@@ -1,53 +1,54 @@
 <% content_for :page_title do %>About<% end %>
 <section class="col-md-offset-2 col-md-8">
     <h2>About Skoona Services</h2>
-    <p class="lead ">
-        Skoona Services exists to explore Authentication and Authorization services.
-        With additional focus on content authorization using expanded UserProfile Permission properties.
-    </p>
     <p class="lead">
+        Skoona Services exists to explore Authentication and Authorization services.
+        With additional focus on content-based authorization using expanded UserProfile Permission properties.
+    </p>
+    <h4>Users must first logon before accessing a secured resource.</h4>
+    <p>
         Authentication is evaluated with every page request, except for images,
         javascript, and css script files.  Token-based single signon is supported, along with a local Signin page.
         Local Signin includes the popular <em>remember me</em>, and <em>reset my password</em> features
-        via secure email tokens.
+        via secure email.
     </p>
-    <p class="lead">
-        All elements to be secured are assigned an unique id, called URI, by the developer.  Authorizations are
-        evaluated for each <em>page access</em>, every <em>clickable control</em>, and available
-        for each <em>showable element</em>.  Page Access authorization is automated by examining the
+    <h4>All secured page elements shall be assigned an unique id, called URI, by a developer.</h4>
+    <p>
+        Authorizations areevaluated for each <em>page access</em>, <em>clickable control</em>, and
+        for each <em>showable data element</em>.  Page Access authorization is automated by examining the
         the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
-        authorization requires the developer to use programming helpers implement authorization.  Showable elements
-        have two levels of authorization available; straight access (show/hide) authorization, and content-based
-        authorization using the expanded UserProfile permissions, both in concert with the AccessRegistry.
+        authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
+        have two levels of authorization available; Clickable, and content-based
+        authorization using the expanded UserProfile permissions, both use the AccessRegistry.
     </p>
     <div class="panel panel-info">
-        <div class="panel-heading">Content-based Example</div>
         <div class="panel-body">
-            <p class="lead">
-                A user might have general access to the Account page which could lists five
-                sensitive documents types, but is only allowed to view two document types for that specific account.  The
-                UserProfile would contain a document-type permissions list for each account they have access to.
+            <p>
+                A user might have general access to the Account page which could list five
+                sensitive documents types, but is only allowed to view two document types for that specific
+                account.  Content-based authorization requires a document-type permissions list by account, to
+                enforce access restrictions.
             </p>
         </div>
     </div>
-    <p class="lead">
+    <h4>Authorization shall consider business entities when determining access restrictions.</h4>
+    <p>
         Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization outcomes.
         It first identifies access authorization to a specific business entity. Then specific access, by type, to secure objects related to that entity.
     </p>
     <div class="panel panel-info">
-        <div class="panel-heading">Content-based Authorization Specification</div>
         <div class="panel-body">
-            <h5>Associated to a Authenticated User</h5>
+            <h5>Content-based Authorization Specification</h5>
             <dl class="dl-horizontal">
                 <dt>Key/Value tuple where:</dt>
                     <dd>key is an encoded string: &lt;entity-type&gt;&lt;entity-id&gt;</dd>
                     <dd>value is list of &lt;identities&gt; the user shall access.</dd>
-                    <dd></dd>
-                    <dd>Each User's UserProfile can have many of these security tuples.</dd>
+                    <dd>&nbsp;</dd>
+                    <dd>Each User's UserProfile can have many of these Authorization tuples associated.</dd>
             </dl>
         </div>
     </div>
-    <p class="lead">
+    <p>
         AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
         application to access role strings; which could be externally administered via LDAP or SQL.  The
         AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which

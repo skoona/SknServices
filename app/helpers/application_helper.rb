@@ -3,16 +3,19 @@ module ApplicationHelper
 
   def menu_active?(menu_link)
     active = false
+    page_access = "#{controller_name}/#{action_name}" unless controller_name.eql?('pages')
+    page_access = "#{controller_name}/#{params[:id]}" if controller_name.eql?('pages')
+
     if menu_link.is_a? Array
-      active = menu_link.include?(accessed_page)
+      active = menu_link.include?(page_access)
     else
-      active = accessed_page.include?(menu_link)
+      active = page_access.include?(menu_link)
     end
     active ? 'active' : ''
   end
 
   def logo
-    logo = image_tag("rails.png", alt: "Time and it's Cost", class: "img-rounded pull-left")
+    logo = image_tag("AvatarSMP.gif", alt: "Skoona Services", class: "img-responsive")
   end
 
   # Return title on a per-page basis.
