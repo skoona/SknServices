@@ -2,7 +2,9 @@ source 'https://rubygems.org'
 gem 'rails', '~> 4.0'
 gem 'config'
 
-gem 'sqlite3'
+gem 'pg'
+gem "rails_warden"
+
 gem 'bootstrap-sass'
 gem 'sass-rails', '~> 5.0'
 gem 'autoprefixer-rails'

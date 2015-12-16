@@ -1,3 +1,32 @@
-Sknservice
+SknService
 ================
 
+
+rails generate model NAME [field[:type][:index] field[:type][:index]] [options]
+
+  enable_extension "plpgsql"
+
+  create_table "users", force: :cascade do |t|
+    t.string   "username"
+    t.string   "name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "remember_token"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_date"
+    t.string   "role_groups"
+    t.string   "roles"
+    t.boolean  "active",               default: true
+    t.text     "address"
+    t.string   "voice_phone"
+    t.string   "sms_phone"
+    t.string   "file_access_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
+  add_index "users", ["username"], name: "index_users_on_username", using: :btree
+
+
+rails g model Users username:string:index name:string email:string password:digest remember_token:string:index password_reset_token:string password_reset_date:datetime role_groups:string roles:string active:boolean file_access_token:string
