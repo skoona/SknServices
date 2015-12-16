@@ -1,0 +1,42 @@
+---
+Packaging:
+  pomVersion: 0.4.1.2
+  isDeveloper: false
+  isDevelopment: true
+  isProduction: false
+  time_zone: Eastern Time (US & Canada)
+
+remote_log:
+  hostname: localhost
+  port: 8071
+
+security:
+  admin_role: Manager
+  verify_login_after_msecs: 7200000
+  ! warden_ignore_paths:
+    - '/signin'
+    - '/signout'
+    - '/assets'
+    - '/sessions'
+    - '/home'
+    - '/about'
+    - '/contact'
+    - '/help'
+    - '/__better_errors'
+    - '/password_resets'
+  ! controller_ignore_paths:
+    - pages
+    - sessions
+    - password_resets
+
+standards:
+  ! security_roles:
+    - Client
+    - Staff
+    - Support
+    - Manager
+  ! role_groups:
+    - Internal
+    - Clients
+    - Vendors
+    - Partners

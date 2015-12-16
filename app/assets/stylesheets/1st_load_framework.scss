@@ -1,0 +1,86 @@
+// import the CSS framework
+
+
+
+$navbar-default-bg: #0011ec;
+$light-orange: #ff8c00;
+//$navbar-default-color: $light-orange;
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+@import "webfontkit";
+
+// Define the extra fonts
+.brockFont {
+  font-family: 'brock_scriptregular', Helvetica, Arial, sans-serif;
+  font-size: ($font-size-base * 2.0);
+}
+.tangerineFont {
+  font-family: 'tangerineregular', Helvetica, Arial, sans-serif;
+}
+.tangerineBoldFont {
+  font-family: 'tangerinebold', Helvetica, Arial, sans-serif;
+}
+
+// make all images responsive by default
+img {
+  @extend .img-responsive;
+  margin: 0 auto;
+  }
+// override for the 'Home' navigation link
+.navbar-brand {
+  font-size: inherit;
+  }
+// THESE ARE EXAMPLES YOU CAN MODIFY
+// create your own classes
+// to make views framework-neutral
+.column {
+  @extend .col-md-6;
+  @extend .text-center;
+  }
+.form {
+  @extend .col-md-6;
+  }
+.form-centered {
+  @extend .col-md-6;
+  @extend .text-center;
+  }
+.submit {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .btn-lg;
+  }
+// apply styles to HTML elements
+// to make views framework-neutral
+main {
+  @extend .container;
+  background-color: #eee;
+  padding-bottom: 80px;
+  width: 100%;
+  margin-top: 51px; // accommodate the navbar
+  }
+section {
+  @extend .row;
+  margin-top: 20px;
+  }
+
+
+// Set the correct sprite paths
+//$iconSpritePath: image-path('glyphicons-halflings.png');
+//$iconWhiteSpritePath: image-path('glyphicons-halflings-white.png');
+//
+//$navbarBackground: #555;
+//$navbarBackgroundHighlight: #888;
+//$navbarText: #eee;
+//$navbarLinkColor: #eee;
+//
+//@import "bootstrap";
+//
+//body { padding-top: 60px; }
+//
+//@import "bootstrap-responsive";
+//
+//.navbar .brand {
+//  color: #FAFFB8;
+//}
