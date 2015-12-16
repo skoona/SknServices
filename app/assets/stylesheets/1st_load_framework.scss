@@ -14,13 +14,15 @@ $light-orange: #ff8c00;
 // Define the extra fonts
 .brockFont {
   font-family: 'brock_scriptregular', Helvetica, Arial, sans-serif;
-  font-size: ($font-size-base * 2.0);
+  font-size: ($font-size-base * 1.5);
 }
 .tangerineFont {
   font-family: 'tangerineregular', Helvetica, Arial, sans-serif;
+  font-size: $font-size-base;
 }
 .tangerineBoldFont {
   font-family: 'tangerinebold', Helvetica, Arial, sans-serif;
+  font-size: $font-size-base;
 }
 
 // make all images responsive by default
@@ -64,7 +66,15 @@ section {
   @extend .row;
   margin-top: 20px;
   }
-
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  padding-top: 6px;
+  background-color: #eee;
+}
 
 // Set the correct sprite paths
 //$iconSpritePath: image-path('glyphicons-halflings.png');

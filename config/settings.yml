@@ -11,7 +11,7 @@ remote_log:
   port: 8071
 
 security:
-  admin_role: Manager
+  admin_role: EmployeePrimary
   verify_login_after_msecs: 7200000
   ! warden_ignore_paths:
     - '/signin'
@@ -20,8 +20,6 @@ security:
     - '/sessions'
     - '/home'
     - '/about'
-    - '/contact'
-    - '/help'
     - '/__better_errors'
     - '/password_resets'
   ! controller_ignore_paths:
@@ -31,12 +29,15 @@ security:
 
 standards:
   ! security_roles:
-    - Client
-    - Staff
-    - Support
-    - Manager
+    - InsuredSecondary
+    - InsuredPrimary
+    - AgentSecondary
+    - AgentPrimary
+    - EmployeeAgencySecondary
+    - EmployeeAgencyPrimary
+    - EmployeeSecondary
+    - EmployeePrimary
   ! role_groups:
-    - Internal
-    - Clients
-    - Vendors
-    - Partners
+    - AgencyStaff
+    - InsuredStaff
+    - InternalStaff

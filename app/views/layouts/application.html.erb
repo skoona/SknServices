@@ -29,14 +29,14 @@
 
        <%= yield %>
 
+        <%# Application Footer %>
+        <div class="row col-md-offset-1 col-md-10">
+            <%= debug(params) if Rails.env.development? %>
+        </div>
+
        <%# Application Footer %>
        <%= render 'layouts/footer' %>
     </main>
-
-    <%# Application Footer %>
-    <div class="row col-md-offset-1 col-md-10">
-      <%= debug(params) if Rails.env.development? %>
-    </div>
 
   </body>
 </html>
