@@ -2,20 +2,27 @@
 # <Rails.root>/config/warden.rb
 # Configures Warden to be user as a Rack level security manager
 #
-#
 # Author: James Scott, Jr. <skoona@gmail.com>
 # Date: 3.13.2013
 #
 #
 #  Refs: https://github.com/hassox/warden/wiki/Callbacks
+#        http://blog.maestrano.com/rails-api-authentication-with-warden-without-devise/
+#        https://github.com/ajsharp/warden-rspec-rails
+#        https://github.com/hassox/warden/wiki
+#
 # 'use Rack::Session::Cookie, :secret => "replace this with some secret key"'
 ##
 # Main configuration
 ##
 ##
-# OBJECTIVE: Allow Remember Me tokens to be used to sign in; prefer them over passwords
+# OBJECTIVE:  Authenticate the user of every request !
+#
+# Allow Remember Me tokens to be used to sign in; prefer them over passwords
+#
 # This module along with the modules authentication_controller_helper, authentication_user_helper implement
 # the desired security model with a minimum of impact on the ApplicationController[s] or User objects.
+#
 #
 # CONTROLS:
 # app/initializers/session_store set the Timeout of 30 minutes on Session Cookie (which is signed with domain)

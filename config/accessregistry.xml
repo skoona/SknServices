@@ -97,6 +97,11 @@
 
 -->
     <!--============== RSpec Test Data  ========== -->
+    <resource secured="false">
+        <uri>testing/public</uri>
+        <description>Unsecured or Public Resource.</description>
+    </resource>
+
     <resource secured="true">
         <uri>testing/role/progressive</uri>
         <description>Testing Resource Only: Progressive Capability</description>
@@ -363,14 +368,6 @@
         <uri>pages/about</uri>
         <description>About Us Page</description>
     </resource>
-    <resource secured="false">
-        <uri>/home</uri>
-        <description>Home Page</description>
-    </resource>
-    <resource secured="false">
-        <uri>/about</uri>
-        <description>About Us Page</description>
-    </resource>
 
     <!--=========================  PROTECTED TASK LINKS   ============================ -->
   <resource>
@@ -402,7 +399,7 @@
 
     <!--=========================  DEVELOPMENT RESOURCES  ============================ -->
   <resource secured="true">
-      <uri>/developer</uri>
+      <uri>pages/developer</uri>
       <description>System Status Page for Developers</description>
       <permission type="READ">
           <authorizedRoles>
@@ -410,7 +407,5 @@
           </authorizedRoles>
       </permission>
   </resource>
-
-<!--=========================    GLOBAL USER PAGES    ============================ -->
 
 </accessRegistry>

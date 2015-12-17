@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get '/signin',                    to:     'sessions#new'
   get '/home',                      to:     'pages#home'
   get '/about',                     to:     'pages#about'
+  get '/developer',                 to:     'pages#developer'
 
   root to: 'pages#home'
 end

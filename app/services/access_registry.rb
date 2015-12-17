@@ -117,10 +117,9 @@ class AccessRegistry
         false    # false if nothing  is thrown, i.e not found
       end # end catch
     else 
-      # TODO: Enable logging of all access which get this pass
+      # TODO: Enable logging of all unregistered
       Rails.logger.info("#{self.class.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
-      puts("#{self.class.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}")
-      result = true
+      result = false
     end
     
     result
@@ -151,19 +150,17 @@ class AccessRegistry
          false    # false if nothing  is thrown, i.e not found
        end # end catch
      else
-       # TODO: Enable logging of all access which get this pass
+       # TODO: Enable logging of all unregistered
        Rails.logger.info("#{self.class.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
-       puts("#{self.class.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}")
-       result = true
+       result = false
      end
      
     result
   end
 
   def self.is_secured?(resource_uri)
-    # if the uri is not present its considered to have public access
-    return false unless @@ar_permissions.has_key?(resource_uri)
-    @@ar_permissions[resource_uri]["secured"] ||  false
+    # Must be present and defined as false/un-secured ELSE true, treat it as a secure resource
+    !warden_bypass?(resource_uri)
   end
 
   def self.warden_bypass?(resource_uri)
@@ -178,7 +175,7 @@ class AccessRegistry
   end
 
   def self.role_in_resource_crud?(role_name, resource_uri, crud_mode)
-    @@ar_permissions[resource_uri].has_key?(crud_mode) and @@ar_permissions[resource_uri][crud_mode].has_key?(role_name)
+    @@ar_permissions.has_key?(resource_uri) and @@ar_permissions[resource_uri].has_key?(crud_mode) and @@ar_permissions[resource_uri][crud_mode].has_key?(role_name)
   end
 
   def self.role_in_resource_crud_with_option?(role_name, resource_uri, crud_mode, option)

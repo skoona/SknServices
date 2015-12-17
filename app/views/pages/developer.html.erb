@@ -1,0 +1,85 @@
+<% provide(:title, "SknService Developer Page") %>
+<script type="text/javascript">
+    function about() {
+        info = document.getElementById('about-content');
+        if (window.XMLHttpRequest)
+        { xhr = new XMLHttpRequest(); }
+        else
+        { xhr = new ActiveXObject("Microsoft.XMLHTTP"); }
+        xhr.open("GET","/rails/info/properties",false);
+        xhr.send("");
+        info.innerHTML = xhr.responseText;
+        info.style.display = 'block'
+    }
+</script>
+<div id="page">
+    <div id="content">
+        <h1>SknService home#developer</h1>
+
+        <div>
+            <% if logged_in? %>
+             <h3>Welcome <%= current_user.name %>.</h3>
+            <% end %>
+        </div>
+
+        <div>
+            <h3>Platform Configuration Values</h3>
+            <p>View Direct Page Accessed => <%= accessed_page() %></p>
+            <p>Controller name => <%= controller_name %></p>
+            <p>Controller Action => <%= action_name %></p>
+            <p>Controller Path => <%= controller_path() %></p>
+            <p>Request fullpath => <%= request.fullpath() %></p>
+            <p>Request original fullpath => <%= request.original_fullpath() %></p>
+            <p>Rails Environment => <%= Rails.env.to_s %></p>
+            <%# <p>ActiveRecord Username => <%= ActiveRecord::Base.connection.raw_connection.config[:username] || ActiveRecord::Base.connection.raw_connection.config[:adapter] %>
+            <p>isDeveloper => <%= Settings.Packaging.isDeveloper.to_s %></p>
+            <p>isDevelopment => <%= Settings.Packaging.isDevelopment.to_s %></p>
+            <p>isProduction => <%= Settings.Packaging.isProduction.to_s %></p>
+            <p>Development Version <%= Settings.Packaging.pomVersion.to_s %></p>
+        </div>
+        <div id="about">
+                <h3><a href="rails/info/properties" onclick="about(); return false">click here for application environment info.</a></h3>
+                <div id="about-content" style="display: none"></div>
+        </div>
+        <hr />
+        <div style="margin-left: 17px;">
+            <div>
+                <% if logged_in? %>
+                    <p>Has Access to this page '/' = <%= current_user.has_access?("/") ? "True": "False" %></p>
+                    <hr />
+                    <h3>Groups</h3>
+                    <ol>
+                        <% current_user.role_groups.each do |item| -%>
+                            <li><%= item %></li>
+                        <% end -%>
+                    </ol>
+                    <hr />
+                    <h3>Roles</h3>
+                    <ol>
+                        <% current_user.roles.each do |item| -%>
+                            <li><%= item %></li>
+                        <% end -%>
+                    </ol>
+                <% end %>
+            </div>
+            <hr />
+            <div>
+            <h3>Current Session Values</h3>
+                <ol>
+                    <% session.keys do |k| -%>
+                        <li> <%= k %>: <%= session[k] %> </li>
+                    <% end -%>
+                </ol>
+            </div>
+            <hr />
+            <div>
+             <h3>Cookies on Current Request</h3>
+                 <ol>
+                    <% cookies.each do |item| -%>
+                        <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
+                    <% end -%>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>

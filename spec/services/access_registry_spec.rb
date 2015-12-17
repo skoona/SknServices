@@ -58,7 +58,7 @@ RSpec.describe AccessRegistry, "Authorization management" do
   let(:resource_options) {"testing/role/options"}
   let(:resource_absolutes) {"testing/role/absolutes"}
   let(:resource_progressive) {"testing/role/progressive"}
-  let(:resource_signin_page) {"/signin"}
+  let(:resource_public_page) {"testing/public"}
 
   let(:auth) { AccessRegistryTestUser.new(["Test.Action.Read"]) }
 
@@ -71,14 +71,14 @@ RSpec.describe AccessRegistry, "Authorization management" do
     it "Will not allow an instance to be created."  do
         expect{ AccessRegistry.new }.to raise_error(NotImplementedError)
     end
-    it "Undefined resource are not secured." do
-      expect(AccessRegistry.is_secured?(resource_unknown)).to be false
+    it "Undefined resource are treated as secured." do
+      expect(AccessRegistry.is_secured?(resource_unknown)).to be true
     end
     it "Defined resources are secure when declared as such." do
       expect(AccessRegistry.is_secured?(resource_progressive)).to be true
     end
     it "Defined resources are not secure when declared as such." do
-      expect(AccessRegistry.is_secured?(resource_signin_page)).to be false
+      expect(AccessRegistry.is_secured?(resource_public_page)).to be false
     end
   end
 
