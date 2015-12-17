@@ -1,0 +1,34 @@
+<% provide(:title, "User") %>
+
+<section class="row" xmlns="http://www.w3.org/1999/html">
+  <h2><%= @user.name %></h2>
+    <div class="offset3">
+        <ul class="list-unstyled thumbnails">
+          <li>
+              <div class="img-thumbnail">
+                  <%= gravatar_for @user, class: "img-polaroid" %>
+                  <p class="text-center">
+                      Username:&nbsp; <%= @user.username %><br/>
+                  </p>
+             </div>
+          </li>
+          <li>
+              <ul class="list-unstyled">
+                  <li><strong>Username: &nbsp; </strong> <%= @user.username %></li>
+                  <li><strong>Email: &nbsp; </strong> <%= @user.email %></li>
+                  <li><strong>Roles: &nbsp; </strong> <%= @user.roles.join(", ") %></li>
+                  <li><strong>Groups: &nbsp; </strong> <%= @user.role_groups.join(", ") %></li>
+                  <li><%= @user.active ? "Active" : "inActive" %></li>
+                  <li>Last password reset: &nbsp; <%= @user.password_reset_date? ? @user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></li>
+              </ul>
+          </li>
+        </ul>
+    <div class="row">
+        <ul class="nav nav-pills pull-right">
+          <li><%= link_to "Edit", edit_user_path(@user) %></li>
+          <li><%= link_to "Delete", user_path(@user), method: :delete, data: {confirm: "Deleting cannot be undone! Delete anyway?"} %></li>
+          <li><%= link_to "Back", users_path() %></li>
+        </ul>
+    </div>
+  </div>
+</section>

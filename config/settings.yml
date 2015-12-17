@@ -13,15 +13,6 @@ remote_log:
 security:
   admin_role: EmployeePrimary
   verify_login_after_msecs: 7200000
-  ! warden_ignore_paths:
-    - '/signin'
-    - '/signout'
-    - '/assets'
-    - '/sessions'
-    - '/home'
-    - '/about'
-    - '/__better_errors'
-    - '/password_resets'
   ! controller_ignore_paths:
     - pages
     - sessions

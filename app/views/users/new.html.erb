@@ -1,0 +1,13 @@
+<% provide(:title, 'Add User') %>
+
+<%= simple_form_for(@user, :html => { :class => 'form-vertical', :authenticity_token => true }) do |f| %>
+    <%= f.error_notification %>
+    <%= render 'fields', f:  f %>
+
+    <div class="button-group">
+        <div class="controls pull-right">
+            <%= f.button :submit, "Save", class: 'btn btn-primary' %>
+            <%= link_to "Cancel", users_path(), class: 'btn' %>
+        </div>
+    </div>
+<% end %>

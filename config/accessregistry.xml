@@ -195,7 +195,7 @@
                 <authorizedRole>Clients.Action.Update</authorizedRole>
                 <authorizedRole>Clients.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -206,7 +206,7 @@
             <authorizedRoles>
                 <authorizedRole>Clients.Action.Update</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -217,7 +217,7 @@
             <authorizedRoles>
                 <authorizedRole>Clients.Action.Update</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -228,7 +228,7 @@
             <authorizedRoles>
                 <authorizedRole>Clients.Action.Create</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -239,7 +239,7 @@
             <authorizedRoles>
                 <authorizedRole>Clients.Action.Create</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -255,7 +255,7 @@
                 <authorizedRole>Users.Action.Update</authorizedRole>
                 <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -270,7 +270,7 @@
                 <authorizedRole>Users.Action.Update</authorizedRole>
                 <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -284,7 +284,7 @@
                 <authorizedRole>Users.Action.Update</authorizedRole>
                 <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -295,7 +295,7 @@
             <authorizedRoles>
                 <authorizedRole>Users.Action.Update</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -306,7 +306,7 @@
             <authorizedRoles>
                 <authorizedRole>Users.Action.Update</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -317,7 +317,7 @@
             <authorizedRoles>
                 <authorizedRole>Users.Action.Create</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -328,7 +328,7 @@
             <authorizedRoles>
                 <authorizedRole>Users.Action.Create</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -339,7 +339,7 @@
             <authorizedRoles>
                 <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>Manager</authorizedRole>
+                <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -355,13 +355,20 @@
         <uri>/signin</uri>
         <description>Login Page</description>
     </resource>
-
     <resource secured="false">
         <uri>pages/home</uri>
         <description>Home Page</description>
     </resource>
     <resource secured="false">
         <uri>pages/about</uri>
+        <description>About Us Page</description>
+    </resource>
+    <resource secured="false">
+        <uri>/home</uri>
+        <description>Home Page</description>
+    </resource>
+    <resource secured="false">
+        <uri>/about</uri>
         <description>About Us Page</description>
     </resource>
 
@@ -388,7 +395,7 @@
       <authorizedRoles>
         <authorizedRole>Users.Action.Delete</authorizedRole>
         <authorizedRole>Developer.Access.Status</authorizedRole>
-        <authorizedRole>Manager</authorizedRole>
+        <authorizedRole>EmployeePrimary</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>

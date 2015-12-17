@@ -1,0 +1,21 @@
+<% provide(:title, 'Reset Password') %>
+
+<%= simple_form_for(@user, :url => password_resets_path, :html => { :class => 'form-horizontal' }) do |f| %>
+
+  <div class="control-group">
+    <div class="controls">   
+      <h3>Enter Your UserName</h3>
+    </div>
+  </div>
+
+  <fieldset>
+  	<%= f.input :username, autofocus: true %>
+  </fieldset>
+
+  <div class="button-group">
+    <div class="controls">
+      <%= f.button :submit, "Reset Password", class: 'btn btn-primary' %>
+      <%= link_to "Cancel", root_path(), class: 'btn' %>
+		</div>
+  </div>
+<% end %>

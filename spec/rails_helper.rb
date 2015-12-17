@@ -54,6 +54,9 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
   config.include Rails.application.routes.mounted_helpers
 
+  config.include Warden::Test::Helpers
+  Warden.test_mode!
+
   # Turn on FactoryGirl
   # ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md
   config.include FactoryGirl::Syntax::Methods
@@ -106,7 +109,7 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
-    # Warden.test_reset!
+    Warden.test_reset!
   end
 
 end

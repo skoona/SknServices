@@ -1,5 +1,5 @@
 <%# navigation styled for Bootstrap 3.0 %>
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -8,14 +8,53 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-        <a class="navbar-brand" href="<%= root_path %>">
-            <%= logo() %>
-        </a>
+      <%= link_to home_path, class: " navbar-brand" do %>
+        <%= logo() %>
+      <% end %>
     </div>
     <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <%= render 'layouts/navigation_links' %>
-      </ul>
+        <ul class="nav navbar-nav">
+            <% if logged_in? && current_user.is_admin? %>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="<%= menu_active?('users/new') %>">
+                            <%= link_to new_user_path do %>
+                                <i class="icon-user"></i>
+                                <span>&nbsp;Add user</span>
+                            <% end %>
+                        </li>
+                        <li class="<%= menu_active?('users/index') %>">
+                            <%= link_to users_path do %>
+                                <i class="icon-list"></i>
+                                <span>&nbsp;All users</span>
+                            <% end %>
+                        </li>
+                    </ul>
+                </li>
+            <% end %>
+        </ul>
+        <ul class="nav navbar-nav">
+            <li class="<%= menu_active?('pages/about') %>">
+                <%= link_to "About",  about_path %>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <% if logged_in? %>
+                <li class="<%= menu_active?('users/show') %>">
+                    <%= link_to "Profile", user_path(current_user) %>
+                </li>
+            <% end %>
+            <li><%=
+                link_to_if(logged_in?, "Sign out", signout_path, method: :delete) do
+                link_to "Sign in", signin_path
+                end
+            %></li>
+        </ul>
+        <% if logged_in? %>
+            <p class="navbar-text pull-right">Signed in as <a href="<%= user_path(current_user) %>"><span><i class="icon-user"></i>&nbsp;<%= current_user.name %></span></a></p>
+        <% end %>
     </div>
   </div>
 </nav>

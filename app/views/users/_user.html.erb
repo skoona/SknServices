@@ -1,0 +1,23 @@
+<%# Handle row alignment issue until bootstrap v3.0/Sass is available %>
+<%# - see @counter = 0 in EmployeesController %>
+<% if (@counter % 3 == 0) %>
+</section>
+<section role="page" class="row users">
+<% end %>
+<% @counter += 1 %>
+
+<div class="col-md-3">
+  <div class="thumbnail">
+    <%= link_to user_path(user) do %>
+      <%= gravatar_for(user, size: 96, class: "media-object") %>
+    <% end %>
+    <strong class="text-center"><%= user.name %></strong>
+    <p class="text-center">
+        Username:&nbsp; <%= user.username %><br/>
+    </p>
+    <ul class="nav nav-pills">
+      <li><%= link_to "Details", user_path(user) %></li>
+      <li><%= link_to "Edit", edit_user_path(user) %></li>
+    </ul>
+  </div>
+</div>

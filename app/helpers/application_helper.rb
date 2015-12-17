@@ -3,8 +3,7 @@ module ApplicationHelper
 
   def menu_active?(menu_link)
     active = false
-    page_access = "#{controller_name}/#{action_name}" unless controller_name.eql?('pages')
-    page_access = "#{controller_name}/#{params[:id]}" if controller_name.eql?('pages')
+    page_access = "#{controller_name}/#{action_name}"
 
     if menu_link.is_a? Array
       active = menu_link.include?(page_access)

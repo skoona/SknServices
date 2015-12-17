@@ -20,8 +20,9 @@ module Secure
       send :helper_method, :login_required, :redirect_to_target_or_default, :accessed_page, "has_access?".to_sym, "current_user_has_access?".to_sym if respond_to? :helper_method
     end
 
+
     def login_required
-      unless Settings.security.controller_ignore_paths.include?(controller_name)         # a bypass for public pages in the pages controller
+      unless AccessRegistry.warden_bypass?(request.original_fullpath) # TODO Verify bypass,   Settings.security.controller_ignore_paths.include?(controller_name)         # a bypass for public pages in the pages controller
         unless logged_in?
           store_target_location
           Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to Sign in page")
@@ -44,10 +45,7 @@ module Secure
     end
 
     def accessed_page
-      page_access = "#{controller_name}/#{action_name}" unless controller_name.eql?('pages')
-      page_access = "#{controller_name}/#{params[:id]}" if controller_name.eql?('pages')
-
-      page_access
+      "#{controller_name}/#{action_name}"
     end
 
     # called from a engine to check access with status

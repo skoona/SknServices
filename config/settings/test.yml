@@ -1,0 +1,11 @@
+---
+Packaging:
+  isTest: true
+  isDevelopment: false
+  isProduction: false
+
+rspec_users:
+  password: developer99
+  manager: manager1
+  staff: staff1
+  support: support1

@@ -166,6 +166,11 @@ class AccessRegistry
     @@ar_permissions[resource_uri]["secured"] ||  false
   end
 
+  def self.warden_bypass?(resource_uri)
+    # Warden must consider all things true (secured) unless its present and  defined to be different
+    (@@ar_permissions.has_key?(resource_uri) && !@@ar_permissions[resource_uri]["secured"]) # prefer the actual value or use the default
+  end
+
   protected
 
   def self.has_options_ary?(role_name, resource_uri, crud_mode="READ")

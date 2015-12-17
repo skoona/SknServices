@@ -1,0 +1,21 @@
+<% provide(:title, 'Edit User') %>
+
+<div class="row">
+    <div class="controls-group">
+        <div class="controls">
+            <%= gravatar_for(@user) %>
+            <a href ="http://gravatar.com/emails">change</a>
+        </div>
+    </div>
+</div>
+<%= simple_form_for(@user, :html => { :class => 'form-vertical', :authenticity_token => true }) do |f| %>
+
+    <%= render 'fields', f:  f %>
+
+    <div class="button-group">
+        <div class="controls pull-right">
+            <%= f.button :submit, "Update", class: 'btn btn-primary' %>
+            <%= link_to "Cancel", user_path(@user), class: 'btn' %>
+        </div>
+    </div>
+<% end %>

@@ -1,0 +1,5 @@
+---
+Packaging:
+  isTest: false
+  isDevelopment: true
+  isProduction: false
