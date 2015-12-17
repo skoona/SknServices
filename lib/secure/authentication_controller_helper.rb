@@ -17,23 +17,23 @@ module Secure
     extend ActiveSupport::Concern
 
     included do
-      send :helper_method, :login_required, :redirect_to_target_or_default, :accessed_page, "has_access?".to_sym, "current_user_has_access?".to_sym if respond_to? :helper_method
+      send :helper_method, :login_required, :redirect_to_target_or_default, :accessed_page_name, :accessed_page, "has_access?".to_sym, "current_user_has_access?".to_sym if respond_to? :helper_method
     end
 
 
     def login_required
-      unless AccessRegistry.warden_bypass?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
+      unless AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
         unless logged_in?
           store_target_location
           Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to Sign in page")
           if flash.empty?
-            redirect_to signin_url, :alert => "You must sign in before accessing the '#{accessed_page}' page."
+            redirect_to signin_url, :alert => "You must sign in before accessing the '#{accessed_page_name}' page."
           else
             redirect_to signin_url
           end
         else
           # This is the sole page level access control, based on controller/action URI entries in the access registry
-          redirect_to home_url, :alert => "You are not authorized to access the #{accessed_page} page!" unless current_user_has_access?(accessed_page)
+          redirect_to home_url, :alert => "You are not authorized to access the #{accessed_page_name} page!" unless current_user_has_access?(accessed_page)
         end
       end
       Rails.logger.debug("Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
@@ -42,6 +42,10 @@ module Secure
     def redirect_to_target_or_default(default, *args)
       redirect_to(session[:return_to] || default, *args)
       session[:return_to] = nil
+    end
+
+    def accessed_page_name
+      AccessRegistry.get_resource_description(accessed_page) || ""
     end
 
     def accessed_page

@@ -160,10 +160,10 @@ class AccessRegistry
 
   def self.is_secured?(resource_uri)
     # Must be present and defined as false/un-secured ELSE true, treat it as a secure resource
-    !warden_bypass?(resource_uri)
+    !security_check?(resource_uri)
   end
 
-  def self.warden_bypass?(resource_uri)
+  def self.security_check?(resource_uri)
     # Warden must consider all things true (secured) unless its present and  defined to be different
     (@@ar_permissions.has_key?(resource_uri) && !@@ar_permissions[resource_uri]["secured"]) # prefer the actual value or use the default
   end

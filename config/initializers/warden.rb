@@ -136,7 +136,7 @@ Warden::Manager.on_request do |proxy|
 
   tstatus = false
   full_path = proxy.request.original_fullpath
-  bypass = full_path.eql?("/") || AccessRegistry.warden_bypass?(full_path)
+  bypass = full_path.eql?("/") || AccessRegistry.security_check?(full_path)
 
   unless proxy.user.present? or bypass
     ##
