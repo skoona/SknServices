@@ -22,7 +22,7 @@ module Secure
 
 
     def login_required
-      unless AccessRegistry.warden_bypass?(request.original_fullpath) # TODO Verify bypass,   Settings.security.controller_ignore_paths.include?(controller_name)         # a bypass for public pages in the pages controller
+      unless AccessRegistry.warden_bypass?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
         unless logged_in?
           store_target_location
           Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to Sign in page")

@@ -13,10 +13,6 @@ remote_log:
 security:
   admin_role: EmployeePrimary
   verify_login_after_msecs: 7200000
-  ! controller_ignore_paths:
-    - pages
-    - sessions
-    - password_resets
 
 standards:
   ! security_roles:
