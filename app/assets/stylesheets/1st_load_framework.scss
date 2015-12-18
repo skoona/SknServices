@@ -2,40 +2,87 @@
 
 
 
-$navbar-default-bg: #0011ec;
-$light-orange: #ff8c00;
-//$navbar-default-color: $light-orange;
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+$navbar-default-bg: #0011ec;
+
 @import "webfontkit";
 
-// Define the extra fonts
+/* Define the extra fonts  */
 .brockFont {
   font-family: 'brock_scriptregular', Helvetica, Arial, sans-serif;
   font-size: ($font-size-base * 1.5);
-}
+ }
 .tangerineFont {
   font-family: 'tangerineregular', Helvetica, Arial, sans-serif;
   font-size: $font-size-base;
-}
+ }
 .tangerineBoldFont {
   font-family: 'tangerinebold', Helvetica, Arial, sans-serif;
   font-size: $font-size-base;
-}
+ }
 
-// make all images responsive by default
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+ }
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+ }
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  padding-top: 6px;
+  background-color: #eee;
+ }
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+  }
+.container .text-muted {
+  margin: 20px 0;
+  }
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+  }
+code {
+  font-size: 80%;
+  }
+
+/* make all images responsive by default */
 img {
   @extend .img-responsive;
   margin: 0 auto;
   }
-// override for the 'Home' navigation link
+.carousel-inner > .item > img {
+//  z-index: 60;
+  margin: 0 auto;
+  width: 100%;
+  }
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+//  background-color: #0011ec;
+  z-index: 10;
+}
+
+/* override for the 'Home' navigation link */
 .navbar-brand {
   font-size: inherit;
   }
-// THESE ARE EXAMPLES YOU CAN MODIFY
-// create your own classes
+
 // to make views framework-neutral
 .column {
   @extend .col-md-6;
@@ -66,31 +113,3 @@ section {
   @extend .row;
   margin-top: 20px;
   }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  padding-top: 6px;
-  background-color: #eee;
-}
-
-// Set the correct sprite paths
-//$iconSpritePath: image-path('glyphicons-halflings.png');
-//$iconWhiteSpritePath: image-path('glyphicons-halflings-white.png');
-//
-//$navbarBackground: #555;
-//$navbarBackgroundHighlight: #888;
-//$navbarText: #eee;
-//$navbarLinkColor: #eee;
-//
-//@import "bootstrap";
-//
-//body { padding-top: 60px; }
-//
-//@import "bootstrap-responsive";
-//
-//.navbar .brand {
-//  color: #FAFFB8;
-//}

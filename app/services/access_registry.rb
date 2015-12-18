@@ -1,7 +1,7 @@
 ##
 # app/services/access_registry.rb
 #
-# Reads a control file from <rails_root>/config/accessregistry.xml into a control hash
+# Reads a control file from <rails_root>/config/access_registry.xml into a control hash
 # offers static routines to callers which validate access to controlled resources
 #
 # Author: James Scott, Jr. <jscott@skoona.net>
@@ -74,7 +74,7 @@
 class AccessRegistry
 
   CRUD_MODES = ["CREATE","READ","UPDATE","DELETE"].freeze
-	@@ar_permissions = Secure::AccessRegistryUtility.new("accessregistry").from_xml()
+	@@ar_permissions = Secure::AccessRegistryUtility.new("access_registry").from_xml()
 
   def initialize
     # not needed as this is a static class

@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-user = {
+user1 = {
     username:              "skoona",
     name:                  "James Scott",
     email:                 "skoona@gmail.com",
@@ -16,5 +16,16 @@ user = {
     roles:                   ["EmployeePrimary","Developer.Access.Status"]
 }
 
+user2 = {
+    username:              "utester1",
+    name:                  "SknService UTester1",
+    email:                 "appdev@brotherhoodmutual.com",
+    password:                "nobugs",
+    password_confirmation:   "nobugs",
+    role_groups:             ["InternalStaff"],
+    roles:                   ["EmployeeSecondary"]
+}
+
 User.delete_all
-User.create(user)
+User.create(user1)
+User.create(user2)

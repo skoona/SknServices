@@ -7,6 +7,7 @@
 #
 #
 #  Refs: https://github.com/hassox/warden/wiki/Callbacks
+#     ***http://pothibo.com/2013/07/authentication-with-warden-devise-less/
 #        http://blog.maestrano.com/rails-api-authentication-with-warden-without-devise/
 #        https://github.com/ajsharp/warden-rspec-rails
 #        https://github.com/hassox/warden/wiki
@@ -54,7 +55,10 @@
 #   logout causes callback: before_logout() to run and remove user from fetch cache and deletes all cookies
 #
 ##
-Rails.application.config.middleware.use RailsWarden::Manager do |manager|
+
+
+# Rails.application.config.middleware.use RailsWarden::Manager do |manager|
+Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
   manager.default_strategies :password, :not_authorized
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
 end

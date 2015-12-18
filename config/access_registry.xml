@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <accessRegistry>
 <!--
-   config/accessregistry.xml
+   config/access_registry.xml
 
    Along with class AccessRegistry and module AccessControl, this file describes those
    application resources that should be both secured and un-secured. This file is pre-processed
@@ -34,7 +34,7 @@
    statement is a 'secured' attribute which indicates if this resource record is secure or not.  If its not, the
    record is considered documentation and will always return true to the #has_access?() api.
 
-   Should a #has_access? request be made with a uri not recored in the access registry, the default return is TRUE.
+   Should a #has_access? request be made with a uri not recorded in the access registry, the default return is TRUE.
    Effectively granting access to any undocumented resource.
 
    Second, each entry is evaluated using the semantics of CRUD.  CREATE, READ, UPDATE, DELETE permissions
@@ -354,19 +354,19 @@
 
     <resource secured="false"> <!-- This resource is not protected, since unauthorized users need to see it. -->
         <uri>/signout</uri>
-		    <description>Logout Page</description>
+		    <description>Logout</description>
 	  </resource>
     <resource secured="false"> <!-- This resource is not protected, since unauthorized users need to see it. -->
         <uri>/signin</uri>
-        <description>Login Page</description>
+        <description>Sign-in</description>
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
-        <description>Home Page</description>
+        <description>Home</description>
     </resource>
     <resource secured="false">
         <uri>pages/about</uri>
-        <description>About Us Page</description>
+        <description>About</description>
     </resource>
 
     <!--=========================  PROTECTED TASK LINKS   ============================ -->

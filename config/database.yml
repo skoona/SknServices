@@ -14,20 +14,19 @@ defaults: &defaults
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: postgres
-  password: postgres
-  host: localhost
-
+  username: <%= Settings.PostgreSQL.username %>
+  password: <%= Settings.PostgreSQL.password %>
+  host: <%= Settings.PostgreSQL.host %>
 
 development:
-  database: SkoonaServices_development
+  database: SknServices_development
   <<: *defaults
 
 test:
-  database: SkoonaServices_test
+  database: SknServices_test
   <<: *defaults
 
 production:
-  database: SkoonaServices_production
+  database: SknServices_production
   <<: *defaults
 

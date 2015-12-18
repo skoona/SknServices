@@ -6,6 +6,11 @@ Packaging:
   isProduction: false
   time_zone: Eastern Time (US & Canada)
 
+PostgreSQL:
+  username: postgres
+  password: postgres
+  host: localhost
+
 remote_log:
   hostname: localhost
   port: 8071

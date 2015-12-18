@@ -12,31 +12,29 @@
     <%= csrf_meta_tags %>
     <%= yield(:head) %>
 
-    <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="assets/favicon.ico"/>
-    <!--
-    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png"/>
-    <link rel="apple-touch-icon" sizes="72x72" href="assets/apple-touch-icon-72x72.png"/>
-    <link rel="apple-touch-icon" sizes="114x114" href="assets/apple-touch-icon-114x114.png"/>
-    -->
+
   </head>
+
   <body data-controller-name="<%= controller_name %>" data-controller-action="<%= action_name %>">  <%# Identifies each page so JS can act when wanted %>
     <header>
-      <%= render 'layouts/navigation' %>
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <%= render 'layouts/navigation' %>
+      </nav>
     </header>
+
     <main role="main">
        <%= render 'layouts/messages' %>
 
        <%= yield %>
 
-        <%# Application Footer %>
-        <div class="row col-md-offset-1 col-md-10">
-            <%= debug(params) if Rails.env.development? %>
-        </div>
-
-       <%# Application Footer %>
-       <%= render 'layouts/footer' %>
+       <div class="row col-md-offset-1 col-md-10">
+         <%= debug(params) if Rails.env.development? %>
+      </div>
     </main>
 
+    <footer class="footer">
+      <%= render 'layouts/footer' %>
+    </footer>
   </body>
 </html>

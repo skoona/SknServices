@@ -1,4 +1,5 @@
-<% provide(:title, "SknService Developer Page") %>
+<% provide(:title, accessed_page_name) %>
+
 <script type="text/javascript">
     function about() {
         info = document.getElementById('about-content');
@@ -12,7 +13,8 @@
         info.style.display = 'block'
     }
 </script>
-<div id="page">
+
+<section class="container" id="page">
     <div id="content">
         <h1>SknService home#developer</h1>
 
@@ -24,7 +26,8 @@
 
         <div>
             <h3>Platform Configuration Values</h3>
-            <p>View Direct Page Accessed => <%= accessed_page() %></p>
+            <p>Router Direct Page Accessed => <%= accessed_page() %></p>
+            <p>AccessRegistry Access Page Name => <%= accessed_page_name() %></p>
             <p>Controller name => <%= controller_name %></p>
             <p>Controller Action => <%= action_name %></p>
             <p>Controller Path => <%= controller_path() %></p>
@@ -82,4 +85,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

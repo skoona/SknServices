@@ -1,23 +1,26 @@
-<%# Handle row alignment issue until bootstrap v3.0/Sass is available %>
-<%# - see @counter = 0 in EmployeesController %>
-<% if (@counter % 3 == 0) %>
-</section>
-<section role="page" class="row users">
-<% end %>
-<% @counter += 1 %>
 
-<div class="col-md-3">
-  <div class="thumbnail">
+<div class="col-xs-6 col-sm-3 placeholder">
     <%= link_to user_path(user) do %>
-      <%= gravatar_for(user, size: 96, class: "media-object") %>
+        <%= gravatar_for(user, size: 96, class: "img-responsive", alt: user.username) %>
     <% end %>
-    <strong class="text-center"><%= user.name %></strong>
-    <p class="text-center">
-        Username:&nbsp; <%= user.username %><br/>
-    </p>
-    <ul class="nav nav-pills">
-      <li><%= link_to "Details", user_path(user) %></li>
-      <li><%= link_to "Edit", edit_user_path(user) %></li>
+    <h4 class="text-center">Username: &nbsp;<%= user.username %></h4>
+    <ul class="list-unstyled text-center">
+        <li><%= user.email %></li>
+        <li>State: <%= user.active ? "Active" : "inActive" %></li>
+        <li>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></li>
     </ul>
-  </div>
+    <ul class="nav nav-pills placeholder">
+        <li><%= link_to edit_user_path(user) do %>
+                <span class="badge">Edit</span>
+            <% end %>
+        </li>
+        <li><%= link_to user_path(user), method: :delete, data: {confirm: "Deleting cannot be undone! Delete anyway?"}  do %>
+                <span class="badge">Delete</span>
+            <% end %>
+        </li>
+        <li><%= link_to users_path()  do %>
+                <span class="badge">Back</span>
+            <% end %>
+        </li>
+    </ul>
 </div>

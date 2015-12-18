@@ -1,13 +1,13 @@
 <% provide(:title, 'Edit User') %>
 
-<div class="row">
+<section class="row">
     <div class="controls-group">
         <div class="controls">
-            <%= gravatar_for(@user) %>
-            <a href ="http://gravatar.com/emails">change</a>
+            <%= gravatar_for(@user, size: 96, class: "img-responsive", alt: user.username) %>
+            <a href ="http://gravatar.com/emails" class="text-muted">Change Picture</a>
         </div>
     </div>
-</div>
+</section>
 <%= simple_form_for(@user, :html => { :class => 'form-vertical', :authenticity_token => true }) do |f| %>
 
     <%= render 'fields', f:  f %>
@@ -19,3 +19,4 @@
         </div>
     </div>
 <% end %>
+
