@@ -17,7 +17,9 @@ module Secure
     extend ActiveSupport::Concern
 
     included do
-      send :helper_method, :login_required, :redirect_to_target_or_default, :accessed_page_name, :accessed_page, "has_access?".to_sym, "current_user_has_access?".to_sym if respond_to? :helper_method
+      send :helper_method, :login_required, :redirect_to_target_or_default,
+           :accessed_page_name, :accessed_page, :valid_user_has_access?,
+           "has_access?".to_sym, "current_user_has_access?".to_sym if respond_to? :helper_method
     end
 
 
@@ -50,6 +52,10 @@ module Secure
 
     def accessed_page
       "#{controller_name}/#{action_name}"
+    end
+
+    def valid_user_has_access?(uri, options=nil)
+      logged_in? and current_user_has_access?(uri, options)
     end
 
     # called from a engine to check access with status

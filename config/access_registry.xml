@@ -189,21 +189,23 @@
     </resource>
 
 <!--========================= RESOURCE REGISTRY  ================================ -->
-    <!--============== PasswordResets Menu  ========== -->
-    <resource secured="false">
-        <uri>password_resets/password_resets</uri>
-        <description>PasswordResets Menu - PasswordReset</description>
+    <!--============== System Menu  ========== -->
+    <resource secured="true">
+        <uri>#Administration</uri>
+        <description>Administration Menu - Title</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Clients.Action.Create</authorizedRole>
-                <authorizedRole>Clients.Action.Read</authorizedRole>
-                <authorizedRole>Clients.Action.Update</authorizedRole>
-                <authorizedRole>Clients.Action.Delete</authorizedRole>
+                <authorizedRole>Users.Action.Create</authorizedRole>
+                <authorizedRole>Users.Action.Read</authorizedRole>
+                <authorizedRole>Users.Action.Update</authorizedRole>
+                <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
+
+    <!--============== PasswordResets Process  ========== -->
     <resource secured="false">
         <uri>password_resets/edit</uri>
         <description>PasswordResets Action - Edit</description>
@@ -249,21 +251,6 @@
         </permission>
     </resource>
 
-    <!--============== Users Menu  ========== -->
-    <resource secured="true">
-        <uri>users/users</uri>
-        <description>Top Menu Users - Users</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Users.Action.Create</authorizedRole>
-                <authorizedRole>Users.Action.Read</authorizedRole>
-                <authorizedRole>Users.Action.Update</authorizedRole>
-                <authorizedRole>Users.Action.Delete</authorizedRole>
-                <authorizedRole>Developer.Access.Status</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
     <!--============== Users Pages  ========== -->
     <resource secured="true">
         <uri>users/index</uri>
@@ -368,34 +355,6 @@
         <uri>pages/about</uri>
         <description>About</description>
     </resource>
-
-    <!--=========================  PROTECTED TASK LINKS   ============================ -->
-  <resource>
-    <uri>users</uri>
-    <description>Individual Staff Members.</description>
-    <permission type="CREATE">
-      <authorizedRoles>
-        <authorizedRole>Users.Action.Create</authorizedRole>
-      </authorizedRoles>
-    </permission>
-    <permission type="READ">
-      <authorizedRoles>
-        <authorizedRole>Users.Action.Read</authorizedRole>
-      </authorizedRoles>
-    </permission>
-    <permission type="UPDATE">
-      <authorizedRoles>
-        <authorizedRole>Users.Action.Update</authorizedRole>
-      </authorizedRoles>
-    </permission>
-    <permission type="DELETE">
-      <authorizedRoles>
-        <authorizedRole>Users.Action.Delete</authorizedRole>
-        <authorizedRole>Developer.Access.Status</authorizedRole>
-        <authorizedRole>EmployeePrimary</authorizedRole>
-      </authorizedRoles>
-    </permission>
-  </resource>
 
     <!--=========================  DEVELOPMENT RESOURCES  ============================ -->
   <resource secured="true">
