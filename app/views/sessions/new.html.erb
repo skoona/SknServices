@@ -1,6 +1,6 @@
 <% provide(:title, "Sign in") %>
 
-<%= simple_form_for :session, url: sessions_path, :html => { :class => 'form-horizontal' } do |f| %>
+<%= simple_form_for :session, url: sessions_path, :html => { :class => 'form-horizontal form' } do |f| %>
     <fieldset>
         <legend class="controls"><h3>Please sign in</h3></legend>
       <div class="form-group">
@@ -30,7 +30,7 @@
       </div>
       <div class="button-group">
           <div class="controls">
-              <%= f.button :submit, "Sign in", :class => "btn btn-large btn-primary" %>
+              <%= f.button :submit, "Sign in", :class => "submit" %>
           </div>
       </div>
       </fieldset>

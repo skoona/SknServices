@@ -89,6 +89,7 @@ img {
   @extend .text-center;
   }
 .form {
+  @extend .col-md-offset-3;
   @extend .col-md-6;
   }
 .form-centered {
