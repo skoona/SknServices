@@ -2,7 +2,7 @@
 
 <section class="col-md-offset-2 col-md-8">
     <h2>About SknService</h2>
-    <%= image_tag("AccessProfile-ContentProfile.png", alt: "Main Path", class: "first-slide") %>
+    <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "first-slide") %>
     <p class="lead">
         SknService application project exists to explore Authentication and Authorization services.
         With additional focus on content-based authorization using expanded UserProfile Permission properties.
@@ -43,10 +43,17 @@
             <h5>Content-based Authorization Specification</h5>
             <dl class="dl-horizontal">
                 <dt>Key/Value tuple where:</dt>
-                    <dd>key is an encoded string: &lt;entity-type&gt;&lt;entity-id&gt;</dd>
-                    <dd>value is list of &lt;identities&gt; the user shall access.</dd>
-                    <dd>&nbsp;</dd>
-                    <dd>Each User's UserProfile can have many of these Authorization tuples associated.</dd>
+                    <dd>key is a single record for each user labeled ContentProfile.</dd>
+                    <dd>value is collection of associated ContentProfileEntry(s).</dd>
+                    <dd>Content Profiles are indentified by an unique token assigned by the authentication service.</dd>
+                <dt>Profile: One</dt>
+                    <dd>key is an unique combination of: &lt;UUID&gt;/&lt;ProfileType&gt;</dd>
+                    <dd>value is collection of &lt;ProfileEntry&gt; the user shall access.</dd>
+                    <dd>Each User has only one of these.</dd>
+                <dt>Profile Entry: Many</dt>
+                    <dd>key is unique combination of: &lt;ContentType&gt;/&lt;EntityType&gt;/&lt;EntityTypeOpts&gt;</dd>
+                    <dd>value is collection of &lt;ContentTypeOpts&gt; the user shall access.</dd>
+                    <dd>Each User can have many of these.</dd>
             </dl>
         </div>
     </div>
