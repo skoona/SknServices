@@ -30,3 +30,7 @@ rails generate model NAME [field[:type][:index] field[:type][:index]] [options]
 
 
 rails g model Users username:string:index name:string email:string password:digest remember_token:string:index password_reset_token:string password_reset_date:datetime role_groups:string roles:string active:boolean file_access_token:string
+
+
+careful with this command, but it could help when 'TypeError: incompatible marshal file format (can't be read)' happens
+$ git clean -d -x -f
