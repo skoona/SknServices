@@ -1,66 +1,75 @@
 <% provide(:title, accessed_page_name) %>
 
-<section class="col-md-offset-2 col-md-8">
-    <h2>About SknService</h2>
-    <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "first-slide") %>
-    <p class="lead">
-        SknService application project exists to explore Authentication and Authorization services.
-        With additional focus on content-based authorization using expanded UserProfile Permission properties.
-    </p>
-    <h4>Users must first logon before accessing a secured resource.</h4>
-    <p>
-        Authentication is evaluated with every page request, except for images,
-        javascript, and css script files.  Token-based single signon is supported, along with a local Signin page.
-        Local Signin includes the popular <em>remember me</em>, and <em>reset my password</em> features
-        via secure email.
-    </p>
-    <h4>All secured page elements shall be assigned an unique id, called URI, by a developer.</h4>
-    <p>
-        Authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and
-        for each <em>showable data element</em>.  Page Access authorization is automated by examining the
-        the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
-        authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
-        have two levels of authorization available; Clickable, and content-based
-        authorization using the expanded UserProfile permissions, both use the AccessRegistry.
-    </p>
-    <div class="panel panel-info">
-        <div class="panel-body">
-            <p>
-                A user might have general access to the Account page which could list five
-                sensitive documents types, but is only allowed to view two document types for that specific
-                account.  Content-based authorization requires a document-type permissions list by account, to
-                enforce access restrictions.
-            </p>
+
+<section class="container">
+
+    <section>
+        <h2>About SknService</h2>
+
+        <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "large-image") %>
+    </section>
+
+    <section>
+        <p class="lead">
+            SknService application project exists to explore Authentication and Authorization services.
+            With additional focus on content-based authorization using expanded UserProfile Permission properties.
+        </p>
+        <h4>Users must first logon before accessing a secured resource.</h4>
+        <p>
+            Authentication is evaluated with every page request, except for images,
+            javascript, and css script files.  Token-based single signon is supported, along with a local Signin page.
+            Local Signin includes the popular <em>remember me</em>, and <em>reset my password</em> features
+            via secure email.
+        </p>
+        <h4>All secured page elements shall be assigned an unique id, called URI, by a developer.</h4>
+        <p>
+            Authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and
+            for each <em>showable data element</em>.  Page Access authorization is automated by examining the
+            the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
+            authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
+            have two levels of authorization available; Clickable, and content-based
+            authorization using the expanded UserProfile permissions, both use the AccessRegistry.
+        </p>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <p>
+                    A user might have general access to the Account page which could list five
+                    sensitive documents types, but is only allowed to view two document types for that specific
+                    account.  Content-based authorization requires a document-type permissions list by account, to
+                    enforce access restrictions.
+                </p>
+            </div>
         </div>
-    </div>
-    <h4>Authorization shall consider business entities when determining access restrictions.</h4>
-    <p>
-        Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization outcomes.
-        It first identifies access authorization to a specific business entity. Then specific access, by type, to secure objects related to that entity.
-    </p>
-    <div class="panel panel-info">
-        <div class="panel-body">
-            <h5>Content-based Authorization Specification</h5>
-            <dl class="dl-horizontal">
-                <dt>Key/Value tuple where:</dt>
+        <h4>Authorization shall consider business entities when determining access restrictions.</h4>
+        <p>
+            Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization outcomes.
+            It first identifies access authorization to a specific business entity. Then specific access, by type, to secure objects related to that entity.
+        </p>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h5>Content-based Authorization Specification</h5>
+                <dl class="dl-horizontal">
+                    <dt>Key/Value tuple where:</dt>
                     <dd>key is a single record for each user labeled ContentProfile.</dd>
                     <dd>value is collection of associated ContentProfileEntry(s).</dd>
                     <dd>Content Profiles are indentified by an unique token assigned by the authentication service.</dd>
-                <dt>Profile: One</dt>
+                    <dt>Profile: One</dt>
                     <dd>key is an unique combination of: &lt;UUID&gt;/&lt;ProfileType&gt;</dd>
                     <dd>value is collection of &lt;ProfileEntry&gt; the user shall access.</dd>
                     <dd>Each User has only one of these.</dd>
-                <dt>Profile Entry: Many</dt>
+                    <dt>Profile Entry: Many</dt>
                     <dd>key is unique combination of: &lt;ContentType&gt;/&lt;EntityType&gt;/&lt;EntityTypeOpts&gt;</dd>
                     <dd>value is collection of &lt;ContentTypeOpts&gt; the user shall access.</dd>
                     <dd>Each User can have many of these.</dd>
-            </dl>
+                </dl>
+            </div>
         </div>
-    </div>
-    <p>
-        AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
-        application to access role strings; which could be externally administered via LDAP or SQL.  The
-        AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
-        also could be administered via LDAP or SQL.
-    </p>
+        <p>
+            AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
+            application to access role strings; which could be externally administered via LDAP or SQL.  The
+            AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
+            also could be administered via LDAP or SQL.
+        </p>
+    </section>
+
 </section>
