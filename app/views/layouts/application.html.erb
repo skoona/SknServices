@@ -24,17 +24,23 @@
     </header>
 
     <main role="main">
-       <%= render 'layouts/messages' %>
+       <section class="col-md-8">
+        <%= render 'layouts/messages' %>
+       </section>
 
-       <%= yield %>
+       <section class="col-md-10">
+        <%= yield %>
+       </section>
 
-       <div class="row col-md-offset-1 col-md-10">
+       <section class="col-md-9">
          <%= debug(params) if Rails.env.development? %>
-      </div>
+       </section>
     </main>
 
+  <!--
     <footer class="footer">
       <%= render 'layouts/footer' %>
     </footer>
+  -->
   </body>
 </html>

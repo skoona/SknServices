@@ -34,3 +34,4 @@ rails g model Users username:string:index name:string email:string password:dige
 
 careful with this command, but it could help when 'TypeError: incompatible marshal file format (can't be read)' happens
 $ git clean -d -x -f
+
