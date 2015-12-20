@@ -20,7 +20,7 @@
                         <% if valid_user_has_access?('users/new') %>
                             <li class="<%= menu_active?('users/new') %>">
                                 <%= link_to new_user_path do %>
-                                    <i class="icon-user"></i>
+                                    <i class="glyphicon glyphicon-user"></i>
                                     <span>&nbsp;Add user</span>
                                 <% end %>
                             </li>
@@ -29,7 +29,7 @@
                         <% if valid_user_has_access?('users/index') %>
                             <li class="<%= menu_active?('users/index') %>">
                                 <%= link_to users_path do %>
-                                    <i class="icon-list"></i>
+                                    <i class="glyphicon glyphicon-list"></i>
                                     <span>&nbsp;All users</span>
                                 <% end %>
                             </li>
@@ -56,8 +56,11 @@
                 end
             %></li>
         </ul>
-        <% if valid_user_has_access?('/signin') %>
-            <p class="navbar-text pull-right">Signed in as <a href="<%= user_path(current_user) %>"><span><i class="icon-user"></i>&nbsp;<%= current_user.name %></span></a></p>
+        <% if logged_in? %>
+            <p class="navbar-text pull-right">Signed in as
+                <a href="<%= user_path(current_user) %>">
+                <span><i class="glyphicon glyphicon-user"></i>&nbsp;<%= current_user.name %></span></a>
+            </p>
         <% end %>
     </div>
   </div>

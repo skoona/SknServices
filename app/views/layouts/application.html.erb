@@ -17,22 +17,20 @@
   </head>
 
   <body data-controller-name="<%= controller_name %>" data-controller-action="<%= action_name %>">  <%# Identifies each page so JS can act when wanted %>
-    <header>
-      <nav class="navbar navbar-default navbar-fixed-top">
-        <%= render 'layouts/navigation' %>
-      </nav>
-    </header>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <%= render 'layouts/navigation' %>
+    </nav>
 
     <main role="main">
-       <section class="col-md-8">
+       <section>
         <%= render 'layouts/messages' %>
        </section>
 
-       <section class="col-md-10">
+       <section>
         <%= yield %>
        </section>
 
-       <section class="col-md-9">
+       <section>
          <%= debug(params) if Rails.env.development? %>
        </section>
     </main>
