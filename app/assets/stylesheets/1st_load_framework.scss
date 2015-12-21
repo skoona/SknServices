@@ -23,7 +23,7 @@ $navbar-default-bg: rgba(0, 21, 252, 0.27);
   font-size: $font-size-base;
  }
 
-/* Sticky footer styles
+/* my custom page
 -------------------------------------------------- */
 html {
   position: relative;
@@ -35,6 +35,30 @@ body {
   /* Margin bottom by footer height */
   //  margin-bottom: 60px;
  }
+main {
+  @extend .container;
+  background-color: #eee;
+  padding-bottom: 80px;
+  width: 100%;
+  margin-top: 51px; // accommodate the navbar
+ }
+section {
+  @extend .row;
+  margin-top: 6px;
+  overflow: auto;
+ }
+textarea {
+  resize: vertical;
+ }
+.center {
+  text-align: center;
+ }
+.center h1 {
+  margin-bottom: 10px;
+ }
+
+/* Sticky footer styles
+ -------------------------- */
 .footer {
   position: absolute;
   bottom: 0;
@@ -44,6 +68,35 @@ body {
   padding-top: 6px;
   background-color: #eee;
  }
+
+/* typography
+ ---------------------- */
+/* HOLDER
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1;
+  }
+
+  h1 {
+    font-size: 3em;
+    letter-spacing: -2px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 1.2em;
+    letter-spacing: -1px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: normal;
+    color: #777;
+  }
+
+  p {
+    font-size: 1.1em;
+    line-height: 1.7em;
+  }
+*/
 
 /* Custom page CSS
 -------------------------------------------------- */
@@ -62,6 +115,7 @@ body > .container {
 code {
   font-size: 80%;
   }
+
 
 /* make all images responsive by default */
 img {
@@ -106,19 +160,6 @@ img {
   @extend .btn;
   @extend .btn-primary;
   @extend .btn-lg;
-  }
-// apply styles to HTML elements
-// to make views framework-neutral
-main {
-  @extend .container;
-  background-color: #eee;
-  padding-bottom: 80px;
-  width: 100%;
-  margin-top: 51px; // accommodate the navbar
-  }
-section {
-  @extend .row;
-  margin-top: 6px;
   }
 
 /* ----- SimpleForm Styles ----- */

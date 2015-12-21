@@ -8,48 +8,37 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <%= link_to home_path, class: " navbar-brand" do %>
-        <%= logo() %>
+      <%= link_to home_path, class: "navbar-brand" do %>
+        <%= logo("logo") %>
       <% end %>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-            <% if valid_user_has_access?('#Administration') %>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <% if valid_user_has_access?('users/new') %>
-                            <li class="<%= menu_active?('users/new') %>">
-                                <%= link_to new_user_path do %>
-                                    <i class="glyphicon glyphicon-user"></i>
-                                    <span>&nbsp;Add user</span>
-                                <% end %>
-                            </li>
-                        <% end %>
-
-                        <% if valid_user_has_access?('users/index') %>
-                            <li class="<%= menu_active?('users/index') %>">
-                                <%= link_to users_path do %>
-                                    <i class="glyphicon glyphicon-list"></i>
-                                    <span>&nbsp;All users</span>
-                                <% end %>
-                            </li>
-                        <% end %>
-                    </ul>
-                </li>
-            <% end %>
+            <%= nav_link("About", about_path) %>
         </ul>
+
+        <% if valid_user_has_access?('#Administration') %>
         <ul class="nav navbar-nav">
-            <li class="<%= menu_active?('pages/about') %>">
-                <%= link_to "About",  about_path %>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <% if valid_user_has_access?('users/new') %>
+                        <%= nav_link("Add User", new_user_path) %>
+                    <% end %>
+                </ul>
             </li>
         </ul>
+        <% end %>
+
+        <% if logged_in? %>
+        <ul class="nav navbar-nav">
+            <%= nav_link_icon("glyphicon-list", "All Users", users_path) %>
+        </ul>
+        <% end %>
 
         <ul class="nav navbar-nav navbar-right">
             <% if valid_user_has_access?('users/show') %>
-                <li class="<%= menu_active?('users/show') %>">
-                    <%= link_to "Profile", user_path(current_user) %>
-                </li>
+              <%= nav_link "Profile", user_path(current_user) %>
             <% end %>
             <li><%=
                 link_to_if(logged_in?, "Sign out", signout_path, method: :delete) do

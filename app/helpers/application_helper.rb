@@ -13,8 +13,8 @@ module ApplicationHelper
     active ? 'active' : ''
   end
 
-  def logo
-    logo = image_tag("AvatarSMP.gif", alt: "Skoona Services", class: "img-responsive")
+  def logo(logo_id="logo")
+    logo = image_tag("AvatarSMP.gif", id: logo_id, alt: "Skoona Services", class: "img-responsive")
   end
 
   # Return title on a per-page basis.
@@ -42,14 +42,26 @@ module ApplicationHelper
 
   def nav_link(link_text, link_path, http_method=nil)
     class_name = current_page?(link_path) ? 'active' : ''
+    opts = http_method.nil? ? {method: http_method} : {}
 
     content_tag(:li, class: class_name) do
-      if http_method
-        link_to(link_text, link_path, method: http_method)
-      else
-        link_to(link_text, link_path)
+      link_to(link_text,link_path, opts)
+    end
+  end
+
+  def nav_link_icon(icon, link_text, link_path, http_method=nil)
+    class_name = current_page?(link_path) ? 'active' : ''
+    opts = http_method.nil? ? {method: http_method} : {}
+
+    content_tag(:li, class: class_name) do
+      link_to(link_path, opts) do
+        content_tag(:span) do
+          keep = content_tag("i", nil, {class: "glyphicon #{icon}"})
+          keep += "&nbsp;#{link_text}".html_safe
+          keep
+        end
       end
     end
   end
-  
+
 end # End module
