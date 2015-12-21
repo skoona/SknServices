@@ -28,11 +28,7 @@ module Secure
         unless logged_in?
           store_target_location
           Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to Sign in page")
-          if flash.empty?
-            redirect_to signin_url, :alert => "You must sign in before accessing the '#{accessed_page_name}' page."
-          else
-            redirect_to signin_url
-          end
+          redirect_to signin_url, :alert => "You must sign in before accessing the '#{accessed_page_name}' page."
         else
           # This is the sole page level access control, based on controller/action URI entries in the access registry
           redirect_to home_url, :alert => "You are not authorized to access the #{accessed_page_name} page!" unless current_user_has_access?(accessed_page)

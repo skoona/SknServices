@@ -10,7 +10,7 @@
         <li>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></li>
     </ul>
     <ul class="nav nav-pills placeholder">
-        <% if has_access?('users/edit') %>
+        <% if has_access?('users/edit') and current_user.username.eql?(user.username) %>
             <li><%= link_to edit_user_path(user) do %>
                     <span class="badge">Edit</span>
                 <% end %>
@@ -22,7 +22,7 @@
                 <% end %>
             </li>
         <% end %>
-        <li><%= link_to users_path()  do %>
+        <li><%= link_to :back  do %>
                 <span class="badge">Back</span>
             <% end %>
         </li>

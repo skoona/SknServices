@@ -23,7 +23,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <% if valid_user_has_access?('users/new') %>
-                        <%= nav_link("Add User", new_user_path) %>
+                        <%= nav_link_icon("glyphicon-user", "Add User", new_user_path) %>
                     <% end %>
                 </ul>
             </li>
@@ -32,14 +32,11 @@
 
         <% if logged_in? %>
         <ul class="nav navbar-nav">
-            <%= nav_link_icon("glyphicon-list", "All Users", users_path) %>
+            <%= nav_link("All Users", users_path) %>
         </ul>
         <% end %>
 
         <ul class="nav navbar-nav navbar-right">
-            <% if valid_user_has_access?('users/show') %>
-              <%= nav_link "Profile", user_path(current_user) %>
-            <% end %>
             <li><%=
                 link_to_if(logged_in?, "Sign out", signout_path, method: :delete) do
                 link_to "Sign in", signin_path

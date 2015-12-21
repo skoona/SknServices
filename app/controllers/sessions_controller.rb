@@ -3,6 +3,7 @@ class SessionsController < ActionController::Base
   layout "application"
 
   def new
+    # flash.clear
     flash.now.alert = warden.message if warden.message.present?
   end
 

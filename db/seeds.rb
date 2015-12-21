@@ -12,8 +12,8 @@ user1 = {
     email:                 "skoona@gmail.com",
     password:                "developer99",
     password_confirmation:   "developer99",
-    role_groups:             ["InternalStaff"],
-    roles:                   ["EmployeePrimary","Developer.Access.Status"]
+    role_groups:             ["InternalStaff", "Services.Action.Admin", "Developer.Access.Status"],
+    roles:                   ["EmployeePrimary"]
 }
 
 user2 = {
@@ -22,8 +22,12 @@ user2 = {
     email:                 "appdev@brotherhoodmutual.com",
     password:                "nobugs",
     password_confirmation:   "nobugs",
-    role_groups:             ["InternalStaff"],
-    roles:                   ["EmployeeSecondary"]
+    role_groups:             ["InternalStaff", "Services.Action.ResetPassword"],
+    roles:                   ["EmployeeSecondary",
+                              "Users.Action.Update",
+                              "Users.Action.Edit",
+                              "Users.Action.Read",
+                              "Service.Action.ResetPassword"]
 }
 
 User.delete_all

@@ -43,7 +43,7 @@ RSpec.feature "Authentication process for all users." do
 
     scenario "Unauthorized access is redirected to Home page with unauthorized message." do
       #user = FactoryGirl.create(:manager)
-      visit users_url
+      visit new_user_url
       expect(current_path).to eq signin_path
       expect(page).to have_notice_message("Please sign in to continue.")
       fill_in 'Username', :with => user.username
@@ -95,7 +95,7 @@ RSpec.feature "Authentication process for all users." do
       visit signin_url
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
-      expect(page).to have_alert_message("Invalid Credentials.")
+      expect(page).to have_alert_message("Your Credentials are invalid or expired.")
     end
 
   end

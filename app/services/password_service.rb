@@ -11,7 +11,7 @@ class PasswordService
 	end
 
 	def reset_password(params)
-		user = User.find(params[:id])
+		user = User.find(params[:id])  # id is a :password_reset_token
 		if user.password_reset_date > 2.hours.ago        # MEANS LESS THAN TWO HOURS AGO
 			 user.update!(permitted(params))
        user.reload

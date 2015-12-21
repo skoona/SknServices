@@ -6,7 +6,7 @@ class PasswordResetsController < ApplicationController
 
   def create
 		@page_controls = password_service.reset_requested(params)
-		redirect_to signin_url, notice: @page_controls.message
+		redirect_to home_url, notice: @page_controls.message
   end
 
   def edit

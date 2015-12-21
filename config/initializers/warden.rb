@@ -63,13 +63,6 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
 end
 
-##
-# Injects the new action to match SessionsController
-Warden::Manager.before_failure do |env, opts|
-  #Rails.logger.debug " Warden::Manager.before_failure(ONLY) session.id=#{request.session_options[:id]}"
-  env['action_dispatch.request.path_parameters'][:action] = "new"
-end
-
 class Warden::SessionSerializer
   ##
   # Save the User id to session store
@@ -93,6 +86,7 @@ end
 # Use the fields from the Signin page to authorize user
 Warden::Strategies.add(:password) do
   def valid?
+    return false if request.get?
     params["session"].has_key?("username") and params["session"].has_key?("password") and
         params["session"]["username"].present? and params["session"]["password"].present?
   end
@@ -100,6 +94,8 @@ Warden::Strategies.add(:password) do
   def authenticate!
     user = User.find_by_username(params["session"]["username"]).try(:authenticate, params["session"]["password"])
     (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Invalid username or password.")
+  rescue
+    fail!("Your Credentials are invalid or expired.")
   end
 end
 
@@ -107,6 +103,7 @@ end
 # Use the remember_token from the requests cookies to authorize user
 Warden::Strategies.add(:remember_token) do
   def valid?
+    return false if request.get?
     request.cookies["remember_token"].present?
   end
 
@@ -114,7 +111,9 @@ Warden::Strategies.add(:remember_token) do
     remember_token = request.cookies["remember_token"]
     token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token.present?
     user = User.fetch_existing_user( token )
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Remember Me token is invalid or expired.")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired.")
+  rescue
+    fail!("Your Credentials are invalid or expired.")
   end
 end
 
@@ -126,10 +125,9 @@ Warden::Strategies.add(:not_authorized) do
   end
 
   def authenticate!
-    fail!("Invalid Credentials.")
+    fail!("Your Credentials are invalid or expired.")
   end
 end
-
 
 ##
 # IF NO CURRENT USER PRESENT
@@ -164,6 +162,22 @@ Warden::Manager.on_request do |proxy|
 end
 
 ##
+# Called in no user has be fetch and set as the current user
+Warden::Manager.after_failed_fetch do |user,auth,opts|
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"
+  if auth.cookies["remember_token"].present?
+    auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
+  end
+end
+
+##
+# Injects the new action to match SessionsController
+Warden::Manager.before_failure do |env, opts|
+  Rails.logger.debug " Warden::Manager.before_failure(ONLY) session.id=#{env['warden'].request.session_options[:id]}"
+  env['action_dispatch.request.path_parameters'][:action] = "new"
+end
+
+##
 # Set remember_token only after a signin
 Warden::Manager.after_authentication do |user,auth,opts|
   remember = false
@@ -183,7 +197,7 @@ end
 # Logout the user object
 Warden::Manager.before_logout do |user,auth,opts|
   user.disable_authentication_controls unless user.nil?
-  auth.cookies.delete '_ProjectServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
+  auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
   auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   auth.reset_session!
   Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"

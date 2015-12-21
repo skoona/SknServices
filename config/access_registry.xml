@@ -195,10 +195,7 @@
         <description>Administration Menu - Title</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Users.Action.Create</authorizedRole>
-                <authorizedRole>Users.Action.Read</authorizedRole>
-                <authorizedRole>Users.Action.Update</authorizedRole>
-                <authorizedRole>Users.Action.Delete</authorizedRole>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
@@ -211,7 +208,7 @@
         <description>PasswordResets Action - Edit</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Clients.Action.Update</authorizedRole>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
@@ -222,7 +219,7 @@
         <description>PasswordResets Action - Update</description>
         <permission type="UPDATE">
             <authorizedRoles>
-                <authorizedRole>Clients.Action.Update</authorizedRole>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
@@ -233,7 +230,7 @@
         <description>PasswordResets Action - New</description>
         <permission type="CREATE">
             <authorizedRoles>
-                <authorizedRole>Clients.Action.Create</authorizedRole>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
@@ -244,7 +241,7 @@
         <description>PasswordResets Action - Create</description>
         <permission type="CREATE">
             <authorizedRoles>
-                <authorizedRole>Clients.Action.Create</authorizedRole>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
@@ -285,6 +282,7 @@
         <description>User Action - Edit</description>
         <permission type="UPDATE">
             <authorizedRoles>
+                <authorizedRole>Users.Action.Edit</authorizedRole>
                 <authorizedRole>Users.Action.Update</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
@@ -296,6 +294,7 @@
         <description>User Action - Update</description>
         <permission type="UPDATE">
             <authorizedRoles>
+                <authorizedRole>Users.Action.Edit</authorizedRole>
                 <authorizedRole>Users.Action.Update</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
@@ -308,6 +307,7 @@
         <permission type="CREATE">
             <authorizedRoles>
                 <authorizedRole>Users.Action.Create</authorizedRole>
+                <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
@@ -319,6 +319,7 @@
         <permission type="CREATE">
             <authorizedRoles>
                 <authorizedRole>Users.Action.Create</authorizedRole>
+                <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
@@ -330,6 +331,7 @@
         <permission type="DELETE">
             <authorizedRoles>
                 <authorizedRole>Users.Action.Delete</authorizedRole>
+                <authorizedRole>Users.Action.Create</authorizedRole>
                 <authorizedRole>Developer.Access.Status</authorizedRole>
                 <authorizedRole>EmployeePrimary</authorizedRole>
             </authorizedRoles>
