@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   before_save { |user|
     user.email = user.email.downcase
     user.username = user.username.downcase
-    user.generate_token(:remember_token)
+    user.generate_unique_token(:remember_token)
   }
 
   serialize :roles, Array
@@ -48,9 +48,9 @@ class User < ActiveRecord::Base
     name
   end
 
-  def generate_token(column)
+  def generate_unique_token(column)
     begin
-      self[column] = SecureRandom.urlsafe_base64
+      self[column] = User.get_new_secure_token
     end while User.exists?(column => self[column])
   end
 

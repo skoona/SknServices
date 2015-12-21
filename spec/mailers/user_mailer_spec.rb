@@ -5,7 +5,7 @@ RSpec.describe UserMailer do
   describe "password_reset" do
     let(:mail) { UserMailer.password_reset(user) }
     before :each do
-      user.generate_token(:password_reset_token)
+      user.generate_unique_token(:password_reset_token)
       user.save
     end
 

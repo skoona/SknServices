@@ -17,6 +17,7 @@ remote_log:
 
 security:
   admin_role: EmployeePrimary
+  extra_digest_strength: 3
   verify_login_after_msecs: 7200000
 
 standards:

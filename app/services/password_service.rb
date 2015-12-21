@@ -57,7 +57,7 @@ class PasswordService
 	end
 
   def send_password_reset(user)
-    user.generate_token(:password_reset_token)
+    user.generate_unique_token(:password_reset_token)
     user.password_reset_date = Time.zone.now
     user.save!
     password_mailer(user)

@@ -17,17 +17,13 @@
   </head>
 
   <body data-controller-name="<%= controller_name %>" data-controller-action="<%= action_name %>">  <%# Identifies each page so JS can act when wanted %>
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <%= render 'layouts/navigation' %>
-    </nav>
+    <%= render 'layouts/navigation' %>
 
     <main role="main">
-       <section>
-        <%= render 'layouts/messages' %>
-       </section>
+       <%= render 'layouts/messages' %>
 
        <section>
-        <%= yield %>
+         <%= yield %>
        </section>
 
        <section>
@@ -36,9 +32,7 @@
     </main>
 
   <!--
-    <footer class="footer">
       <%= render 'layouts/footer' %>
-    </footer>
   -->
   </body>
 </html>

@@ -25,9 +25,34 @@ module Secure
         user_object.disable_authentication_controls if user_object.present?
       end
 
+      def get_new_secure_digest(token)
+        BCrypt::Password.create(token, (BCrypt::Engine::MIN_COST + Settings.security.extra_digest_strength)) # Good and Strong
+      end
+
+      def get_new_secure_token
+        SecureRandom.urlsafe_base64
+      end
+
+      # TODO: Get a Token
+      #   rememberme_token = User.get_new_secure_token()
+      # TODO: Persist the Token as an encrypted digest
+      #   update_attribute(:remember_digest, User.get_new_secure_digest(rememberme_token))
+      # TODO: Authenticate the Token against its Digest
+      #   User.is_token_authentic?(digest,token)
+
+
       def users_store
         Secure::ObjectStorageContainer.instance
       end
+    end
+
+    # returns true/false if any <column> digest matches token
+    # note: Password.new(digest) decrypts digest
+    def is_token_authentic?(token)
+      attribute_names.select do |attr|
+        attr.split("_").last.eql?("digest") ?
+            BCrypt::Password.new(attr).is_password?(token) : false
+      end.any?    # any? returns true/false if any digest matched
     end
 
     # Warden will call this methods
