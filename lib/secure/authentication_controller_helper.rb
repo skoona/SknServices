@@ -33,6 +33,8 @@ module Secure
           # This is the sole page level access control, based on controller/action URI entries in the access registry
           redirect_to home_url, :alert => "You are not authorized to access the #{accessed_page_name} page!" unless current_user_has_access?(accessed_page)
         end
+      else
+        flash.delete(:notice) if flash.notice.eql?("Please sign in to continue.")
       end
       Rails.logger.debug("Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
     end

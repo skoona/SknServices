@@ -35,3 +35,15 @@ rails g model Users username:string:index name:string email:string password:dige
 careful with this command, but it could help when 'TypeError: incompatible marshal file format (can't be read)' happens
 $ git clean -d -x -f
 
+Rails 3.1 already added a feature that automatically generate indexes for associations, by simply invoking:
+
+rails g scaffold Comment post:references title:string body:text
+With the above, Rails will detect that post is a reference and it will automatically 1)
+add a post_id integer column, 2) add an association to your model and 3) add an index to
+that column.
+
+ allows you to specify which columns should have an (unique) index. So one could write:
+
+rails g scaffold Person name:index email:uniq
+And the generator will automatically generate an index for name and an unique index for e-mail. There are other features there as well, so don’t forget to checkout the CHANGELOG.
+

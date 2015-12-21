@@ -37,6 +37,7 @@
 # SEQUENCES: A
 # deserialize() remember_token from session if session and/or keys exists
 #   fetch() from Users UsersCache, set_user if found
+#   after_failed_fetch() likely caused by invalid token, clear all cookies
 # on_request() if user or excluded paths, then pass
 #   if remember_token and no user, attempt warden.authenticate() with token, which will set_user
 # ApplicationController#before_filter()  Redirect to SignIn if no user was set (save original to session)
@@ -164,7 +165,7 @@ end
 ##
 # Called in no user has be fetch and set as the current user
 Warden::Manager.after_failed_fetch do |user,auth,opts|
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) remember_token present?(#{auth.cookies["remember_token"].present?}), user=#{user.name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
   if auth.cookies["remember_token"].present?
     auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   end
