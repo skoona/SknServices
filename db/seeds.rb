@@ -43,6 +43,14 @@ u2 = User.create(user2)
 # Authorization Content Profile Initialization
 #
 ##
+ContentProfile.delete_all
+ProfileType.delete_all
+ContentProfileEntry.delete_all
+ContentTypeOpt.delete_all
+ContentType.delete_all
+TopicTypeOpt.delete_all
+TopicType.delete_all
+
 
 # {UUID/AgencyOwner} => [
 #     PAK/ProfileType    {Commission/Agency/0034 => "CommRptID,CommCsvID,ExperRptID"},
@@ -69,6 +77,14 @@ operations_cto = [
     {value: "23", description: "Illinois"}
 ]
 
+all_content_type_opts = [
+    commission_cto,
+    notification_cto,
+    operations_cto
+].flatten.uniq
+
+all_content_type_opts_recs = ContentTypeOpt.create!(all_content_type_opts)
+
 # requires: topic_type_id
 agency_tto = [
    {value: "0034", description: "Some Agency Number"},
@@ -81,10 +97,18 @@ account_tto = [
    {value: "None",   description: "All Agent Accounts"}
 ]
 # requires: topic_type_id
-LicensedStates_tto = [
+licensed_states_tto = [
    {value: "USA", description: "United States of America"},
    {value: "CAN", description: "Canada"}
 ]
+
+all_topic_type_opts = [
+    agency_tto,
+    account_tto,
+    licensed_states_tto
+].flatten.uniq
+
+all_topic_type_opts_recs = TopicTypeOpt.create!(all_topic_type_opts)
 
 ct  = [
   {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer"},
@@ -103,25 +127,64 @@ pt  = [
   {name: "AgencySecondary", description: "Limited User"}
 ]
 
+control_opts = {
+       "Commission" => commission_cto.map() {|rec| rec[:value]}.flatten,
+     "Notification" => notification_cto.map() {|rec| rec[:value]}.flatten,
+       "Operations" => operations_cto.map() {|rec| rec[:value]}.flatten,
+           "Agency" => agency_tto.map() {|rec| rec[:value]}.flatten,
+          "Account" => account_tto.map() {|rec| rec[:value]}.flatten,
+    "LicensedStates" => licensed_states_tto.map() {|rec| rec[:value]}.flatten
+}
+
+##
+# Create Type Records
+ct_recs = ContentType.create!(ct).each do |rec|
+  # find ids
+  ids = all_content_type_opts_recs.map {|item| item.id if control_opts[rec.name].include?(item.value)}.flatten.uniq
+  # set ids and save
+  rec.content_type_opt_ids=ids
+  rec.save
+  rec
+end
+tt_recs = TopicType.create!(tt).each do |rec|
+  # find ids
+  ids = all_topic_type_opts_recs.map {|item| item.id if control_opts[rec.name].include?(item.value)}.flatten.uniq
+  # set ids and save
+  rec.topic_type_opt_ids=ids
+  rec.save
+  rec
+end
+pt_recs = ProfileType.create!(pt)
+
+##
+# Make Associations
+
 cpe = [
-  {topic_value: "Commission",   content_value: [], description: '', content_type_id: '', topic_type_id: '', content_profile_id: ''},
-  {topic_value: "Notification", content_value: [], description: '', content_type_id: '', topic_type_id: '', content_profile_id: ''},
-  {topic_value: "Operations",   content_value: [], description: '', content_type_id: '', topic_type_id: '', content_profile_id: ''}
+  {topic_value: "Agency",     content_value: [], description: 'Determine which agency documents can be seen'},
+  {topic_value: "Account",    content_value: [], description: 'Determine which accounts will have notification sent'},
+  {topic_value: "LicensedStates", content_value: [], description: 'Determine which States agent may operate in.'}
 ]
 
-cp  = [{person_authenticated_key: u1.person_authenticated_key,
+cpe_recs_ids = cpe.map do |item|
+    idx = {"Agency" => "Commission", "Account" => "Notification", "LicensedStates" => "Operations"}
+    topic_rec = tt_recs.detect {|t| t.name.eql?(item[:topic_value])}
+    content_rec = ct_recs.detect {|t| t.name.eql?(idx[item[:topic_value]])}
+    rec = ContentProfileEntry.create!(item)
+    rec.content_type=content_rec
+    rec.topic_type=topic_rec
+    rec.save
+    rec.id
+end
+
+pt_rec = pt_recs.detect {|r| r.name.eql?("AgencyPrimary")}
+cp  = ContentProfile.create({person_authentication_key: u2.person_authenticated_key,
         authentication_provider: "BCrypt",
-        username: u1.username,
+        username: u2.username,
         display_name: u1.display_name,
-        email: u1.email,
-        profile_type_id: 'AgencyPrimary'}
-]
-
-
-
-
-
-
+        email: u2.email,
+        profile_type_id: pt_rec.id}
+)
+cp.content_profile_entry_ids=cpe_recs_ids
 
 
 
