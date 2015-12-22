@@ -68,16 +68,6 @@ ActiveRecord::Schema.define(version: 20151222224252) do
     t.datetime "updated_at",      null: false
   end
 
-  create_table "group_roles", force: :cascade do |t|
-    t.integer  "user_group_role_id"
-    t.integer  "user_role_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  add_index "group_roles", ["user_group_role_id"], name: "index_group_roles_on_user_group_role_id", using: :btree
-  add_index "group_roles", ["user_role_id"], name: "index_group_roles_on_user_role_id", using: :btree
-
   create_table "profile_types", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
@@ -162,8 +152,6 @@ ActiveRecord::Schema.define(version: 20151222224252) do
   add_foreign_key "content_profile_entries", "content_types"
   add_foreign_key "content_profile_entries", "topic_types"
   add_foreign_key "content_profiles", "profile_types"
-  add_foreign_key "group_roles", "user_group_roles"
-  add_foreign_key "group_roles", "user_roles"
   add_foreign_key "topic_options", "topic_type_opts"
   add_foreign_key "topic_options", "topic_types"
   add_foreign_key "user_group_roles_user_roles", "user_group_roles"

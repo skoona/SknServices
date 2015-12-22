@@ -2,39 +2,77 @@
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
 
-puts "Defining 2 Users"
-user1 = {
+puts "Defining  Users"
+users =[ {
     username:              "skoona",
-    name:                  "James Scott",
+    name:                  "Employee Primary User: Developer",
     email:                 "skoona@gmail.com",
     password:                "developer99",
     password_confirmation:   "developer99",
-    role_groups:             ["InternalStaff"],
-    roles:                   ["EmployeePrimary",
-                              "Services.Action.Developer",
-                              "Services.Action.Admin"]
-}
-
-user2 = {
-    username:              "utester1",
-    name:                  "SknService UTester1",
+    role_groups:             ["EmployeePrimary"],
+    roles:                   ["Services.Action.Developer"]
+},
+{
+    username:              "eptester",
+    name:                  "Employee Primary User",
     email:                 "appdev@brotherhoodmutual.com",
     password:                "nobugs",
     password_confirmation:   "nobugs",
-    role_groups:             ["InternalStaff"],
-    roles:                   ["EmployeeSecondary",
-                              "Users.Action.Update",
-                              "Users.Action.Edit",
-                              "Users.Action.Read",
-                              "Service.Action.ResetPassword"]
+    role_groups:             ["EmployeePrimary"],
+    roles:                   ["Services.Action.Admin"]
+},
+{
+    username:              "estester",
+    name:                  "Employee Secondary User",
+    email:                 "appdev1@brotherhoodmutual.com",
+    password:                "nobugs",
+    password_confirmation:   "nobugs",
+    role_groups:             ["EmployeeSecondary"],
+    roles:                   ["Services.Action.ResetPassword"]
+},
+{
+    username:              "aptester",
+    name:                  "Agency Primary User",
+    email:                 "appdev2@brotherhoodmutual.com",
+    password:                "nobugs",
+    password_confirmation:   "nobugs",
+    role_groups:             ["AgencyPrimary"],
+    roles:                   ["Services.Action.ResetPassword"]
+},
+{
+    username:              "astester",
+    name:                  "Agency Secondary User",
+    email:                 "appdev3@brotherhoodmutual.com",
+    password:                "nobugs",
+    password_confirmation:   "nobugs",
+    role_groups:             ["AgencySecondary"],
+    roles:                   ["Services.Action.ResetPassword"]
+},
+{
+    username:              "vptester",
+    name:                  "Vendor Long Term User",
+    email:                 "appdev4@brotherhoodmutual.com",
+    password:                "nobugs",
+    password_confirmation:   "nobugs",
+    role_groups:             ["VendorPrimary"],
+    roles:                   ["Services.Action.ResetPassword"]
+},
+{
+    username:              "vstester",
+    name:                  "Vendor Short Term User",
+    email:                 "appdev5@brotherhoodmutual.com",
+    password:                "nobugs",
+    password_confirmation:   "nobugs",
+    role_groups:             ["VendorSecondary"],
+    roles:                   ["Services.Action.ResetPassword"]
 }
+]
 
 puts "Clear existing User Table"
 User.delete_all
-u1 = User.create(user1)
-u2 = User.create(user2)
 
-puts "Two Users Created"
+urecs = User.create!(users)
+puts "Users Created #{urecs.size}"
 
 
 
@@ -173,9 +211,9 @@ cpe = [
 ]
 puts "Creating ContentProfileEntries"
 cpe_recs_ids = cpe.map do |item|
-    idx = {"Agency" => "Commission", "Account" => "Notification", "LicensedStates" => "Operations"}
+    human_choice = {"Agency" => "Commission", "Account" => "Notification", "LicensedStates" => "Operations"}
     topic_rec = tt_recs.detect {|t| t.name.eql?(item[:topic_value])}
-    content_rec = ct_recs.detect {|t| t.name.eql?(idx[item[:topic_value]])}
+    content_rec = ct_recs.detect {|t| t.name.eql?(human_choice[item[:topic_value]])}
     rec = ContentProfileEntry.create!(item)
     rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
     rec.content_type=content_rec
@@ -186,11 +224,11 @@ end
 
 puts "Creating ContentProfile"
 pt_rec = pt_recs.detect {|r| r.name.eql?("AgencyPrimary")}
-cp  = ContentProfile.create({person_authentication_key: u2.person_authenticated_key,
+cp  = ContentProfile.create({person_authentication_key: urecs[3].person_authenticated_key,
         authentication_provider: "BCrypt",
-        username: u2.username,
-        display_name: u1.display_name,
-        email: u2.email,
+        username: urecs[3].username,
+        display_name: urecs[3].display_name,
+        email: urecs[3].email,
         profile_type_id: pt_rec.id}
 )
 cp.content_profile_entry_ids=cpe_recs_ids

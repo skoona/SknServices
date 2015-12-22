@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                       :integer          not null, primary key
+#  username                 :string
+#  name                     :string
+#  email                    :string
+#  password_digest          :string
+#  remember_token           :string
+#  password_reset_token     :string
+#  password_reset_date      :datetime
+#  role_groups              :string
+#  roles                    :string
+#  active                   :boolean          default(TRUE)
+#  file_access_token        :string
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  person_authenticated_key :string
+#
+
 # Read about factories at https://github.com/thoughtbot/factory_girl
 require 'faker'
 

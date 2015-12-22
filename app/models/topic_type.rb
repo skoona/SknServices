@@ -11,7 +11,7 @@
 #
 
 class TopicType < ActiveRecord::Base
-  has_and_belongs_to_many :topic_type_opts, :join_table => :topic_option
+  has_and_belongs_to_many :topic_type_opts, :join_table => :topic_options
   has_one  :content_profile_entry, inverse_of: :topic_type
 
   validates_presence_of :name, :description

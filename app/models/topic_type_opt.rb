@@ -10,7 +10,7 @@
 #
 
 class TopicTypeOpt < ActiveRecord::Base
-  has_and_belongs_to_many :topic_types, :join_table => :topic_option
+  has_and_belongs_to_many :topic_types, :join_table => :topic_options
 
   validates_presence_of :value, :description
 end

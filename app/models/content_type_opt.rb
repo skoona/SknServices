@@ -10,7 +10,7 @@
 #
 
 class ContentTypeOpt < ActiveRecord::Base
-  has_and_belongs_to_many :content_types, :join_table => :content_option
+  has_and_belongs_to_many :content_types, :join_table => :content_options
 
   validates_presence_of :value, :description
 end
