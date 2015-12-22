@@ -1,11 +1,8 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
 
+puts "Defining 2 Users"
 user1 = {
     username:              "skoona",
     name:                  "James Scott",
@@ -32,9 +29,12 @@ user2 = {
                               "Service.Action.ResetPassword"]
 }
 
+puts "Clear existing User Table"
 User.delete_all
 u1 = User.create(user1)
 u2 = User.create(user2)
+
+puts "Two Users Created"
 
 
 
@@ -43,13 +43,14 @@ u2 = User.create(user2)
 # Authorization Content Profile Initialization
 #
 ##
-ContentProfile.delete_all
-ProfileType.delete_all
-ContentProfileEntry.delete_all
-ContentTypeOpt.delete_all
-ContentType.delete_all
-TopicTypeOpt.delete_all
-TopicType.delete_all
+puts "Clearing ContentProfile process tables"
+ContentProfileEntry.destroy_all
+ContentProfile.destroy_all
+ProfileType.destroy_all
+ContentTypeOpt.destroy_all
+ContentType.destroy_all
+TopicTypeOpt.destroy_all
+TopicType.destroy_all
 
 
 # {UUID/AgencyOwner} => [
@@ -57,7 +58,7 @@ TopicType.delete_all
 #                        {Notification/Account/99 => "AdvCancel,Cancel"},
 #                        {Operations/LicensedStates/USA => "21,30,34,45"}
 # ]                      ContentType/TopicType/TopicTypeOpts => ContentTypeOpts
-
+puts "Defining Content Options"
 # requires: content_type_id
 commission_cto = [
     {value: "68601", description: "Imageright Commision Document Type ID" },
@@ -83,8 +84,10 @@ all_content_type_opts = [
     operations_cto
 ].flatten.uniq
 
+puts "Creating Content Options"
 all_content_type_opts_recs = ContentTypeOpt.create!(all_content_type_opts)
 
+puts "Defining Topic Options"
 # requires: topic_type_id
 agency_tto = [
    {value: "0034", description: "Some Agency Number"},
@@ -108,8 +111,10 @@ all_topic_type_opts = [
     licensed_states_tto
 ].flatten.uniq
 
+puts "Creating Topic Options"
 all_topic_type_opts_recs = TopicTypeOpt.create!(all_topic_type_opts)
 
+puts "Defining Type Records"
 ct  = [
   {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer"},
   {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String"},
@@ -138,6 +143,7 @@ control_opts = {
 
 ##
 # Create Type Records
+puts "Creating Type Records"
 ct_recs = ContentType.create!(ct).each do |rec|
   # find ids
   ids = all_content_type_opts_recs.map {|item| item.id if control_opts[rec.name].include?(item.value)}.flatten.uniq
@@ -159,23 +165,26 @@ pt_recs = ProfileType.create!(pt)
 ##
 # Make Associations
 
+puts "Defining ContentProfileEntries"
 cpe = [
   {topic_value: "Agency",     content_value: [], description: 'Determine which agency documents can be seen'},
   {topic_value: "Account",    content_value: [], description: 'Determine which accounts will have notification sent'},
   {topic_value: "LicensedStates", content_value: [], description: 'Determine which States agent may operate in.'}
 ]
-
+puts "Creating ContentProfileEntries"
 cpe_recs_ids = cpe.map do |item|
     idx = {"Agency" => "Commission", "Account" => "Notification", "LicensedStates" => "Operations"}
     topic_rec = tt_recs.detect {|t| t.name.eql?(item[:topic_value])}
     content_rec = ct_recs.detect {|t| t.name.eql?(idx[item[:topic_value]])}
     rec = ContentProfileEntry.create!(item)
+    rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
     rec.content_type=content_rec
     rec.topic_type=topic_rec
     rec.save
     rec.id
 end
 
+puts "Creating ContentProfile"
 pt_rec = pt_recs.detect {|r| r.name.eql?("AgencyPrimary")}
 cp  = ContentProfile.create({person_authentication_key: u2.person_authenticated_key,
         authentication_provider: "BCrypt",
@@ -187,7 +196,7 @@ cp  = ContentProfile.create({person_authentication_key: u2.person_authenticated_
 cp.content_profile_entry_ids=cpe_recs_ids
 
 
-
+puts "Completed Creating ContentProfile Models"
 
 
 ##
@@ -195,7 +204,7 @@ cp.content_profile_entry_ids=cpe_recs_ids
 # Authorization Group and User level Roles
 # Resource Sets
 ##
-
+puts "Defining UserGroup Management process tables"
 # requires user_group_role_id: ''
 all_admin = [
     {name: "Services.Action.Admin", description: "Super User"},
@@ -293,3 +302,5 @@ result = ges.each do |grp|
   grp.user_role_ids = role_ids
   grp.save!
 end
+
+puts "Completed creating UserGroup Management process model"
