@@ -85,7 +85,7 @@ class AccessRegistry
   # Core Methods
   #
   def self.get_resource_description(resource_uri)
-    @@ar_permissions[resource_uri]["description"]
+    @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["description"] : ""
   end  
   def self.get_ar_resource_keys
     @@ar_permissions.keys

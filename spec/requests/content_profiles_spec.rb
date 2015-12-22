@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe "ContentProfiles", type: :request do
   describe "GET /content_profiles" do

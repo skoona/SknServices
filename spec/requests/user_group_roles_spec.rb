@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe "UserGroupRoles", type: :request do
   describe "GET /user_group_roles" do
