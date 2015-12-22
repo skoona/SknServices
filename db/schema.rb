@@ -11,10 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151222173809) do
+ActiveRecord::Schema.define(version: 20151222224252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "content_options", force: :cascade do |t|
+    t.integer "content_type_id"
+    t.integer "content_type_opt_id"
+  end
+
+  add_index "content_options", ["content_type_id"], name: "index_content_options_on_content_type_id", using: :btree
+  add_index "content_options", ["content_type_opt_id"], name: "index_content_options_on_content_type_opt_id", using: :btree
 
   create_table "content_profile_entries", force: :cascade do |t|
     t.string   "topic_value"
@@ -48,12 +56,9 @@ ActiveRecord::Schema.define(version: 20151222173809) do
   create_table "content_type_opts", force: :cascade do |t|
     t.string   "value"
     t.string   "description"
-    t.integer  "content_type_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
-
-  add_index "content_type_opts", ["content_type_id"], name: "index_content_type_opts_on_content_type_id", using: :btree
 
   create_table "content_types", force: :cascade do |t|
     t.string   "name"
@@ -80,15 +85,20 @@ ActiveRecord::Schema.define(version: 20151222173809) do
     t.datetime "updated_at",  null: false
   end
 
+  create_table "topic_options", force: :cascade do |t|
+    t.integer "topic_type_id"
+    t.integer "topic_type_opt_id"
+  end
+
+  add_index "topic_options", ["topic_type_id"], name: "index_topic_options_on_topic_type_id", using: :btree
+  add_index "topic_options", ["topic_type_opt_id"], name: "index_topic_options_on_topic_type_opt_id", using: :btree
+
   create_table "topic_type_opts", force: :cascade do |t|
     t.string   "value"
     t.string   "description"
-    t.integer  "topic_type_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
-
-  add_index "topic_type_opts", ["topic_type_id"], name: "index_topic_type_opts_on_topic_type_id", using: :btree
 
   create_table "topic_types", force: :cascade do |t|
     t.string   "name"
@@ -146,14 +156,16 @@ ActiveRecord::Schema.define(version: 20151222173809) do
   add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
   add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
+  add_foreign_key "content_options", "content_type_opts"
+  add_foreign_key "content_options", "content_types"
   add_foreign_key "content_profile_entries", "content_profiles"
   add_foreign_key "content_profile_entries", "content_types"
   add_foreign_key "content_profile_entries", "topic_types"
   add_foreign_key "content_profiles", "profile_types"
-  add_foreign_key "content_type_opts", "content_types"
   add_foreign_key "group_roles", "user_group_roles"
   add_foreign_key "group_roles", "user_roles"
-  add_foreign_key "topic_type_opts", "topic_types"
+  add_foreign_key "topic_options", "topic_type_opts"
+  add_foreign_key "topic_options", "topic_types"
   add_foreign_key "user_group_roles_user_roles", "user_group_roles"
   add_foreign_key "user_group_roles_user_roles", "user_roles"
 end
