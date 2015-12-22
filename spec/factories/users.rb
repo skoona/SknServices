@@ -11,7 +11,7 @@ FactoryGirl.define do
     password_confirmation   "foobar"
     password_reset_token    "tokenx"
     password_reset_date     {Time.zone.now}
-    role_groups             ["InternalStaff", "Services.Action.ResetPassword"]
+    role_groups             ["EmployeeSecondary"]
     roles                   ["EmployeeSecondary",
                              "Users.Action.Update",
                              "Users.Action.Edit",
@@ -19,7 +19,7 @@ FactoryGirl.define do
                              "Service.Action.ResetPassword"]
 
     factory :support do
-      role_groups             ["InternalStaff", "Services.Action.ResetPassword"]
+      role_groups             ["EmployeeSecondary"]
       roles                   ["EmployeeSecondary",
                                "Users.Action.Update",
                                "Users.Action.Edit",
@@ -28,8 +28,10 @@ FactoryGirl.define do
     end
 
     factory :manager do
-      role_groups             ["InternalStaff", "Services.Action.Admin", "Developer.Access.Status"]
-      roles                   ["EmployeePrimary"]
+      role_groups             ["EmployeePrimary"]
+      roles                   ["EmployeePrimary",
+                               "Services.Action.Admin",
+                               "Services.Action.Developer"]
     end
   end
 
