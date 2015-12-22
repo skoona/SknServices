@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Topic Type Opts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+      <th>Topic type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @topic_type_opts.each do |topic_type_opt| %>
+      <tr>
+        <td><%= topic_type_opt.value %></td>
+        <td><%= topic_type_opt.description %></td>
+        <td><%= topic_type_opt.topic_type %></td>
+        <td><%= link_to 'Show', topic_type_opt %></td>
+        <td><%= link_to 'Edit', edit_topic_type_opt_path(topic_type_opt) %></td>
+        <td><%= link_to 'Destroy', topic_type_opt, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Topic type opt', new_topic_type_opt_path %>

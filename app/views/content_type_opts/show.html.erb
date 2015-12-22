@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @content_type_opt.value %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @content_type_opt.description %>
+</p>
+
+<p>
+  <strong>Content type:</strong>
+  <%= @content_type_opt.content_type %>
+</p>
+
+<%= link_to 'Edit', edit_content_type_opt_path(@content_type_opt) %> |
+<%= link_to 'Back', content_type_opts_path %>

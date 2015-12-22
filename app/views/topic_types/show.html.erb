@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @topic_type.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @topic_type.description %>
+</p>
+
+<p>
+  <strong>Value based y n:</strong>
+  <%= @topic_type.value_based_y_n %>
+</p>
+
+<%= link_to 'Edit', edit_topic_type_path(@topic_type) %> |
+<%= link_to 'Back', topic_types_path %>

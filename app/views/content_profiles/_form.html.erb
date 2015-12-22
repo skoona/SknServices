@@ -1,0 +1,16 @@
+<%= simple_form_for(@content_profile) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :person_authentication_key %>
+    <%= f.association :profile_type %>
+    <%= f.input :authentication_provider %>
+    <%= f.input :username %>
+    <%= f.input :display_name %>
+    <%= f.input :email %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
