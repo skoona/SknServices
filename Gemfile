@@ -19,6 +19,7 @@ gem 'bcrypt'
 gem 'gravatar_image_tag'
 
 group :development do
+  gem 'annotate'
   gem 'pry-rails'
   gem 'better_errors'
   gem 'quiet_assets'
