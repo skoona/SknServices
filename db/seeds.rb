@@ -163,6 +163,11 @@ user_manage_p =
 user_manage_s =
     {name: "Services.Action.Use.UserRecords", description: "Consume User Records"}
 
+all_roles = [all_admin , all_users ,
+             content_profile_p ,  content_profile_s ,
+             group_manage_p ,  group_manage_s ,
+             user_manage_p , user_manage_s
+].flatten.uniq
 
 all_groups = [
     {name: "EmployeePrimary",   group_type: "BMI Admin",    description: "BMI Admin User"},
@@ -173,21 +178,55 @@ all_groups = [
     {name: "VendorSecondary",   group_type: "BMI Public",   description: "BMI Public: Short Term"}
 ]
 
-admin_collection =[]
-admin_collection.push all_users
-admin_collection.push all_admin
-admin_collection.push user_manage_p
-admin_collection.push group_manage_p
-admin_collection.push content_profile_p
+admin_collection = [
+    all_users ,
+    all_admin ,
+    content_profile_p ,
+    group_manage_p ,
+    user_manage_p
+].flatten.uniq
 
-limited_collection =[]
-limited_collection.push all_users
-limited_collection.push user_manage_s
-limited_collection.push group_manage_s
-limited_collection.push content_profile_s
+agency_admin_collection = [
+    all_users ,
+    user_manage_p ,
+    group_manage_p ,
+    content_profile_s
+].flatten.uniq
 
-public_collection =[]
-public_collection.push all_users
-public_collection.push user_manage_s
-public_collection.push group_manage_s
-public_collection.push content_profile_s
+limited_collection = [
+    all_users ,
+    user_manage_s ,
+    group_manage_s ,
+    content_profile_s
+].flatten.uniq
+
+public_collection = [
+    all_users
+].flatten.uniq
+
+
+control = {
+     "BMI Admin"   => admin_collection,
+     "BMI Limited" => limited_collection,
+     "BMI Public"  => public_collection,
+    "Agency Admin" => agency_admin_collection
+}
+
+# Remove Current Stuf
+UserGroupRolesUserRole.delete_all
+UserGroupRole.delete_all
+UserRole.delete_all
+
+# Create them all with array of results in return var
+res = UserRole.create!(all_roles)
+ges = UserGroupRole.create!(all_groups)
+
+# make the associations
+result = ges.each do |grp|
+  role_keys = control[grp.group_type].map {|hsh| hsh[:name] }
+  role_ids = res.map() do |role|
+    role.id if role_keys.include?(role.name)
+  end.flatten
+  grp.user_role_ids = role_ids
+  grp.save!
+end
