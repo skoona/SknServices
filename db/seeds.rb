@@ -165,12 +165,12 @@ user_manage_s =
 
 
 all_groups = [
-    {name: "EmployeePrimary",   description: "BMI Admin User"},
-    {name: "EmployeeSecondary", description: "BMI Limited User"},
-    {name: "AgencyPrimary",     description: "BMI Limited: Agency Admin User"},
-    {name: "AgencySecondary",   description: "BMI Public: Agency Limited User"},
-    {name: "VendorPrimary",     description: "BMI Limited: Long Term"},
-    {name: "VendorSecondary",   description: "BMI Public: Short Term"}
+    {name: "EmployeePrimary",   group_type: "BMI Admin",    description: "BMI Admin User"},
+    {name: "EmployeeSecondary", group_type: "BMI Limited",  description: "BMI Limited User"},
+    {name: "AgencyPrimary",     group_type: "Agency Admin", description: "BMI Limited: Agency Admin User"},
+    {name: "AgencySecondary",   group_type: "BMI Public",   description: "BMI Public: Agency Limited User"},
+    {name: "VendorPrimary",     group_type: "BMI Limited",  description: "BMI Limited: Long Term"},
+    {name: "VendorSecondary",   group_type: "BMI Public",   description: "BMI Public: Short Term"}
 ]
 
 admin_collection =[]

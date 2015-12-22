@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151222035102) do
+ActiveRecord::Schema.define(version: 20151222173809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,16 @@ ActiveRecord::Schema.define(version: 20151222035102) do
     t.datetime "updated_at",      null: false
   end
 
+  create_table "group_roles", force: :cascade do |t|
+    t.integer  "user_group_role_id"
+    t.integer  "user_role_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "group_roles", ["user_group_role_id"], name: "index_group_roles_on_user_group_role_id", using: :btree
+  add_index "group_roles", ["user_role_id"], name: "index_group_roles_on_user_role_id", using: :btree
+
   create_table "profile_types", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
@@ -87,6 +97,33 @@ ActiveRecord::Schema.define(version: 20151222035102) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
+
+  create_table "user_group_roles", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.string   "group_type"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "user_group_roles", ["name"], name: "index_user_group_roles_on_name", unique: true, using: :btree
+
+  create_table "user_group_roles_user_roles", force: :cascade do |t|
+    t.integer "user_group_role_id"
+    t.integer "user_role_id"
+  end
+
+  add_index "user_group_roles_user_roles", ["user_group_role_id"], name: "index_user_group_roles_user_roles_on_user_group_role_id", using: :btree
+  add_index "user_group_roles_user_roles", ["user_role_id"], name: "index_user_group_roles_user_roles_on_user_role_id", using: :btree
+
+  create_table "user_roles", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "user_roles", ["name"], name: "index_user_roles_on_name", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username"
@@ -114,5 +151,9 @@ ActiveRecord::Schema.define(version: 20151222035102) do
   add_foreign_key "content_profile_entries", "topic_types"
   add_foreign_key "content_profiles", "profile_types"
   add_foreign_key "content_type_opts", "content_types"
+  add_foreign_key "group_roles", "user_group_roles"
+  add_foreign_key "group_roles", "user_roles"
   add_foreign_key "topic_type_opts", "topic_types"
+  add_foreign_key "user_group_roles_user_roles", "user_group_roles"
+  add_foreign_key "user_group_roles_user_roles", "user_roles"
 end

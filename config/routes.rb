@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :user_roles
+  resources :user_group_roles
   resources :content_profile_entries
   resources :topic_type_opts
   resources :topic_types
