@@ -17,6 +17,7 @@
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  person_authenticated_key :string
+#  assigned_roles           :string
 #
 
 class User < ActiveRecord::Base
@@ -29,7 +30,11 @@ class User < ActiveRecord::Base
     user.generate_unique_token(:person_authenticated_key)   # Never Changes
   }
 
+
   before_save { |user|
+    user.roles = [] unless user.roles.is_a?(Array)
+    user.assigned_roles = [] unless user.assigned_roles.is_a?(Array)
+    user.role_groups = [] unless user.role_groups.is_a?(Array)
     user.email = user.email.downcase
     user.username = user.username.downcase
     user.generate_unique_token(:remember_token)   # Change with every update
@@ -37,8 +42,9 @@ class User < ActiveRecord::Base
 
   serialize :roles, Array
   serialize :role_groups, Array
+  serialize :assigned_roles, Array
 
-  validates(:role_groups, :roles, presence: true)
+  # validates(:role_groups, :roles, :assigned_roles, presence: true)
   validates(:name, presence: true, length: { maximum: 128 })
   validates(:username, presence: true, uniqueness: { case_sensitive: false })
 
@@ -67,9 +73,11 @@ class User < ActiveRecord::Base
   end
 
   def resolve_user_roles
-    self.roles = self.role_groups.map do |rg|
+    role = self.role_groups.map do |rg|
       UserGroupRole.list_user_roles(rg)
-    end.flatten.uniq
+    end
+    role += self.assigned_roles
+    self.roles = role.flatten.uniq
     self.save
   end
 

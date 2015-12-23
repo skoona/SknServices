@@ -188,7 +188,10 @@
         </permission>
     </resource>
 
+<!--============================================================================= -->
 <!--========================= RESOURCE REGISTRY  ================================ -->
+<!--============================================================================= -->
+
     <!--============== System Menu  ========== -->
     <resource secured="true">
         <uri>#Administration</uri>
@@ -203,6 +206,16 @@
     <resource secured="true">
         <uri>#GroupManagement</uri>
         <description>Authorization Group Role Actions - Menu</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>#ContentProfileManagement</uri>
+        <description>Authorization ContentProfile Actions - Menu</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
@@ -392,10 +405,20 @@
     <resource secured="false">
         <uri>user_group_roles/index</uri>
         <description>RSpec Test</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
     </resource>
     <resource secured="false">
         <uri>content_profiles/index</uri>
         <description>RSpec Test</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
     </resource>
 
 </accessRegistry>
