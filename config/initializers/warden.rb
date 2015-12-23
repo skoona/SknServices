@@ -185,6 +185,7 @@ Warden::Manager.after_authentication do |user,auth,opts|
   remember = true if auth.request.params.key?("session") && "1".eql?(auth.request.params["session"]["remember_me_token"])
   user.enable_authentication_controls
   user.resolve_user_roles                # Todo: Setup User Roles for Authorization
+  user.content_profile= user.content_profile_object
 
   if remember
     if Rails.env.production?
@@ -193,7 +194,7 @@ Warden::Manager.after_authentication do |user,auth,opts|
       auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: 4.hour.from_now, httponly: true }
     end
   end
-  Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}, Roles=#{user.roles unless user.nil?} !
+  Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}, Roles=#{user.roles unless user.nil?}, Profile=#{user.content_profile.try(:attributes) unless user.nil?} !
 end
 
 ##

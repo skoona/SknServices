@@ -74,6 +74,19 @@ module Secure
     end
 
     # Warden will call this methods
+    def content_profile
+      self.instance_variable_get(:@content_profile)
+    end
+    # Warden will call this methods
+    def content_profile=(cp)
+      self.instance_variable_set(:@content_profile, cp)
+    end
+    # Warden will call this methods
+    def content_profile_object
+      ContentProfile.find_by_person_authentication_key(self.person_authenticated_key).try(:profile)
+    end
+
+    # Warden will call this methods
     def disable_authentication_controls
       remove_from_store
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) ")
