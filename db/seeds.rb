@@ -237,6 +237,21 @@ begin
   )
   cp.content_profile_entry_ids=cpe_recs_ids
 
+
+
+  Rails.logger.info "Creating ContentProfileEntries"
+  cpe_recs_ids = cpe.map do |item|
+    human_choice = {"Agency" => "Commission", "Account" => "Notification", "LicensedStates" => "Operations"}
+    topic_rec = tt_recs.detect {|t| t.name.eql?(item[:topic_value])}
+    content_rec = ct_recs.detect {|t| t.name.eql?(human_choice[item[:topic_value]])}
+    rec = ContentProfileEntry.create!(item)
+    rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
+    rec.content_type=content_rec
+    rec.topic_type=topic_rec
+    rec.save
+    rec.id
+  end
+
   pt_rec = pt_recs.detect {|r| r.name.eql?("EmployeePrimary")}
   cp  = ContentProfile.create({person_authentication_key: urecs[0].person_authenticated_key,
                                authentication_provider: "BCrypt",
