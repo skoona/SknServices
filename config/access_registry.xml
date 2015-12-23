@@ -402,7 +402,7 @@
         </permission>
     </resource>
 
-    <resource secured="false">
+    <resource secured="true">
         <uri>user_group_roles/index</uri>
         <description>RSpec Test</description>
         <permission type="READ">
@@ -411,7 +411,7 @@
             </authorizedRoles>
         </permission>
     </resource>
-    <resource secured="false">
+    <resource secured="true">
         <uri>content_profiles/index</uri>
         <description>RSpec Test</description>
         <permission type="READ">

@@ -18,19 +18,19 @@
         </ul>
 
         <% if valid_user_has_access?('#Administration') %>
-        <ul class="nav navbar-nav">
-            <% if valid_user_has_access?('users/new') %>
-                <%= nav_link_icon("glyphicon-user", "Manage UserProfiles", new_user_path) %>
-            <% end %>
-        </ul>
+            <ul class="nav navbar-nav">
+                <% if valid_user_has_access?('users/index') %>
+                    <%= nav_link_icon("glyphicon-user", "Manage UserProfiles", users_path) %>
+                <% end %>
+            </ul>
         <% end %>
 
         <% if valid_user_has_access?('#ContentProfileManagement') %>
-        <ul class="nav navbar-nav">
-            <% if valid_user_has_access?('content_profiles/index') %>
-                <%= nav_link_icon("glyphicon-inbox-out", "Manage ContentProfiles", content_profiles_path) %>
-            <% end %>
-        </ul>
+            <ul class="nav navbar-nav">
+                <% if valid_user_has_access?('content_profiles/index') %>
+                    <%= nav_link_icon("glyphicon-inbox-out", "Manage ContentProfiles", content_profiles_path) %>
+                <% end %>
+            </ul>
         <% end %>
 
         <% if valid_user_has_access?('#GroupManagement') %>
@@ -39,12 +39,6 @@
                     <%= nav_link_icon("glyphicon-parents", "Manage GroupRoles", user_group_roles_path) %>
                 <% end %>
             </ul>
-        <% end %>
-
-        <% if logged_in? %>
-        <ul class="nav navbar-nav">
-            <%= nav_link_icon("glyphicon-user", "List Users", users_path) %>
-        </ul>
         <% end %>
 
         <ul class="nav navbar-nav navbar-right">

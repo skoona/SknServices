@@ -22,11 +22,20 @@ class ContentProfileEntry < ActiveRecord::Base
 
   validates_presence_of :topic_value, :description
 
-  def content_value_name
+  def content_type_name
     content_type.name
   end
   def topic_type_name
     topic_type.name
   end
 
+  def info
+    {
+      topic_value: "",
+      content_value: content_value,
+      content_type: content_type_name,
+      topic_type: topic_type_name,
+      description: description
+    }
+  end
 end

@@ -72,13 +72,4 @@ class User < ActiveRecord::Base
     self.password.present? || new_record?
   end
 
-  def resolve_user_roles
-    role = self.role_groups.map do |rg|
-      UserGroupRole.list_user_roles(rg)
-    end
-    role += self.assigned_roles
-    self.roles = role.flatten.uniq
-    self.save
-  end
-
 end

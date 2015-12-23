@@ -22,4 +22,16 @@ class ContentProfile < ActiveRecord::Base
   def profile_type_name
     profile_type.name
   end
+
+  def profile
+    SknUtils::PageControls.new({
+      entries: content_profile_entries.map(&:info) || [],
+      pak: person_authentication_key,
+      profile_type: profile_type_name,
+      provider: authentication_provider,
+      username: username,
+      display_name: display_name,
+      email: email
+    })
+  end
 end

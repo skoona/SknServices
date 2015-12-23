@@ -8,7 +8,14 @@ module Secure
     extend ActiveSupport::Concern
 
     included do
-      #raise Utility::Errors::SecurityImplementionError, "You must have a remember_token defined for use as the key to storage!" unless self.respond_to?(:remember_token)
+      # Todo: Breaks Test User for now
+      # raise Utility::Errors::SecurityImplementionError,
+      #   "You are missing one or more critical security vars: :remember_token, :person_authenticated_key, :assigned_roles, :role_group, and :roles. !" unless
+      #     self.respond_to?(:remember_token) and
+      #       self.respond_to?(:person_authenticated_key) and
+      #         self.respond_to?(:assigned_roles) and
+      #           self.respond_to?(:role_groups) and
+      #             self.respond_to?(:roles)
     end
 
     module ClassMethods
@@ -53,6 +60,17 @@ module Secure
         attr.split("_").last.eql?("digest") ?
             BCrypt::Password.new(attr).is_password?(token) : false
       end.any?    # any? returns true/false if any digest matched
+    end
+
+    # Unpack Groups and Combine with assigned, into roles
+    # Called by Warden when user is authenticated
+    def resolve_user_roles
+      role = self.role_groups.map do |rg|
+        UserGroupRole.list_user_roles(rg)
+      end
+      role += self.assigned_roles
+      self.roles = role.flatten.uniq
+      self.save
     end
 
     # Warden will call this methods
