@@ -1,0 +1,32 @@
+<% provide(:title, accessed_page_name) %>
+
+<section class="container">
+
+    <section class="container">
+        <h2>SknService Data Model</h2>
+
+        <%= image_tag("sknService-DataModel.png", alt: "Main Path", class: "large-image") %>
+    </section>
+
+
+    <section class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>ContentProfile</h2>
+                <p>Determines if a specific user can access or interact with a specific object by type or name of object.</p>
+                <p><a class="btn btn-default" href="<%= home_path()  %>" role="button">Back &raquo;</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>AccessProfile</h2>
+                <p>Applies an Authorization Profile to each Authenticated User; which was created by the Administrator.  Using the roles assigned, access to navigation, and/or viewable, elements is controlled.</p>
+                <p><a class="btn btn-default" href="<%= home_path()  %>" role="button">Back &raquo;</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>Authentication</h2>
+                <p>Every incoming has both the authentication and authorization features of this site applied.  No access returns you to login or home page.  No authorization returns you to home page.  Should you attempt a url outside what is allowed and provided for, you will directed to the home page with access still being denied.</p>
+                <p><a class="btn btn-default" href="<%= home_path()  %>" role="button">Back &raquo;</a></p>
+            </div>
+        </div>
+    </section>
+
+</section>

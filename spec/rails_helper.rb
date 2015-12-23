@@ -33,7 +33,6 @@ require 'database_cleaner'
 
 require 'spec_helper'
 
-
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # RackSessionAccess config
@@ -66,6 +65,10 @@ RSpec.configure do |config|
   # Turn on FactoryGirl
   # ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md
   config.include FactoryGirl::Syntax::Methods
+
+  config.before(:suite) do
+    load Rails.root.join("db/seeds.rb")
+  end
 
   config.after(:each) do
     Warden.test_reset!

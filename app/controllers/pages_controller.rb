@@ -9,6 +9,9 @@ class PagesController < ApplicationController
   def about
   end
 
+  def model_details
+  end
+
   def developer
   end
 

@@ -1,7 +1,7 @@
 ##
 # spec/support/access_registry_test_user.rb
 #
-# For RSpec Testing
+# For RSpec Testing of core AR facility
 #
 
 

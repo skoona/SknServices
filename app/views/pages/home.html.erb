@@ -31,22 +31,21 @@
     </section>
 
     <section class="container">
-        <!-- Example row of columns -->
         <div class="row">
             <div class="col-md-4">
-                <h2>Content Profile</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                <h2>ContentProfile</h2>
+                <p>Determines if a specific user can access or interact with a specific object by type or name of object.</p>
+                <p><a class="btn btn-default" href="<%= model_details_path()  %>" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
-                <h2>Types</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                <h2>AccessProfile</h2>
+                <p>Applies an Authorization Profile to each Authenticated User; which was created by the Administrator.  Using the roles assigned, access to navigation, and/or viewable, elements is controlled.</p>
+                <p><a class="btn btn-default" href="<%= model_details_path()  %>" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
-                <h2>Values</h2>
-                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                <h2>Authentication</h2>
+                <p>Every incoming has both the authentication and authorization features of this site applied.  No access returns you to login or home page.  No authorization returns you to home page.  Should you attempt a url outside what is allowed and provided for, you will directed to the home page with access still being denied.</p>
+                <p><a class="btn btn-default" href="<%= model_details_path()  %>" role="button">View details &raquo;</a></p>
             </div>
         </div>
     </section>

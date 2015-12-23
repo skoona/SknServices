@@ -363,6 +363,10 @@
         <uri>pages/about</uri>
         <description>About</description>
     </resource>
+    <resource secured="false">
+        <uri>pages/model_details</uri>
+        <description>SknService Model Details</description>
+    </resource>
 
     <!--=========================  DEVELOPMENT RESOURCES  ============================ -->
   <resource secured="true">

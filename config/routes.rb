@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get '/home',                      to:     'pages#home'
   get '/about',                     to:     'pages#about'
   get '/developer',                 to:     'pages#developer'
+  get '/model_details',             to:     'pages#model_details'
 
   root to: 'pages#home'
 end
