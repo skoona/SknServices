@@ -379,4 +379,23 @@
       </permission>
   </resource>
 
+    <resource secured="true">
+        <uri>pages/developer</uri>
+        <description>System Status Page for Developers</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="false">
+        <uri>user_group_roles/index</uri>
+        <description>RSpec Test</description>
+    </resource>
+    <resource secured="false">
+        <uri>content_profiles/index</uri>
+        <description>RSpec Test</description>
+    </resource>
+
 </accessRegistry>
