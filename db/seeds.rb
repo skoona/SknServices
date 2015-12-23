@@ -169,7 +169,9 @@ begin
 
   pt  = [
     {name: "AgencyPrimary",   description: "Agency Super User"},
-    {name: "AgencySecondary", description: "Limited User"}
+    {name: "AgencySecondary", description: "Limited User"},
+    {name: "EmployeePrimary",   description: "BMI Admin User"},
+    {name: "EmployeeSecondary", description: "BMI Limited User"}
   ]
 
   control_opts = {
@@ -232,6 +234,16 @@ begin
           display_name: urecs[3].display_name,
           email: urecs[3].email,
           profile_type_id: pt_rec.id}
+  )
+  cp.content_profile_entry_ids=cpe_recs_ids
+
+  pt_rec = pt_recs.detect {|r| r.name.eql?("EmployeePrimary")}
+  cp  = ContentProfile.create({person_authentication_key: urecs[0].person_authenticated_key,
+                               authentication_provider: "BCrypt",
+                               username: urecs[0].username,
+                               display_name: urecs[0].display_name,
+                               email: urecs[0].email,
+                               profile_type_id: pt_rec.id}
   )
   cp.content_profile_entry_ids=cpe_recs_ids
 
