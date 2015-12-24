@@ -10,7 +10,7 @@
 #  remember_token           :string
 #  password_reset_token     :string
 #  password_reset_date      :datetime
-#  role_groups              :string
+#  assigned_groups          :string
 #  roles                    :string
 #  active                   :boolean          default(TRUE)
 #  file_access_token        :string
@@ -32,19 +32,19 @@ class User < ActiveRecord::Base
 
 
   before_save { |user|
-    user.roles = [] unless user.roles.is_a?(Array)
-    user.assigned_roles = [] unless user.assigned_roles.is_a?(Array)
-    user.role_groups = [] unless user.role_groups.is_a?(Array)
+    user.roles = [user.roles].flatten unless user.roles.is_a?(Array)
+    user.assigned_roles = [user.assigned_roles].flatten unless user.assigned_roles.is_a?(Array)
+    user.assigned_groups = [user.assigned_groups].flatten unless user.assigned_groups.is_a?(Array)
     user.email = user.email.downcase
     user.username = user.username.downcase
     user.generate_unique_token(:remember_token)   # Change with every update
   }
 
   serialize :roles, Array
-  serialize :role_groups, Array
+  serialize :assigned_groups, Array
   serialize :assigned_roles, Array
 
-  # validates(:role_groups, :roles, :assigned_roles, presence: true)
+  # validates(:assigned_groups, :roles, :assigned_roles, presence: true)
   validates(:name, presence: true, length: { maximum: 128 })
   validates(:username, presence: true, uniqueness: { case_sensitive: false })
 

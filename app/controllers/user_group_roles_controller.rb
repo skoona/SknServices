@@ -4,7 +4,7 @@ class UserGroupRolesController < ApplicationController
   # GET /user_group_roles
   # GET /user_group_roles.json
   def index
-    @user_group_roles = UserGroupRole.all
+    @user_group_roles = UserGroupRole.paginate(page: params[:page], :per_page => 12)
   end
 
   # GET /user_group_roles/1

@@ -60,7 +60,6 @@ RSpec.configure do |config|
   config.include Rails.application.routes.mounted_helpers
 
   config.include Warden::Test::Helpers
-  Warden.test_mode!
 
   # Turn on FactoryGirl
   # ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md

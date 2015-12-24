@@ -27,11 +27,11 @@ class ContentProfile < ActiveRecord::Base
   end
 
   def profile
-    SknUtils::PageControls.new({
-      entries: content_profile_entries.map(&:info) || [],
+    Secure::UserContentProfile.new({
+      entries: content_profile_entries.map(&:entry_info) || [],
       pak: person_authentication_key,
-      profile_type: profile_type_name,
-      profile_type_description: profile_type_description,
+      profile_type: profile_type.name,
+      profile_type_description: profile_type.description,
       provider: authentication_provider,
       username: username,
       display_name: display_name,

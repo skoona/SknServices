@@ -1,23 +1,21 @@
 <%# Read This: http://simple-form.plataformatec.com.br/ %>
 
-<section class="row">
-    <fieldset class="col-md-4">
+    <fieldset>
     <legend>User details</legend>
       <%= f.input :name, :size => 45, label: "Full Name", autofocus: true %>
     </fieldset>
+    <fieldset>
+        <legend>Sign In Credentials</legend>
+        <%= f.input :username, label: 'User Name' %>
+        <%= f.input :email, label: 'Email'  %>
+        <%= f.input :password, label: 'Password'  %>
+        <%= f.input :password_confirmation, label: 'Confirmation'  %>
+    </fieldset>
   <% if logged_in? && current_user.is_admin? %>
-    <fieldset class="col-md-4">
+    <fieldset>
     <legend>Access Details</legend>
-      <%= f.input :role_groups, collection: Settings.standards.role_groups.map {|x| [x,x]}, as: :check_boxes, include_blank: false, label: "Groups" %>
-      <%= f.input :roles, collection: Settings.standards.security_roles.map { |x| [x, x] }, as: :check_boxes, include_blank: false, label: "Roles" %>
+      <%= f.input :assigned_groups, collection: @page_controls.groups.map(&:last), as: :check_boxes, include_blank: false, label: "Groups" %>
+      <%= f.input :assigned_roles, collection: @page_controls.roles.map(&:last), as: :check_boxes, include_blank: false, label: "Roles" %>
       <%= f.input :active, inline_label: "Active", label: "Account status" %>
     </fieldset>
   <% end %>
-    <fieldset class="col-md-4">
-    <legend>Sign In Credentials</legend>
-      <%= f.input :username, label: 'User Name' %>
-      <%= f.input :email, label: 'Email'  %>
-      <%= f.input :password, label: 'Password'  %>
-      <%= f.input :password_confirmation, label: 'Confirmation'  %>
-    </fieldset>
-</section>

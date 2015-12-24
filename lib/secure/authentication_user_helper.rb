@@ -10,12 +10,9 @@ module Secure
     included do
       # Todo: Breaks Test User for now
       # raise Utility::Errors::SecurityImplementionError,
-      #   "You are missing one or more critical security vars: :remember_token, :person_authenticated_key, :assigned_roles, :role_group, and :roles. !" unless
+      #   "You are missing one or more critical security vars: :remember_token, :person_authenticated_key. !" unless
       #     self.respond_to?(:remember_token) and
       #       self.respond_to?(:person_authenticated_key) and
-      #         self.respond_to?(:assigned_roles) and
-      #           self.respond_to?(:role_groups) and
-      #             self.respond_to?(:roles)
     end
 
     module ClassMethods
@@ -23,7 +20,7 @@ module Secure
       def fetch_existing_user (token=nil)
         value = users_store.get_stored_object(token)
         value = self.find_by_remember_token(token) unless value.present? or token.nil?
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
         value
       end
 
@@ -53,7 +50,7 @@ module Secure
       end
     end
 
-    # returns true/false if any <column> digest matches token
+    # returns true/false if any <column>_digest matches token
     # note: Password.new(digest) decrypts digest
     def is_token_authentic?(token)
       attribute_names.select do |attr|
@@ -62,48 +59,30 @@ module Secure
       end.any?    # any? returns true/false if any digest matched
     end
 
-    # Unpack Groups and Combine with assigned, into roles
-    # Called by Warden when user is authenticated
-    def resolve_user_roles
-      role = self.role_groups.map do |rg|
-        UserGroupRole.list_user_roles(rg)
-      end
-      role += self.assigned_roles
-      self.roles = role.flatten.uniq
-      self.save
-    end
-
-    # Warden will call this methods
-    def content_profile
-      self.instance_variable_get(:@content_profile)
-    end
-    # Warden will call this methods
-    def content_profile=(cp)
-      self.instance_variable_set(:@content_profile, cp)
-    end
-    # Warden will call this methods
-    def content_profile_object
-      ContentProfile.find_by_person_authentication_key(self.person_authenticated_key).try(:profile)
-    end
-
     # Warden will call this methods
     def disable_authentication_controls
       remove_from_store
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) ")
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{remember_token}")
     end
 
     # Warden will call this methods
     def enable_authentication_controls
+      self.try(:setup_access_profile)
+      self.try(:setup_content_profile)
+
       add_to_store
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) ")
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{remember_token}")
+      true
     end
 
     protected
 
+    # Saves user object to InMemory Container
     def add_to_store()
       Secure::ObjectStorageContainer.instance.add_to_store(remember_token, self)
     end
 
+    # Removes saved user object from InMemory Container
     def remove_from_store()
       Secure::ObjectStorageContainer.instance.remove_from_store remember_token
     end

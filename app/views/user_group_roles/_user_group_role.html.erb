@@ -1,0 +1,22 @@
+<div class="well col-xs-4">
+    <div class="media">
+        <div class="media-left">
+            <%= link_to user_group_role do %>
+                <span class="media-object">
+                    <span style="font-size:4.5em;" class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                </span>
+            <% end %>
+        </div>
+
+        <div class="media-body">
+            <h4 class="media-heading">Name: <%= user_group_role.name %></h4>
+            <p>Description: <%= user_group_role.description %></p>
+            <p>Group:  <%= user_group_role.group_type %></p>
+            <p>
+                <%= link_to 'Show', user_group_role, class: "btn btn-default" %> |
+                <%= link_to 'Edit', edit_user_group_role_path(user_group_role), class: "btn btn-default" %> |
+                <%= link_to 'Destroy', user_group_role, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %>
+            </p>
+        </div>
+    </div>
+</div>

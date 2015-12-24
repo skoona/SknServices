@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @page_controls = access_profile_service.get_user_form_options
   end
 
   def create
@@ -23,6 +24,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    @page_controls = access_profile_service.get_user_form_options
   end
 
   def update
@@ -49,8 +51,8 @@ class UsersController < ApplicationController
   def permitted
     # allow record to be updated without a new password every time.
     if params.key?(:user) and params[:user].key?(:roles)
-      params[:user][:roles].delete("")
-      params[:user][:role_groups].delete("")
+      params[:user][:assigned_roles].delete("")
+      params[:user][:assigned_groups].delete("")
     end
     unless params[:user][:password].present?
       params[:user].delete :password
@@ -59,7 +61,7 @@ class UsersController < ApplicationController
     params.required(:user).permit(:username, :name, :email, :password_confirmation, :password,
                                  :remember_token, :password_reset_token,
                                  :password_reset_date, :active,
-                                 :file_access_token, :role_groups => [], :roles => [])
+                                 :file_access_token, :assigned_groups => [], :assigned_roles => [])
   end
 
 end

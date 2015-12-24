@@ -1,5 +1,9 @@
-<h1>New Content Profile</h1>
+<% provide(:title, accessed_page_name) %>
 
-<%= render 'form' %>
+<section class="container">
+    <h1><%= accessed_page_name %></h1>
 
-<%= link_to 'Back', content_profiles_path %>
+    <%= render 'form' %>
+
+    <%= link_to 'Back', content_profiles_path %>
+</section>

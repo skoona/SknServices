@@ -1,9 +1,12 @@
-<% provide(:title, "All Users") %>
+<% provide(:title, accessed_page_name) %>
 
-<%= will_paginate class: "pagination col-md-6 col-md-offset-6 pull-right" %>
-<section class="placeholders">
-    <%= render @users %>
+<section class="container">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+
+    <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
+            <%= render @users %>
+    <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
+
+    <br />
+    <%= link_to 'New User group role', new_user_group_role_path %>
 </section>
-<%= will_paginate class: "pagination col-md-6 col-md-offset-6 pull-right" %>
-
-

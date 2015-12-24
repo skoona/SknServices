@@ -35,6 +35,11 @@ module Secure
     def size_of_store
       @objects_storage_container.size
     end
+    def stored_keys
+      results = []
+      @objects_storage_container.each_pair {|k,v| results << {k => v.username}}
+      results
+    end
 
     ##
     # Marshalling Support to preserve state of objects_storage_container

@@ -1,13 +1,13 @@
 class PasswordService
 
-	attr_accessor :controller
+	attr_accessor :factory
 
 	def initialize(params={})
-		[:controller].each do |k|
+		[:factory].each do |k|
 			send("#{k}=", nil)
 			send("#{k}=", params[k]) if params.key?(k)
 		end
-		raise ArgumentError, "Initialization params missing: #{self.class.name}" unless @controller.present?
+		raise ArgumentError, "Initialization params missing: #{self.class.name}" unless @factory.present?
 	end
 
 	def reset_password(params)

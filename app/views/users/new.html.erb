@@ -1,13 +1,17 @@
-<% provide(:title, 'Add User') %>
+<% provide(:title, accessed_page_name) %>
 
-<%= simple_form_for(@user, :html => { :class => 'form-vertical', :authenticity_token => true }) do |f| %>
+<section class="container">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+
+    <%= simple_form_for(@user, :html => { :class => 'form form-horizontal', :authenticity_token => true }) do |f| %>
     <%= f.error_notification %>
     <%= render 'fields', f:  f %>
 
-    <div class="button-group">
-        <div class="controls pull-right">
-            <%= f.button :submit, "Save", class: 'btn btn-primary' %>
+    <div class="form-actions">
+        <div class="col-sm-offset-2 col-sm-10">
+            <%= f.button :submit, class: 'btn btn-primary' %>
             <%= link_to "Cancel", users_path(), class: 'btn' %>
         </div>
     </div>
 <% end %>
+</section>

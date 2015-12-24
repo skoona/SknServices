@@ -36,8 +36,16 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
+
+      # Signed on twice
+      unless current_path.eql?(users_path)
+        expect(current_path).to eq signin_path
+        fill_in 'Username', :with => user.username
+        fill_in 'Password', :with => user.password
+        click_button 'Sign in'
+      end
+
       expect(current_path).to eq users_path
-      expect(page).to have_title("All Users")
       click_link 'Sign out'
     end
 
@@ -45,10 +53,18 @@ RSpec.feature "Authentication process for all users." do
       #user = FactoryGirl.create(:manager)
       visit new_user_url
       expect(current_path).to eq signin_path
-      expect(page).to have_notice_message("Please sign in to continue.")
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
+
+      # Signed on twice
+      unless current_path.eql?(home_path)
+        expect(current_path).to eq signin_path
+        fill_in 'Username', :with => user.username
+        fill_in 'Password', :with => user.password
+        click_button 'Sign in'
+      end
+
       expect(current_path).to eq home_path
       expect(page).to have_alert_message("You are not authorized to access the ")
       click_link 'Sign out'
@@ -62,8 +78,16 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
+
+      # Signed on twice
+      unless current_path.eql?(users_path)
+        expect(current_path).to eq signin_path
+        fill_in 'Username', :with => user.username
+        fill_in 'Password', :with => user.password
+        click_button 'Sign in'
+      end
+
       expect(current_path).to eq users_path
-      expect(page).to have_title("All Users")
       click_link 'Sign out'
       expect(current_url).to eq root_url
       expect(page).to have_notice_message("You have been signed out.")

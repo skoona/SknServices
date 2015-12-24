@@ -1,0 +1,25 @@
+<div class="well col-xs-6">
+    <div class="media">
+        <div class="media-left">
+            <%= link_to content_profile do %>
+                <span class="media-object">
+                    <span style="font-size:4.5em;" class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                </span>
+            <% end %>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">Username: <%= content_profile.username %></h4>
+            <p>Display Name: <%= content_profile.display_name %></p>
+            <p>Profile Type: <%= content_profile.profile_type.name %></p>
+            <p>EMail: <%= content_profile.email %></p>
+            <p>Authentication Provider: <%= content_profile.authentication_provider %></p>
+            <p>Person Authentication Key: <%= content_profile.person_authentication_key[-6..-1] %></p>
+            <p>Entries: <span class="badge"><%= content_profile.content_profile_entries.size %></span></p>
+            <p>
+                <%= link_to 'Show', content_profile, class: "btn btn-default" %> |
+                <%= link_to 'Edit', edit_content_profile_path(content_profile), class: "btn btn-default" %> |
+                <%= link_to 'Destroy', content_profile, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %>
+            </p>
+        </div>
+    </div>
+</div>

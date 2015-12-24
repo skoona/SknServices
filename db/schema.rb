@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 20151223040759) do
     t.string   "remember_token"
     t.string   "password_reset_token"
     t.datetime "password_reset_date"
-    t.string   "role_groups"
+    t.string   "assigned_groups"
     t.string   "roles"
     t.boolean  "active",                   default: true
     t.string   "file_access_token"

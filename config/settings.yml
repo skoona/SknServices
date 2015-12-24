@@ -16,21 +16,10 @@ remote_log:
   port: 8071
 
 security:
-  admin_role: EmployeePrimary
+  admin_role: Services.Action.Admin
   extra_digest_strength: 3
   verify_login_after_msecs: 7200000
 
 standards:
-  ! security_roles:
-    - InsuredSecondary
-    - InsuredPrimary
-    - AgentSecondary
-    - AgentPrimary
-    - EmployeeAgencySecondary
-    - EmployeeAgencyPrimary
-    - EmployeeSecondary
-    - EmployeePrimary
-  ! role_groups:
-    - AgencyStaff
-    - InsuredStaff
-    - InternalStaff
+  ! keep:
+    = me

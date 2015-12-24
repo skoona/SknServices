@@ -4,7 +4,7 @@ class ContentProfilesController < ApplicationController
   # GET /content_profiles
   # GET /content_profiles.json
   def index
-    @content_profiles = ContentProfile.all
+    @content_profiles = ContentProfile.paginate(page: params[:page], :per_page => 12)
   end
 
   # GET /content_profiles/1

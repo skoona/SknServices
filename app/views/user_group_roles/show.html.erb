@@ -1,19 +1,8 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, accessed_page_name) %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @user_group_role.name %>
-</p>
+<section class="container">
+    <h1><%= accessed_page_name %></h1>
 
-<p>
-  <strong>Description:</strong>
-  <%= @user_group_role.description %>
-</p>
+    <%= render @user_group_role %>
+</section>
 
-<p>
-  <strong>Group type:</strong>
-  <%= @user_group_role.group_type %>
-</p>
-
-<%= link_to 'Edit', edit_user_group_role_path(@user_group_role) %> |
-<%= link_to 'Back', user_group_roles_path %>

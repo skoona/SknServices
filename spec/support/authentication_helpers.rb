@@ -11,6 +11,9 @@ module AuthenticationHelpers
   #  @user
   #end
 
+  # [warden.] login_as(user_object, :default)   -- should without the bypass stuff
+  # logout(:default)
+
   def bypass_warden_for_views(user, controller_object)
     allow(controller_object).to receive(:current_user) {user}    
     allow(controller_object).to receive(:authenticated?) {true}

@@ -1,5 +1,7 @@
-<% provide(:title, "User") %>
+<% provide(:title, accessed_page_name) %>
 
-<section class="col-md-offset-2 placeholders">
+<section class="container">
+    <h1><%= accessed_page_name %></h1>
+
     <%= render @user %>
 </section>

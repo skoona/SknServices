@@ -10,7 +10,7 @@
 #  remember_token           :string
 #  password_reset_token     :string
 #  password_reset_date      :datetime
-#  role_groups              :string
+#  assigned_groups          :string
 #  roles                    :string
 #  active                   :boolean          default(TRUE)
 #  file_access_token        :string
@@ -33,26 +33,33 @@ FactoryGirl.define do
     password_confirmation   "foobar"
     password_reset_token    "tokenx"
     password_reset_date     {Time.zone.now}
-    role_groups             ["EmployeeSecondary"]
-    assigned_roles          ["EmployeeSecondary",
-                             "Users.Action.Update",
+    assigned_groups             ["EmployeeSecondary"]
+    assigned_roles          ["Users.Action.Update",
+                             "Users.Action.Edit",
+                             "Users.Action.Read",
+                             "Service.Action.ResetPassword"]
+    roles                    ["Users.Action.Update",
                              "Users.Action.Edit",
                              "Users.Action.Read",
                              "Service.Action.ResetPassword"]
 
     factory :support do
-      role_groups             ["EmployeeSecondary"]
-      assigned_roles          ["EmployeeSecondary",
-                               "Users.Action.Update",
+      assigned_groups             ["EmployeeSecondary"]
+      assigned_roles          ["Users.Action.Update",
+                               "Users.Action.Edit",
+                               "Users.Action.Read",
+                               "Service.Action.ResetPassword"]
+      roles                   ["Users.Action.Update",
                                "Users.Action.Edit",
                                "Users.Action.Read",
                                "Service.Action.ResetPassword"]
     end
 
     factory :manager do
-      role_groups             ["EmployeePrimary"]
-      assigned_roles          ["EmployeePrimary",
-                               "Services.Action.Admin",
+      assigned_groups             ["EmployeePrimary"]
+      assigned_roles          ["Services.Action.Admin",
+                               "Services.Action.Developer"]
+      roles                   ["Services.Action.Admin",
                                "Services.Action.Developer"]
     end
   end

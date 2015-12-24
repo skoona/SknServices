@@ -7,11 +7,14 @@
 
 class AccessRegistryTestUser
   include Secure::AccessControl
-  attr_accessor :roles, :unique_id
+
+  attr_accessor :roles, :unique_id, :username, :assigned_roles,
+                :assigned_groups, :remember_token, :person_authenticated_key
 
   def initialize(params=nil)
     @roles = params || [] # is an [] or roles
-    @unique_id = SecureRandom.hex(16)
+    @peron_authenticated_key = @unique_id = SecureRandom.hex(16)
+    @username = Faker::Internet.user_name
   end
 
   def key

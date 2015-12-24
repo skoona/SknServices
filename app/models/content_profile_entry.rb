@@ -29,7 +29,7 @@ class ContentProfileEntry < ActiveRecord::Base
     topic_type.name
   end
 
-  def info
+  def entry_info
     {
       topic_value: topic_value,
       content_value: content_value,

@@ -1,13 +1,13 @@
 <% provide(:title, accessed_page_name) %>
 
 <script type="text/javascript">
-    function about() {
-        info = document.getElementById('about-content');
+    function getRailsInfo(placeHolder) {
+        info = document.getElementById(placeHolder);
         if (window.XMLHttpRequest)
         { xhr = new XMLHttpRequest(); }
         else
         { xhr = new ActiveXObject("Microsoft.XMLHTTP"); }
-        xhr.open("GET","/rails/info/properties",false);
+        xhr.open("GET", info.closest("a").attr('href'),false);
         xhr.send("");
         info.innerHTML = xhr.responseText;
         info.style.display = 'block'
@@ -43,8 +43,12 @@
             <p>Development Version <%= Settings.Packaging.pomVersion.to_s %></p>
         </div>
         <div id="about">
-                <h3><a href="rails/info/properties" onclick="about(); return false">click here for application environment info.</a></h3>
+                <h3><a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false">click here for environment info.</a></h3>
                 <div id="about-content" style="display: none"></div>
+        </div>
+        <div id="routes">
+            <h3><a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false">click here for route info.</a></h3>
+            <div id="route-content" style="display: none"></div>
         </div>
         <hr />
         <div style="margin-left: 17px;">
@@ -52,17 +56,44 @@
                 <% if logged_in? %>
                     <p>Has Access to this page '/' = <%= current_user.has_access?("/") ? "True": "False" %></p>
                     <hr />
-                    <h3>Groups</h3>
+                    <h3>Assigned Groups</h3>
                     <ol>
-                        <% current_user.role_groups.each do |item| -%>
+                        <% current_user.assigned_groups.each do |item| -%>
                             <li><%= item %></li>
                         <% end -%>
                     </ol>
                     <hr />
-                    <h3>Roles</h3>
+                    <h3>Assigned Roles</h3>
                     <ol>
-                        <% current_user.roles.each do |item| -%>
+                        <% current_user.assigned_roles.each do |item| -%>
                             <li><%= item %></li>
+                        <% end -%>
+                    </ol>
+                    <hr />
+                    <h3>Access Profile</h3>
+                    <ol>
+                        <% current_user.access_profile.try(:each) do |item| -%>
+                            <li><%= item %></li>
+                        <% end -%>
+                    </ol>
+                    <hr />
+                    <h3>Content Profile</h3>
+                    <ol>
+                        <% current_user.content_profile.try(:attributes).each_pair do |item, value| -%>
+                            <% if item.eql?(:entries) %>
+                                <l1><h4><%= item%></h4>
+                                    <% value.each do |ary| %>
+                                      <ol>
+                                        <% ary.each_pair do |k,v| %>
+                                           <li><%= k %> => <%= v %></li>
+                                        <% end %>
+                                        <li>---</li>
+                                      </ol>
+                                    <% end %>
+                                </l1>
+                                <% else %>
+                            <li><%= item %> => <%= value %></li>
+                                <% end %>
                         <% end -%>
                     </ol>
                 <% end %>
@@ -71,7 +102,7 @@
             <div>
             <h3>Current Session Values</h3>
                 <ol>
-                    <% session.keys do |k| -%>
+                    <% session.keys.each do |k| -%>
                         <li> <%= k %>: <%= session[k] %> </li>
                     <% end -%>
                 </ol>

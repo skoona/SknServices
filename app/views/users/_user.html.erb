@@ -1,30 +1,36 @@
 
-<div class="col-xs-6 col-sm-3 placeholder">
-    <%= link_to user_path(user) do %>
-        <%= gravatar_for(user, size: 96, class: "img-responsive", alt: user.username) %>
-    <% end %>
-    <h4 class="text-center">Username: &nbsp;<%= user.username %></h4>
-    <ul class="list-unstyled text-center">
-        <li><%= user.email %></li>
-        <li>State: <%= user.active ? "Active" : "inActive" %></li>
-        <li>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></li>
-    </ul>
-    <ul class="nav nav-pills placeholder">
-        <% if has_access?('users/edit') and current_user.username.eql?(user.username) %>
-            <li><%= link_to edit_user_path(user) do %>
-                    <span class="badge">Edit</span>
+<div class="well col-xs-6">
+    <div class="media">
+        <div class="media-left">
+                <%= link_to user_path(user) do %>
+                    <%= gravatar_for(user, {size: 96, alt: user.username, class: "media-object"}) %>
                 <% end %>
-            </li>
-        <% end %>
-        <% if has_access?('users/destroy') %>
-            <li><%= link_to user_path(user), method: :delete, data: {confirm: "Deleting cannot be undone! Delete anyway?"}  do %>
-                    <span class="badge">Delete</span>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">Username: &nbsp;<%= user.username %></h4>
+            <p>Email: <%= user.email %></p>
+            <p>State: <%= user.active ? "Active" : "inActive" %></p>
+            <p>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></p>
+            <p>
+                <% if has_access?('users/show')  %>
+                    <%= link_to user_path(user)  do %>
+                        <span class="badge">Show</span>
+                    <% end %> |
                 <% end %>
-            </li>
-        <% end %>
-        <li><%= link_to :back  do %>
-                <span class="badge">Back</span>
-            <% end %>
-        </li>
-    </ul>
+                <% if has_access?('users/edit') %>
+                    <%= link_to edit_user_path(user) do %>
+                            <span class="badge">Edit</span>
+                    <% end %> |
+                <% end %>
+                <% if has_access?('users/destroy') %>
+                    <%= link_to user_path(user), method: :delete, data: {confirm: "Deleting cannot be undone! Delete anyway?"}  do %>
+                        <span class="badge">Delete</span>
+                    <% end %> |
+                <% end %>
+                <%= link_to :back  do %>
+                    <span class="badge">Back</span>
+                <% end %>
+            </p>
+        </div>
+    </div>
 </div>

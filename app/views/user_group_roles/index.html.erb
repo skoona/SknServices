@@ -1,31 +1,12 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, accessed_page_name) %>
 
-<h1>Listing User Group Roles</h1>
+<section class="container">
+    <h1><%= accessed_page_name %></h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Group type</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+        <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
+        <%= render @user_group_roles %>
+        <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
 
-  <tbody>
-    <% @user_group_roles.each do |user_group_role| %>
-      <tr>
-        <td><%= user_group_role.name %></td>
-        <td><%= user_group_role.description %></td>
-        <td><%= user_group_role.group_type %></td>
-        <td><%= link_to 'Show', user_group_role %></td>
-        <td><%= link_to 'Edit', edit_user_group_role_path(user_group_role) %></td>
-        <td><%= link_to 'Destroy', user_group_role, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New User group role', new_user_group_role_path %>
+    <br />
+    <%= link_to 'New User group role', new_user_group_role_path %>
+</section>

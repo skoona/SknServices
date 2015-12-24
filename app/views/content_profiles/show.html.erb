@@ -1,34 +1,7 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, accessed_page_name) %>
 
-<p>
-  <strong>Person authentication key:</strong>
-  <%= @content_profile.person_authentication_key %>
-</p>
+<section class="container">
+    <h1><%= accessed_page_name %></h1>
 
-<p>
-  <strong>Profile type:</strong>
-  <%= @content_profile.profile_type %>
-</p>
-
-<p>
-  <strong>Authentication provider:</strong>
-  <%= @content_profile.authentication_provider %>
-</p>
-
-<p>
-  <strong>Username:</strong>
-  <%= @content_profile.username %>
-</p>
-
-<p>
-  <strong>Display name:</strong>
-  <%= @content_profile.display_name %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @content_profile.email %>
-</p>
-
-<%= link_to 'Edit', edit_content_profile_path(@content_profile) %> |
-<%= link_to 'Back', content_profiles_path %>
+    <%= render @content_profile %>
+</section>

@@ -10,7 +10,7 @@ begin
       email:                 "skoona@gmail.com",
       password:                "developer99",
       password_confirmation:   "developer99",
-      role_groups:             ["EmployeePrimary"],
+      assigned_groups:             ["EmployeePrimary"],
       assigned_roles:          ["Services.Action.Developer"]
   },
   {
@@ -19,7 +19,7 @@ begin
       email:                 "appdev@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      role_groups:             ["EmployeePrimary"],
+      assigned_groups:             ["EmployeePrimary"],
       assigned_roles:          ["Services.Action.Admin"]
   },
   {
@@ -28,7 +28,7 @@ begin
       email:                 "appdev1@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      role_groups:             ["EmployeeSecondary"],
+      assigned_groups:             ["EmployeeSecondary"],
       assigned_roles:          ["Services.Action.Admin"]
 
   },
@@ -38,7 +38,7 @@ begin
       email:                 "appdev2@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      role_groups:             ["AgencyPrimary"],
+      assigned_groups:             ["AgencyPrimary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   },
   {
@@ -47,7 +47,7 @@ begin
       email:                 "appdev3@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      role_groups:             ["AgencySecondary"],
+      assigned_groups:             ["AgencySecondary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   },
   {
@@ -56,7 +56,7 @@ begin
       email:                 "appdev4@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      role_groups:             ["VendorPrimary"],
+      assigned_groups:             ["VendorPrimary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   },
   {
@@ -65,7 +65,7 @@ begin
       email:                 "appdev5@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      role_groups:             ["VendorSecondary"],
+      assigned_groups:             ["VendorSecondary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   }
   ]

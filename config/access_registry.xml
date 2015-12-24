@@ -381,6 +381,76 @@
         <description>SknService Model Details</description>
     </resource>
 
+    <!--=========================  Content Profile Process  ============================ -->
+    <resource secured="true">
+        <uri>content_profiles/index</uri>
+        <description>Content Profiles</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>content_profiles/show</uri>
+        <description>Content Profiles: Show</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>content_profiles/edit</uri>
+        <description>Content Profiles: Edit</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <!--=========================  Access Profile  ============================ -->
+    <resource secured="true">
+        <uri>user_group_roles/index</uri>
+        <description>Access Profile Groups</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>user_group_roles/show</uri>
+        <description>Access Profile Groups: Show</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>user_group_roles/edit</uri>
+        <description>Access Profile Groups: Edit</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
     <!--=========================  DEVELOPMENT RESOURCES  ============================ -->
   <resource secured="true">
       <uri>pages/developer</uri>
@@ -391,34 +461,5 @@
           </authorizedRoles>
       </permission>
   </resource>
-
-    <resource secured="true">
-        <uri>pages/developer</uri>
-        <description>System Status Page for Developers</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true">
-        <uri>user_group_roles/index</uri>
-        <description>RSpec Test</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>content_profiles/index</uri>
-        <description>RSpec Test</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
 
 </accessRegistry>

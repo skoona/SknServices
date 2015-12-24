@@ -12,11 +12,11 @@ RSpec.describe ApplicationController, "Service routines for resetting forgotten 
     end
 
     it "succeeds when controller is valid." do
-      expect(PasswordService.new({controller: controller})).to be_a(PasswordService)
+      expect(PasswordService.new({factory: controller})).to be_a(PasswordService)
     end
 
     it "fails when controller is invalid." do
-      expect { PasswordService.new({controller: nil}) }.to raise_error(ArgumentError)
+      expect { PasswordService.new({factory: nil}) }.to raise_error(ArgumentError)
     end
 
     it "#password_service return a proper service object." do
