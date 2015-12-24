@@ -6,7 +6,7 @@
 
 
 class AccessRegistryTestUser
-  include Secure::AccessControl
+  include Secure::UserAccessControl
 
   attr_accessor :roles, :unique_id, :username, :assigned_roles,
                 :assigned_groups, :remember_token, :person_authenticated_key

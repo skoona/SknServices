@@ -2,7 +2,7 @@
 #
 
 module Secure
-  module AccessControl
+  module UserAccessControl
     extend ActiveSupport::Concern
 
     ADMIN_ROLE = Settings.security.admin_role

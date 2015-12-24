@@ -21,7 +21,7 @@
 #
 
 class User < ActiveRecord::Base
-  include Secure::AccessControl
+  include Secure::UserAccessControl
 
   has_secure_password
 
