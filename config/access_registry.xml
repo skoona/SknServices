@@ -195,40 +195,76 @@
     <!--============== System Menu  ========== -->
     <resource secured="true">
         <uri>#Administration</uri>
-        <description>Administrative Actions - Menu</description>
+        <description>Authentication Admin</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
     <resource secured="true">
         <uri>#GroupManagement</uri>
-        <description>Authorization Group Role Actions - Menu</description>
+        <description>AccessProfile Admin</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
     <resource secured="true">
         <uri>#ContentProfileManagement</uri>
-        <description>Authorization ContentProfile Actions - Menu</description>
+        <description>ContentProfile Admin</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
 
+    <!--============== Public Pages  ========== -->
+    <resource secured="false"> <!-- This resource is not protected, since unauthorized users need to see it. -->
+        <uri>/signout</uri>
+        <description>Logout</description>
+    </resource>
+    <resource secured="false"> <!-- This resource is not protected, since unauthorized users need to see it. -->
+        <uri>/signin</uri>
+        <description>Sign-in</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/home</uri>
+        <description>Home</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/about</uri>
+        <description>About</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/model_details</uri>
+        <description>SknService Model Details</description>
+    </resource>
+
+
     <!--============== PasswordResets Process  ========== -->
+    <resource secured="false">
+        <uri>password_resets/new</uri>
+        <description>PasswordResets Action - New</description>
+        <permission type="CREATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
     <resource secured="false">
         <uri>password_resets/edit</uri>
         <description>PasswordResets Action - Edit</description>
-        <permission type="READ">
+        <permission type="UPDATE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.ResetPassword</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -239,16 +275,6 @@
         <uri>password_resets/update</uri>
         <description>PasswordResets Action - Update</description>
         <permission type="UPDATE">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-   <resource secured="false">
-        <uri>password_resets/new</uri>
-        <description>PasswordResets Action - New</description>
-        <permission type="CREATE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.ResetPassword</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -269,66 +295,58 @@
     <!--============== Users Pages  ========== -->
     <resource secured="true">
         <uri>users/index</uri>
-        <description>Top Menu Users - Index</description>
+        <description>Users</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Users.Action.Create</authorizedRole>
-                <authorizedRole>Users.Action.Read</authorizedRole>
-                <authorizedRole>Users.Action.Update</authorizedRole>
-                <authorizedRole>Users.Action.Delete</authorizedRole>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
     <resource secured="true">
         <uri>users/show</uri>
-        <description>User Action - Show</description>
+        <description>Show User</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Users.Action.Create</authorizedRole>
                 <authorizedRole>Users.Action.Read</authorizedRole>
-                <authorizedRole>Users.Action.Update</authorizedRole>
-                <authorizedRole>Users.Action.Delete</authorizedRole>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>users/edit</uri>
-        <description>User Action - Edit</description>
-        <permission type="UPDATE">
-            <authorizedRoles>
-                <authorizedRole>Users.Action.Edit</authorizedRole>
-                <authorizedRole>Users.Action.Update</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>users/update</uri>
-        <description>User Action - Update</description>
-        <permission type="UPDATE">
-            <authorizedRoles>
-                <authorizedRole>Users.Action.Edit</authorizedRole>
-                <authorizedRole>Users.Action.Update</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
     <resource secured="true">
         <uri>users/new</uri>
-        <description>User Action - New</description>
+        <description>New User</description>
         <permission type="CREATE">
             <authorizedRoles>
-                <authorizedRole>Users.Action.Create</authorizedRole>
-                <authorizedRole>Users.Action.Delete</authorizedRole>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>users/edit</uri>
+        <description>Edit User</description>
+        <permission type="UPDATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>users/update</uri>
+        <description>Update User</description>
+        <permission type="UPDATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -337,48 +355,22 @@
         <description>User Action - Create</description>
         <permission type="CREATE">
             <authorizedRoles>
-                <authorizedRole>Users.Action.Create</authorizedRole>
-                <authorizedRole>Users.Action.Delete</authorizedRole>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
     <resource secured="true">
         <uri>users/destroy</uri>
-        <description>User Action - Destroy</description>
+        <description>Destroy User</description>
         <permission type="DELETE">
             <authorizedRoles>
-                <authorizedRole>Users.Action.Delete</authorizedRole>
-                <authorizedRole>Users.Action.Create</authorizedRole>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>EmployeePrimary</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
-    </resource>
-
-
-    <!--========================= GLOBAL SYSTEM RESOURCES ============================ -->
-
-    <resource secured="false"> <!-- This resource is not protected, since unauthorized users need to see it. -->
-        <uri>/signout</uri>
-		    <description>Logout</description>
-	  </resource>
-    <resource secured="false"> <!-- This resource is not protected, since unauthorized users need to see it. -->
-        <uri>/signin</uri>
-        <description>Sign-in</description>
-    </resource>
-    <resource secured="false">
-        <uri>pages/home</uri>
-        <description>Home</description>
-    </resource>
-    <resource secured="false">
-        <uri>pages/about</uri>
-        <description>About</description>
-    </resource>
-    <resource secured="false">
-        <uri>pages/model_details</uri>
-        <description>SknService Model Details</description>
     </resource>
 
     <!--=========================  Content Profile Process  ============================ -->
@@ -395,8 +387,20 @@
     </resource>
     <resource secured="true">
         <uri>content_profiles/show</uri>
-        <description>Content Profiles: Show</description>
+        <description>Content Profile: Show</description>
         <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>content_profiles/new</uri>
+        <description>Content Profiles: New</description>
+        <permission type="CREATE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -407,7 +411,40 @@
     <resource secured="true">
         <uri>content_profiles/edit</uri>
         <description>Content Profiles: Edit</description>
-        <permission type="READ">
+        <permission type="UPDATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>content_profiles/update</uri>
+        <description>Content Profiles: Update</description>
+        <permission type="UPDATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>content_profiles/create</uri>
+        <description>Content Profiles: Create</description>
+        <permission type="CREATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>content_profiles/destroy</uri>
+        <description>Content Profile: Destroy</description>
+        <permission type="DELETE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -430,8 +467,20 @@
     </resource>
     <resource secured="true">
         <uri>user_group_roles/show</uri>
-        <description>Access Profile Groups: Show</description>
+        <description>Access Profile Group: Show</description>
         <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserAuthorizationGroups</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>user_group_roles/new</uri>
+        <description>Access Profile Group: New</description>
+        <permission type="CREATE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -441,8 +490,41 @@
     </resource>
     <resource secured="true">
         <uri>user_group_roles/edit</uri>
-        <description>Access Profile Groups: Edit</description>
-        <permission type="READ">
+        <description>Access Profile Group: Edit</description>
+        <permission type="UPDATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>user_group_roles/update</uri>
+        <description>Access Profile Group: Update</description>
+        <permission type="UPDATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>user_group_roles/create</uri>
+        <description>Access Profile Group: Create</description>
+        <permission type="CREATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>user_group_roles/destroy</uri>
+        <description>Access Profile Group: Destroy</description>
+        <permission type="DELETE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -457,6 +539,7 @@
       <description>System Status Page for Developers</description>
       <permission type="READ">
           <authorizedRoles>
+              <authorizedRole>Services.Action.Admin</authorizedRole>
               <authorizedRole>Services.Action.Developer</authorizedRole>
           </authorizedRoles>
       </permission>

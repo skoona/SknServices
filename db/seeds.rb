@@ -279,10 +279,8 @@ begin
       {name: "Services.Action.Developer", description: "Developer"}
   ]
 
-  all_users = [
-      {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"},
-      {name: "Users.Action.Read", description: "Read Action from main models for public"}
-  ]
+  all_users =
+      {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}
 
   content_profile_p =
       {name: "Services.Action.Admin.ContentProfile",   description: "Administer Authorization Content Profile"}
