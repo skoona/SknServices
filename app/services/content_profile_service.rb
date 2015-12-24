@@ -4,18 +4,10 @@
 # Manages CP interactions for Users
 # - requires Secure::UserContentProfile on User instance via User#content_profile
 
-class ContentProfileService
+class ContentProfileService < ::Factory::DomainServices
 
-	attr_accessor :factory, :user
+  # attr_accessor :factory, :user, :current_user  -- initialize by service factory
 
-	def initialize(params={})
-		[:factory, :user].each do |k|
-			send("#{k}=", nil)
-			send("#{k}=", params[k]) if params.key?(k)
-		end
-		raise ArgumentError,
-          "ContentProfileService: Initialization param missing (#{'factory' if @factory.nil?} #{'user' if @user.nil?} #{self.class.name})" unless @factory.present? and @user.present?
-	end
 
 	def some_function(params)
     # do something good

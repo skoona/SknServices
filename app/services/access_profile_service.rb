@@ -4,18 +4,10 @@
 # Manages AccessRegistry interactions for Users
 # - Requires User#access_profile
 
-class AccessProfileService
+class AccessProfileService < ::Factory::DomainServices
 
-	attr_accessor :factory, :user
+  # attr_accessor :factory, :user, :current_user  -- initialize by service factory
 
-	def initialize(params={})
-		[:factory, :user].each do |k|
-			send("#{k}=", nil)
-			send("#{k}=", params[k]) if params.key?(k)
-		end
-    raise ArgumentError,
-          "AccessProfileService: Initialization param missing (#{'factory' if @factory.nil?} #{'user' if @user.nil?} #{self.class.name})" unless @factory.present? and @user.present?
-	end
 
   def get_user_form_options
     SknUtils::PageControls.new({

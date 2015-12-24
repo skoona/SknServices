@@ -1,7 +1,7 @@
 <% provide(:title, accessed_page_name) %>
 
 <section class="container">
-    <h1 class="text-center"><%= accessed_page_name %></h1>
+    <h1><%= accessed_page_name %></h1>
 
     <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
         <section class="container">
@@ -10,5 +10,5 @@
     <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
 
 
-    <%= link_to 'New User group role', new_user_group_role_path %>
+    <%= link_to 'New User group role', new_user_path %>
 </section>

@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def index
     @counter = 0
-    @users = User.paginate(page: params[:page], :per_page => 4)
+    @users = User.paginate(page: params[:page], :per_page => 12)
   end
 
   def show

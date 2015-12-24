@@ -4,7 +4,9 @@
     <h1><%= accessed_page_name %></h1>
 
         <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
-        <%= render @user_group_roles %>
+        <section class="container">
+            <%= render @user_group_roles %>
+        </section>
         <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
 
     <br />

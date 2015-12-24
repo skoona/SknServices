@@ -1,6 +1,7 @@
 
 module ApplicationHelper
 
+
   def menu_active?(menu_link)
     active = false
     page_access = "#{controller_name}/#{action_name}"
@@ -58,20 +59,58 @@ module ApplicationHelper
     end
   end
 
-  def password_service
-    @ct_password_service ||= PasswordService.new({factory: self})
-    yield @ct_password_service if block_given?
-    @ct_password_service
+  # Converts named routes to string
+  #  Basic '/some/hardcoded/string/path'
+  #        '[:named_route_path]'
+  #        '[:named_route_path, {options}]'
+  #        '[:named_route_path, {options}, '?query_string']'
+  #
+  # Advanced ==> {engine: :comm_auto, path: :print_worksheet_quote_path, options: {id: 111304}, query: '?query_string'}
+  #              {engine: , path: , options: {}, query: ''}
+  def page_action_paths(paths)
+    case paths
+      when Array
+        case paths.size
+          when 1
+            send( paths[0] )
+          when 2
+            send( paths[0], paths[1] )
+          when 3
+            rstr = send( paths[0], paths[1] )
+            rstr + paths[2]
+        end
+
+      when Hash
+        rstr = send(paths[:engine]).send(paths[:path], paths.fetch(:options,{}) )
+        rstr + paths.fetch(:query, '')
+
+      when String
+        paths
+    end
+  rescue
+    '#page_action_error'
   end
-  def access_profile_service
-    @ct_access_profile_service ||= AccessProfileService.new({factory: self, user: current_user})
-    yield @ct_access_profile_service if block_given?
-    @ct_access_profile_service
+
+  def string_to_currency(s, *opts)
+    value = s.to_s.gsub(/$, /,'')
+    precision = 0
+    negative_format = "(%u%n)"
+    opts.each do |opt|
+      if opt.is_a? Hash
+        precision = opt[:precision] if opt.has_key? :precision
+        negative_format = opt[:negative_format] if opt.has_key? :negative_format
+      end
+    end
+    is_a_number?(value) ? number_to_currency(value, precision: precision, negative_format: negative_format ) : s
   end
-  def content_profile_service
-    @ct_content_profile_service ||= ContentProfileService.new({factory: self, user: current_user})
-    yield @ct_content_profile_service if block_given?
-    @ct_content_profile_service
+
+  def is_a_number?(s)
+    return true if [Fixnum, Float].include? s.class
+    s.to_s.strip.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
+
+  def snake_case(value)
+    value.downcase.gsub(/\s+/,'_')
   end
 
 end # End module

@@ -1,14 +1,6 @@
-class PasswordService
+class PasswordService < ::Factory::DomainServices
 
-	attr_accessor :factory
-
-	def initialize(params={})
-		[:factory].each do |k|
-			send("#{k}=", nil)
-			send("#{k}=", params[k]) if params.key?(k)
-		end
-		raise ArgumentError, "Initialization params missing: #{self.class.name}" unless @factory.present?
-	end
+	# attr_accessor :factory, :user, :current_user  -- initialize by service factory
 
 	def reset_password(params)
 		user = User.find(params[:id])  # id is a :password_reset_token
