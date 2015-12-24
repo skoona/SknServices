@@ -18,7 +18,8 @@
             <p>
                 <%= link_to 'Show', content_profile, class: "btn btn-default" %> |
                 <%= link_to 'Edit', edit_content_profile_path(content_profile), class: "btn btn-default" %> |
-                <%= link_to 'Destroy', content_profile, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %>
+                <%= link_to 'Destroy', content_profile, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %> |
+                <%= link_to :back, :back, class: "btn btn-default" %>
             </p>
         </div>
     </div>

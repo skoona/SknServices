@@ -2,9 +2,11 @@
 <div class="well col-xs-6">
     <div class="media">
         <div class="media-left">
-                <%= link_to user_path(user) do %>
-                    <%= gravatar_for(user, {size: 96, alt: user.username, class: "media-object"}) %>
-                <% end %>
+            <%= link_to user do %>
+                <span class="media-object">
+                    <span style="font-size:4.5em;" class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                </span>
+            <% end %>
         </div>
         <div class="media-body">
             <h4 class="media-heading">Username: &nbsp;<%= user.username %></h4>
@@ -27,9 +29,7 @@
                         <span class="badge">Delete</span>
                     <% end %> |
                 <% end %>
-                <%= link_to :back  do %>
-                    <span class="badge">Back</span>
-                <% end %>
+                <%= link_to :back, :back, class: "btn btn-default" %>
             </p>
         </div>
     </div>
