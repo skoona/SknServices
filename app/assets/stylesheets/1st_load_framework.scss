@@ -37,7 +37,6 @@ body {
  }
 main {
   @extend .container;
-  background-color: #eee;
   padding-bottom: 80px;
   width: 100%;
   margin-top: 51px; // accommodate the navbar
@@ -92,10 +91,6 @@ textarea {
     color: #777;
   }
 
-  p {
-    font-size: 1.1em;
-    line-height: 1.7em;
-  }
 */
 
 /* Custom page CSS
@@ -115,6 +110,10 @@ body > .container {
 code {
   font-size: 80%;
   }
+p {
+  font-size: 1.1em;
+//  line-height: 1.7em;
+}
 
 
 /* make all images responsive by default */
@@ -130,11 +129,11 @@ img {
 .large-image {
   //  z-index: 60;
   margin: 0 auto;
-  width: 100%;
+  width: 74%;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
-//  background-color: #0011ec;
+  background-color: #0011ec;
   z-index: 10;
 }
 

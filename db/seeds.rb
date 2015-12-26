@@ -191,7 +191,7 @@ begin
     ids = all_content_type_opts_recs.map {|item| item.id if control_opts[rec.name].include?(item.value)}.flatten.uniq
     # set ids and save
     rec.content_type_opt_ids=ids
-    rec.save
+    rec.save!
     rec
   end
   tt_recs = TopicType.create!(tt).each do |rec|
@@ -199,7 +199,7 @@ begin
     ids = all_topic_type_opts_recs.map {|item| item.id if control_opts[rec.name].include?(item.value)}.flatten.uniq
     # set ids and save
     rec.topic_type_opt_ids=ids
-    rec.save
+    rec.save!
     rec
   end
   pt_recs = ProfileType.create!(pt)
@@ -222,7 +222,7 @@ begin
       rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
       rec.content_type=content_rec
       rec.topic_type=topic_rec
-      rec.save
+      rec.save!
       rec.id
   end
 
@@ -248,7 +248,7 @@ begin
     rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
     rec.content_type=content_rec
     rec.topic_type=topic_rec
-    rec.save
+    rec.save!
     rec.id
   end
 

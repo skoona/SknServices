@@ -19,13 +19,13 @@ module Secure
     included do
       send :helper_method, :login_required, :redirect_to_target_or_default,
            :accessed_page_name, :accessed_page, :valid_user_has_access?,
-           "has_access?".to_sym, "current_user_has_access?".to_sym if respond_to? :helper_method
+           :has_access?, :current_user_has_access? if respond_to?(:helper_method)
     end
 
 
     def login_required
       unless AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
-        unless logged_in?
+        unless logged_in? # :authenticated?
           store_target_location
           Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to Sign in page")
           redirect_to signin_url, :alert => "You must sign in before accessing the '#{accessed_page_name}' page."

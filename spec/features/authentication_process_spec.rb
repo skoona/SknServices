@@ -13,7 +13,7 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
       expect(current_path).to eq home_path
-      expect(page).to have_title("Home")
+      expect(page).to have_title("Welcome")
     end
 
     scenario "Required to sign in when page is secured." do

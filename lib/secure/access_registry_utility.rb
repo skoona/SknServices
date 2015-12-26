@@ -57,6 +57,7 @@
 
 module Secure
   class AccessRegistryUtility
+    @@ar_options_keyword = Settings.access_profile.options_keyword
 
     # Initialize object and load the xmlFile
     def initialize (xml_filename)
@@ -68,45 +69,51 @@ module Secure
     end
 
     # Convert xml to Hash format
+    #
+    #File.open("./ar_permissions.yml", "w") do |file|
+    #      YAML::dump(resource_hash, file)
+    #end
     def from_xml (xml_node_set=nil)
       xml_node_set = @xml_doc unless xml_node_set.present?
-      resource_hash = Hash.new
+      resource_hash = HashWithIndifferentAccess.new
       resource_uri = ""
       key = ""
+
       xml_node_set.each do |resource|
-        next unless resource.xpath("uri").present?
+        next unless resource.xpath("uri").present? or !resource.name.eql?("text")
 
         # populate the head of resource hash
-        resource_uri = resource.xpath("uri").text
+        resource_uri = resource.xpath("uri").text.squish
         resource_hash[resource_uri] = {}
-
         resource_hash[resource_uri]["secured"] = false
+        resource_hash[resource_uri]["secured"] = resource["secured"] = true if resource["secured"].present? and resource["secured"].eql?("true")
 
-        resource_hash[resource_uri]["secured"] = resource["secured"].include? "true" if resource["secured"].present?
-        resource_hash[resource_uri]["description"] = resource.xpath("description").text.squish if resource.xpath("description").present?
+        # siblings
+        resource.children.each  do |sibl|
+          next if ["uri", "text"].include?(sibl.name)
+          keystr = sibl.name
 
-        # populate the individual permissions
-        resource.xpath("permission").each do |permission|
-          # ignore \n and other blank entries
-          next unless permission.has_attribute? "type"
+          if keystr.eql?("permission")
+            # populate the individual permissions
+            next unless sibl.has_attribute? "type"
 
-          key = permission["type"]
-          resource_hash[resource_uri][key] = {}
+            key = sibl["type"]
+            resource_hash[resource_uri][key] = {}
 
-          permission.xpath("authorizedRoles/authorizedRole").each do |authorized|
-            next unless authorized.text.present?
+            sibl.xpath("authorizedRoles/authorizedRole").each do |authorized|
+              next unless authorized.text.present?
 
-            name = authorized.text
-            role = []
-            role = authorized["options"].squish.split(",").collect {|item| item.squish } if authorized.has_attribute? "options"
-            resource_hash[resource_uri][key].store(name,role)
-          end # end authorized role
-        end # end permission name
+              name = authorized.text
+              role = []
+              role = authorized[@@ar_options_keyword].squish.split(",").collect {|item| item.squish } if authorized.has_attribute?(@@ar_options_keyword)
+              resource_hash[resource_uri][key].store(name,role)
+            end # end authorized role
+          else # of permission
+            resource_hash[resource_uri][keystr] = sibl.content.squish
+          end
 
-      end # end resource sets
-      #File.open("./ar_permissions.yml", "w") do |file|
-      #      YAML::dump(resource_hash, file)
-      #end
+        end # of sibling
+      end # of node_set
 
       resource_hash
     end  # end from_xml()

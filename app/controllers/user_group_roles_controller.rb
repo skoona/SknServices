@@ -65,6 +65,8 @@ class UserGroupRolesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_user_group_role
       @user_group_role = UserGroupRole.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      redirect_to user_group_roles_url, notice: 'Requested object Not Found!'
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

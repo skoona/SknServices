@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   def target_object
     @user = User.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
-    redirect_to users_url, notice: 'Requested User Not Found!'
+    redirect_to users_url, notice: 'Requested object Not Found!'
   end
 
   def permitted

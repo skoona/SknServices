@@ -74,7 +74,8 @@
 class AccessRegistry
 
   CRUD_MODES = ["CREATE","READ","UPDATE","DELETE"].freeze
-	@@ar_permissions = Secure::AccessRegistryUtility.new("access_registry").from_xml()
+	@@ar_permissions = Secure::AccessRegistryUtility.new(Settings.access_profile.registry_filename.basename).from_xml()
+  @@ar_strict_mode = Settings.access_profile.default_unknown_to_unsecure
 
   def initialize
     # not needed as this is a static class
@@ -86,7 +87,16 @@ class AccessRegistry
   #
   def self.get_resource_description(resource_uri)
     @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["description"] : ""
-  end  
+  end
+  def self.get_resource_userdata_string(resource_uri)
+    @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["userdata"] : ""
+  end
+  def self.get_resource_userdata_hash(resource_uri) # target must be json formatted string
+    str = @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["userdata"] : false
+    JSON.parse(str) if str
+  rescue
+    {}.to_json
+  end
   def self.get_ar_resource_keys
     @@ar_permissions.keys
   end
@@ -98,7 +108,6 @@ class AccessRegistry
   # Match specific CRUD
   # User Role MUST match CRUD Role AND
   # User options MUST match Resource Options if Resource Options are present
-  #
   def self.check_role_permissions? (user_roles, resource_uri, crud_mode="READ", options=nil)
     user_roles = [user_roles] unless user_roles.kind_of?(Array)
     result = false
@@ -129,7 +138,6 @@ class AccessRegistry
   # Match Any CRUD
   # User Role MUST match CRUD Role AND
   # User options MUST match Resource Options if Resource Options are present
-  #
   def self.check_access_permissions? (user_roles, resource_uri, options=nil)
     user_roles = [user_roles] unless user_roles.kind_of?(Array)
     result = false
@@ -152,6 +160,7 @@ class AccessRegistry
      else
        # TODO: Enable logging of all unregistered
        Rails.logger.info("#{self.class.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
+
        result = false
      end
      
@@ -165,6 +174,7 @@ class AccessRegistry
 
   def self.security_check?(resource_uri)
     # Warden must consider all things true (secured) unless its present and  defined to be different
+    return true if (!@@ar_permissions.has_key?(resource_uri) && @@ar_strict_mode)
     (@@ar_permissions.has_key?(resource_uri) && !@@ar_permissions[resource_uri]["secured"]) # prefer the actual value or use the default
   end
 

@@ -1,0 +1,30 @@
+<% provide(:title, accessed_page_name) %>
+
+
+<section class="container">
+
+    <section class="container">
+        <h2><%= accessed_page_name %></h2>
+
+        <%= image_tag("AccessProfile-ContentProfile.png", alt: "ContentProfile", class: "large-image") %>
+    </section>
+
+    <section class="container">
+        <p class="lead">
+            ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
+            engineering challenge to handle the dynamics of Electronic Delivery.  ContentProfiles deal with
+            specific content access privileges; which document, file, report, etc.
+        </p>
+
+        <p>
+            UserProfiles and AccessProfiles have many different implementations available, and are well handled processes.  However,
+            ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
+            engineering challenge to handle the dynamics of Electronic Delivery.
+        </p>
+    </section>
+
+    <%= link_to :back, class: "pull-right" do %>
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        Home
+    <% end %>
+</section>

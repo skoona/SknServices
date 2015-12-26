@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
 
   before_create {|user|
     user.generate_unique_token(:person_authenticated_key)   # Never Changes
+    user.generate_unique_token(:remember_token)   # Change by reset only
   }
 
 
@@ -36,7 +37,6 @@ class User < ActiveRecord::Base
     user.assigned_groups = [user.assigned_groups].flatten unless user.assigned_groups.is_a?(Array)
     user.email = user.email.downcase
     user.username = user.username.downcase
-    user.generate_unique_token(:remember_token)   # Change with every update
   }
 
   serialize :roles, Array
@@ -65,6 +65,7 @@ class User < ActiveRecord::Base
     begin
       self[column] = User.get_new_secure_token
     end while User.exists?(column => self[column])
+    true
   end
 
   def need_password?

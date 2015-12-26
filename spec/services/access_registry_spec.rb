@@ -71,7 +71,7 @@ RSpec.describe AccessRegistry, "Authorization management" do
     it "Will not allow an instance to be created."  do
         expect{ AccessRegistry.new }.to raise_error(NotImplementedError)
     end
-    it "Undefined resource are treated as secured." do
+    it "Undefined resources are treated as secured." do
       expect(AccessRegistry.is_secured?(resource_unknown)).to be true
     end
     it "Defined resources are secure when declared as such." do
@@ -79,6 +79,27 @@ RSpec.describe AccessRegistry, "Authorization management" do
     end
     it "Defined resources are not secure when declared as such." do
       expect(AccessRegistry.is_secured?(resource_public_page)).to be false
+    end
+  end
+
+  context "element payloads are directly accessable" do
+    it "#get_resource_description returns desciption element as string, from secured resource." do
+      expect(AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
+    end
+    it "#get_resource_userdata_string returns userdata element as string, from secured resource." do
+      expect(AccessRegistry.get_resource_userdata_string('testing/userdata')).to be_a_kind_of(String)
+    end
+    it "#get_resource_userdata_hash returns userdata element as hash, from secured resource." do
+      expect(AccessRegistry.get_resource_userdata_hash('testing/userdata')).to be_a_kind_of(Hash)
+    end
+    it "#get_resource_description returns desciption element as string, from unsecure resource." do
+      expect(AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
+    end
+    it "#get_resource_userdata_string returns userdata element as string, from unsecure resource." do
+      expect(AccessRegistry.get_resource_userdata_string('testing/userdata')).to be_a_kind_of(String)
+    end
+    it "#get_resource_userdata_hash returns userdata element as hash, from unsecure resource." do
+      expect(AccessRegistry.get_resource_userdata_hash('testing/userdata')).to be_a_kind_of(Hash)
     end
   end
 
@@ -165,6 +186,7 @@ RSpec.describe AccessRegistry, "Authorization management" do
         auth.set_roles  ["Test.Action.Read"]
         expect(auth.has_access?(resource_options)).to be true
         expect(auth.has_update?(resource_options)).to be false
+        expect(auth.has_create?(resource_options)).to be false
         expect(auth.has_update?(resource_options,owner_option)).to be true
         expect(auth.has_create?(resource_options,manager_option)).to be true
       end

@@ -2,50 +2,47 @@
 
 <section class="container">
 
-    <section class="container">
-        <h2>Welcome to SknService</h2>
-
-        <%= image_tag("AccessProfile-ContentProfile.png", alt: "Main Path", class: "large-image") %>
-    </section>
-
-    <section class="container">
-        <div class="panel panel-info">
-            <div class="panel-body">
-                <h5>Content-based Authorization Specification</h5>
-                <dl class="dl-horizontal">
-                    <dt>Key/Value tuple where:</dt>
-                    <dd>key is a single record for each user labeled ContentProfile.</dd>
-                    <dd>value is collection of associated ContentProfileEntry(s).</dd>
-                    <dd>Content Profiles are indentified by an unique token assigned by the authentication service.</dd>
-                    <dt>Profile: One</dt>
-                    <dd>key is an unique combination of: &lt;UUID&gt;/&lt;ProfileType&gt;</dd>
-                    <dd>value is collection of &lt;ProfileEntry&gt; the user shall access.</dd>
-                    <dd>Each User has only one of these.</dd>
-                    <dt>Profile Entry: Many</dt>
-                    <dd>key is unique combination of: &lt;ContentType&gt;/&lt;EntityType&gt;/&lt;EntityTypeOpts&gt;</dd>
-                    <dd>value is collection of &lt;ContentTypeOpts&gt; the user shall access.</dd>
-                    <dd>Each User can have many of these.</dd>
-                </dl>
-            </div>
-        </div>
-    </section>
+    <div class="jumbotron">
+        <h1><%= accessed_page_name %></h1>
+        <p>
+            This application demonstrates and explores methods for Authentication, Access Authorizations,
+            and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
+            this application.
+        </p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="<%= learn_more_path %>" role="button">Learn more</a>
+        </p>
+    </div>
 
     <section class="container">
         <div class="row">
             <div class="col-md-4">
                 <h2>ContentProfile</h2>
-                <p>Determines if a specific user can access or interact with a specific object by type or name of object.</p>
-                <p><a class="btn btn-default" href="<%= model_details_path()  %>" role="button">View details &raquo;</a></p>
+                <p>
+                    Determines if a specific user can access or interact with a specific object by
+                    type or name of object.
+                </p>
+                <p><a class="btn btn-default" href="<%= details_content_path()  %>" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
                 <h2>AccessProfile</h2>
-                <p>Applies an Authorization Profile to each Authenticated User; which was created by the Administrator.  Using the roles assigned, access to navigation, and/or viewable, elements is controlled.</p>
-                <p><a class="btn btn-default" href="<%= model_details_path()  %>" role="button">View details &raquo;</a></p>
+                <p>
+                    Renders per-assigned access roles to each Authenticated User. Roles which were mapped, by
+                    an administrator, to compile time application resources.  AccessProfile methods enforce access privileges
+                    to navigation, click-ables, and all viewable elements. Unauthorized attempts to access
+                    restricted pages, result in a redirect to the home page with an appropriate message.
+                </p>
+                <p><a class="btn btn-default" href="<%= details_access_path()  %>" role="button">View details &raquo;</a></p>
             </div>
             <div class="col-md-4">
                 <h2>Authentication</h2>
-                <p>Every incoming has both the authentication and authorization features of this site applied.  No access returns you to login or home page.  No authorization returns you to home page.  Should you attempt a url outside what is allowed and provided for, you will directed to the home page with access still being denied.</p>
-                <p><a class="btn btn-default" href="<%= model_details_path()  %>" role="button">View details &raquo;</a></p>
+                <p>
+                    Every incoming request will have the authentication features of
+                    this site applied.  Incorrect credentials redirects to login page.  No authorization
+                    returns you to home page. Users are assigned username, password, remember_me token,
+                    and a unique person_authentication_token(PAK).
+                </p>
+                <p><a class="btn btn-default" href="<%= details_auth_path()  %>" role="button">View details &raquo;</a></p>
             </div>
         </div>
     </section>

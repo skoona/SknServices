@@ -1,0 +1,92 @@
+<% provide(:title, accessed_page_name) %>
+
+
+<section class="container">
+    <article>
+        <header>
+            <h1><%= accessed_page_name %></h1>
+            <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "large-image") %>
+        </header>
+
+        <hr />
+        <section>
+            <p class="lead">
+                This application demonstrates and explores methods for Authentication, Access Authorizations,
+                and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
+                this application.
+            </p>
+
+            <ul class="lead">
+                <li>
+                    UserProfiles deal with userid, password, password resets, and some preferences management.
+                </li>
+                <li>
+                    AccessProfiles deal with what each user is allowed to access, click, or view.
+                </li>
+                <li>
+                    ContentProfiles deal with specific content access priviledges; which document, etc.
+                </li>
+            </ul>
+
+            <p>
+                UserProfiles and AccessProfiles have many different implementations available, and are well handled processes.  However,
+                ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
+                engineering challenge to handle the dynamics of Electronic Delivery.
+            </p>
+            <h4>All secured page elements shall be assigned an unique id, called URI, by a developer.</h4>
+            <p>
+                Authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and
+                for each <em>showable data element</em>.  Page Access authorization is automated by examining the
+                the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
+                authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
+                have two levels of authorization available; Clickable, and content-based
+                authorization using the expanded UserProfile permissions, both use the AccessRegistry.
+            </p>
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <p>
+                        A user might have general access to the Account page which could list five
+                        sensitive documents types, but is only allowed to view two document types for that specific
+                        account.  Content-based authorization requires a document-type permissions list by account, to
+                        enforce access restrictions.
+                    </p>
+                </div>
+            </div>
+            <h4>Authorization shall consider business entities when determining access restrictions.</h4>
+            <p>
+                Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization outcomes.
+                It first identifies access authorization to a specific business entity. Then specific access, by type, to secure objects related to that entity.
+            </p>
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <h5>Content-based Authorization Specification</h5>
+                    <dl class="dl-horizontal">
+                        <dt>Key/Value tuple where:</dt>
+                        <dd>key is a single record for each user labeled ContentProfile.</dd>
+                        <dd>value is collection of associated ContentProfileEntry(s).</dd>
+                        <dd>Content Profiles are indentified by an unique token assigned by the authentication service.</dd>
+                        <dt>Profile: One</dt>
+                        <dd>key is an unique combination of: &lt;UUID&gt;/&lt;ProfileType&gt;</dd>
+                        <dd>value is collection of &lt;ProfileEntry&gt; the user shall access.</dd>
+                        <dd>Each User has only one of these.</dd>
+                        <dt>Profile Entry: Many</dt>
+                        <dd>key is unique combination of: &lt;ContentType&gt;/&lt;EntityType&gt;/&lt;EntityTypeOpts&gt;</dd>
+                        <dd>value is collection of &lt;ContentTypeOpts&gt; the user shall access.</dd>
+                        <dd>Each User can have many of these.</dd>
+                    </dl>
+                </div>
+            </div>
+            <p>
+                AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
+                application to access role strings; which could be externally administered via LDAP or SQL.  The
+                AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
+                also could be administered via LDAP or SQL.
+            </p>
+        </section>
+
+        <%= link_to :back, class: "pull-right" do %>
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            Home
+        <% end %>
+    </article>
+</section>

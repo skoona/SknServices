@@ -15,6 +15,13 @@ remote_log:
   hostname: localhost
   port: 8071
 
+access_profile:
+  default_unknown_to_unsecure: false
+  options_keyword: options
+  registry_filename:  # defaults to <root>/config  -- no override
+    basename: access_registry
+    extension: xml
+
 security:
   admin_role: Services.Action.Admin
   extra_digest_strength: 3

@@ -5,7 +5,7 @@
 
    Along with class AccessRegistry and module AccessControl, this file describes those
    application resources that should be both secured and un-secured. This file is pre-processed
-   by the class AccessRegistryUtility to enable the overall Authorization capability: which converts
+   by the class AccessRegistryUtility to enable the Access Authorization capability: which converts
    it into a Hash object.
 
    There are two general sets of entries or URIs.
@@ -96,10 +96,26 @@
 
 
 -->
+
     <!--============== RSpec Test Data  ========== -->
     <resource secured="false">
         <uri>testing/public</uri>
         <description>Unsecured or Public Resource.</description>
+        <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
+    </resource>
+
+    <resource secured="true">
+        <uri>testing/userdata</uri>
+        <description>Secured Content Description</description>
+        <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Test.Action.Create</authorizedRole>
+                <authorizedRole>Test.Action.Read</authorizedRole>
+                <authorizedRole>Test.Action.Update</authorizedRole>
+                <authorizedRole>Test.Action.Delete</authorizedRole>
+            </authorizedRoles>
+        </permission>
     </resource>
 
     <resource secured="true">
@@ -238,7 +254,7 @@
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
-        <description>Home</description>
+        <description>Welcome to SknService</description>
     </resource>
     <resource secured="false">
         <uri>pages/about</uri>
@@ -246,7 +262,23 @@
     </resource>
     <resource secured="false">
         <uri>pages/model_details</uri>
-        <description>SknService Model Details</description>
+        <description>Information Model Details</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/learn_more</uri>
+        <description>More Information</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/details_content</uri>
+        <description>ContentProfile Details</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/details_access</uri>
+        <description>AccessProfile Details</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/details_auth</uri>
+        <description>Authentication Details</description>
     </resource>
 
 
@@ -537,6 +569,7 @@
   <resource secured="true">
       <uri>pages/developer</uri>
       <description>System Status Page for Developers</description>
+      <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
       <permission type="READ">
           <authorizedRoles>
               <authorizedRole>Services.Action.Admin</authorizedRole>

@@ -5,6 +5,7 @@ class PasswordService < ::Factory::DomainServices
 	def reset_password(params)
 		user = User.find(params[:id])  # id is a :password_reset_token
 		if user.password_reset_date > 2.hours.ago        # MEANS LESS THAN TWO HOURS AGO
+       user.generate_unique_token(:remember_token)
 			 user.update!(permitted(params))
        user.reload
 		else
@@ -50,6 +51,7 @@ class PasswordService < ::Factory::DomainServices
 
   def send_password_reset(user)
     user.generate_unique_token(:password_reset_token)
+    user.generate_unique_token(:remember_token)
     user.password_reset_date = Time.zone.now
     user.save!
     password_mailer(user)

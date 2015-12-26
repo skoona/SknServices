@@ -19,7 +19,8 @@ module Secure
       # find user from our internal list
       def fetch_existing_user (token=nil)
         value = users_store.get_stored_object(token)
-        value = self.find_by_remember_token(token) unless value.present? or token.nil?
+        value = self.find_by(remember_token: token) unless value.present? or token.nil?
+
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
         value
       end
@@ -30,11 +31,11 @@ module Secure
       end
 
       def get_new_secure_digest(token)
-        BCrypt::Password.create(token, (BCrypt::Engine::MIN_COST + Settings.security.extra_digest_strength)) # Good and Strong
+        BCrypt::Password.create(token, cost: (BCrypt::Engine::MIN_COST + Settings.security.extra_digest_strength)) # Good and Strong
       end
 
       def get_new_secure_token
-        SecureRandom.urlsafe_base64
+        users_store.generate_unique_key
       end
 
       # TODO: Get a Token

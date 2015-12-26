@@ -35,12 +35,7 @@ who has access to each URI will need to be created.  Something like:
 <resource secured="true">
     <uri>Agency/Commission-STMT/0034</uri>
     <description>Agency Commision Report in ImageRight</description>
-    <userdata>
-        <drawerid>27655173</drawerid>
-        <filetype>27635476</filetype>
-        <foldertype>27637844</foldertype>
-        <doctype>955</doctype>
-    </userdata>
+    <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
     <permission type="READ">
         <authorizedRoles>
             <authorizedRole options="0034">ContentProfile.Access.Agency.Commission-STMT</authorizedRole>
@@ -50,12 +45,7 @@ who has access to each URI will need to be created.  Something like:
 <resource secured="true">
     <uri>Agency/Commission-CSV/0034</uri>
     <description>Agency Commision Report in csv format from ImageRight</description>
-    <userdata>
-        <drawerid>27655173</drawerid>
-        <filetype>27635476</filetype>
-        <foldertype>27637844</foldertype>
-        <doctype>956</doctype>
-    </userdata>
+    <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
     <permission type="READ">
         <authorizedRoles>
             <authorizedRole options="0034">ContentProfile.Access.Agency.Commission-CSV</authorizedRole>
@@ -65,12 +55,7 @@ who has access to each URI will need to be created.  Something like:
 <resource secured="true">
     <uri>Agency/Experience-STMT/0034</uri>
     <description>Agency Experience Report in ImageRight</description>
-    <userdata>
-        <drawerid>27655173</drawerid>
-        <filetype>27635476</filetype>
-        <foldertype>27637844</foldertype>
-        <doctype>957</doctype>
-    </userdata>
+    <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
     <permission type="READ">
         <authorizedRoles>
             <authorizedRole options="0034">ContentProfile.Access.Agency.Experience-STMT</authorizedRole>

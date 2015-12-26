@@ -6,10 +6,18 @@ class PagesController < ApplicationController
   def home
   end
 
-  def about
+  def learn_more
+  end
+  def details_content
+  end
+  def details_access
+  end
+  def details_auth
+  end
+  def details_model
   end
 
-  def model_details
+  def about
   end
 
   def developer
