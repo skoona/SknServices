@@ -88,14 +88,8 @@ class AccessRegistry
   def self.get_resource_description(resource_uri)
     @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["description"] : ""
   end
-  def self.get_resource_userdata_string(resource_uri)
+  def self.get_resource_userdata(resource_uri)
     @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["userdata"] : ""
-  end
-  def self.get_resource_userdata_hash(resource_uri) # target must be json formatted string
-    str = @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["userdata"] : false
-    JSON.parse(str) if str
-  rescue
-    {}.to_json
   end
   def self.get_ar_resource_keys
     @@ar_permissions.keys

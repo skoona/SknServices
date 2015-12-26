@@ -25,7 +25,7 @@ module Secure
 
     def login_required
       unless AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
-        unless logged_in? # :authenticated?
+        unless authenticated?
           store_target_location
           Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to Sign in page")
           redirect_to signin_url, :alert => "You must sign in before accessing the '#{accessed_page_name}' page."

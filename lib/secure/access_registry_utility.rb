@@ -109,7 +109,7 @@ module Secure
               resource_hash[resource_uri][key].store(name,role)
             end # end authorized role
           else # of permission
-            resource_hash[resource_uri][keystr] = sibl.content.squish
+            resource_hash[resource_uri][keystr] = process_resource_content(keystr, sibl.content.squish)
           end
 
         end # of sibling
@@ -117,6 +117,32 @@ module Secure
 
       resource_hash
     end  # end from_xml()
+
+    # UserData Required format/syntax is:
+    #   value|value|...
+    #   key:value|key:value|...
+    #   Reserved chars: |:     - vertical-bar and semi-colon
+    def process_resource_content(name, value)
+      return value unless name.eql?("userdata")
+      return value unless value.match(/[\||:]/)
+
+      a_result = []
+      h_result = HashWithIndifferentAccess.new
+
+      value = value.gsub('"','')
+
+      a_result = value.split('|') if value.match(/\|/)
+      a_result = [value] if a_result.empty?
+
+      if value.match(/:/)
+        a_result.each do |outer|
+          item = outer.split(':')
+          h_result.store(item[0].strip, item[1].strip)
+        end
+      end
+
+      h_result.empty? ? a_result : h_result
+    end
 
   end # end class
 end # end module

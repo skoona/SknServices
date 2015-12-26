@@ -7,10 +7,7 @@ RSpec.describe "Password Resets View Collection " do
   let(:user_object) { FactoryGirl.create(:user) }
 
   before :each do
-    bypass_warden_for_views(user_object, view)
-    login_as(user_object)
-    #  # force load of Specific View Helpers
-    view.extend(ApplicationHelper)
+    login_as(user_object, scope: :default)
   end
 
   it "#password_resets/new renders correctly. " do

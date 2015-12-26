@@ -58,7 +58,7 @@
 ##
 
 
-# Rails.application.config.middleware.use RailsWarden::Manager do |manager|
+# Rails.application.config.middleware.use Warden::Manager do |manager|
 Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
   manager.default_strategies :password, :not_authorized
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
@@ -69,7 +69,7 @@ class Warden::SessionSerializer
   # Save the User id to session store
   def serialize(record)
     #Rails.logger.debug " Warden::SessionSerializer.serialize(ONLY) session.id=#{request.session_options[:id]}, user=#{record.name if record.present?}"
-    [record.class.name, record.remember_token]
+    [record.class.name, record.person_authenticated_key]
   end
 
   ##
@@ -77,7 +77,7 @@ class Warden::SessionSerializer
   # Use token to find the existing object
   def deserialize(keys)
     klass, token = keys
-    user = klass.to_s.classify.constantize.fetch_existing_user( token )
+    user = klass.to_s.classify.constantize.fetch_cached_user( token )
     # Rails.logger.debug " Warden::SessionSerializer.deserialize(ONLY) session.id=#{request.session_options[:id]}, user=#{user.name if user.present?}"
     user
   end
@@ -111,7 +111,7 @@ Warden::Strategies.add(:remember_token) do
   def authenticate!
     remember_token = request.cookies["remember_token"]
     token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token.present?
-    user = User.fetch_existing_user( token )
+    user = User.find_by(remember_token: token)
     (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired.")
   rescue
     fail!("Your Credentials are invalid or expired.")

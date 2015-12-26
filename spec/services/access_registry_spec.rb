@@ -82,24 +82,28 @@ RSpec.describe AccessRegistry, "Authorization management" do
     end
   end
 
-  context "element payloads are directly accessable" do
-    it "#get_resource_description returns desciption element as string, from secured resource." do
-      expect(AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
+  context "Element payloads are directly accessable from secured and unsecured resources. " do
+    context "From secured resource." do
+      it "#get_resource_description returns desciption element as string." do
+        expect(AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
+      end
+      it "#get_resource_userdata returns userdata element as hash." do
+        expect(AccessRegistry.get_resource_userdata('testing/userdata')).to be_a_kind_of(Hash)
+      end
     end
-    it "#get_resource_userdata_string returns userdata element as string, from secured resource." do
-      expect(AccessRegistry.get_resource_userdata_string('testing/userdata')).to be_a_kind_of(String)
-    end
-    it "#get_resource_userdata_hash returns userdata element as hash, from secured resource." do
-      expect(AccessRegistry.get_resource_userdata_hash('testing/userdata')).to be_a_kind_of(Hash)
-    end
-    it "#get_resource_description returns desciption element as string, from unsecure resource." do
-      expect(AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
-    end
-    it "#get_resource_userdata_string returns userdata element as string, from unsecure resource." do
-      expect(AccessRegistry.get_resource_userdata_string('testing/userdata')).to be_a_kind_of(String)
-    end
-    it "#get_resource_userdata_hash returns userdata element as hash, from unsecure resource." do
-      expect(AccessRegistry.get_resource_userdata_hash('testing/userdata')).to be_a_kind_of(Hash)
+    context "From unsecured resource." do
+      it "#get_resource_description returns desciption element as string." do
+        expect(AccessRegistry.get_resource_description('testing/public')).to be_a_kind_of(String)
+      end
+      it "#get_resource_userdata returns userdata element as string." do
+        expect(AccessRegistry.get_resource_userdata('testing/public_string')).to be_a_kind_of(String)
+      end
+      it "#get_resource_userdata returns userdata element as hash." do
+        expect(AccessRegistry.get_resource_userdata('testing/public')).to be_a_kind_of(Hash)
+      end
+      it "#get_resource_userdata returns userdata element as array." do
+        expect(AccessRegistry.get_resource_userdata('testing/public_array')).to be_a_kind_of(Array)
+      end
     end
   end
 

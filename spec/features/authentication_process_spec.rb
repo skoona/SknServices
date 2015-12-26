@@ -37,33 +37,17 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
 
-      # Signed on twice
-      unless current_path.eql?(users_path)
-        expect(current_path).to eq signin_path
-        fill_in 'Username', :with => user.username
-        fill_in 'Password', :with => user.password
-        click_button 'Sign in'
-      end
-
       expect(current_path).to eq users_path
       click_link 'Sign out'
     end
 
     scenario "Unauthorized access is redirected to Home page with unauthorized message." do
-      #user = FactoryGirl.create(:manager)
+      user = FactoryGirl.create(:user)
       visit new_user_url
       expect(current_path).to eq signin_path
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
-
-      # Signed on twice
-      unless current_path.eql?(home_path)
-        expect(current_path).to eq signin_path
-        fill_in 'Username', :with => user.username
-        fill_in 'Password', :with => user.password
-        click_button 'Sign in'
-      end
 
       expect(current_path).to eq home_path
       expect(page).to have_alert_message("You are not authorized to access the ")
@@ -78,14 +62,6 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
-
-      # Signed on twice
-      unless current_path.eql?(users_path)
-        expect(current_path).to eq signin_path
-        fill_in 'Username', :with => user.username
-        fill_in 'Password', :with => user.password
-        click_button 'Sign in'
-      end
 
       expect(current_path).to eq users_path
       click_link 'Sign out'

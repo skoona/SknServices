@@ -18,8 +18,15 @@ module Secure
     module ClassMethods
       # find user from our internal list
       def fetch_existing_user (token=nil)
+        value = self.find_by(remember_token: token)
+
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
+        value
+      end
+      # find user from our internal list
+      def fetch_cached_user (token)
         value = users_store.get_stored_object(token)
-        value = self.find_by(remember_token: token) unless value.present? or token.nil?
+        value = self.find_by(person_authenticated_key: token) unless value.present? or token.nil?
 
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
         value
@@ -149,12 +156,12 @@ module Secure
 
     # Saves user object to InMemory Container
     def add_to_store()
-      Secure::ObjectStorageContainer.instance.add_to_store(remember_token, self)
+      Secure::ObjectStorageContainer.instance.add_to_store(person_authenticated_key, self)
     end
 
     # Removes saved user object from InMemory Container
     def remove_from_store()
-      Secure::ObjectStorageContainer.instance.remove_from_store remember_token
+      Secure::ObjectStorageContainer.instance.remove_from_store(person_authenticated_key)
     end
   end # end AccessControl
 end # end Secure

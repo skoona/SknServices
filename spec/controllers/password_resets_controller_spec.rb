@@ -1,10 +1,9 @@
 # spec/controllers/password_resets_controller_spec.rb
 
 RSpec.describe PasswordResetsController do
-  let(:user) {FactoryGirl.create(:user)}
+  let!(:user) {FactoryGirl.create(:user)}
   before :each do
-    bypass_warden(user, controller)
-    login_as(user)
+    login_as(user, scope: :default)
     @request.host = 'www.example.com'
   end
 

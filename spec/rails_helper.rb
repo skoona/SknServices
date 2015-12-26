@@ -52,14 +52,14 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.use_transactional_fixtures = false
 
-  # Include support methods
-  config.include AuthenticationHelpers
-  config.include ApplicationHelper
-
+  # Include routing helpers
   config.include Rails.application.routes.url_helpers
   config.include Rails.application.routes.mounted_helpers
 
+  # Include support methods
+  config.include ApplicationHelper
   config.include Warden::Test::Helpers
+  config.include Warden::Test::ControllerHelpers, type: :controller
 
   # Turn on FactoryGirl
   # ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md
