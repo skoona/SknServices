@@ -9,9 +9,9 @@ module Secure
 
     included do
       # Todo: Breaks Test User for now
-      # raise Utility::Errors::SecurityImplementionError,
-      #   "You are missing one or more critical security vars: :person_authenticated_key. !" unless
-      #       self.respond_to?(:person_authenticated_key) and
+      raise Utility::Errors::SecurityImplementionError,
+        "You are missing a critical security vars: :person_authenticated_key, please implement!" unless
+          self.attribute_names.include?("person_authenticated_key")
     end
 
     module ClassMethods   # mostly called by Warden
@@ -19,17 +19,15 @@ module Secure
       def fetch_remembered_user (token=nil)
         value = self.find_by(remember_token: token)
         value = nil unless value.token_authentic?(token)
-        value = nil if last_login_time_expired?(value)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
+
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
         value
       end
       # find user from our internal list
       def fetch_cached_user (token)
         value = users_store.get_stored_object(token)
-        value = self.find_by(person_authenticated_key: token) unless value.present? or token.nil?
-        value = nil if last_login_time_expired?(value)
 
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
         value
       end
 

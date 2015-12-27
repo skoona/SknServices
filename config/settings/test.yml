@@ -9,3 +9,7 @@ rspec_users:
   manager: manager1
   staff: staff1
   support: support1
+
+security:
+  session_expires: <%= -> { 4.hours.from_now } %>
+  remembered_for:  <%= -> { 12.hours.from_now } %>

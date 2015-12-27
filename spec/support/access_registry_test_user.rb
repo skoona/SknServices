@@ -6,16 +6,23 @@
 
 
 class AccessRegistryTestUser
-  include Secure::UserAccessControl
 
   attr_accessor :roles, :unique_id, :username, :assigned_roles,
                 :assigned_groups, :remember_token, :person_authenticated_key
 
   def initialize(params=nil)
     @roles = params || [] # is an [] or roles
-    @peron_authenticated_key = @unique_id = SecureRandom.hex(16)
+    @person_authenticated_key = @unique_id = SecureRandom.hex(16)
     @username = Faker::Internet.user_name
   end
+
+  def self.attribute_names
+    [
+      "roles", "unique_id", "username", "assigned_roles",
+      "assigned_groups", "remember_token", "person_authenticated_key"
+    ]
+  end
+  include Secure::UserAccessControl
 
   def key
     unique_id

@@ -60,7 +60,7 @@
 
 # Rails.application.config.middleware.use Warden::Manager do |manager|
 Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
-  manager.default_strategies :password, :not_authorized
+  manager.default_strategies :password, :remember_token, :not_authorized
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
 end
 
@@ -86,6 +86,9 @@ end
 ##
 # Use the fields from the Signin page to authorize user
 Warden::Strategies.add(:password) do
+  def auth
+    @auth ||= Rack::Auth::Basic::Request.new(env)
+  end
   def valid?
     return false if request.get?
     params["session"].has_key?("username") and params["session"].has_key?("password") and
@@ -94,7 +97,7 @@ Warden::Strategies.add(:password) do
 
   def authenticate!
     user = User.find_by_username(params["session"]["username"]).try(:authenticate, params["session"]["password"])
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Invalid username or password.")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
   rescue
     fail!("Your Credentials are invalid or expired.")
   end
@@ -104,17 +107,34 @@ end
 # Use the remember_token from the requests cookies to authorize user
 Warden::Strategies.add(:remember_token) do
   def valid?
-    return false if request.get?
     request.cookies["remember_token"].present?
   end
 
   def authenticate!
     remember_token = request.cookies["remember_token"]
-    token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token.present?
+    token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token
     user = User.fetch_remembered_user(token)
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired.")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Token Invaild!")
   rescue
-    fail!("Your Credentials are invalid or expired.")
+    fail!("Your Credentials are invalid or expired. Token Invaild!")
+  end
+end
+
+Warden::Strategies.add(:basic_auth) do
+  def auth
+    @auth ||= Rack::Auth::Basic::Request.new(env)
+  end
+
+  def valid?
+    auth.provided? && auth.basic? && auth.credentials
+  end
+
+  def authenticate!
+    user = User.find_by_username(auth.credentials[0])
+    user.try(:authenticate,auth.credentials[1])
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
+   rescue
+    fail!("Your Credentials are invalid or expired.  Auth Invaild!")
   end
 end
 
@@ -126,7 +146,7 @@ Warden::Strategies.add(:not_authorized) do
   end
 
   def authenticate!
-    fail!("Your Credentials are invalid or expired.")
+    fail!("Your Credentials are invalid or expired. Not Authorized!")
   end
 end
 
@@ -141,41 +161,23 @@ Warden::Manager.on_request do |proxy|
   full_path = proxy.request.original_fullpath
   bypass = full_path.eql?("/") || AccessRegistry.security_check?(full_path)
 
-  unless proxy.user.present? or bypass
-    ##
-    # Handle to special case where a token login is possible
-    tstatus = false
-    if proxy.cookies['remember_token'].present?
-      proxy.authenticate(:remember_token, :not_authorized) # sets user if successful
-      unless proxy.user.present?
-        proxy.raw_session[:return_to] = proxy.request.original_url
-        proxy.env["PATH_INFO"] = "/signin"        # routes to sessions/new
-        tstatus = true
-      end
-    else   # Controllers's login_required? will sort this out
+  unless proxy.authenticated? or bypass
+    proxy.authenticate(:remember_token)      # sets user if successful
+    unless proxy.authenticated?    # Controllers's login_required? will sort this out
       proxy.request.flash.clear
       proxy.request.flash.notice = "Please sign in to continue."
+      tstatus = true
     end
-    Rails.logger.debug " Warden::Manager.on_request(EXITx) bypass=#{bypass}, redirected=#{tstatus}, token=#{proxy.cookies['remember_token'].present?}, userId=#{proxy.user.name if proxy.user.present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
-  else
-    Rails.logger.debug " Warden::Manager.on_request(EXITy) bypass=#{bypass}, redirected=#{tstatus}, userId=#{proxy.user.name if proxy.user.present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
   end
+
+  Rails.logger.debug " Warden::Manager.on_request(EXIT) bypass=#{bypass}, redirected=#{tstatus}, userId=#{proxy.user.name if proxy.user.present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
 end
 
-##
-# Called in no user has be fetch and set as the current user
-Warden::Manager.after_failed_fetch do |user,auth,opts|
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) remember_token present?(#{auth.cookies["remember_token"].present?}), user=#{user.name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
-  if auth.cookies["remember_token"].present?
-    auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
+Warden::Manager.after_set_user do |user, auth, opts|
+  unless !User.last_login_time_expired?(user) && user.active?
+    auth.logout
+    throw(:warden, :message => "Session Expired! Please sign in to continue.")
   end
-end
-
-##
-# Injects the new action to match SessionsController
-Warden::Manager.before_failure do |env, opts|
-  Rails.logger.debug " Warden::Manager.before_failure(ONLY) session.id=#{env['warden'].request.session_options[:id]}"
-  env['action_dispatch.request.path_parameters'][:action] = "new"
 end
 
 ##
@@ -187,14 +189,29 @@ Warden::Manager.after_authentication do |user,auth,opts|
 
   if remember
     if Rails.env.production?
-      auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: 4.hour.from_now, httponly: true, secure: true }
+      auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: Settings.security.session_expires, httponly: true, secure: true }
     else
-      auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: 4.hour.from_now, httponly: true }
+      auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: Settings.security.remembered_for, httponly: true }
     end
   else
     auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   end
   Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]} !
+end
+
+##
+# Called in no user has be fetch and set as the current user
+Warden::Manager.after_failed_fetch do |user,auth,opts|
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) remember_token present?(#{auth.cookies["remember_token"].present?}), user=#{user.name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
+  auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
+end
+
+##
+# Injects the new action to match SessionsController
+Warden::Manager.before_failure do |env, opts|
+  Rails.logger.debug " Warden::Manager.before_failure(ONLY) session.id=#{env['warden'].request.session_options[:id]}"
+  env['warden'].cookies.delete :remember_token, domain: env['warden'].env["SERVER_NAME"]
+  env['action_dispatch.request.path_parameters'][:action] = "new"
 end
 
 ##

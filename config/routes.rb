@@ -16,5 +16,8 @@ Rails.application.routes.draw do
   get '/details_access',            to:     'pages#details_access'
   get '/details_auth',              to:     'pages#details_auth'
 
+  # Warden Failure Thrown
+  get '/unauthenticated',           to:     'pages#home'
+
   root to: 'pages#home'
 end

@@ -19,7 +19,7 @@ RSpec.feature "Authentication process for all users." do
     scenario "Required to sign in when page is secured." do
       visit users_url
       expect(current_path).to eq signin_path
-      expect(page).to have_notice_message("Please sign in to continue.")
+      expect(page).to have_notice_message("Please sign in to continue")
     end
 
     scenario "Not required to sign in when page is unsecured." do
@@ -32,7 +32,7 @@ RSpec.feature "Authentication process for all users." do
       user = FactoryGirl.create(:manager)
       visit users_url
       expect(current_path).to eq signin_path
-      expect(page).to have_notice_message("Please sign in to continue.")
+      expect(page).to have_notice_message("Please sign in to continue")
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
@@ -58,7 +58,7 @@ RSpec.feature "Authentication process for all users." do
       user = FactoryGirl.create(:manager)
       visit users_url
       expect(current_path).to eq signin_path
-      expect(page).to have_notice_message("Please sign in to continue.")
+      expect(page).to have_notice_message("Please sign in to continue")
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
@@ -66,7 +66,7 @@ RSpec.feature "Authentication process for all users." do
       expect(current_path).to eq users_path
       click_link 'Sign out'
       expect(current_url).to eq root_url
-      expect(page).to have_notice_message("You have been signed out.")
+      expect(page).to have_notice_message("You have been signed out")
     end
   end
 
@@ -79,7 +79,7 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
-      expect(page).to have_alert_message("Invalid username or password.")
+      expect(page).to have_alert_message("Invalid username or password")
     end
 
     scenario "Cannot sign in with incorrect password." do
@@ -88,14 +88,14 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Password', :with => "somebody"
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
-      expect(page).to have_alert_message("Invalid username or password.")
+      expect(page).to have_alert_message("Invalid username or password")
     end
 
     scenario "Cannot sign in when no credentials are offered." do
       visit signin_url
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
-      expect(page).to have_alert_message("Your Credentials are invalid or expired.")
+      expect(page).to have_alert_message("Your Credentials are invalid or expired")
     end
 
   end
