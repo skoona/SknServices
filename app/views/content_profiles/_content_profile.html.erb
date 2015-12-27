@@ -16,9 +16,15 @@
             <p>Person Authentication Key: <%= content_profile.person_authentication_key[-6..-1] %></p>
             <p>Entries: <span class="badge"><%= content_profile.content_profile_entries.size %></span></p>
             <p>
-                <%= link_to 'Show', content_profile, class: "btn btn-default" %> |
-                <%= link_to 'Edit', edit_content_profile_path(content_profile), class: "btn btn-default" %> |
-                <%= link_to 'Destroy', content_profile, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %> |
+                <% if has_access?('content_profiles/show') and action_name.eql?('index') %>
+                    <%= link_to 'Show', content_profile, class: "btn btn-default" %> |
+                <% end %>
+                <% if has_access?('content_profiles/edit')  %>
+                    <%= link_to 'Edit', edit_content_profile_path(content_profile), class: "btn btn-default" %> |
+                <% end %>
+                <% if has_access?('content_profiles/destroy') and action_name.eql?('show') %>
+                    <%= link_to 'Destroy', content_profile, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %> |
+                <% end %>
                 <%= link_to :back, :back, class: "btn btn-default" %>
             </p>
         </div>

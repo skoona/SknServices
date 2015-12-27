@@ -14,7 +14,7 @@
             <p>State: <%= user.active ? "Active" : "inActive" %></p>
             <p>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></p>
             <p>
-                <% if has_access?('users/show')  %>
+                <% if has_access?('users/show') and action_name.eql?('index') %>
                     <%= link_to user_path(user)  do %>
                         <span class="badge">Show</span>
                     <% end %> |
@@ -24,7 +24,7 @@
                             <span class="badge">Edit</span>
                     <% end %> |
                 <% end %>
-                <% if has_access?('users/destroy') %>
+                <% if has_access?('users/destroy') and action_name.eql?('show') %>
                     <%= link_to user_path(user), method: :delete, data: {confirm: "Deleting cannot be undone! Delete anyway?"}  do %>
                         <span class="badge">Delete</span>
                     <% end %> |

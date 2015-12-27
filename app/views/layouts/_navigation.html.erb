@@ -12,41 +12,57 @@
         <%= logo("logo") %>
       <% end %>
     </div>
+
     <div id="navbar" class="collapse navbar-collapse">
+
         <ul class="nav navbar-nav">
             <%= nav_link("About", about_path) %>
+            <% if valid_user_has_access?('#Management') %>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <% if valid_user_has_access?('#Administration') %>
+                            <% if valid_user_has_access?('users/index') %>
+                                <%= nav_link_icon("glyphicon-user", "Manage UserProfiles", users_path) %>
+                            <% end %>
+                        <% end %>
+
+                        <% if valid_user_has_access?('#ContentProfileManagement') %>
+                            <% if valid_user_has_access?('content_profiles/index') %>
+                                <%= nav_link_icon("glyphicon-inbox", "Manage ContentProfiles", content_profiles_path) %>
+                            <% end %>
+                        <% end %>
+
+                        <% if valid_user_has_access?('#GroupManagement') %>
+                            <% if valid_user_has_access?('user_group_roles/index') %>
+                                <%= nav_link_icon("glyphicon-lock", "Manage GroupRoles", user_group_roles_path) %>
+                            <% end %>
+                        <% end %>
+                        <% if valid_user_has_access?('#GroupManagement') %>
+                            <% if valid_user_has_access?('user_group_roles/index') %>
+                                <%= nav_link_icon("glyphicon-lock", "Manage GroupRoles", user_group_roles_path) %>
+                            <% end %>
+                        <% end %>
+                    </ul>
+                </li>
+                <% if valid_user_has_access?('#Demonstration') %>
+                    <% if valid_user_has_access?('profiles/access_profile_demo') %>
+                        <%= nav_link_icon("glyphicon-lock", "AccessProfile Demo", access_profile_demo_path) %>
+                    <% end %>
+                    <% if valid_user_has_access?('profiles/content_profile_demo') %>
+                        <%= nav_link_icon("glyphicon-lock", "ContentProfile Demo", content_profile_demo_path) %>
+                    <% end %>
+                <% end %>
+            <% end %>
         </ul>
-
-        <% if valid_user_has_access?('#Administration') %>
-            <ul class="nav navbar-nav">
-                <% if valid_user_has_access?('users/index') %>
-                    <%= nav_link_icon("glyphicon-user", "Manage UserProfiles", users_path) %>
-                <% end %>
-            </ul>
-        <% end %>
-
-        <% if valid_user_has_access?('#ContentProfileManagement') %>
-            <ul class="nav navbar-nav">
-                <% if valid_user_has_access?('content_profiles/index') %>
-                    <%= nav_link_icon("glyphicon-inbox", "Manage ContentProfiles", content_profiles_path) %>
-                <% end %>
-            </ul>
-        <% end %>
-
-        <% if valid_user_has_access?('#GroupManagement') %>
-            <ul class="nav navbar-nav">
-                <% if valid_user_has_access?('user_group_roles/index') %>
-                    <%= nav_link_icon("glyphicon-lock", "Manage GroupRoles", user_group_roles_path) %>
-                <% end %>
-            </ul>
-        <% end %>
-
         <ul class="nav navbar-nav navbar-right">
-            <li><%=
-                link_to_if(logged_in?, "Sign out", signout_path, method: :delete) do
-                link_to "Sign in", signin_path
-                end
-            %></li>
+            <li>
+                <%=
+                    link_to_if(logged_in?, "Sign out", signout_path, method: :delete) do
+                    link_to "Sign in", signin_path
+                    end
+                %>
+            </li>
         </ul>
         <% if logged_in? %>
             <p class="navbar-text pull-right">Signed in as
