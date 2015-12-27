@@ -25,7 +25,7 @@ access_profile:
 security:
   admin_role: Services.Action.Admin
   extra_digest_strength: 3
-  verify_login_after_msecs: 7200000
+  verify_login_after_msecs: 28800000   # 8 hours
 
 standards:
   ! keep:

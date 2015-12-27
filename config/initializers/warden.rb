@@ -111,7 +111,7 @@ Warden::Strategies.add(:remember_token) do
   def authenticate!
     remember_token = request.cookies["remember_token"]
     token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token.present?
-    user = User.find_by(remember_token: token)
+    user = User.fetch_remembered_user(token)
     (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired.")
   rescue
     fail!("Your Credentials are invalid or expired.")
@@ -191,6 +191,8 @@ Warden::Manager.after_authentication do |user,auth,opts|
     else
       auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: 4.hour.from_now, httponly: true }
     end
+  else
+    auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   end
   Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]} !
 end

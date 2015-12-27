@@ -18,6 +18,7 @@
 #  updated_at               :datetime         not null
 #  person_authenticated_key :string
 #  assigned_roles           :string
+#  remember_token_digest    :string
 #
 
 class User < ActiveRecord::Base
@@ -27,7 +28,7 @@ class User < ActiveRecord::Base
 
   before_create {|user|
     user.generate_unique_token(:person_authenticated_key)   # Never Changes
-    user.generate_unique_token(:remember_token)   # Change by reset only
+    user.regenerate_remember_token!   # :remember_token Change by reset or any update
   }
 
 
@@ -60,10 +61,13 @@ class User < ActiveRecord::Base
   end
 
   def generate_unique_token(column)
-    # puts "#{self.class.name}.#{__method__} called for #{username}'s #{column}"
     Rails.logger.debug "#{self.class.name}.#{__method__} called for #{username}'s #{column}"
     begin
-      self[column] = User.get_new_secure_token
+      if  column.to_s.eql?("remember_token")
+        self[column] = SecureRandom.urlsafe_base64
+      else
+        self[column] = User.get_new_secure_token
+      end
     end while User.exists?(column => self[column])
     true
   end

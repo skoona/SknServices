@@ -2,6 +2,12 @@
 #
 # Ref: http://stackoverflow.com/questions/13420923/configuring-warden-for-use-in-rspec-controller-specs
 #
+# Ref: http://kentaroimai.com/articles?language=en
+#      http://kentaroimai.com/articles/tags/Warden?language=en
+
+# class ActionController::TestCase
+#   include Warden::Test::ControllerHelpers
+# end
 
 module Warden
   # Warden::Test::ControllerHelpers provides a facility to test controllers in isolation

@@ -10,16 +10,16 @@ module Secure
     included do
       # Todo: Breaks Test User for now
       # raise Utility::Errors::SecurityImplementionError,
-      #   "You are missing one or more critical security vars: :remember_token, :person_authenticated_key. !" unless
-      #     self.respond_to?(:remember_token) and
+      #   "You are missing one or more critical security vars: :person_authenticated_key. !" unless
       #       self.respond_to?(:person_authenticated_key) and
     end
 
-    module ClassMethods
-      # find user from our internal list
-      def fetch_existing_user (token=nil)
+    module ClassMethods   # mostly called by Warden
+      # find user in database
+      def fetch_remembered_user (token=nil)
         value = self.find_by(remember_token: token)
-
+        value = nil unless value.token_authentic?(token)
+        value = nil if last_login_time_expired?(value)
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
         value
       end
@@ -27,6 +27,7 @@ module Secure
       def fetch_cached_user (token)
         value = users_store.get_stored_object(token)
         value = self.find_by(person_authenticated_key: token) unless value.present? or token.nil?
+        value = nil if last_login_time_expired?(value)
 
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) cache size =>#{users_store.size_of_store}, returns #{value.present? ? value.name : 'Not Found!'}, StoredKeys=#{users_store.stored_keys}")
         value
@@ -45,13 +46,11 @@ module Secure
         users_store.generate_unique_key
       end
 
-      # TODO: Get a Token
-      #   rememberme_token = User.get_new_secure_token()
-      # TODO: Persist the Token as an encrypted digest
-      #   update_attribute(:remember_digest, User.get_new_secure_digest(rememberme_token))
-      # TODO: Authenticate the Token against its Digest
-      #   User.is_token_authentic?(digest,token)
-
+      def last_login_time_expired?(person)
+        rc = (person &&  ((Time.now.to_i - person.updated_at.to_i) > Settings.security.verify_login_after_msecs))
+        person.disable_authentication_controls if rc
+        rc
+      end
 
       def users_store
         Secure::ObjectStorageContainer.instance
@@ -64,17 +63,22 @@ module Secure
 
     # returns true/false if any <column>_digest matches token
     # note: Password.new(digest) decrypts digest
-    def is_token_authentic?(token)
+    def token_authentic?(token)
       attribute_names.select do |attr|
         attr.split("_").last.eql?("digest") ?
-            BCrypt::Password.new(attr).is_password?(token) : false
+            BCrypt::Password.new(self[attr]).is_password?(token) : false
       end.any?    # any? returns true/false if any digest matched
+    end
+
+    def regenerate_remember_token!
+      self.generate_unique_token(:remember_token)
+      self.remember_token_digest = User.get_new_secure_digest(self.remember_token)
     end
 
     # Warden will call this methods
     def disable_authentication_controls
       remove_from_store
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{remember_token}")
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
     end
 
     # Warden will call this methods
@@ -83,7 +87,7 @@ module Secure
       self.try(:setup_content_profile)
 
       add_to_store
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{remember_token}")
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       true
     end
 

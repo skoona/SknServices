@@ -9,7 +9,7 @@
         </header>
         <hr />
         <section>
-        <h3>config/access_registry.xml</h3>
+        <h3>Access Registry Component</h3>
         <p>
             Along with class AccessRegistry and module AccessControl, this file describes those
             application resources that should be both secured and un-secured. This file is pre-processed
@@ -99,7 +99,7 @@
 
         <section>
         <hr />
-        <h3>-*-*-*-   Table of Contents  -*-*-*-</h3>
+        <h3>-*-*-*-   config/access_registry.xml  -*-*-*-</h3>
         <dl class="dl-horizontal">
             <dt>GLOBAL Resources</dt><dd>Unsecured (login, logout, etc.)</dd>
             <dt>GLOBAL Pages</dt><dd>Unsecured (home )</dd>
@@ -114,7 +114,7 @@
             &lt;resource secured="true|false"&gt;
                 &lt;uri&gt;anyString&lt;/uri&gt;
                 &lt;description&gt;&lt;/description&gt;
-                &lt;userdata&gt;json-string&lt;/userdata&gt;
+                &lt;userdata&gt;formatted-string&lt;/userdata&gt;
                 &lt;permission type="CREATE|READ|UPDATE|DELETE"&gt;
                     &lt;authorizedRoles&gt;
                         &lt;authorizedRole options="anyOption"&gt;security-role-name&lt;/authorizedRole&gt;
@@ -131,13 +131,46 @@
             &lt;resource secured="false"&gt;
                 &lt;uri&gt;anyString&lt;/uri&gt;
                 &lt;description&gt;Any String can be a URI.&lt;/description&gt;
+                &lt;userdata&gt;formatted-string&lt;/userdata&gt;
             &lt;/resource&gt;
+
+            UserData Required format/syntax is:
+               returns Array if value|value,...
+               returns Hash  if key:value|key:value|...
+               returns String if no format chars present
+               format chars: |:  # vertical-bar and semi-colon
+
         </pre>
         <pre class="pre-scrollable">
             &lt;!--============== RSpec Test Data  ========== --&gt;
             &lt;resource secured="false"&gt;
                 &lt;uri&gt;testing/public&lt;/uri&gt;
                 &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
+                &lt;userdata&gt;"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"&lt;/userdata&gt;
+            &lt;/resource&gt;
+            &lt;resource secured="false"&gt;
+                &lt;uri&gt;testing/public_array&lt;/uri&gt;
+                &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
+                &lt;userdata&gt;"drawerid|filetype|foldertype|doctype"&lt;/userdata&gt;
+            &lt;/resource&gt;
+            &lt;resource secured="false"&gt;
+                &lt;uri&gt;testing/public_string&lt;/uri&gt;
+                &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
+                &lt;userdata&gt;"value without vertical-basrs or semi-colons will return as string"&lt;/userdata&gt;
+            &lt;/resource&gt;
+        
+            &lt;resource secured="true"&gt;
+                &lt;uri&gt;testing/userdata&lt;/uri&gt;
+                &lt;description&gt;Secured Content Description&lt;/description&gt;
+                &lt;userdata&gt;"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"&lt;/userdata&gt;
+                &lt;permission type="READ"&gt;
+                    &lt;authorizedRoles&gt;
+                        &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
+                        &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
+                        &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
+                        &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                    &lt;/authorizedRoles&gt;
+                &lt;/permission&gt;
             &lt;/resource&gt;
 
             &lt;resource secured="true"&gt;

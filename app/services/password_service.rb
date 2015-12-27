@@ -4,10 +4,10 @@ class PasswordService < ::Factory::DomainServices
 
 	def reset_password(params)
 		user = User.find(params[:id])  # id is a :password_reset_token
-		if user.password_reset_date > 2.hours.ago        # MEANS LESS THAN TWO HOURS AGO
-       user.generate_unique_token(:remember_token)
+		if user.password_reset_date > 2.hours.ago       # MEANS LESS THAN TWO HOURS AGO
+       user.regenerate_remember_token!
+       params.merge({user: {remember_token: user.remember_token,remember_token_digest: user.remember_token_digest}})
 			 user.update!(permitted(params))
-       user.reload
 		else
 		  raise Utility::Errors::ExpiredCredentialError, "Sorry, your password reset token has expired."  
 		end			 
@@ -28,7 +28,8 @@ class PasswordService < ::Factory::DomainServices
 	end
 
   def permitted(params)
-    params.required(:user).permit(:password_confirmation, :password)
+    params.required(:user).permit(:password_confirmation, :password,
+                                  :remember_token, :remember_token_digest)
   end
 
 	def reset_requested(params)
@@ -51,7 +52,7 @@ class PasswordService < ::Factory::DomainServices
 
   def send_password_reset(user)
     user.generate_unique_token(:password_reset_token)
-    user.generate_unique_token(:remember_token)
+    user.regenerate_remember_token!
     user.password_reset_date = Time.zone.now
     user.save!
     password_mailer(user)

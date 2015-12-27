@@ -3,7 +3,8 @@
 
 RSpec.describe ApplicationController, "Service routines for resetting forgotten passwords.", :type => :controller  do
   let(:service) {controller.password_service}
-  let(:user) {create(:user)}
+  let!(:user) {create(:user)}
+  before { login_as(user, scope: :default) }
 
   context "Initialization "  do
 
