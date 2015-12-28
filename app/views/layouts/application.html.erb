@@ -10,16 +10,16 @@
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <%= csrf_meta_tags %>
+
     <%= yield(:head) %>
 
     <link rel="shortcut icon" href="/assets/images/favicon.ico"/>
-
   </head>
 
   <body data-controller-name="<%= controller_name %>" data-controller-action="<%= action_name %>">  <%# Identifies each page so JS can act when wanted %>
-    <%= render 'layouts/navigation' %>
+      <main role="main">
+        <%= render 'layouts/navigation' %>
 
-    <main role="main">
        <%= render 'layouts/messages' %>
 
        <section>

@@ -59,7 +59,7 @@ module ApplicationHelper
     end
   end
 
-  # Converts named routes to string
+  ### Converts named routes to string
   #  Basic '/some/hardcoded/string/path'
   #        '[:named_route_path]'
   #        '[:named_route_path, {options}]'

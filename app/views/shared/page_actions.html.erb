@@ -1,0 +1,94 @@
+<%#  view/shared/page_actions.html.erb
+
+    # link_to macro takes three params(hashes), path, text, options_hash
+    # link_to(text, path, html_options, &block)
+    ### usage
+    # page_actions = []
+    # page_actions << {
+    #   path:"#policy-cancel-modal",
+    #       text: "Cancel Policy",
+    #       data: {
+    #       toggle: "modal"
+    #   }
+    # }
+ %>
+
+<section role="page-actions" class="container">
+    <div class="row">
+        <div class="btn-group">
+            <% expand_all = false %>
+            <% if page_actions.length == 1 and not expand_all %>
+
+                <% action = page_actions.first %>
+
+                <% html_options = {} %>
+                <% html_options[:id] = action[:id] if action[:id].present? %>
+                <% html_options[:data] = action[:data] if action[:data].present? %>
+                <% html_options[:target] = action.fetch(:target,'_self') %>
+                <% html_options[:class] = "btn #{action[:klass]}" %>
+                <% html_options[:data_id] = action[:data_id] if action[:data_id].present? %>
+                <% html_options[:method] = action[:method] if action[:method].present? %>
+
+                <% icon_klass = action.fetch(:icon_klass,'') %>
+
+                <%= link_to page_action_paths(action[:path]), html_options do %>
+                    <% if icon_klass.present? %>
+                        <i class="glyphicon <%= icon_klass %>"></i>
+                    <% end %>
+                    <%= action[:text] %>
+                <% end %>
+
+            <% elsif page_actions.any? %>
+
+                <button class="btn dropdown-toggle" data-toggle="dropdown">Actions</button>
+                <ul class="dropdown-menu multi-level">
+                    <% if expand_all %>
+                        <li><a id="expandAllBtn" href='#'>Expand All</a></li>
+                        <li id="expandDivider" class='divider'></li>
+                    <% end %>
+
+                    <% page_actions.each do |action| %>
+
+                        <% html_options = {} %>
+                        <% html_options[:id] = action[:id] if action[:id].present? %>
+                        <% html_options[:data] = action[:data] if action[:data].present? %>
+                        <% html_options[:target] = action.fetch(:target,'_self') %>
+                        <% html_options[:class] = action[:klass] if action[:klass].present? %>
+                        <% html_options[:data_id] = action[:data_id] if action[:data_id].present? %>
+                        <% html_options[:method] = action[:method] if action[:method].present? %>
+
+                        <% icon_klass = action.fetch(:icon_klass,'') %>
+                        <% level = action.fetch(:level,'') %>
+
+                        <% if level.present? %>
+                            <% if level.eql?('prime') %>
+                                <span class="indent glyphicon <%= icon_klass %>"></span><%= action[:text] %>
+                            <% else %>
+                                <li>
+                                    <%= link_to page_action_paths(action[:path]), html_options do %>
+                                        <span class="indent glyphicon <%= icon_klass %>"></span><%= action[:text] %>
+                                    <% end %>
+                                </li>
+                                <% if level.eql?('second_end') %>
+                                    <li class="divider" ></li>
+                                <% end %>
+                            <% end %>
+
+                        <% else %>
+                            <li>
+                                <%= link_to page_action_paths(action[:path]), html_options do %>
+                                    <% if icon_klass.present? %>
+                                        <i class="glyphicon <%= icon_klass %>"></i>
+                                    <% end %>
+                                    &nbsp;<%= action[:text] %>
+                                <% end %>
+                            </li>
+                        <% end %>
+
+                    <% end %>
+                </ul>
+            <% end %>
+
+        </div>
+    </div>
+</section>

@@ -2,7 +2,7 @@
 
 <section class="container">
     <article>
-        <header>
+        <header class="page-header">
             <h2><%= accessed_page_name %></h2>
             <%= image_tag("AccessProfile-ContentProfile.png", alt: "ContentProfile", class: "large-image") %>
         </header>
@@ -20,10 +20,10 @@
                 engineering challenge to handle the dynamics of Electronic Delivery.
             </p>
         </section>
-
-        <%= link_to :back, class: "pull-right" do %>
-            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-            Home
-        <% end %>
     </article>
+
+    <%= link_to :back, class: "pull-right" do %>
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        Home
+    <% end %>
 </section>
