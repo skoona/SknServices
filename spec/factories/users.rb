@@ -35,6 +35,7 @@ FactoryGirl.define do
     password_confirmation   "foobar"
     password_reset_token    "tokenx"
     password_reset_date     {Time.zone.now}
+    last_login              {Time.zone.now}
     assigned_groups             ["EmployeeSecondary"]
     assigned_roles          ["Users.Action.Update",
                              "Users.Action.Edit",
@@ -46,6 +47,7 @@ FactoryGirl.define do
                              "Service.Action.ResetPassword"]
 
     factory :support do
+      last_login              {Time.zone.now}
       assigned_groups             ["EmployeeSecondary"]
       assigned_roles          ["Users.Action.Update",
                                "Users.Action.Edit",
@@ -58,6 +60,7 @@ FactoryGirl.define do
     end
 
     factory :manager do
+      last_login              {Time.zone.now}
       assigned_groups             ["EmployeePrimary"]
       assigned_roles          ["Services.Action.Admin",
                                "Services.Action.Developer"]

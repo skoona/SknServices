@@ -34,7 +34,8 @@ class ApplicationController < ActionController::Base
 
   # Force signout to prevent CSRF attacks
   def handle_unverified_request
-    logout(scope: :access_profile, message: "An unverified request was received! For security reasons you have been signed out.")
+    logout()
+    flash.alert = "An unverified request was received! For security reasons you have been signed out."
     super
   end
 

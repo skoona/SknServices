@@ -44,7 +44,8 @@ module Secure
 
       def last_login_time_expired?(person)
         rc = (person &&  ((Time.now.to_i - person.last_login.to_i) > Settings.security.verify_login_after_msecs))
-        person.disable_authentication_controls if rc
+        # person.disable_authentication_controls if rc
+        person.last_login = Time.now
         rc
       end
 
