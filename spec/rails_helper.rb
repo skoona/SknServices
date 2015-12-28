@@ -32,6 +32,11 @@ require 'capybara/mechanize'
 require 'database_cleaner'
 
 require 'spec_helper'
+# require 'rails_warden'                     may not be needed, as ApplicationController/rails brings them
+# require 'rails_warden/controller_mixin'
+require 'warden/test/helpers'
+require 'warden/test/warden_helpers'
+
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
@@ -58,8 +63,10 @@ RSpec.configure do |config|
 
   # Include support methods
   config.include ApplicationHelper
-  config.include Warden::Test::Helpers
+  config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
+  config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
   config.include Warden::Test::ControllerHelpers, type: :controller
+
 
   # Turn on FactoryGirl
   # ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md

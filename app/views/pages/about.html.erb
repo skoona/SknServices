@@ -1,8 +1,9 @@
-<% provide(:title, accessed_page_name) %>
+<% content_for(:title, accessed_page_name) %>
 
 
 <section class="container">
-    <article>
+    <div class="col-xs-2"></div>
+    <article class="col-xs-8">
         <header class="page-header">
             <h2>About SknService</h2>
 
@@ -74,6 +75,7 @@
             </p>
         </section>
     </article>
+    <div class="col-xs-2"></div>
 
     <%= link_to :back, class: "pull-right" do %>
         <span class="glyphicon glyphicon-home" aria-hidden="true"></span>

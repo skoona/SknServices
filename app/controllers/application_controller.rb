@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Secure::AuthenticationControllerHelper
+  include Secure::ControllerAccessProfile
   include ApplicationHelper
 
   # Prevent CSRF attacks by raising an exception.
@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
 
   # Force signout to prevent CSRF attacks
   def handle_unverified_request
-    logout(:default)
+    logout(scope: :access_profile, message: "An unverified request was received! For security reasons you have been signed out.")
     super
   end
 
@@ -46,7 +46,6 @@ class ApplicationController < ActionController::Base
   # Serialize to user session
   def manage_domain_services
     unless controller_name.include?("sessions")
-      # session[:page_info_domain] = page_info_domain if @page_info_domain.present?
       Rails.logger.debug "#{self.class.name}.#{__method__}() Called for session.id=#{request.session_options[:id]}"
     end
   end

@@ -19,6 +19,7 @@
 #  person_authenticated_key :string
 #  assigned_roles           :string
 #  remember_token_digest    :string
+#  last_login               :datetime
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl

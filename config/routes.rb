@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get '/content_profile_demo',      to:     'profiles#content_profile_demo'
 
   # Warden Failure Thrown
-  get '/unauthenticated',           to:     'pages#home'
+  get '/unauthenticated',           to:     'pages#unauthenticated'
 
   root to: 'pages#home'
 end

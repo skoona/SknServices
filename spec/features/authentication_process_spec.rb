@@ -19,7 +19,7 @@ RSpec.feature "Authentication process for all users." do
     scenario "Required to sign in when page is secured." do
       visit users_url
       expect(current_path).to eq signin_path
-      expect(page).to have_notice_message("Please sign in to continue")
+      expect(page).to have_alert_message("You must sign in before accessing")
     end
 
     scenario "Not required to sign in when page is unsecured." do
@@ -32,7 +32,7 @@ RSpec.feature "Authentication process for all users." do
       user = FactoryGirl.create(:manager)
       visit users_url
       expect(current_path).to eq signin_path
-      expect(page).to have_notice_message("Please sign in to continue")
+      expect(page).to have_alert_message("You must sign in before accessing")
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
@@ -58,14 +58,14 @@ RSpec.feature "Authentication process for all users." do
       user = FactoryGirl.create(:manager)
       visit users_url
       expect(current_path).to eq signin_path
-      expect(page).to have_notice_message("Please sign in to continue")
+      expect(page).to have_alert_message("You must sign in before accessing")
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
 
       expect(current_path).to eq users_path
       click_link 'Sign out'
-      expect(current_url).to eq root_url
+      expect(current_url).to eq home_url
       expect(page).to have_notice_message("You have been signed out")
     end
   end

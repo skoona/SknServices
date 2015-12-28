@@ -19,16 +19,18 @@
 #  person_authenticated_key :string
 #  assigned_roles           :string
 #  remember_token_digest    :string
+#  last_login               :datetime
 #
 
 class User < ActiveRecord::Base
-  include Secure::UserAccessControl
+  include Secure::UserAccessProfile
 
   has_secure_password
 
   before_create {|user|
     user.generate_unique_token(:person_authenticated_key)   # Never Changes
     user.regenerate_remember_token!   # :remember_token Change by reset or any update
+    user.last_login = Time.now
   }
 
 

@@ -3,6 +3,8 @@
 
 class PagesController < ApplicationController
 
+  before_action :honor_flash
+
   def home
   end
 
@@ -23,4 +25,12 @@ class PagesController < ApplicationController
   def developer
   end
 
+  def unauthenticated
+  end
+
+private
+
+  def honor_flash
+    flash.now.alert = warden.message if warden.message.present?
+  end
 end

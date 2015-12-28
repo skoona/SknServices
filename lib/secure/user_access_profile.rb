@@ -1,8 +1,8 @@
-# lib/Secure/access_control.rb
+# lib/Secure/user_access_profile.rb
 #
 
 module Secure
-  module UserAccessControl
+  module UserAccessProfile
     extend ActiveSupport::Concern
 
     ADMIN_ROLE = Settings.security.admin_role
@@ -10,7 +10,7 @@ module Secure
     included do
       # Todo: Breaks Test User for now
       raise Utility::Errors::SecurityImplementionError,
-        "You are missing a critical security vars: :person_authenticated_key, please implement!" unless
+        "You are missing a critical security var: :person_authenticated_key; Please implement!" unless
           self.attribute_names.include?("person_authenticated_key")
     end
 
@@ -19,14 +19,12 @@ module Secure
       def fetch_remembered_user (token=nil)
         value = self.find_by(remember_token: token)
         value = nil unless value.token_authentic?(token)
-
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
         value
       end
       # find user from our internal list
       def fetch_cached_user (token)
         value = users_store.get_stored_object(token)
-
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
         value
       end
@@ -45,7 +43,7 @@ module Secure
       end
 
       def last_login_time_expired?(person)
-        rc = (person &&  ((Time.now.to_i - person.updated_at.to_i) > Settings.security.verify_login_after_msecs))
+        rc = (person &&  ((Time.now.to_i - person.last_login.to_i) > Settings.security.verify_login_after_msecs))
         person.disable_authentication_controls if rc
         rc
       end
@@ -75,12 +73,15 @@ module Secure
 
     # Warden will call this methods
     def disable_authentication_controls
+      self.last_login = Time.now
+      self.save
       remove_from_store
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
     end
 
     # Warden will call this methods
     def enable_authentication_controls
+      self.last_login = Time.now
       self.try(:setup_access_profile)
       self.try(:setup_content_profile)
 

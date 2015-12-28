@@ -36,3 +36,17 @@ rails g model Users username:string:index name:string email:string password:dige
 # Gem 'annotate'
 bundle exec annotate --exclude tests,fixtures,factories,serializers
 ```
+from after_fetch_failed()
+AUTH: Warden::Proxy:70232456487340
+    @config={
+        :default_scope=>:access_profile,
+        :scope_defaults=>{:access_profile=>{:store=>true, :action=>"home"}},
+        :default_strategies=>{
+            :_all=>[:password, :http_basic_auth, :not_authorized],
+            :access_profile=>[
+                :password,
+                :http_basic_auth,
+                :not_authorized
+                      ]},
+        :intercept_401=>true,
+        :failure_app=>#<Proc:0x007fc08b31d208@/Users/jscott/masterWork/SknService/config/initializers/warden.rb:66 (lambda)>}

@@ -3,7 +3,7 @@
 RSpec.describe PasswordResetsController do
   let!(:user) {FactoryGirl.create(:user)}
   before :each do
-    login_as(user, scope: :default)
+    login_as(user, scope: :access_profile)
     @request.host = 'www.example.com'
   end
 

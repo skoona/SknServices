@@ -56,40 +56,62 @@
 #   logout causes callback: before_logout() to run and remove user from fetch cache and deletes all cookies
 #
 ##
-
+# DEBUG Legend:
+#
+# :01 RailsWarden:Manager
+# :st serialize_into_session              using person_authenticated_key rather than user.id
+# :sf serialize_from_session              retrieves memory object from object cache
+#
+# :pw Strategy :password                  set user and call after_auth, fail (if last) and call after_fetch_failed:event:authent
+# :rt Strategy :remember_token
+# :ba Strategy :http_basic_auth
+# :na Strategy :not_authorized
+#
+# :or Callback :on_request                 Nothing
+# :aa Callback :after_authentication       Establishs User caches, resolve roles, clear session-menu, checks last login, causes user.save
+# :aff Callback :after_failed_fetch        if path.secure then DROPS both cookies, clears flash, issue "Please login..."
+# :bf Callback :before_failure             DROPS remember_token, set REDIRECT :unauthenticated
+# :bl Callback :before_logout              User cleanup, drops token and session, resets session
+##
 
 # Rails.application.config.middleware.use Warden::Manager do |manager|
 Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
-  manager.default_strategies :password, :remember_token, :not_authorized
-  manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
-end
+  puts "===============[DEBUG]:01 #{self.class}\##{__method__}"
+  # manager.default_user_class = User
+  # manager.unauthenticated_action = "unauthenticated"
+  manager.default_scope = :access_profile
+  manager.default_strategies :remember_token, :password, :http_basic_auth, :not_authorized
+  manager.scope_defaults :access_profile,
+                         :store => true,
+                         :strategies => [:remember_token, :password, :http_basic_auth, :not_authorized],
+                         :action => 'unauthenticated'
+  manager.failure_app = lambda {|env| PagesController.action(:unauthenticated).call(env) }
 
-class Warden::SessionSerializer
-  ##
-  # Save the User id to session store
-  def serialize(record)
-    #Rails.logger.debug " Warden::SessionSerializer.serialize(ONLY) session.id=#{request.session_options[:id]}, user=#{record.name if record.present?}"
+  # otherwise wrap class Warden::SessionSerializer, def serialize(record); def deserialize(keys)
+  manager.serialize_into_session do |record|
+    puts "===============[DEBUG]:st #{self.class}\##{__method__}"
     [record.class.name, record.person_authenticated_key]
   end
-
-  ##
-  # Restore a klass name and id from session store
-  # Use token to find the existing object
-  def deserialize(keys)
+  manager.serialize_from_session do |keys|
+    puts "===============[DEBUG]:sf #{self.class}\##{__method__}"
     klass, token = keys
-    user = klass.to_s.classify.constantize.fetch_cached_user( token )
-    # Rails.logger.debug " Warden::SessionSerializer.deserialize(ONLY) session.id=#{request.session_options[:id]}, user=#{user.name if user.present?}"
+    klass = case klass
+              when Class
+                klass
+              when String, Symbol
+                klass.to_s.classify.constantize
+            end
+    user = klass.fetch_cached_user( token )
     user
   end
 end
 
+
 ##
 # Use the fields from the Signin page to authorize user
 Warden::Strategies.add(:password) do
-  def auth
-    @auth ||= Rack::Auth::Basic::Request.new(env)
-  end
   def valid?
+    puts "===============[DEBUG]:pw #{self.class}\##{__method__}"
     return false if request.get?
     params["session"].has_key?("username") and params["session"].has_key?("password") and
         params["session"]["username"].present? and params["session"]["password"].present?
@@ -107,6 +129,7 @@ end
 # Use the remember_token from the requests cookies to authorize user
 Warden::Strategies.add(:remember_token) do
   def valid?
+    puts "===============[DEBUG]:rt #{self.class}\##{__method__}"
     request.cookies["remember_token"].present?
   end
 
@@ -114,27 +137,28 @@ Warden::Strategies.add(:remember_token) do
     remember_token = request.cookies["remember_token"]
     token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token
     user = User.fetch_remembered_user(token)
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Token Invaild!")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Token Invaild!")
   rescue
-    fail!("Your Credentials are invalid or expired. Token Invaild!")
+    fail("Your Credentials are invalid or expired. Token Invaild!")
   end
 end
 
-Warden::Strategies.add(:basic_auth) do
+Warden::Strategies.add(:http_basic_auth) do
   def auth
-    @auth ||= Rack::Auth::Basic::Request.new(env)
+    @auth ||= Rack::Auth::Basic::Request.new(env)  # TODO: how long does this last, or for how many users?
   end
 
   def valid?
+    puts "===============[DEBUG]:ba #{self.class}\##{__method__}"
     auth.provided? && auth.basic? && auth.credentials
   end
 
   def authenticate!
     user = User.find_by_username(auth.credentials[0])
     user.try(:authenticate,auth.credentials[1])
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Invalid username or password!")
    rescue
-    fail!("Your Credentials are invalid or expired.  Auth Invaild!")
+    fail("Your Credentials are invalid or expired.  Auth Invaild!")
   end
 end
 
@@ -142,6 +166,7 @@ end
 # This will always fail, and is used as the last option should prior options fail
 Warden::Strategies.add(:not_authorized) do
   def valid?
+    puts "===============[DEBUG]:na #{self.class}\##{__method__}"
     true
   end
 
@@ -155,37 +180,36 @@ end
 # if remember me token is present
 #    attempt to authenticate using token, fail to signin page, else pass
 Warden::Manager.on_request do |proxy|
-  Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user.name if proxy.user.present?}, original_fullpath=#{proxy.request.original_fullpath}, session.keys=#{proxy.raw_session.keys}"
+  puts "===============[DEBUG]:or #{self.class}\##{__method__}"
+  Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user(:run_callbacks => false).name if proxy.user(:run_callbacks => false).present?}, token=#{proxy.cookies['remember_token'].present?}, original_fullpath=#{proxy.request.original_fullpath}, session.keys=#{proxy.raw_session.keys}"
 
-  tstatus = false
-  full_path = proxy.request.original_fullpath
-  bypass = full_path.eql?("/") || AccessRegistry.security_check?(full_path)
+  # Nothing really to do here
 
-  unless proxy.authenticated? or bypass
-    proxy.authenticate(:remember_token)      # sets user if successful
-    unless proxy.authenticated?    # Controllers's login_required? will sort this out
-      proxy.request.flash.clear
-      proxy.request.flash.notice = "Please sign in to continue."
-      tstatus = true
-    end
-  end
-
-  Rails.logger.debug " Warden::Manager.on_request(EXIT) bypass=#{bypass}, redirected=#{tstatus}, userId=#{proxy.user.name if proxy.user.present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
-end
-
-Warden::Manager.after_set_user do |user, auth, opts|
-  unless !User.last_login_time_expired?(user) && user.active?
-    auth.logout
-    throw(:warden, :message => "Session Expired! Please sign in to continue.")
-  end
+  Rails.logger.debug " Warden::Manager.on_request(EXIT) userId=#{proxy.user(:run_callbacks => false).name if proxy.user(:run_callbacks => false).present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
 end
 
 ##
-# Set remember_token only after a signin
+# Set remember_token only after a signin, and verify last login window
+#
+# after_authentication is just a wrapper to after_set_user, which is only invoked
+# when the user is set through the authentication path. The options and yielded arguments
+# are the same as in after_set_user.
+#
 Warden::Manager.after_authentication do |user,auth,opts|
+  puts "===============[DEBUG]:aa #{self.class}\##{__method__}"
   remember = false
   remember = true if auth.request.params.key?("session") && "1".eql?(auth.request.params["session"]["remember_me_token"])
+
+  unless !User.last_login_time_expired?(user) && user.active?
+    auth.logout(:access_profile, :message => "Session Expired! Please sign in to continue.")
+    throw(:warden, :message => "Session Expired! Please sign in to continue.")
+  end
+
+  # setup user for session and object caching, and resolve authorization groups/roles
   user.enable_authentication_controls
+
+  # force reload of navigation menu, which re-authorizes it too
+  auth.request.params["session"]["navigation_menu"] = nil
 
   if remember
     if Rails.env.production?
@@ -200,26 +224,61 @@ Warden::Manager.after_authentication do |user,auth,opts|
 end
 
 ##
-# Called in no user has be fetch and set as the current user
+# A callback that runs if no user could be fetched, meaning there is now no user logged in.
+# - cleanup no-good cookies, and maybe session
+# - All atempts to auth have been tried (i.e. all valid stratgies)
+#
 Warden::Manager.after_failed_fetch do |user,auth,opts|
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) remember_token present?(#{auth.cookies["remember_token"].present?}), user=#{user.name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
-  auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
+  puts "===============[DEBUG]:af #{self.class}\##{__method__}"
+  full_path = auth.request.original_fullpath
+  bypass = full_path.eql?("/") ||
+      full_path.include?("pages") ||
+      full_path.include?("sessions") ||
+      asset_request? ||
+      AccessRegistry.security_check?(full_path)
+
+#   puts "OPTS: #{opts}"
+
+    unless bypass    # Controllers's login_required? will sort this out
+      auth.request.flash.clear
+      auth.request.flash.notice = "Please sign in to continue."
+      auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
+      auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
+    end
+
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user(:run_callbacks => false).name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
 end
 
 ##
-# Injects the new action to match SessionsController
+# Injects the home action to match PagesController
+#
+# A callback that runs just prior to the failure application being called.
+# This callback occurs after PATH_INFO has been modified for the failure (default /unauthenticated)
+# In this callback you can mutate the environment as required by the failure application
+# If a Rails controller were used for the failure_app for example, you would need to set request[:params][:action] = :unauthenticated
+#
 Warden::Manager.before_failure do |env, opts|
+  puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
+  full_path = env['warden'].request.original_fullpath
+  bypass = full_path.eql?("/") ||
+      full_path.include?("pages") ||
+      full_path.include?("sessions") ||
+      asset_request? ||
+      AccessRegistry.security_check?(full_path)
   Rails.logger.debug " Warden::Manager.before_failure(ONLY) session.id=#{env['warden'].request.session_options[:id]}"
-  env['warden'].cookies.delete :remember_token, domain: env['warden'].env["SERVER_NAME"]
-  env['action_dispatch.request.path_parameters'][:action] = "new"
+  env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
+  env['action_dispatch.request.path_parameters'][:action] = "unauthenticated" if bypass
 end
 
 ##
+# A callback that runs just prior to the logout of each scope.
 # Logout the user object
 Warden::Manager.before_logout do |user,auth,opts|
+  puts "===============[DEBUG]:bl #{self.class}\##{__method__}"
   user.disable_authentication_controls unless user.nil?
   auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
   auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   auth.reset_session!
-  Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"
+  auth.request.flash.notice = opts[:message] if opts[:message]
+  Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"
 end

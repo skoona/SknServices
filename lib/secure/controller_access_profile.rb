@@ -1,25 +1,39 @@
 ##
-# <Rails.root>/lib/Secure/controller_authentication.rb
+# <Rails.root>/lib/Secure/controller_access_profile.rb
 #
 # This module is included in your application controller which makes
 # several methods available to all controllers and views.
 #
+# RailsWarden auto includes via
+#     RailsWarden::Mixins::HelperMethods,          :warden, :logged_in?, :authenticated?, :current_user, :user
+#     RailsWarden::Mixins::ControllerOnlyMethods   :authenticate, :authenticate!, :logout
+#     to ::ActionController::Base
+# RailsWarden auto includes via
+#     RailsWarden::Mixins::HelperMethods
+#     to ::ApplicationHelper
+#
 # You must restrict unregistered users from accessing a controller using
 # a before filter. For example.
 #
-#   before_filter :login_required, :except => [:index, :show]
+#   before_filter :login_required
+#
+#  depends on: rails_warden.gem
+#     ref: https://github.com/hassox/rails_warden
+#
 #
 # Author: James Scott, Jr. <skoona@gmail.com>
 # Date: 3.13.2013
 
 module Secure
-  module AuthenticationControllerHelper
+  module ControllerAccessProfile
     extend ActiveSupport::Concern
 
     included do
-      send :helper_method, :login_required, :redirect_to_target_or_default,
-           :accessed_page_name, :accessed_page, :valid_user_has_access?,
-           :has_access?, :current_user_has_access? if respond_to?(:helper_method)
+      send( :helper_method, [ :login_required, :redirect_to_target_or_default,
+                              :accessed_page_name, :accessed_page,
+                              :valid_user_has_access?, :has_access?,
+                              :current_user_has_access?]
+      ) if respond_to?(:helper_method)
     end
 
 
@@ -53,7 +67,7 @@ module Secure
     end
 
     def valid_user_has_access?(uri, options=nil)
-      logged_in? and current_user_has_access?(uri, options)
+      authenticated? and current_user_has_access?(uri, options)
     end
 
     # called from a engine to check access with status
@@ -73,5 +87,5 @@ module Secure
       session[:return_to] = request.original_url
     end
 
-  end # end AuthenticationControllerHelper
+  end # end ControllerAccessProfile
 end # end Secure

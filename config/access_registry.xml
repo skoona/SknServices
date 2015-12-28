@@ -17,7 +17,7 @@
             or other click-able resource in your application.
 
    Page Entries are automatically validated by a security filter/callback plugged into the app's base controller,
-   as a part of the AuthenticationControllerHelper::login_required() functionality.  If the user does not have
+   as a part of the ControllerAccessProfile::login_required() functionality.  If the user does not have
    a matching role for the current controller/action then they are redirected to the home page and given
    a 'not authorized' warning; otherwise they pass through to the desired page.
 
@@ -317,6 +317,10 @@
     <resource secured="false"> <!-- This resource is not protected, since unauthorized users need to see it. -->
         <uri>/signin</uri>
         <description>Sign-in</description>
+    </resource>
+    <resource secured="false">
+        <uri>pages/unauthenticated</uri>
+        <description>No Authenticated User Available!  Attempts to Sign In has failed! Unauthenticated</description>
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
