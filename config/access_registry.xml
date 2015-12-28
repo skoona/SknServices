@@ -3,7 +3,7 @@
 <!--
    config/access_registry.xml
 
-   Along with class AccessRegistry and module AccessControl, this file describes those
+   Along with class Secure::AccessRegistry and module AccessControl, this file describes those
    application resources that should be both secured and un-secured. This file is pre-processed
    by the class AccessRegistryUtility to enable the Access Authorization capability: which converts
    it into a Hash object.

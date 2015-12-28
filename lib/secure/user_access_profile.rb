@@ -113,25 +113,25 @@ module Secure
     end
 
     def has_access? (resource_uri, options=nil)
-      rc = AccessRegistry.check_access_permissions?( access_profile, resource_uri, options)
+      rc = Secure::AccessRegistry.check_access_permissions?( access_profile, resource_uri, options)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
       rc
     end
 
     def has_create? (resource_uri, options=nil)
-      AccessRegistry.check_role_permissions?( access_profile, resource_uri, "CREATE", options)
+      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "CREATE", options)
     end
 
     def has_read? (resource_uri, options=nil)
-      AccessRegistry.check_role_permissions?( access_profile, resource_uri, "READ", options)
+      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "READ", options)
     end
 
     def has_update? (resource_uri, options=nil)
-      AccessRegistry.check_role_permissions?( access_profile, resource_uri, "UPDATE", options)
+      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "UPDATE", options)
     end
 
     def has_delete? (resource_uri, options=nil)
-      AccessRegistry.check_role_permissions?( access_profile, resource_uri, "DELETE", options)
+      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "DELETE", options)
     end
 
     # Unpack Groups and Combine with assigned, into roles

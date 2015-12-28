@@ -242,7 +242,7 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
       full_path.include?("pages") ||
       full_path.include?("sessions") ||
       full_path.include?("assets") ||
-      AccessRegistry.security_check?(full_path)
+      Secure::AccessRegistry.security_check?(full_path)
 
 #   # puts "OPTS: #{opts}"
 
@@ -272,7 +272,7 @@ Warden::Manager.before_failure do |env, opts|
       full_path.include?("pages") ||
       full_path.include?("sessions") ||
       full_path.include?("assets") ||
-      AccessRegistry.security_check?(full_path)
+      Secure::AccessRegistry.security_check?(full_path)
   Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
   env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
   env['action_dispatch.request.path_parameters'][:action] = "unauthenticated" unless bypass

@@ -39,7 +39,7 @@
                 the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
                 authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
                 have two levels of authorization available; Clickable, and content-based
-                authorization using the expanded UserProfile permissions, both use the AccessRegistry.
+                authorization using the expanded UserProfile permissions, both use the Secure::AccessRegistry.
             </p>
             <div class="panel panel-info">
                 <div class="panel-body">
@@ -76,9 +76,9 @@
                 </div>
             </div>
             <p>
-                AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
+                Secure::AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
                 application to access role strings; which could be externally administered via LDAP or SQL.  The
-                AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
+                Secure::AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
                 also could be administered via LDAP or SQL.
             </p>
         </section>

@@ -1,7 +1,7 @@
 ##
 # app/services/content_profile_service.rb
 #
-# Manages AccessRegistry interactions for Users
+# Manages Secure::AccessRegistry interactions for Users
 # - Requires User#access_profile
 
 class AccessProfileService < ::Factory::DomainServices

@@ -13,11 +13,11 @@ UserProfiles and AccessProfiles have many different implementations available, a
 ContentProfiles are the main focus of exploration in this app, which has proven to be a significant 
 engineering challenge to handle the dynamics of Electronic Delivery.  
 
-AccessProfile i.e (AccessRegistry)
+AccessProfile i.e (Secure::AccessRegistry)
 ---
 
 The current implementation of
-AccessProfile contains an XML AccessRegistry file which could embody the specific requirements of
+AccessProfile contains an XML Secure::AccessRegistry file which could embody the specific requirements of
 the ContentProfile.  It would do this by creating an entry for each content type uri; like:
 
 * 'Agency/Commission-STMT/0034'

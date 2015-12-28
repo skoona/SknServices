@@ -1,7 +1,7 @@
 #
 # lib/Secure/access_registry_utility.rb
 #
-# Converts AccessRegistry XML Permissions file to YAMLable hash format.
+# Converts Secure::AccessRegistry XML Permissions file to YAMLable hash format.
 # -  Inputs: AccessRegistry xmlFile
 # - Outputs: a hash with the contents of the xml file
 #

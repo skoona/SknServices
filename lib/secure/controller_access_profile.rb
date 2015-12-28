@@ -38,7 +38,7 @@ module Secure
 
 
     def login_required
-      unless AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
+      unless Secure::AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
         unless authenticated?
           store_target_location
           Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to Sign in page")
@@ -59,7 +59,7 @@ module Secure
     end
 
     def accessed_page_name
-      AccessRegistry.get_resource_description(accessed_page) || ""
+      Secure::AccessRegistry.get_resource_description(accessed_page) || ""
     end
 
     def accessed_page

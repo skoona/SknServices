@@ -42,7 +42,7 @@
 #    }
 
 
-RSpec.describe AccessRegistry, "Authorization management" do
+RSpec.describe Secure::AccessRegistry, "Authorization management" do
 
   let(:admin) {["Test.Action.Create", "Test.Action.Read", "Test.Action.Update", "Test.Action.Delete"]}
   let(:employee) {["Test.Action.Read"]}
@@ -65,44 +65,44 @@ RSpec.describe AccessRegistry, "Authorization management" do
 
   context "Initializes correctly as a Static Service" do
     it "Loads the permissions resources when Rails starts." do
-      object = AccessRegistry.get_ar_resource_keys
+      object = Secure::AccessRegistry.get_ar_resource_keys
       expect(object.size).to be > 1
     end
     it "Will not allow an instance to be created."  do
-        expect{ AccessRegistry.new }.to raise_error(NotImplementedError)
+        expect{ Secure::AccessRegistry.new }.to raise_error(NotImplementedError)
     end
     it "Undefined resources are treated as secured." do
-      expect(AccessRegistry.is_secured?(resource_unknown)).to be true
+      expect(Secure::AccessRegistry.is_secured?(resource_unknown)).to be true
     end
     it "Defined resources are secure when declared as such." do
-      expect(AccessRegistry.is_secured?(resource_progressive)).to be true
+      expect(Secure::AccessRegistry.is_secured?(resource_progressive)).to be true
     end
     it "Defined resources are not secure when declared as such." do
-      expect(AccessRegistry.is_secured?(resource_public_page)).to be false
+      expect(Secure::AccessRegistry.is_secured?(resource_public_page)).to be false
     end
   end
 
   context "Element payloads are directly accessable from secured and unsecured resources. " do
     context "From secured resource." do
       it "#get_resource_description returns desciption element as string." do
-        expect(AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
+        expect(Secure::AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
       end
       it "#get_resource_userdata returns userdata element as hash." do
-        expect(AccessRegistry.get_resource_userdata('testing/userdata')).to be_a_kind_of(Hash)
+        expect(Secure::AccessRegistry.get_resource_userdata('testing/userdata')).to be_a_kind_of(Hash)
       end
     end
     context "From unsecured resource." do
       it "#get_resource_description returns desciption element as string." do
-        expect(AccessRegistry.get_resource_description('testing/public')).to be_a_kind_of(String)
+        expect(Secure::AccessRegistry.get_resource_description('testing/public')).to be_a_kind_of(String)
       end
       it "#get_resource_userdata returns userdata element as string." do
-        expect(AccessRegistry.get_resource_userdata('testing/public_string')).to be_a_kind_of(String)
+        expect(Secure::AccessRegistry.get_resource_userdata('testing/public_string')).to be_a_kind_of(String)
       end
       it "#get_resource_userdata returns userdata element as hash." do
-        expect(AccessRegistry.get_resource_userdata('testing/public')).to be_a_kind_of(Hash)
+        expect(Secure::AccessRegistry.get_resource_userdata('testing/public')).to be_a_kind_of(Hash)
       end
       it "#get_resource_userdata returns userdata element as array." do
-        expect(AccessRegistry.get_resource_userdata('testing/public_array')).to be_a_kind_of(Array)
+        expect(Secure::AccessRegistry.get_resource_userdata('testing/public_array')).to be_a_kind_of(Array)
       end
     end
   end
@@ -201,25 +201,25 @@ RSpec.describe AccessRegistry, "Authorization management" do
 
     context "When permissions match" do
       it "Allows access to secured resource when correct role is provided with no options." do
-        expect(AccessRegistry.check_access_permissions?(employee, resource_progressive, nil)).to be true
+        expect(Secure::AccessRegistry.check_access_permissions?(employee, resource_progressive, nil)).to be true
       end
       it "Allows access to secured resource when correct role and options are provided." do
-        expect(AccessRegistry.check_access_permissions?(employee, resource_options, options)).to be true
+        expect(Secure::AccessRegistry.check_access_permissions?(employee, resource_options, options)).to be true
       end
       it "Allows access to secured resource when correct role and unrelated options are provided." do
-        expect(AccessRegistry.check_access_permissions?(employee, resource_progressive, unknown_options)).to be true
+        expect(Secure::AccessRegistry.check_access_permissions?(employee, resource_progressive, unknown_options)).to be true
       end
     end
 
     context "When permissions do not match." do
       it "Does not allow access to secured resource when wrong role is provided with no options." do
-        expect(AccessRegistry.check_access_permissions?(bad, resource_options, nil)).to be false
+        expect(Secure::AccessRegistry.check_access_permissions?(bad, resource_options, nil)).to be false
       end
       it "Allow access to secured resource when correct role and wrong options are provided." do
-        expect(AccessRegistry.check_access_permissions?(employee, resource_options, unknown_options)).to be true
+        expect(Secure::AccessRegistry.check_access_permissions?(employee, resource_options, unknown_options)).to be true
       end
       it "Does not allow access to secured resource when wrong role and unrelated options are provided." do
-        expect(AccessRegistry.check_access_permissions?(bad, resource_options, unknown_options)).to be false
+        expect(Secure::AccessRegistry.check_access_permissions?(bad, resource_options, unknown_options)).to be false
       end
     end
   end
@@ -228,37 +228,37 @@ RSpec.describe AccessRegistry, "Authorization management" do
 
     context "When CRUD roles are granted permission to access resource." do
       it "Update permission is granted with options present for employees" do
-        expect(AccessRegistry.check_role_permissions?(employee, resource_options, "UPDATE", owner_option)).to be true
+        expect(Secure::AccessRegistry.check_role_permissions?(employee, resource_options, "UPDATE", owner_option)).to be true
       end
       it "Create permission is granted with no options present for managers." do
-        expect(AccessRegistry.check_role_permissions?(admin, resource_absolutes, "CREATE", nil)).to be true
+        expect(Secure::AccessRegistry.check_role_permissions?(admin, resource_absolutes, "CREATE", nil)).to be true
       end
       it "Read permission is granted." do
-        expect(AccessRegistry.check_role_permissions?(admin, resource_absolutes, "READ", nil)).to be true
+        expect(Secure::AccessRegistry.check_role_permissions?(admin, resource_absolutes, "READ", nil)).to be true
       end
       it "Update permission is granted." do
-        expect(AccessRegistry.check_role_permissions?(admin, resource_absolutes, "UPDATE", nil)).to be true
+        expect(Secure::AccessRegistry.check_role_permissions?(admin, resource_absolutes, "UPDATE", nil)).to be true
       end
       it "Delete permission is granted." do
-        expect(AccessRegistry.check_role_permissions?(admin, resource_absolutes, "DELETE", nil)).to be true
+        expect(Secure::AccessRegistry.check_role_permissions?(admin, resource_absolutes, "DELETE", nil)).to be true
       end
     end
 
     context "When CRUD roles are denied permission to access resource." do
       it "Create permission is denied with wrong options present for employees." do
-        expect(AccessRegistry.check_role_permissions?(employee, resource_options, "CREATE", owner_option)).to be false
+        expect(Secure::AccessRegistry.check_role_permissions?(employee, resource_options, "CREATE", owner_option)).to be false
       end
       it "Create permission is denied." do
-        expect(AccessRegistry.check_role_permissions?(employee, resource_absolutes, "CREATE", nil)).to be false
+        expect(Secure::AccessRegistry.check_role_permissions?(employee, resource_absolutes, "CREATE", nil)).to be false
       end
       it "Read permission is denied." do
-        expect(AccessRegistry.check_role_permissions?(bad, resource_absolutes, "READ", nil)).to be false
+        expect(Secure::AccessRegistry.check_role_permissions?(bad, resource_absolutes, "READ", nil)).to be false
       end
       it "Update permission is denied." do
-        expect(AccessRegistry.check_role_permissions?(employee, resource_absolutes, "UPDATE", nil)).to be false
+        expect(Secure::AccessRegistry.check_role_permissions?(employee, resource_absolutes, "UPDATE", nil)).to be false
       end
       it "Delete permission is denied." do
-        expect(AccessRegistry.check_role_permissions?(employee, resource_absolutes, "DELETE", nil)).to be false
+        expect(Secure::AccessRegistry.check_role_permissions?(employee, resource_absolutes, "DELETE", nil)).to be false
       end
     end
   end
