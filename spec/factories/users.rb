@@ -47,7 +47,6 @@ FactoryGirl.define do
                              "Service.Action.ResetPassword"]
 
     factory :support do
-      last_login              {Time.zone.now}
       assigned_groups             ["EmployeeSecondary"]
       assigned_roles          ["Users.Action.Update",
                                "Users.Action.Edit",
@@ -60,7 +59,6 @@ FactoryGirl.define do
     end
 
     factory :manager do
-      last_login              {Time.zone.now}
       assigned_groups             ["EmployeePrimary"]
       assigned_roles          ["Services.Action.Admin",
                                "Services.Action.Developer"]
