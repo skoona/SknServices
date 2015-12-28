@@ -320,7 +320,7 @@
     </resource>
     <resource secured="false">
         <uri>pages/unauthenticated</uri>
-        <description>No Authenticated User Available!  Attempts to Sign In has failed! Unauthenticated</description>
+        <description>No Authenticated User Available!  All attempts to Sign In have failed!  Unauthenticated</description>
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
