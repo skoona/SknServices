@@ -150,6 +150,13 @@ module Secure
       Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "DELETE", options)
     end
 
+    def get_resource_description(resource_uri)
+      Secure::AccessRegistry.get_resource_description(resource_uri)
+    end
+    def get_resource_userdata(resource_uri)
+      Secure::AccessRegistry.get_resource_userdata(resource_uri)
+    end
+
     protected
 
     # Saves user object to InMemory Container
