@@ -9,9 +9,9 @@ module Secure
 
     included do
       # Todo: Breaks Test User for now
-      raise Utility::Errors::SecurityImplementionError,
-        "You are missing a critical security var: :person_authenticated_key; Please implement!" unless
-          self.attribute_names.include?("person_authenticated_key")
+      # raise Utility::Errors::SecurityImplementionError,
+      #   "You are missing a critical security var: :person_authenticated_key; Please implement!" unless
+      #     self.attribute_names.include?("person_authenticated_key")
     end
 
     module ClassMethods   # mostly called by Warden
@@ -107,10 +107,6 @@ module Secure
     def access_profile
       self.roles || []
     end
-    # Returns RB of ContentProfile
-    def content_profile
-      self.instance_variable_get(:@content_profile)
-    end
 
     def has_access? (resource_uri, options=nil)
       rc = Secure::AccessRegistry.check_access_permissions?( access_profile, resource_uri, options)
@@ -146,14 +142,6 @@ module Secure
         self.roles = role.flatten.uniq
         self.save
       end
-    end
-
-    # Retrieves users content profile in ResultBean
-    def setup_content_profile
-      self.instance_variable_set(:@content_profile,
-                                 ContentProfile.find_by_person_authentication_key(self.person_authenticated_key).
-                                     try(:profile)
-      )
     end
 
     protected

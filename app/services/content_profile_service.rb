@@ -2,7 +2,7 @@
 # app/services/content_profile_service.rb
 #
 # Manages CP interactions for Users
-# - requires Secure::UserContentProfile on User instance via User#content_profile
+# - requires Utility::UserContentProfileBean on User instance via User#content_profile
 
 class ContentProfileService < ::Factory::DomainServices
 

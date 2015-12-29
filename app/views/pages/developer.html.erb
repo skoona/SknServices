@@ -2,15 +2,16 @@
 
 <script type="text/javascript">
     function getRailsInfo(placeHolder) {
-        info = document.getElementById(placeHolder);
+        info =  document.getElementById(placeHolder);
         if (window.XMLHttpRequest)
         { xhr = new XMLHttpRequest(); }
         else
         { xhr = new ActiveXObject("Microsoft.XMLHTTP"); }
         xhr.open("GET", info.closest("a").attr('href'),false);
         xhr.send("");
-        info.innerHTML = xhr.responseText;
-        info.style.display = 'block'
+
+        info.hide().innerHTML($.contents('body',xhr.responseText)).fadeIn();
+        document.getElementById(placeHolder).style.display = 'block';
     }
 </script>
 
@@ -43,11 +44,11 @@
             <p>Development Version <%= Settings.Packaging.pomVersion.to_s %></p>
         </div>
         <div id="about">
-                <h3><a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false">click here for environment info.</a></h3>
+                <h3><a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">click here for environment info.</a></h3>
                 <div id="about-content" style="display: none"></div>
         </div>
         <div id="routes">
-            <h3><a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false">click here for route info.</a></h3>
+            <h3><a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false;">click here for route info.</a></h3>
             <div id="route-content" style="display: none"></div>
         </div>
         <hr />

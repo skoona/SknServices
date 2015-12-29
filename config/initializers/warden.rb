@@ -225,10 +225,9 @@ Warden::Manager.after_authentication do |user,auth,opts|
 end
 
 
-PUBLIC_PAGES = ['/signout','/signin', '/home', '/about', '/developer', '/details_model',
-                '/learn_more', '/details_content', '/details_access',
-                'details_auth', '/access_profile_demo', '/content_profile_demo',
-                '/unauthenticated']
+PUBLIC_PAGES = ['/signout','/signin', '/home', '/about', '/learn_more',
+                '/details_model', '/details_content', '/details_access','details_auth',
+                '/assests','/unauthenticated', 'sessions', 'sessions/new', 'sessions/create']
 ##
 # A callback that runs if no user could be fetched, meaning there is now no user logged in.
 # - cleanup no-good cookies, and maybe session
@@ -239,12 +238,7 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
   full_path = auth.request.original_fullpath
   bypass = full_path.eql?("/") ||
       PUBLIC_PAGES.map {|p| full_path.include?(p) }.any? ||
-      full_path.include?("pages") ||
-      full_path.include?("sessions") ||
-      full_path.include?("assets") ||
       Secure::AccessRegistry.security_check?(full_path)
-
-#   # puts "OPTS: #{opts}"
 
     unless bypass    # Controllers's login_required? will sort this out
       auth.request.flash.clear
@@ -269,10 +263,8 @@ Warden::Manager.before_failure do |env, opts|
   full_path = env['warden'].request.original_fullpath
   bypass = full_path.eql?("/") ||
       PUBLIC_PAGES.map {|p| full_path.include?(p) }.any? ||
-      full_path.include?("pages") ||
-      full_path.include?("sessions") ||
-      full_path.include?("assets") ||
       Secure::AccessRegistry.security_check?(full_path)
+
   Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
   env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
   env['action_dispatch.request.path_parameters'][:action] = "unauthenticated" unless bypass

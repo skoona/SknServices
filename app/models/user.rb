@@ -23,6 +23,7 @@
 #
 
 class User < ActiveRecord::Base
+  include Secure::UserContentProfile
   include Secure::UserAccessProfile
 
   has_secure_password
@@ -59,7 +60,7 @@ class User < ActiveRecord::Base
   validates( :password_confirmation, presence: true, if: :need_password?)
 
   def display_name
-    name
+    self.name
   end
 
   def generate_unique_token(column)
