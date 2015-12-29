@@ -5,7 +5,7 @@ RSpec.feature "Authentication process for all users." do
 
 
   context "Users " do
-    given(:user) { FactoryGirl.create(:user) }
+    given(:user) { create(:user) }
 
     scenario "Sign in with username and password credentials." do
       visit signin_url

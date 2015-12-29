@@ -1,22 +1,14 @@
 <% provide(:title, 'Reset Password') %>
 
-<%= simple_form_for(@user, :url => password_reset_path(@user), :html => { :class => 'form-horizontal' }) do |f| %>
+<%= simple_form_for(@user, :url => password_reset_path(@user), :html => { :class => 'form form-horizontal' }) do |f| %>
 
-  <div class="control-group">
-    <div class="controls">   
       <h3>Enter new password</h3>
-    </div>
-  </div>
-    
-  <fieldset>			
+
 	  	<%= f.input :password, autofocus: true %>
 	  	<%= f.input :password_confirmation, label: 'Confirmation' %>
-  </fieldset>
 
-  <div class="button-group">
-    <div class="controls">
-        <%= f.button :submit, "Update Password", class: 'btn btn-primary' %>
+    <div class="col-sm-offset-3">
+        <%= f.button :submit, "Update Password", class: 'btn-primary' %>
         <%= link_to "Cancel", root_path(), class: 'btn' %>
     </div>
-  </div>
 <% end %>

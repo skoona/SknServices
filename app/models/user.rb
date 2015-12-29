@@ -23,8 +23,7 @@
 #
 
 class User < ActiveRecord::Base
-  include Secure::UserContentProfile
-  include Secure::UserAccessProfile
+  include Secure::UserProfileHelper
 
   has_secure_password
 
@@ -61,18 +60,6 @@ class User < ActiveRecord::Base
 
   def display_name
     self.name
-  end
-
-  def generate_unique_token(column)
-    Rails.logger.debug "#{self.class.name}.#{__method__} called for #{username}'s #{column}"
-    begin
-      if  column.to_s.eql?("remember_token")
-        self[column] = SecureRandom.urlsafe_base64
-      else
-        self[column] = User.get_new_secure_token
-      end
-    end while User.exists?(column => self[column])
-    true
   end
 
   def need_password?

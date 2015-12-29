@@ -16,11 +16,9 @@
 
         <%= render 'fields', f:  f %>
 
-        <div class="form-actions">
-            <div class="col-sm-offset-2 col-sm-10">
-                <%= f.button :submit, class: 'btn btn-primary submit' %>
-                <%= link_to "Cancel", user_path(@user), class: 'btn' %>
-            </div>
+        <div class="col-sm-offset-3">
+            <%= f.button :submit, class: 'btn btn-primary submit' %>
+            <%= link_to "Cancel", user_path(@user), class: 'btn' %>
         </div>
     <% end %>
 

@@ -3,23 +3,15 @@
 <section class="container">
 
     <%= simple_form_for(@user, :url => password_resets_path, :html => { :class => 'form-horizontal form' }) do |f| %>
-        <fieldset>
-            <legend><h3 class="text-center">Reset Your Password</h3></legend>
+            <h2>Reset Your Password</h2>
 
-        <div class="form-group">
-            <label for="username" class="col-sm-6 control-label required">Enter Your UserName</label>
-            <div class="col-sm-6">
-                <input class="required form-control" autofocus="autofocus" type="text" name="user[username]" id="user_username">
-            </div>
-        </div>
+            <label for="username">Enter Your UserName</label>
+            <input autofocus="autofocus" type="text" name="user[username]" id="user_username">
 
-        <div class="button-group">
-          <div class="col-sm-offset-3 col-sm-9">
-              <button type="submit" name="commit" value="Reset Password" class="btn btn-default btn-primary submit">Reset Password</button>
+          <div class="col-sm-offset-3">
+              <button type="submit" name="commit" value="Reset Password" class="btn-primary submit">Reset Password</button>
               <%= link_to "Cancel", root_path(), class: 'btn' %>
           </div>
-        </div>
-        </fieldset>
     <% end %>
 
 </section>

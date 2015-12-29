@@ -8,30 +8,50 @@ module Secure
     ADMIN_ROLE = Settings.security.admin_role
 
     included do
-      # Todo: Breaks Test User for now
+
       # raise Utility::Errors::SecurityImplementionError,
       #   "You are missing a critical security var: :person_authenticated_key; Please implement!" unless
       #     self.attribute_names.include?("person_authenticated_key")
     end
 
     module ClassMethods   # mostly called by Warden
+
       # find user in database
+      def find_and_authenticate_user(uname, upass)
+        upp = nil
+        value = self.find_by(username: uname).authenticate(upass)
+        upp = self.new(value) if value.present?
+        upp = nil unless upp && value
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        upp
+      rescue Exception => e
+        Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
+        nil
+      end
       def fetch_remembered_user (token=nil)
+        upp = nil
         value = self.find_by(remember_token: token)
-        value = nil unless value.token_authentic?(token)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
-        value
+        upp = self.new(value) if value.present?
+        upp = nil unless upp && value && value.token_authentic?(token)
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        upp
+      rescue Exception => e
+        Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
+        nil
       end
       # find user from our internal list
       def fetch_cached_user (token)
         value = users_store.get_stored_object(token)
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
         value
+      rescue Exception => e
+        Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
+        nil
       end
 
       def logout(token)
-        user_object = users_store.get_stored_object(token.to_sym)
-        user_object.disable_authentication_controls if user_object.present?
+        u_object = users_store.get_stored_object(token.to_sym)
+        u_object.disable_authentication_controls if u_object.present?
       end
 
       def get_new_secure_digest(token)
@@ -43,9 +63,9 @@ module Secure
       end
 
       def last_login_time_expired?(person)
-        rc = (person &&  ((Time.now.to_i - person.last_login.to_i) > Settings.security.verify_login_after_msecs))
+        rc = (person &&  ((Time.now.to_i - person[:last_login].to_i) > Settings.security.verify_login_after_msecs))
         # person.disable_authentication_controls if rc
-        person.last_login = Time.now
+        person[:last_login] = Time.now
         rc
       end
 
@@ -58,45 +78,25 @@ module Secure
     # Instance Methods
     #
 
-    # returns true/false if any <column>_digest matches token
-    # note: Password.new(digest) decrypts digest
-    def token_authentic?(token)
-      attribute_names.select do |attr|
-        attr.split("_").last.eql?("digest") ?
-            BCrypt::Password.new(self[attr]).is_password?(token) : false
-      end.any?    # any? returns true/false if any digest matched
-    end
-
-    def regenerate_remember_token!
-      self.generate_unique_token(:remember_token)
-      self.remember_token_digest = User.get_new_secure_digest(self.remember_token)
-    end
 
     # Warden will call this methods
     def disable_authentication_controls
-      self.last_login = Time.now
-      self.save
+      proxy_u.last_login = Time.now
+      proxy_u.save
       remove_from_store
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
-    end
-
-    # Warden will call this methods
-    def enable_authentication_controls
-      self.last_login = Time.now
-      self.try(:setup_access_profile)
-      self.try(:setup_content_profile)
-
-      add_to_store
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       true
     end
 
-    ##
-    # Application Methods
-    # - add more is_<name>? as needed
-    #
-    def is_admin?
-      access_profile.include? ADMIN_ROLE
+    # Warden will call this methods
+    def enable_authentication_controls
+      proxy_u.last_login = Time.now
+      self.setup_access_profile
+      self.setup_content_profile
+
+      add_to_store
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      true
     end
 
     ##
@@ -105,7 +105,27 @@ module Secure
 
     # Return all Roles
     def access_profile
-      self.roles || []
+      proxy_u.roles || []
+    end
+
+    # Unpack Groups and Combine with assigned, into roles
+    # Called by Warden when user is authenticated
+    def setup_access_profile
+      rc = false
+      role = proxy_u[:assigned_groups].map do |rg|
+        UserGroupRole.list_user_roles(rg)
+      end
+      if role.present?
+        role += proxy_u[:assigned_roles]
+        role += proxy_u[:assigned_groups]
+        proxy_u[:roles] = role.flatten.uniq
+        rc = proxy_u.save
+      end
+      rc
+    end
+
+    def is_admin?
+      access_profile.include? ADMIN_ROLE
     end
 
     def has_access? (resource_uri, options=nil)
@@ -130,30 +150,16 @@ module Secure
       Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "DELETE", options)
     end
 
-    # Unpack Groups and Combine with assigned, into roles
-    # Called by Warden when user is authenticated
-    def setup_access_profile
-      role = self.assigned_groups.map do |rg|
-        UserGroupRole.list_user_roles(rg)
-      end
-      if role.present?
-        role += self.assigned_roles
-        role += self.assigned_groups
-        self.roles = role.flatten.uniq
-        self.save
-      end
-    end
-
     protected
 
     # Saves user object to InMemory Container
     def add_to_store()
-      Secure::ObjectStorageContainer.instance.add_to_store(person_authenticated_key, self)
+      Secure::ObjectStorageContainer.instance.add_to_store(id.to_sym, self)
     end
 
     # Removes saved user object from InMemory Container
     def remove_from_store()
-      Secure::ObjectStorageContainer.instance.remove_from_store(person_authenticated_key)
+      Secure::ObjectStorageContainer.instance.remove_from_store(id.to_sym)
     end
   end # end AccessControl
 end # end Secure

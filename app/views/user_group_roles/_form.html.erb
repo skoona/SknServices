@@ -1,13 +1,10 @@
 <%= simple_form_for(@user_group_role, :html => { :class => 'form form-horizontal', :authenticity_token => true }) do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
     <%= f.input :name %>
     <%= f.input :description %>
     <%= f.input :group_type %>
-  </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, class: 'btn btn-primary submit' %>
-  </div>
+    <div class="col-sm-offset-3">
+        <%= f.button :submit, class: 'btn-block submit' %>
+    </div>
 <% end %>

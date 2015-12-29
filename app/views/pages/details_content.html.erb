@@ -1,7 +1,8 @@
 <% provide(:title, accessed_page_name) %>
 
 <section class="container">
-    <article>
+    <div class="col-xs-1"></div>
+    <article class="col-xs-10">
         <header class="page-header">
             <h2><%= accessed_page_name %></h2>
 
@@ -21,10 +22,11 @@
                 engineering challenge to handle the dynamics of Electronic Delivery.
             </p>
         </section>
+        <%= link_to :back, class: "pull-right" do %>
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            Home
+        <% end %>
     </article>
+    <div class="col-xs-1"></div>
 
-    <%= link_to :back, class: "pull-right" do %>
-        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-        Home
-    <% end %>
 </section>

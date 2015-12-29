@@ -28,15 +28,16 @@ require 'faker'
 FactoryGirl.define do
   factory :user do
     username                {Faker::Internet.user_name}
+    person_authenticated_key {SecureRandom.hex(16)}
     name                    {Faker::Name.name}
     email                   { "#{username}@#{Faker::Internet.domain_name}".downcase }
-    remember_token          "MyString"
+    remember_token          {SecureRandom.urlsafe_base64}
     password                "foobar"
     password_confirmation   "foobar"
-    password_reset_token    "tokenx"
+    password_reset_token    {SecureRandom.urlsafe_base64}
     password_reset_date     {Time.zone.now}
     last_login              {Time.zone.now}
-    assigned_groups             ["EmployeeSecondary"]
+    assigned_groups         ["EmployeeSecondary"]
     assigned_roles          ["Users.Action.Update",
                              "Users.Action.Edit",
                              "Users.Action.Read",

@@ -22,7 +22,7 @@
 # Allow Remember Me tokens to be used to sign in; prefer them over passwords
 #
 # This module along with the modules authentication_controller_helper, authentication_user_helper implement
-# the desired security model with a minimum of impact on the ApplicationController[s] or User objects.
+# the desired security model with a minimum of impact on the ApplicationController[s] or UserProfile objects.
 #
 #
 # CONTROLS:
@@ -32,11 +32,11 @@
 # * When a cookie expires is is deleted by the browser, and never sent back
 # * We intend for the session cookie to expire after 30 minutes, and have the token automatically sign them in again for
 #   up to 8 hours.
-# * Signing out deletes all cookies/tokens.  I.E. User is done using the system for a while.
+# * Signing out deletes all cookies/tokens.  I.E. UserProfile is done using the system for a while.
 #
 # SEQUENCES: A
 # deserialize() remember_token from session if session and/or keys exists
-#   fetch() from Users UsersCache, set_user if found
+#   fetch() from UserProfiles UsersCache, set_user if found
 #   after_failed_fetch() likely caused by invalid token, clear all cookies
 # on_request() if user or excluded paths, then pass
 #   if remember_token and no user, attempt warden.authenticate() with token, which will set_user
@@ -68,16 +68,16 @@
 # :na Strategy :not_authorized
 #
 # :or Callback :on_request                 Nothing
-# :aa Callback :after_authentication       Establishs User caches, resolve roles, clear session-menu, checks last login, causes user.save
+# :aa Callback :after_authentication       Establishs UserProfile caches, resolve roles, clear session-menu, checks last login, causes user.save
 # :aff Callback :after_failed_fetch        if path.secure then DROPS both cookies, clears flash, issue "Please login..."
 # :bf Callback :before_failure             DROPS remember_token, set REDIRECT :unauthenticated
-# :bl Callback :before_logout              User cleanup, drops token and session, resets session
+# :bl Callback :before_logout              UserProfile cleanup, drops token and session, resets session
 ##
 
 # Rails.application.config.middleware.use Warden::Manager do |manager|
 Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
   # puts "===============[DEBUG]:01 #{self.class}\##{__method__}"
-  # manager.default_user_class = User
+  # manager.default_user_class = Secure::UserProfile
   # manager.unauthenticated_action = "unauthenticated"
   manager.default_scope = :access_profile
   manager.default_strategies :remember_token, :password, :http_basic_auth, :not_authorized
@@ -118,8 +118,8 @@ Warden::Strategies.add(:password) do
   end
 
   def authenticate!
-    user = User.find_by_username(params["session"]["username"]).try(:authenticate, params["session"]["password"])
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
+    user = Secure::UserProfile.find_and_authenticate_user(params["session"]["username"], params["session"]["password"])
+    (user and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
   rescue
     fail!("Your Credentials are invalid or expired.")
   end
@@ -129,6 +129,7 @@ end
 # Use the remember_token from the requests cookies to authorize user
 Warden::Strategies.add(:remember_token) do
   def valid?
+    return false if request.get?
     # puts "===============[DEBUG]:rt #{self.class}\##{__method__}"
     request.cookies["remember_token"].present?
   end
@@ -136,7 +137,7 @@ Warden::Strategies.add(:remember_token) do
   def authenticate!
     remember_token = request.cookies["remember_token"]
     token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token
-    user = User.fetch_remembered_user(token)
+    user = Secure::UserProfile.fetch_remembered_user(token)
     (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Token Invaild!")
   rescue
     fail("Your Credentials are invalid or expired. Token Invaild!")
@@ -149,13 +150,13 @@ Warden::Strategies.add(:http_basic_auth) do
   end
 
   def valid?
+    return false if request.get?
     # puts "===============[DEBUG]:ba #{self.class}\##{__method__}"
     auth.provided? && auth.basic? && auth.credentials
   end
 
   def authenticate!
-    user = User.find_by_username(auth.credentials[0])
-    user.try(:authenticate,auth.credentials[1])
+    user = Secure::UserProfile.find_and_authenticate_user(auth.credentials[0],auth.credentials[1])
     (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Invalid username or password!")
    rescue
     fail("Your Credentials are invalid or expired.  Auth Invaild!")
@@ -186,7 +187,7 @@ Warden::Manager.on_request do |proxy|
 
   # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
   user_object = proxy.user()
-  if user_object.present? && User.last_login_time_expired?(user_object) && user_object.active?
+  if user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object) && user_object.active?
     proxy.logout(:access_profile, :message => "Please sign in to continue. Session Expired!")
     timeout_flag = true
   end

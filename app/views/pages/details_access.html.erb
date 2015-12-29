@@ -1,7 +1,8 @@
 <% provide(:title, accessed_page_name) %>
 
 <section class="container">
-    <article>
+    <div class="col-xs-1"></div>
+    <article class="col-xs-10">
         <header class="page-header">
             <h1><%= accessed_page_name %></h1>
             <%= image_tag("AccessProfile-ContentProfile.png", alt: "ContentProfile", class: "large-image") %>
@@ -259,10 +260,11 @@
                 &lt;/resource&gt;
             </pre>
         </section>
-    </article>
-
-    <%= link_to :back, class: "pull-right" do %>
+        <%= link_to :back, class: "pull-right" do %>
         <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
         Home
     <% end %>
+    </article>
+    <div class="col-xs-1"></div>
+
 </section>

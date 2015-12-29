@@ -10,6 +10,9 @@ RSpec.describe Secure::UserProfile, 'Contains the users presence.' do
     it '#new with user_object does not raise error.' do
       expect( Secure::UserProfile.new(user) ).to be_a(Secure::UserProfile)
     end
+    it '#method find_and_authenticate_user(name,pass) works as expected.' do
+      expect( Secure::UserProfile.find_and_authenticate_user(user.username, user.password)).to be_a_kind_of(Secure::UserProfile)
+    end
   end
 
   context "Delegates missing instance methods to the user_object it contains." do
@@ -35,6 +38,27 @@ RSpec.describe Secure::UserProfile, 'Contains the users presence.' do
   context "Handles Instance methods from included module." do
     it '#method access_profile returns expected object.' do
       expect( Secure::UserProfile.new(user).access_profile ).to be_a_kind_of(Array)
+    end
+  end
+
+  context "Handles internal ActiveRecord Class methods." do
+    it '#method fetch_remembered_user() works as expected.' do
+      expect( Secure::UserProfile.fetch_remembered_user(user.remember_token) ).to be_a_kind_of(Secure::UserProfile)
+    end
+    it '#method enable_authentication_controls() works as expected.' do
+      expect( Secure::UserProfile.new(user).enable_authentication_controls() ).to be true
+    end
+    it '#method disable_authentication_controls() works as expected.' do
+      u = Secure::UserProfile.new(user)
+      expect( u.enable_authentication_controls() ).to be true
+      expect( u.disable_authentication_controls() ).to be true
+    end
+    it '#method fetch_cached_user() works as expected.' do
+      u = Secure::UserProfile.new(user)
+      expect( u.enable_authentication_controls() ).to be true
+      expect( Secure::UserProfile.users_store.size_of_store).to be > 0
+      expect( Secure::UserProfile.fetch_cached_user(u.person_authenticated_key)).to be_a_kind_of(Secure::UserProfile)
+      expect( u.disable_authentication_controls() ).to be true
     end
   end
 

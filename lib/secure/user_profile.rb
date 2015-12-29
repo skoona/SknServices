@@ -9,18 +9,31 @@ module Secure
     include Secure::UserContentProfile
     include Secure::UserAccessProfile
 
-    attr_accessor :id, :last_access
+    attr_accessor :id, :person_authenticated_key, :last_access
 
+    # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
+    class << self
+      delegate :find_by,
+               :to => ::User
+    end
     ##
     # Initialize with a user_object only
     def initialize(user)
       @user_object = user
-      id = @user_object.person_authenticated_key
+      @person_authenticated_key = @user_object[:person_authenticated_key]
+      @id = @person_authenticated_key
       last_access = Time.now
     end
 
     def active?
       @user_object.active and id.present?
+    end
+
+    def proxy_u
+      @user_object
+    end
+    def proxy_c
+      @user_object.class
     end
 
     # Authenticate returns self, we need to override that return value to return us instead

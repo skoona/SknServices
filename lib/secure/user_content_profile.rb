@@ -33,6 +33,7 @@ module Secure
                                  ContentProfile.find_by_person_authentication_key(self.person_authenticated_key).
                                      try(:profile)
       )
+      true
     end
 
     protected

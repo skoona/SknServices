@@ -16,6 +16,9 @@ class AccessRegistryTestUser
     @username = Faker::Internet.user_name
   end
 
+  def proxy_u
+    self
+  end
   def self.attribute_names
     [
       "roles", "unique_id", "username", "assigned_roles",
