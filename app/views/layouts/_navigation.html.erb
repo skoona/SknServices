@@ -38,11 +38,6 @@
                                 <%= nav_link_icon("glyphicon-lock", "Manage GroupRoles", user_group_roles_path) %>
                             <% end %>
                         <% end %>
-                        <% if valid_user_has_access?('#GroupManagement') %>
-                            <% if valid_user_has_access?('user_group_roles/index') %>
-                                <%= nav_link_icon("glyphicon-lock", "Manage GroupRoles", user_group_roles_path) %>
-                            <% end %>
-                        <% end %>
                     </ul>
                 </li>
                 <% if valid_user_has_access?('#Demonstration') %>
@@ -66,7 +61,7 @@
         </ul>
         <% if logged_in? %>
             <p class="navbar-text pull-right">Signed in as
-                <a href="<%= user_path(current_user) %>">
+                <a href="<%= user_path(current_user.id) %>">
                 <span><i class="glyphicon glyphicon-user"></i>&nbsp;<small><%= current_user.name %></small></span></a>
             </p>
         <% end %>

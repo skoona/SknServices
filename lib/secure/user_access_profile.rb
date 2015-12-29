@@ -154,12 +154,12 @@ module Secure
 
     # Saves user object to InMemory Container
     def add_to_store()
-      Secure::ObjectStorageContainer.instance.add_to_store(id.to_sym, self)
+      Secure::ObjectStorageContainer.instance.add_to_store(person_authenticated_key.to_sym, self)
     end
 
     # Removes saved user object from InMemory Container
     def remove_from_store()
-      Secure::ObjectStorageContainer.instance.remove_from_store(id.to_sym)
+      Secure::ObjectStorageContainer.instance.remove_from_store(person_authenticated_key.to_sym)
     end
   end # end AccessControl
 end # end Secure
