@@ -1,4 +1,5 @@
-<div class="well col-xs-6">
+
+<div class="well <%= action_name.eql?('show') ? 'col-xs-offset-3 col-xs-6' : 'col-xs-6' %>">
     <div class="media">
         <div class="media-left">
             <%= link_to content_profile do %>
@@ -17,7 +18,7 @@
             <p>Entries: <span class="badge"><%= content_profile.content_profile_entries.size %></span></p>
             <p>
                 <% if has_access?('content_profiles/show') and action_name.eql?('index') %>
-                    <%= link_to 'Show', content_profile, class: "btn btn-default" %> |
+                    <%= link_to 'Show', content_profile, class: "btn btn-default btn-primary" %> |
                 <% end %>
                 <% if has_access?('content_profiles/edit')  %>
                     <%= link_to 'Edit', edit_content_profile_path(content_profile), class: "btn btn-default" %> |
@@ -25,7 +26,7 @@
                 <% if has_access?('content_profiles/destroy') and action_name.eql?('show') %>
                     <%= link_to 'Destroy', content_profile, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %> |
                 <% end %>
-                <%= link_to :back, :back, class: "btn btn-default" %>
+                <%= link_to :back, :back, class: (action_name.eql?('index') ? 'btn' : 'btn btn-default btn-primary') %>
             </p>
         </div>
     </div>

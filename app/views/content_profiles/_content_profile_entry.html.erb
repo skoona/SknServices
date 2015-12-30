@@ -1,0 +1,22 @@
+<div class="well col-xs-6">
+    <div class="media">
+        <div class="media-left">
+            <%= link_to content_profile_path do %>
+                <span class="media-object">
+                    <span style="font-size:2.5em;" class="glyphicon glyphicon-leaf" aria-hidden="true"></span>
+                </span>
+            <% end %>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading"><%= entry.topic_type %></h4>
+            <dl class="dl-horizontal">
+                <dt>Topic Type</dt><dd><%= entry.topic_type %></dd>
+                <dt>Topic Description</dt><dd><%= entry.description %></dd>
+                <dt>Topic Value</dt><dd><%= entry.topic_value %></dd>
+                <dt>Content Type</dt><dd><%= entry.content_type %></dd>
+                <dt>Content Description</dt><dd><%= entry.content_type_description %></dd>
+                <dt>Content Value</dt><dd><%= entry.content_value %></dd>
+            </dl>
+        </div>
+    </div>
+</div>

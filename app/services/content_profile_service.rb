@@ -4,27 +4,33 @@
 # Manages CP interactions for Users
 # - requires Utility::UserContentProfileBean on User instance via User#content_profile
 
-class ContentProfileService < ::Factory::DomainServices
+class ContentProfileService < ::ContentProfileDomain
 
   # attr_accessor :factory, :user, :current_user  -- initialize by service factory
 
 
-	def some_function(params)
-    # do something good
-		bean = {
-			success: true,
-			message: "Did something good."
-		}
-		SknUtils::PageControls.new(bean)
-		
-	rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}(#{user.username if user.present?}) Klass: #{e.class.name}, Cause: #{e.message}"
-		bean = {
-			success: false,
-			message: e.message
-		}
-		SknUtils::PageControls.new(bean)
-	end
+  def handle_demo_page(params={})
+    @page_user=current_user
+
+    SknUtils::PageControls.new({
+                                   success: true,
+                                   message: "",
+                                   page_users: get_page_users,
+                                   page_user: page_user.username,
+                                   content_profile: get_page_content_profile,
+                                   access_profile: get_page_access_profile
+                               })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::ResultBean.new({
+        success: false,
+        message: e.message,
+        # page_users: [],
+        page_user: "",
+        content_profile: [],
+        access_profile: []
+    })
+  end
 
 
 end

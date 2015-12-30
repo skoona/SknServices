@@ -13,7 +13,7 @@ module Secure
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
     class << self
-      delegate :find_by,
+      delegate :find_by, :find_each, :where,
                :to => ::User
     end
     ##

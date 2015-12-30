@@ -187,7 +187,7 @@ Warden::Manager.on_request do |proxy|
 
   # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
   user_object = proxy.user()
-  if user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object) && user_object.active?
+  if user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
     proxy.logout(:access_profile, :message => "Please sign in to continue. Session Expired!")
     timeout_flag = true
   end

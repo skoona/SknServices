@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
     user.generate_unique_token(:person_authenticated_key)   # Never Changes
     user.regenerate_remember_token!   # :remember_token Change by reset or any update
     user.last_login = Time.now
+    user.active = true
   }
 
 

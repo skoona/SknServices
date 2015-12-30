@@ -1,5 +1,5 @@
 
-<div class="well col-xs-6">
+<div class="well <%= action_name.eql?('show') ? 'col-xs-offset-3 col-xs-6' : 'col-xs-6' %>">
     <div class="media">
         <div class="media-left">
             <%= link_to user do %>

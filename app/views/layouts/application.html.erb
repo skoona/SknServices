@@ -13,7 +13,7 @@
 
     <%= yield(:head) %>
 
-    <link rel="shortcut icon" href="/assets/images/favicon.ico"/>
+    <link rel="shortcut icon" href="<%= image_path("favicon.ico") %>"/>
   </head>
 
   <body data-controller-name="<%= controller_name %>" data-controller-action="<%= action_name %>">  <%# Identifies each page so JS can act when wanted %>

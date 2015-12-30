@@ -4,4 +4,12 @@
     <h1><%= accessed_page_name %></h1>
 
     <%= render @content_profile %>
+
+    <% if action_name.eql?('show') %>
+        <section>
+            <% @content_profile.content_profile_entries.each do |cpe| %>
+                <%= render 'content_profile_entry', entry: SknUtils::PageControls.new(cpe.entry_info)  %>
+            <% end %>
+        </section>
+    <% end %>
 </section>

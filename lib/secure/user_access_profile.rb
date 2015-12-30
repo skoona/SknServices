@@ -16,6 +16,29 @@ module Secure
 
     module ClassMethods   # mostly called by Warden
 
+      def page_users
+        usrs = []
+        self.where(active: true).find_each do |u|
+          usrs << [u.display_name, u.username ]
+        end
+        usrs
+      rescue Exception => e
+        Rails.logger.error("  #{self.name.to_s}.#{__method__}() returns: #{e.class.name} msg: #{e.message}")
+        []
+      end
+
+      def page_user(uname)
+        upp = nil
+        value = self.find_by(username: uname)
+        upp = self.new(value) if value.present?
+        upp = nil unless upp && value
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        upp
+
+      rescue Exception => e
+        Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
+        nil
+      end
       # find user in database
       def find_and_authenticate_user(uname, upass)
         upp = nil
@@ -63,9 +86,11 @@ module Secure
       end
 
       def last_login_time_expired?(person)
-        rc = (person &&  ((Time.now.to_i - person[:last_login].to_i) > Settings.security.verify_login_after_msecs))
-        # person.disable_authentication_controls if rc
+        a = (Time.now.to_i - person[:last_login].to_i)
+        b = Settings.security.verify_login_after_msecs.to_i / 1000
+        rc = (person &&  (a > b ))
         person[:last_login] = Time.now
+        Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{person.username if person}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
         rc
       end
 
@@ -104,8 +129,31 @@ module Secure
     #
 
     # Return all Roles
-    def access_profile
-      proxy_u.roles || []
+    def access_profile(wdesc=false)
+      wdesc ? access_profile_hash : (proxy_u.roles || [])
+    end
+
+    def access_profile_hash
+      ary_hash = []
+      ary_hash = proxy_u[:assigned_groups].map do |rg|
+        UserGroupRole.list_user_roles(rg, true)
+      end
+      unless ary_hash.empty?
+        proxy_u[:assigned_roles].map do |ar|
+          ug = UserRole.find_by(name: ar)
+          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Role"}
+        end
+
+        proxy_u[:assigned_groups].each do |ag|
+          ug = UserGroupRole.find_by(name: ag)
+          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Group"}
+        end
+      end
+
+      ary_hash.flatten.uniq
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      raise e
     end
 
     # Unpack Groups and Combine with assigned, into roles

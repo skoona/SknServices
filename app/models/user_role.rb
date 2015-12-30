@@ -13,4 +13,5 @@ class UserRole < ActiveRecord::Base
   has_and_belongs_to_many :user_group_roles, join_table: :user_group_roles_user_roles
 
   validates_uniqueness_of :name
+
 end
