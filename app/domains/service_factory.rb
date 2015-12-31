@@ -9,20 +9,20 @@
 
 class ServiceFactory < ::Factory::DomainServices
 
-  # attr_accessor :factory, :user, :current_user  -- initialize by service factory
+  # attr_accessor :factory, :controller, :user, :current_user  -- initialize by service factory
 
   def password_service
-    @ct_password_service ||= ::PasswordService.new({factory: self})
+    @ct_password_service ||= ::PasswordService.new({factory: self, controller: controller, user: factory.current_user})
     yield @ct_password_service if block_given?
     @ct_password_service
   end
   def access_profile_service
-    @ct_access_profile_service ||= ::AccessProfileService.new({factory: self})
+    @ct_access_profile_service ||= ::AccessProfileService.new({factory: self, controller: controller, user: factory.current_user})
     yield @ct_access_profile_service if block_given?
     @ct_access_profile_service
   end
   def content_profile_service
-    @ct_content_profile_service ||= ::ContentProfileService.new({factory: self})
+    @ct_content_profile_service ||= ::ContentProfileService.new({factory: self, controller: controller, user: factory.current_user})
     yield @ct_content_profile_service if block_given?
     @ct_content_profile_service
   end

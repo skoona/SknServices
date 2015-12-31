@@ -4,19 +4,24 @@
 module Factory
   class DomainServices
 
-    attr_accessor :factory, :user
+    attr_accessor :factory, :user, :controller
 
     def initialize(params={})
-      [:factory].each do |k|
+      [:factory, :controller, :user].each do |k|
         send("#{k}=", nil)
-        send("#{k}=", params[k]) if params.key?(k)
+        instance_variable_set("@#{k.to_s}",params[k])  if params.key?(k)
       end
+
+      # Fixups based on how we were initialized
+      @factory = @controller if factory.nil? and @controller.present?
+
       raise ArgumentError,
-            "Factory::DomainServices: for #{self},  Missing required initialization param(s) (#{'factory' if @factory.nil?} #{'user' if @user.nil?} for #{self})" unless @factory.present?
+        %Q!Factory::DomainServices: for #{self.class.name}.  Missing required initialization
+           param(s) (#{'factory' if factory.nil?} #{'user' if user.nil?})! unless factory.present?
     end
 
     def current_user
-      user || factory.current_user
+      @user || @factory.current_user
     end
 
   end

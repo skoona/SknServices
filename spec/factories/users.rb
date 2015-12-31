@@ -38,14 +38,8 @@ FactoryGirl.define do
     password_reset_date     {Time.zone.now}
     last_login              {Time.zone.now}
     assigned_groups         ["EmployeeSecondary"]
-    assigned_roles          ["Users.Action.Update",
-                             "Users.Action.Edit",
-                             "Users.Action.Read",
-                             "Service.Action.ResetPassword"]
-    roles                    ["Users.Action.Update",
-                             "Users.Action.Edit",
-                             "Users.Action.Read",
-                             "Service.Action.ResetPassword"]
+    assigned_roles          ["Service.Action.ResetPassword"]
+    roles                   ["Service.Action.ResetPassword"]
 
     factory :support do
       assigned_groups             ["EmployeeSecondary"]

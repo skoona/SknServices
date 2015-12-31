@@ -16,7 +16,7 @@ module Secure
 
     module ClassMethods   # mostly called by Warden
 
-      def page_users
+      def page_users(context='access')
         usrs = []
         self.where(active: true).find_each do |u|
           usrs << [u.display_name, u.username ]
@@ -27,7 +27,7 @@ module Secure
         []
       end
 
-      def page_user(uname)
+      def page_user(uname, context='access')
         upp = nil
         value = self.find_by(username: uname)
         upp = self.new(value) if value.present?
@@ -141,12 +141,12 @@ module Secure
       unless ary_hash.empty?
         proxy_u[:assigned_roles].map do |ar|
           ug = UserRole.find_by(name: ar)
-          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Role"}
+          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Role"} if ug
         end
 
         proxy_u[:assigned_groups].each do |ag|
           ug = UserGroupRole.find_by(name: ag)
-          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Group"}
+          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Group"} if ug
         end
       end
 

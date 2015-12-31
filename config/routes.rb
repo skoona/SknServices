@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get '/details_auth',              to:     'pages#details_auth'
   get '/access_profile_demo',       to:     'profiles#access_profile_demo'
   get '/content_profile_demo',      to:     'profiles#content_profile_demo'
+  get 'accessible_content',         to:     'profiles#accessible_content'
 
   # Warden Failure Thrown
   get '/unauthenticated',           to:     'pages#unauthenticated'

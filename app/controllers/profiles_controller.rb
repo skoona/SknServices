@@ -10,4 +10,15 @@ class ProfilesController < ApplicationController
     @page_controls = content_profile_service.handle_demo_page(params)
   end
 
+  # json api, requires :username and access: [:access, :content]
+  # - returns Accessible Content
+  def accessible_content(params)
+    @page_controls = content_profile_service.accessible_content(params)
+    if @page_controls.success
+      render json:  @page_controls.to_hash().as_json(root: false), status: :accepted, content_type: :json and return
+    else
+      render json:  @page_controls.to_hash().as_json(root: false), status: :conflict, content_type: 'text/plain' and return
+    end
+  end
+
 end

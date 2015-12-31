@@ -21,14 +21,14 @@
                 </div>
                 <!-- Table -->
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                    <table id="users-table" class="table table-striped table-hover">
                         <thead>
                         <th>Username</th>
                         <th>Proper Name</th>
                         </thead>
                         <tbody class="">
                         <% @page_controls.page_users.each do |u| %>
-                            <tr date-key="<%= u.username %>">
+                            <tr data-key="<%= u.username %>">
                                 <td><%= u.username %></td>
                                 <td><%= u.display_name %></td>
                             </tr>
@@ -46,7 +46,7 @@
                     </div>
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table id="access-table" class="table table-striped table-hover">
                             <thead>
                             <th>Assigned From</th>
                             <th>Role Pattern</th>
@@ -72,7 +72,7 @@
                     </div>
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table id="accessible-table" class="table table-striped table-hover">
                             <thead>
                             <th>Source</th>
                             <th>Filename</th>
