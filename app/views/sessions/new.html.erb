@@ -1,7 +1,7 @@
 <% provide(:title, "Sign in") %>
 
 <section class="container">
-    <%= form_tag( url_for(sessions_path),  class: 'form' ) do |f| %>
+    <%= form_tag( url_for(sessions_path),  class: 'form', :authenticity_token => true  ) do |f| %>
             <h2 class="form-signin-heading">Please sign in</h2>
 
                 <label for="session_username" class="sr-only">Username</label>

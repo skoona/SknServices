@@ -86,11 +86,11 @@ module Secure
       end
 
       def last_login_time_expired?(person)
-        a = (Time.now.to_i - person[:last_login].to_i)
+        a = (Time.now.to_i - person.last_access.to_i)
         b = Settings.security.verify_login_after_msecs.to_i / 1000
         rc = (person &&  (a > b ))
-        person[:last_login] = Time.now
-        Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{person.username if person}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
+        person.last_access = Time.now
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username if person}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
         rc
       end
 
@@ -153,7 +153,7 @@ module Secure
       ary_hash.flatten.uniq
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      raise e
+      {}
     end
 
     # Unpack Groups and Combine with assigned, into roles

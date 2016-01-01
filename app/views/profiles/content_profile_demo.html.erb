@@ -27,9 +27,9 @@
                         <th>Username</th>
                         <th>Proper Name</th>
                         </thead>
-                        <tbody class="">
+                        <tbody class="" data-package="<%= @page_controls.to_hash.to_json %>">
                         <% @page_controls.page_users.each do |u| %>
-                            <tr data-key="<%= u.username %>">
+                            <tr data-package="<%= u.to_hash.to_json %>">
                                 <td><%= u.username %></td>
                                 <td><%= u.display_name %></td>
                             </tr>
@@ -42,32 +42,38 @@
         <div class="col-md-9">
             <div class="col-md-12">
                 <div class="panel panel-info ">
-                    <div class="panel-heading">
-                        <h2 class="panel-title">ContentProfile Entry: <%= @page_controls.content_profile.profile_type %>, <%= @page_controls.content_profile.profile_type_description %></h2>
-                    </div>
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table id="content-table" class="table table-striped table-hover">
-                            <thead>
-                            <th>Entry Description</th>
-                            <th>Content</th>
-                            <th>Content Description</th>
-                            <th>Topic</th>
-                            <th>Content Value</th>
-                            </thead>
-                            <tbody class="">
-                            <% @page_controls.content_profile.entries.each do |u| %>
-                                <tr data-key="<%= u.content_value %>">
-                                    <td><%= u.description %></td>
-                                    <td><%= u.content_type %></td>
-                                    <td><%= u.content_type_description %></td>
-                                    <td><%= u.topic_type %></td>
-                                    <td><%= u.content_value %></td>
-                                </tr>
-                            <% end  %>
-                            </tbody>
-                        </table>
-                    </div>
+                    <% if @page_controls.success %>
+                        <div class="panel-heading">
+                            <h2 class="panel-title">ContentProfile Entry: <%= @page_controls.content_profile.profile_type %>, <%= @page_controls.content_profile.profile_type_description %></h2>
+                        </div>
+                        <!-- Table -->
+                        <div class="table-responsive">
+                            <table id="content-table" class="table table-striped table-hover">
+                                <thead>
+                                <th>Entry Description</th>
+                                <th>Content</th>
+                                <th>Content Description</th>
+                                <th>Topic</th>
+                                <th>Content Value</th>
+                                </thead>
+                                <tbody class="">
+                                <% @page_controls.content_profile.entries.each do |u| %>
+                                    <tr data-package="<%= u.to_hash.to_json %>">
+                                        <td><%= u.description %></td>
+                                        <td><%= u.content_type %></td>
+                                        <td><%= u.content_type_description %></td>
+                                        <td><%= u.topic_type %></td>
+                                        <td><%= u.content_value %></td>
+                                    </tr>
+                                <% end  %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% else %>
+                        <div class="panel-heading">
+                            <h2 class="panel-title">ContentProfile Entry: <%= @page_controls.message %></h2>
+                        </div>
+                    <% end %>
                 </div>
             </div>
             <div class="col-md-12">

@@ -324,11 +324,11 @@
     </resource>
     <resource secured="false">
         <uri>pages/unauthenticated</uri>
-        <description>No Authenticated User Available!  All attempts to Sign In have failed!  Unauthenticated</description>
+        <description>Your request is not authorized!</description>
     </resource>
     <resource secured="false">
         <uri>/unauthenticated</uri>
-        <description>No Authenticated User Available!  All attempts to Sign In have failed!  Unauthenticated</description>
+        <description>Your request is not authorized!</description>
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>

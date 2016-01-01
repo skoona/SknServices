@@ -2,19 +2,19 @@ module Utilities
 
   RSpec::Matchers.define :have_error_message do |message|
     match do |page|
-      expect(page).to have_selector('div#flash_error', text: message)
+      expect(page).to have_selector('div[id^=flash_error]', text: message)
     end
   end
 
   RSpec::Matchers.define :have_alert_message do |message|
     match do |page|
-      expect(page).to have_selector('div#flash_alert', text: message)
+      expect(page).to have_selector('div[id^=flash_alert]', text: message)
     end
   end
 
   RSpec::Matchers.define :have_notice_message do |message|
     match do |page|
-      expect(page).to have_selector('div#flash_notice', text: message)
+      expect(page).to have_selector('div[id^=flash_notice]', text: message)
     end
   end
 

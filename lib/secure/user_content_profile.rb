@@ -24,7 +24,7 @@ module Secure
     #
     # Returns RB of ContentProfile
     def content_profile
-      self.instance_variable_get(:@content_profile)
+      self.instance_variable_get(:@content_profile) || ((setup_content_profile and @content_profile.present?) ? self.instance_variable_get(:@content_profile) :  {})
     end
 
     # Retrieves users content profile in ResultBean

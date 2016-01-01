@@ -48,17 +48,80 @@ rails g model Users username:string:index name:string email:string password:dige
 # Gem 'annotate'
 bundle exec annotate --exclude tests,fixtures,factories,serializers
 ```
-from after_fetch_failed()
-AUTH: Warden::Proxy:70232456487340
-    @config={
-        :default_scope=>:access_profile,
-        :scope_defaults=>{:access_profile=>{:store=>true, :action=>"home"}},
-        :default_strategies=>{
-            :_all=>[:password, :http_basic_auth, :not_authorized],
-            :access_profile=>[
-                :password,
-                :http_basic_auth,
-                :not_authorized
-                      ]},
-        :intercept_401=>true,
-        :failure_app=>#<Proc:0x007fc08b31d208@/Users/jscott/masterWork/SknService/config/initializers/warden.rb:66 (lambda)>}
+
+AccessProfile Package:
+data-package="{
+    &quot;success&quot;:true,
+    &quot;message&quot;:&quot;&quot;,
+    &quot;accessible_content_url&quot;:null,
+    &quot;page_users&quot;:[
+        {&quot;username&quot;:&quot;skoona&quot;,&quot;display_name&quot;:&quot;Employee Primary User: Developer&quot;},
+        {&quot;username&quot;:&quot;eptester&quot;,&quot;display_name&quot;:&quot;Employee Primary User&quot;},
+        {&quot;username&quot;:&quot;estester&quot;,&quot;display_name&quot;:&quot;Employee Secondary User&quot;},
+        {&quot;username&quot;:&quot;aptester&quot;,&quot;display_name&quot;:&quot;Agency Primary User&quot;},
+        {&quot;username&quot;:&quot;astester&quot;,&quot;display_name&quot;:&quot;Agency Secondary User&quot;},
+        {&quot;username&quot;:&quot;vptester&quot;,&quot;display_name&quot;:&quot;Vendor Long Term User&quot;},
+        {&quot;username&quot;:&quot;vstester&quot;,&quot;display_name&quot;:&quot;Vendor Short Term User&quot;}
+                            ],
+    &quot;page_user&quot;:&quot;skoona&quot;
+    ,&quot;access_profile&quot;:[
+        {&quot;description&quot;:&quot;Super User&quot;,&quot;name&quot;:&quot;Services.Action.Admin&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+        {&quot;description&quot;:&quot;Super User&quot;,&quot;name&quot;:&quot;Services.Action.Primary&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+        {&quot;description&quot;:&quot;Developer&quot;,&quot;name&quot;:&quot;Services.Action.Developer&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+        {&quot;description&quot;:&quot;Reset Forgotten Password via EMail&quot;,&quot;name&quot;:&quot;Services.Action.ResetPassword&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+        {&quot;description&quot;:&quot;Administer Authorization Content Profile&quot;,&quot;name&quot;:&quot;Services.Action.Admin.ContentProfile&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+        {&quot;description&quot;:&quot;Administer Authorization Group&quot;,&quot;name&quot;:&quot;Services.Action.Admin.UserAuthorizationGroups&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+        {&quot;description&quot;:&quot;Administer User Records&quot;,&quot;name&quot;:&quot;Services.Action.Admin.UserRecords&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+        {&quot;description&quot;:&quot;Developer&quot;,&quot;name&quot;:&quot;Services.Action.Developer&quot;,&quot;type&quot;:&quot;Assigned Role&quot;},
+        {&quot;description&quot;:&quot;BMI Admin User&quot;,&quot;name&quot;:&quot;EmployeePrimary&quot;,&quot;type&quot;:&quot;Assigned Group&quot;}
+                                ]
+              }"
+
+
+ContentProfile Package:
+data-package="{
+    &quot;success&quot;:true,
+    &quot;message&quot;:&quot;&quot;,
+    &quot;accessible_content_url&quot;:null,
+    &quot;page_users&quot;:[
+        {
+         &quot;username&quot;:&quot;skoona&quot;,
+         &quot;display_name&quot;:&quot;Employee Primary User: Developer&quot;
+        },
+        {&quot;username&quot;:&quot;eptester&quot;,&quot;display_name&quot;:&quot;Employee Primary User&quot;},
+        {&quot;username&quot;:&quot;estester&quot;,&quot;display_name&quot;:&quot;Employee Secondary User&quot;},
+        {&quot;username&quot;:&quot;aptester&quot;,&quot;display_name&quot;:&quot;Agency Primary User&quot;},
+        {&quot;username&quot;:&quot;astester&quot;,&quot;display_name&quot;:&quot;Agency Secondary User&quot;},
+        {&quot;username&quot;:&quot;vptester&quot;,&quot;display_name&quot;:&quot;Vendor Long Term User&quot;},
+        {&quot;username&quot;:&quot;vstester&quot;,&quot;display_name&quot;:&quot;Vendor Short Term User&quot;}
+                           ],
+    &quot;page_user&quot;:&quot;skoona&quot;,
+    &quot;content_profile&quot;:{
+        &quot;username&quot;:&quot;skoona&quot;,
+        &quot;display_name&quot;:&quot;Employee Primary User: Developer&quot;,
+        &quot;pak&quot;:&quot;eafbf74d395cd68e1b5743bad33a82b4&quot;,
+        &quot;profile_type&quot;:&quot;EmployeePrimary&quot;,
+        &quot;profile_type_description&quot;:&quot;BMI Admin User&quot;,
+        &quot;provider&quot;:&quot;BCrypt&quot;,
+        &quot;email&quot;:&quot;skoona@gmail.com&quot;,
+        &quot;entries&quot;:[
+            {
+             &quot;topic_value&quot;:&quot;Agency&quot;,
+             &quot;content_value&quot;:[
+                                &quot;68601&quot;,
+                                &quot;68602&quot;,
+                                &quot;68603&quot;
+                                       ],
+             &quot;content_type&quot;:&quot;Commission&quot;,
+             &quot;content_type_description&quot;:&quot;Monthly Commission Reports and Files&quot;,
+             &quot;topic_type&quot;:&quot;Agency&quot;,
+             &quot;topic_type_description&quot;:&quot;Agency Actions&quot;,
+             &quot;description&quot;:&quot;Determine which agency documents can be seen&quot;
+            },
+            {&quot;topic_value&quot;:&quot;Account&quot;,&quot;content_value&quot;:[&quot;AdvCancel&quot;,&quot;FutCancel&quot;,&quot;Cancel&quot;],&quot;content_type&quot;:&quot;Notification&quot;,&quot;content_type_description&quot;:&quot;Email Notification of Related Events&quot;,&quot;topic_type&quot;:&quot;Account&quot;,&quot;topic_type_description&quot;:&quot;Account Actions&quot;,&quot;description&quot;:&quot;Determine which accounts will have notification sent&quot;},
+            {&quot;topic_value&quot;:&quot;LicensedStates&quot;,&quot;content_value&quot;:[&quot;21&quot;,&quot;9&quot;,&quot;23&quot;],&quot;content_type&quot;:&quot;Operations&quot;,&quot;content_type_description&quot;:&quot;Business Operational Metric&quot;,&quot;topic_type&quot;:&quot;LicensedStates&quot;,&quot;topic_type_description&quot;:&quot;Agent Actions&quot;,&quot;description&quot;:&quot;Determine which States agent may operate in.&quot;}
+                            ]
+                                }
+              }"
+
+                            <tr data-package="{&quot;username&quot;:&quot;skoona&quot;,&quot;display_name&quot;:&quot;Employee Primary User: Developer&quot;}">

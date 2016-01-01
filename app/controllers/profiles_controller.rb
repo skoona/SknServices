@@ -15,9 +15,9 @@ class ProfilesController < ApplicationController
   def accessible_content(params)
     @page_controls = content_profile_service.accessible_content(params)
     if @page_controls.success
-      render json:  @page_controls.to_hash().as_json(root: false), status: :accepted, content_type: :json and return
+      render json:  {package: @page_controls.to_hash()}.as_json(root: false), status: :accepted, content_type: :json and return
     else
-      render json:  @page_controls.to_hash().as_json(root: false), status: :conflict, content_type: 'text/plain' and return
+      render json:  {package: @page_controls.to_hash()}.as_json(root: false), status: :conflict, content_type: 'text/plain' and return
     end
   end
 

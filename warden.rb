@@ -31,10 +31,6 @@ module Warden
         @request.env['action_controller.instance'] = @controller
       end
 
-      def warden_use_user(user, options={})
-        warden.set_user(user, options)
-      end
-
       # Quick access to Warden::Proxy.
       def warden
         @warden ||= begin

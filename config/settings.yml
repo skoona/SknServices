@@ -28,7 +28,18 @@ security:
   session_expires: <%= -> { 4.hours.from_now } %>
   remembered_for:  <%= -> { 12.hours.from_now } %>
   verify_login_after_msecs: 28800000   # 8 hours
-
-standards:
-  ! keep:
-    = me
+  ! public_pages:
+   - /signout
+   - /signin
+   - /home
+   - /about
+   - /learn_more
+   - /details_model
+   - /details_content
+   - /details_access
+   - details_auth
+   - /assests
+   - /unauthenticated
+   - /sessions
+   - sessions/new
+   - sessions/create

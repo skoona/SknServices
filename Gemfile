@@ -32,6 +32,7 @@ group :test do
   gem 'database_cleaner'
   gem 'capybara-mechanize'
   gem 'rack_session_access'
+  gem 'warden-rspec-rails'
   #gem 'capybara-webkit'
   # gem 'selenium-webdriver'
 end

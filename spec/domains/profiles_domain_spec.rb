@@ -6,7 +6,7 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
 
   before do
     @user = Secure::UserProfile.new( User.first )
-    warden_use_user(@user, scope: :access_profile)
+    sign_in(@user, scope: :access_profile)
     @service = ProfilesDomain.new({factory: controller, controller: controller, user: @user})
   end
 
@@ -63,13 +63,13 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
     end
     it "#get_page_access_profile() returns a array of hashes as expected." do
       expect( @service.get_page_user(@user.username, "access") ).to be_a(Secure::UserProfile)
-      result = @service.get_page_access_profile()
+      result = @service.get_page_access_profile(@user)
       expect(result).to be_a(Array)
       expect(result.first).to be_a(Hash)
     end
     it "#get_page_content_profile() returns a hash as expected, AFTER BEING ENABLE." do
       expect(@user.enable_authentication_controls()).to be true
-        result = @service.get_page_content_profile()
+        result = @service.get_page_content_profile(@user)
       expect(@user.disable_authentication_controls()).to be true
 
       expect(result).to be_a(Hash)
@@ -77,6 +77,60 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
     end
   end
 
+  context "Controller accessible methods handle requests properly. " do
+      let!(:aptesterA) {@service.get_page_user("aptester", "access")}
+      let!(:estesterA) {@service.get_page_user("estester", "access")}
+      let!(:aptesterC) {@service.get_page_user("aptester", "content")}
+      let!(:estesterC) {@service.get_page_user("estester", "content")}
+
+      before() do
+        @access = controller.service_factory.access_profile_service
+        @content = controller.service_factory.content_profile_service
+      end
+    context "For user aptester, that has content and access profiles available. " do
+      it "#accessible_content(access) return a PageControls object for context: access " do
+        expect(@service.accessible_content({username: 'aptester', access: 'access'})).to be_a(SknUtils::PageControls)
+        expect(@service.accessible_content({username: 'aptester', access: 'access'}).success).to be true
+      end
+      it "#accessible_content(content) return a PageControls object for context: content " do
+        expect(@service.accessible_content({username: 'aptester', access: 'content'})).to be_a(SknUtils::PageControls)
+        expect(@service.accessible_content({username: 'aptester', access: 'content'}).success).to be true
+      end
+    end
+    context "For user estester, that has access but no content profile available. " do
+      it "#accessible_content(access) return a PageControls object for context: access " do
+        expect(@service.accessible_content({username: 'estester', access: 'access'})).to be_a(SknUtils::PageControls)
+        expect(@service.accessible_content({username: 'estester', access: 'access'}).success).to be true
+      end
+      it "#accessible_content(content) return a PageControls object for context: content " do
+        expect(@service.accessible_content({username: 'estester', access: 'content'})).to be_a(SknUtils::PageControls)
+      end
+      it "#accessible_content(content) return a PageControls object for context: content " do
+        expect(@content.accessible_content({username: 'estester', access: 'content'}).success).to be true
+      end
+    end
+
+    context "For user aptester, that has content and access profiles available. " do
+      it "#access_profile_package(access) return a PageControls object for context: access " do
+        expect(@access.access_profile_package(aptesterA)).to be_a(SknUtils::PageControls)
+        expect(@access.access_profile_package(aptesterA).success).to be true
+      end
+      it "#content_profile_package(content) return a PageControls object for context: content " do
+        expect(@content.content_profile_package(aptesterC)).to be_a(SknUtils::PageControls)
+        expect(@content.content_profile_package(aptesterC).success).to be true
+      end
+    end
+    context "For user estester, that has access but no content profile available. " do
+      it "#access_profile_package(access) return a PageControls object for context: access " do
+        expect(@access.access_profile_package(estesterA)).to be_a(SknUtils::PageControls)
+        expect(@access.access_profile_package(estesterA).success).to be true
+      end
+      it "#content_profile_package(content) return a PageControls object for context: content " do
+        expect(@content.content_profile_package(estesterC)).to be_a(SknUtils::PageControls)
+        expect(@content.content_profile_package(estesterC).success).to be false
+      end
+    end
+  end
 
 
 end

@@ -1,6 +1,15 @@
 
 module ApplicationHelper
 
+  def flash_message(type, text)
+    if flash[type].present? and flash[type].is_a?(Array)
+      flash[type] << text
+    elsif flash[type].present? and flash[type].is_a?(String)
+      flash[type] = [flash[type], text]
+    else
+      flash[type] = [text]
+    end
+  end
 
   def menu_active?(menu_link)
     active = false

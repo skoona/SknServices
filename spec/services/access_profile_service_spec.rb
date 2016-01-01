@@ -4,7 +4,7 @@
 RSpec.describe ApplicationController, "Service routines of AccessProfile.", :type => :controller  do
   before do
     @user = Secure::UserProfile.new( User.first )
-    warden_use_user(@user, scope: :access_profile)
+    sign_in(@user, scope: :access_profile)
     @factory = controller.service_factory
     @service = @factory.access_profile_service
   end

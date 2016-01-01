@@ -79,5 +79,7 @@ RSpec.configure do |config|
   config.after(:each) do
     Warden.test_reset!
   end
-
+  def sign_in(user, opts=nil)
+    warden.set_user(user,opts)
+  end
 end

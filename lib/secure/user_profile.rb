@@ -22,7 +22,7 @@ module Secure
       @user_object = user
       @person_authenticated_key = @user_object[:person_authenticated_key]
       @id = @user_object.id
-      last_access = Time.now
+      @last_access = Time.now
     end
 
     def active?

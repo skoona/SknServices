@@ -84,8 +84,8 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
   manager.scope_defaults :access_profile,
                          :store => true,
                          :strategies => [:remember_token, :password, :http_basic_auth, :not_authorized],
-                         :action => 'unauthenticated'
-  manager.failure_app = lambda {|env| PagesController.action(:unauthenticated).call(env) }
+                         :action => :new
+  manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
 
   # otherwise wrap class Warden::SessionSerializer, def serialize(record); def deserialize(keys)
   manager.serialize_into_session do |record|
@@ -140,7 +140,7 @@ Warden::Strategies.add(:remember_token) do
     user = Secure::UserProfile.fetch_remembered_user(token)
     (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Token Invaild!")
   rescue
-    fail("Your Credentials are invalid or expired. Token Invaild!")
+    fail("Your Credentials are invalid or expired. Not Authorized!")
   end
 end
 
@@ -159,7 +159,7 @@ Warden::Strategies.add(:http_basic_auth) do
     user = Secure::UserProfile.find_and_authenticate_user(auth.credentials[0],auth.credentials[1])
     (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Invalid username or password!")
    rescue
-    fail("Your Credentials are invalid or expired.  Auth Invaild!")
+    fail("Your Credentials are invalid or expired.  Not Authorized!")
   end
 end
 
@@ -188,7 +188,9 @@ Warden::Manager.on_request do |proxy|
   # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
   user_object = proxy.user()
   if user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
-    proxy.logout(:access_profile, :message => "Please sign in to continue. Session Expired!")
+    proxy.logout()
+    proxy.errors.add(:general,"Session Expired! Please Sign In To Continue.")
+    proxy.request.flash[:alert] = ["Session Expired! Please Sign In To Continue."]
     timeout_flag = true
   end
 
@@ -226,9 +228,6 @@ Warden::Manager.after_authentication do |user,auth,opts|
 end
 
 
-PUBLIC_PAGES = ['/signout','/signin', '/home', '/about', '/learn_more',
-                '/details_model', '/details_content', '/details_access','details_auth',
-                '/assests','/unauthenticated', 'sessions', 'sessions/new', 'sessions/create']
 ##
 # A callback that runs if no user could be fetched, meaning there is now no user logged in.
 # - cleanup no-good cookies, and maybe session
@@ -238,12 +237,11 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
   full_path = auth.request.original_fullpath
   bypass = full_path.eql?("/") ||
-      PUBLIC_PAGES.map {|p| full_path.include?(p) }.any? ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
       Secure::AccessRegistry.security_check?(full_path)
 
     unless bypass    # Controllers's login_required? will sort this out
-      auth.request.flash.clear
-      auth.request.flash.notice = "Please sign in to continue."
+      auth.errors.add(:general,"Please sign in to continue. No user logged in!")
       auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
       auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
     end
@@ -252,7 +250,7 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
 end
 
 ##
-# Injects the home action to match PagesController
+# Injects the home action to match SessionsController
 #
 # A callback that runs just prior to the failure application being called.
 # This callback occurs after PATH_INFO has been modified for the failure (default /unauthenticated)
@@ -263,12 +261,12 @@ Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
   full_path = env['warden'].request.original_fullpath
   bypass = full_path.eql?("/") ||
-      PUBLIC_PAGES.map {|p| full_path.include?(p) }.any? ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
       Secure::AccessRegistry.security_check?(full_path)
 
   Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
   env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
-  env['action_dispatch.request.path_parameters'][:action] = "unauthenticated" unless bypass
+  env['action_dispatch.request.path_parameters'][:action] = :new unless bypass
 end
 
 ##
@@ -280,6 +278,7 @@ Warden::Manager.before_logout do |user,auth,opts|
   auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
   auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   auth.reset_session!
-  auth.request.flash.notice = opts[:message] if opts[:message]
+  auth.errors.add(:general,opts[:message]) if opts[:message]
+
   Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"
 end

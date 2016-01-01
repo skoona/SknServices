@@ -10,27 +10,94 @@ class ProfilesDomain < ::Factory::DomainServices
 
   PROFILE_CONTEXT=""  # override in service
 
-  def accessible_content(params)
-    get_page_user(params[:username])
+  ##
+  # Builds display package for a single username
+  def access_profile_package(user_profile=nil)
+    @accessible_type = "access" # [:access, :content]
+      raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
+
+    SknUtils::PageControls.new({
+                                   success: true,
+                                   message: "",
+                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_path, {id: @accessible_type}]),
+                                   page_user: user_profile.username,
+                                   access_profile: get_page_access_profile(user_profile)
+                               })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+                                   success: false,
+                                   message: e.message,
+                                   accessible_content_url: nil,
+                                   page_user: "",
+                                   access_profile: []
+                               })
+  end
+
+  ##
+  # Builds display package for a single username
+  def content_profile_package(user_profile=nil)
+    @accessible_type = "content" # [:access, :content]
+      raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
+
+    SknUtils::PageControls.new({
+                                   success: true,
+                                   message: "",
+                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_path, {id: @accessible_type}]),
+                                   page_user: user_profile.username,
+                                   content_profile: get_page_content_profile(user_profile)
+                               })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+                                 success: false,
+                                 message: e.message,
+                                 accessible_content_url: nil,
+                                 page_user: "",
+                                 content_profile: []
+                             })
+  end
+
+
+  ##
+  # Returns content available via profile to specified user
+  def accessible_content(params) # :access, :username, :profile
     @accessible_type = params[:access] # [:access, :content]
+    @profile = params[:profile] # [:access=role, :content=content]
+    pg_u = get_page_user(params[:username], @accessible_type)
+      raise(Utility::Errors::NotFound, "No profile data available for user") unless pg_u.present?
+
     results = case @accessible_type
                 when 'access'
-                  {success: true, message: "", content: 'access'}
+                  {success: true, message: "", content: 'access',
+                  package: user_accessible_content(pg_u, "access", @profile)}
                 when 'content'
-                  {success: true, message: "", content: 'content'}
+                  {success: true, message: "", content: 'content',
+                   package: user_accessible_content(pg_u, "content", @profile)}
                 else
-                  {success: false, message: "not found"}
+                  {success: false, message: "not found", content: 'error',
+                   package: []}
               end
-    SknUtils::ResultBean.new(results)
+    SknUtils::PageControls.new(results)
 
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::ResultBean.new({
+    SknUtils::PageControls.new({
                                  success: false,
                                  message: e.message,
-                                 content: @accessible_type
+                                 content: @accessible_type,
+                                 package: {}
                              })
   end
+
+  def user_accessible_content(user_profile, context="access", profile=nil)
+    [
+      {source: "datafiles", filename: "someFile.dat", created: user_profile.last_access, size: "0"},
+      {source: "images",    filename: "somePic.png",  created: user_profile.last_access, size: "0"},
+      {source: "pdfs",      filename: "someFile.pdf", created: user_profile.last_access, size: "0"}
+    ]
+  end
+
 
   def get_page_users(context=PROFILE_CONTEXT)
     usrs = []
@@ -50,12 +117,16 @@ class ProfilesDomain < ::Factory::DomainServices
     @page_user = Secure::UserProfile.page_user(uname)
   end
 
-  def get_page_access_profile
-    page_user.access_profile(true)
+  def get_page_access_profile(user_profile)
+    result = user_profile.access_profile(true)
+      raise(Utility::Errors::NotFound, "No access profile data available for #{user_profile.display_name}") if result.empty?
+    result
   end
 
-  def get_page_content_profile
-    page_user.content_profile.to_hash
+  def get_page_content_profile(user_profile)
+    result = user_profile.content_profile.to_hash
+      raise(Utility::Errors::NotFound, "No content profile data available for #{user_profile.display_name}") if result.empty?
+    result
   end
 
   def group_select_options

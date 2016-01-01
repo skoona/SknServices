@@ -26,9 +26,9 @@
                         <th>Username</th>
                         <th>Proper Name</th>
                         </thead>
-                        <tbody class="">
+                        <tbody class="" data-package="<%= @page_controls.to_hash.to_json %>">
                         <% @page_controls.page_users.each do |u| %>
-                            <tr data-key="<%= u.username %>">
+                            <tr data-package="<%= u.to_hash.to_json %>">
                                 <td><%= u.username %></td>
                                 <td><%= u.display_name %></td>
                             </tr>
@@ -41,28 +41,34 @@
         <div class="col-md-9">
             <div class="col-md-12">
                 <div class="panel panel-info ">
-                    <div class="panel-heading">
-                        <h2 class="panel-title">AccessProfiles</h2>
-                    </div>
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table id="access-table" class="table table-striped table-hover">
-                            <thead>
-                            <th>Assigned From</th>
-                            <th>Role Pattern</th>
-                            <th>Description</th>
-                            </thead>
-                            <tbody class="">
-                            <% @page_controls.access_profile.each do |r| %>
-                                <tr data-key="<%= r.name %>">
-                                    <td><%= r.type %></td>
-                                    <td><%= r.name %></td>
-                                    <td><%= r.description %></td>
-                                </tr>
-                            <% end %>
-                            </tbody>
-                        </table>
-                    </div>
+                    <% if @page_controls.success %>
+                        <div class="panel-heading">
+                            <h2 class="panel-title">AccessProfiles</h2>
+                        </div>
+                        <!-- Table -->
+                        <div class="table-responsive">
+                            <table id="access-table" class="table table-striped table-hover">
+                                <thead>
+                                <th>Assigned From</th>
+                                <th>Role Pattern</th>
+                                <th>Description</th>
+                                </thead>
+                                <tbody class="">
+                                <% @page_controls.access_profile.each do |r| %>
+                                    <tr data-package="<%= r.to_hash.to_json %>">
+                                        <td><%= r.type %></td>
+                                        <td><%= r.name %></td>
+                                        <td><%= r.description %></td>
+                                    </tr>
+                                <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% else %>
+                        <div class="panel-heading">
+                            <h2 class="panel-title">AccessProfiles: <%= @page_controls.message %></h2>
+                        </div>
+                    <% end %>
                 </div>
             </div>
             <div class="col-md-12">
