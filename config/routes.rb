@@ -24,10 +24,9 @@ Rails.application.routes.draw do
   end
 
   resources :profiles, only: :none do
-    member do
-      get :accessible_content
-    end
     collection do
+      get :accessible_content
+      post :available_content
       get :content_profile_demo
       get :access_profile_demo
     end

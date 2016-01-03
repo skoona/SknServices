@@ -120,9 +120,9 @@ Warden::Strategies.add(:password) do
 
   def authenticate!
     user = Secure::UserProfile.find_and_authenticate_user(params["session"]["username"], params["session"]["password"])
-    (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
+    (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
   rescue
-    fail!("Your Credentials are invalid or expired.")
+    fail!("Your Credentials are invalid or expired. RescuePassword")
   end
 end
 
@@ -139,9 +139,9 @@ Warden::Strategies.add(:remember_token) do
     remember_token = request.cookies["remember_token"]
     token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token
     user = Secure::UserProfile.fetch_remembered_user(token)
-    (user.present? and user.active?) ? success!(user, "Signed in successfully. Remembered!") : fail("Your Credentials are invalid or expired. Token Invaild!")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully. Remembered!") : fail("Your Credentials are invalid or expired. FailRemembered")
   rescue
-    fail("Your Credentials are invalid or expired. Not Authorized!")
+    fail("Your Credentials are invalid or expired. Not Authorized! RescueRemembered")
   end
 end
 
@@ -158,9 +158,9 @@ Warden::Strategies.add(:http_basic_auth) do
 
   def authenticate!
     user = Secure::UserProfile.find_and_authenticate_user(auth.credentials[0],auth.credentials[1])
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
    rescue
-    fail("Your Credentials are invalid or expired.  Not Authorized!")
+    fail("Your Credentials are invalid or expired.  Not Authorized! RescueBasic")
   end
 end
 
@@ -173,7 +173,7 @@ Warden::Strategies.add(:not_authorized) do
   end
 
   def authenticate!
-    fail!("Your Credentials are invalid or expired. Not Authorized!")
+    fail!("Your Credentials are invalid or expired. Not Authorized! FailNotAuthorized")
   end
 end
 

@@ -37,7 +37,7 @@ class ProfilesDomain < ::Factory::DomainServices
                                    success: true,
                                    message: "",
                                    user_options: user_profile.user_options,
-                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profile_path, {id: @accessible_type, format: :json}]),
+                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profiles_path, {format: :json}]),
                                    page_user: user_profile.username,
                                    access_profile: get_page_access_profile(user_profile)
                                })
@@ -63,7 +63,7 @@ class ProfilesDomain < ::Factory::DomainServices
                                    success: true,
                                    message: "",
                                    user_options: user_profile.user_options,
-                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profile_path, {id: @accessible_type, format: :json}]),
+                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profiles_path, {format: :json}]),
                                    page_user: user_profile.username,
                                    content_profile: get_page_content_profile(user_profile)
                                })
@@ -84,25 +84,16 @@ class ProfilesDomain < ::Factory::DomainServices
   # Returns content available via profile to specified user
   ##
   # From Content
-  # {
-  #     "username":"skoona",
-  #     "description":"determine which agency documents can be seen",
-  #     "topic_value":"agency",
-  #     "content_value":["68601","68602","68603"],
-  #     "content_type":"commission",
-  #     "content_type_description":"monthly commission reports and files",
-  #     "topic_type":"agency",
-  #     "topic_type_description":"agency actions"
-  # }
+  # Parameters: {"user_options"=>["Manager"], "description"=>"Determine which agency documents can be seen",
+  #              "username"=>"skoona", "topic_value"=>"Agency", "content_value"=>["68601", "68602", "68603"],
+  #              "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files",
+  #              "topic_type"=>"Agency", "topic_type_description"=>"Agency Actions", "id"=>"content"}
   ##
   # From Access
-  # {
-  #     "username":"skoona",
-  #     "name":"services.action.admin",
-  #     "description":"super user",
-  #     "type":"employeeprimary"
-  # }
-  # Parameters: {"id"=>"content", "topic_value"=>"Account", "content_value"=>["AdvCancel", "FutCancel", "Cancel"], "content_type"=>"Notification", "content_type_description"=>"Email Notification of Related Events", "topic_type"=>"Account", "topic_type_description"=>"Account Actions", "description"=>"Determine which accounts will have notification sent", "username"=>"aptester"}
+  # Parameters: {"user_options"=>["Manager"], "name"=>"Services.Action.Admin.ContentProfile",
+  #              "description"=>"Administer Authorization Content Profile",
+  #              "type"=>"EmployeePrimary", "username"=>"eptester", "controller"=>"profiles",
+  #              "action"=>"accessible_content", "id"=>"access", "format"=>"json"}
   def api_accessible_content(params) # :access, :username, :profile
     @accessible_type = params[:id] || params[:access] # [:access, :content]
     @profile = params[:profile] # [:access=role, :content=content]

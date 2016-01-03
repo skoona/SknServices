@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
     user.assigned_groups = [user.assigned_groups].flatten unless user.assigned_groups.is_a?(Array)
     user.email = user.email.downcase
     user.username = user.username.downcase
+    user.user_options = [user.user_options] unless user.user_options.is_a?(Array)
   }
 
   serialize :roles, Array

@@ -3,14 +3,16 @@
 <section class="container">
     <article>
     <div class="row">
-        <div class="jumbotron">
-            <h1><%= accessed_page_name %></h1>
-            <p>
-                This page demonstrates the features of AccessProfile process.
-            </p>
-            <p>
-                <a class="btn btn-primary btn-lg" href="<%= learn_more_pages_path %>" role="button">Learn more</a>
-            </p>
+        <div class="col-md-12">
+            <div class="jumbotron col-md-12">
+                <h1><%= accessed_page_name %></h1>
+                <p>
+                    This page demonstrates the features of AccessProfile process.
+                </p>
+                <p>
+                    <a class="btn btn-primary btn-lg" href="<%= learn_more_pages_path %>" role="button">Learn more</a>
+                </p>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -41,27 +43,21 @@
         <div class="col-md-9">
             <div class="col-md-12">
                 <div class="panel panel-info ">
-                    <% if @page_controls.success and @page_controls.page_users.first.package.success %>
-                        <div class="panel-heading">
-                            <h2 class="panel-title">AccessProfiles Entries: <span class="label-info">select a user profile</span></h2>
-                        </div>
-                        <!-- Table -->
-                        <div class="table-responsive">
-                            <table id="access-table" class="table table-striped table-hover profile hidden">
-                                <thead>
+                    <div class="panel-heading">
+                        <h2 class="panel-title">AccessProfiles Entries: <span class="label-info">select a user profile</span></h2>
+                    </div>
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table id="access-table" class="table table-striped table-hover profile hidden">
+                            <thead>
                                 <th>Assigned From</th>
                                 <th>Role Pattern</th>
                                 <th>Description</th>
-                                </thead>
-                                <tbody class="">
-                                </tbody>
-                            </table>
-                        </div>
-                    <% else %>
-                        <div class="panel-heading">
-                            <h2 class="panel-title">AccessProfiles: <%= @page_controls.message %></h2>
-                        </div>
-                    <% end %>
+                            </thead>
+                            <tbody class="">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="col-md-12">

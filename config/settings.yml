@@ -44,9 +44,9 @@ security:
    - /sessions
    - /sessions/new
    - /sessions/create
-   - /profiles/access/accessible_content
-   - /profiles/content/accessible_content
    - /profiles/accessible_content
+   - /profiles/available_content
+
   ! user_options:
    - Manager
    - Staff

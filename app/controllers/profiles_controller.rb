@@ -17,9 +17,19 @@ class ProfilesController < ApplicationController
     @page_controls = access_profile_service.accessible_content(params)
     results = @page_controls.to_hash
     if @page_controls.package.success
-      render json: results, status: :accepted, layout: false, content_type: :json and return
+      render json: results.as_json(root: false), status: :accepted, layout: false, content_type: 'text/plain' and return
     else
-      render json: results, status: :conflict, layout: false, content_type: :json and return
+      render json: results.as_json(root: false), status: :conflict, layout: false, content_type: 'text/plain' and return
+    end
+  end
+
+  def available_content(params)
+    @page_controls = access_profile_service.accessible_content(params)
+    results = @page_controls.to_hash
+    if @page_controls.package.success
+      render json: results.as_json(root: false), status: :accepted, layout: false, content_type: 'text/plain' and return
+    else
+      render json: results.as_json(root: false), status: :conflict, layout: false, content_type: 'text/plain' and return
     end
   end
 

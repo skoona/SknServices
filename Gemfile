@@ -11,7 +11,7 @@ gem 'autoprefixer-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'bootstrap-will_paginate'
-# gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
 
 gem 'jbuilder', '~> 2.0'
 gem 'simple_form'
@@ -38,7 +38,7 @@ group :test do
   # gem 'selenium-webdriver'
 end
 group :development, :test do
-  gem 'web-console', '~> 2.0'
+  # gem 'web-console', '~> 2.0'
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
   gem 'faker'

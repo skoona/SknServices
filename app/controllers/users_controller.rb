@@ -53,6 +53,8 @@ class UsersController < ApplicationController
     if params.key?(:user) and params[:user].key?(:roles)
       params[:user][:assigned_roles].delete("")
       params[:user][:assigned_groups].delete("")
+      params[:user][:user_options].delete("")
+      params[:user][:roles].delete("")
     end
     unless params[:user][:password].present?
       params[:user].delete :password
@@ -61,7 +63,11 @@ class UsersController < ApplicationController
     params.required(:user).permit(:username, :name, :email, :password_confirmation, :password,
                                  :remember_token, :password_reset_token,
                                  :password_reset_date, :active,
-                                 :file_access_token, :assigned_groups => [], :assigned_roles => [])
+                                 :file_access_token,
+                                 :user_options => [],
+                                 :roles => [],
+                                 :assigned_groups => [],
+                                 :assigned_roles => [])
   end
 
 end
