@@ -18,6 +18,7 @@ gem 'simple_form'
 gem 'skn_utils'
 gem 'bcrypt'
 gem 'gravatar_image_tag'
+# gem 'responders', '~> 2.0'        # JSON Controller Supports -- makes no diff
 
 group :development do
   gem 'annotate'

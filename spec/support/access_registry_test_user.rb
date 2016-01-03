@@ -21,7 +21,7 @@ class AccessRegistryTestUser
   end
   def self.attribute_names
     [
-      "roles", "unique_id", "username", "assigned_roles",
+      "roles", "unique_id", "username", "assigned_roles", "user_options",
       "assigned_groups", "remember_token", "person_authenticated_key"
     ]
   end

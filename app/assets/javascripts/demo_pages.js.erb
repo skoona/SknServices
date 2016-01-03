@@ -1,0 +1,246 @@
+/**
+ * Created by jscott on 1/1/16.
+ */
+
+
+var logEnabled = <%= Rails.env.development? %>,
+    csrfToken;
+
+/**
+ * Prevents debuging messages from going to console none development mode
+ * @param message {string}  to log on console
+ */
+        function consoleLog(message) {
+    if (logEnabled) {
+        console.log(message);
+    }
+}
+
+/**
+ * Determines if a property with a specific value exists in object
+ * @param obj    {object}
+ * @param key    {property name}
+ * @param value  {value to match}
+ * @returns {boolean}
+ */
+function hasValue(obj, key, value) {
+    return obj.hasOwnProperty(key) && obj[key] === value;
+}
+
+/**
+ * Content/Access Profile Table Selection
+ * - fire ajax to get data, using url on accessible-table tbody
+ * - then update accessible-table rows
+ */
+function profileTablesRequester(ev) {
+    var dataPackage = $(ev.currentTarget).data().package,
+        contentType = dataPackage.hasOwnProperty('name'), // then AccessProfile
+        accessUrl = $("#accessible-table tbody" ).data().accessibleUrl,
+        tTitle = $('#accessible-table').closest('div').prev('div').find('h2.panel-title'),
+        dataResponse = {},
+        textStatus = "";
+
+    $("table.profile tbody tr").removeClass('success');
+    $(ev.currentTarget).addClass('success');
+
+    if (contentType) {
+        consoleLog(dataPackage.name + ":" + dataPackage.description + ", Selected.");
+    } else {
+        consoleLog(dataPackage.content_type + ":" + dataPackage.content_type_description + ", Selected.");
+    }
+
+    // var jqxhr = $.getJSON(accessUrl, $.param(dataPackage))
+    dataPackage['authenticity_token'] = csrfToken;
+    $.ajax({
+        beforeSend: function(request) {
+            request.setRequestHeader('X-CSRF-Token', csrfToken);
+        },
+        dataType: "json",
+        url: accessUrl,
+        data: $.param(dataPackage)
+    }).done(function(data,textStatus,jqXHR) {
+            textStatus = textStatus;
+            dataResponse = data;
+            replaceAccessibleTableRows(data);
+            console.log( "profileTablesRequester() success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+            textStatus = textStatus;
+            tTitle.replaceWith('<h2 class="panel-title">No Accessible Content for ' + dataPackage.username + ': <span class="label-info">select a different ContentProfile Entry from above.</span></h2>');
+            console.log( "profileTablesRequester() error: " + textStatus + ', thrown=' + errorThrown );
+      });
+
+    return false;
+}
+
+
+/**
+ * Reloads the content-table with supplied rows from a contentProfile package
+ * @param dataPackage {contentProfile}
+ */
+function replaceContentTableRows(dataPackage) {
+    var oBody = $('#content-table tbody'),
+            tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
+            vList = dataPackage.package.content_profile.entries,
+            newRow = [],
+            counter = 0,
+            msg = '<h2 class="panel-title">ContentProfile Entry for ' + dataPackage.username + ", " + dataPackage.package.content_profile.profile_type + ":" + dataPackage.package.content_profile.profile_type_description + '</h2>';
+
+    oBody.empty();
+    $.each(vList, function(index, row) {
+            newRow = [];
+            newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
+            newRow.push('<td>' + row.description  + '</td>');
+            newRow.push('<td>' + row.content_type  + '</td>');
+            newRow.push('<td>' + row.content_type_description  + '</td>');
+            newRow.push('<td>' + row.topic_type  + '</td>');
+            newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+            newRow.push('</tr>');
+
+            oBody.append(newRow.join());
+                counter = index + 1;
+        }
+
+    );
+
+    if (!dataPackage.package.success) {
+        msg = '<h2 class="panel-title">' + dataPackage.package.message + '</h2>';
+        $('#content-table').removeClass('show').addClass('hidden');
+    } else {
+        $('#content-table').removeClass('hidden').addClass('show');
+        $( "#content-table tbody tr" ).on( "click", profileTablesRequester);
+    }
+    tTitle.replaceWith(msg);
+
+    consoleLog('replaceContentTableRows(rowsAdded=' + counter + ')');
+    return false;
+}
+
+/**
+ * Reloads the access-table with supplied rows from a accessProfile package
+ * @param dataPackage {accessProfile}
+ */
+function replaceAccessTableRows(dataPackage) {
+    var oBody = $('#access-table tbody'),
+            tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
+    vList = dataPackage.package.access_profile,
+            newRow = [],
+            counter = 0,
+            msg = '<h2 class="panel-title">AccessProfile Entries for ' + dataPackage.username + ", " + dataPackage.display_name + '</h2>';
+
+    oBody.empty();
+    $.each(vList, function(index, row) {
+                newRow = [];
+                newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
+                newRow.push('<td>' + row.type  + '</td>');
+                newRow.push('<td>' + row.name  + '</td>');
+                newRow.push('<td>' + row.description  + '</td>');
+                newRow.push('</tr>');
+
+                oBody.append(newRow.join());
+                counter = index + 1;
+            }
+
+    );
+
+    if (!dataPackage.package.success) {
+        msg = '<h2 class="panel-title">' + dataPackage.package.message + '</h2>';
+        $('#access-table').removeClass('show').addClass('hidden');
+    } else {
+        $('#access-table').removeClass('hidden').addClass('show');
+        $( "#access-table tbody tr" ).on( "click", profileTablesRequester);
+    }
+    tTitle.replaceWith(msg);
+
+    consoleLog('replaceAccessTableRows(rowsAdded=' + counter + ')');
+    return false;
+}
+
+/**
+ * Reloads the accessible-table with supplied rows from a Profile package
+ * @param dataPackage {ProfileEntry}
+ *
+ * dataPackage = {success: true, message: "", content: 'access',
+ *                username: pg_u.username, display_name: pg_u.display_name ,
+ *                package: [
+ *                  {source: "datafiles", filename: "someFile.dat", created: '12/1/2015', size: "0"},
+ *                  ...
+ *                         ]
+ *                }
+ */
+function replaceAccessibleTableRows(dataPackage) {
+    var oBody = $('#accessible-table tbody'),
+            tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
+            vList = dataPackage.package,
+            newRow = [],
+            counter = 0,
+            msg = '<h2 class="panel-title">Accessible Content for ' + dataPackage.username + ", " + (dataPackage.hasOwnProperty('type') ? dataPackage.type : dataPackage.content_type) + '</h2>';
+
+    oBody.empty();
+    $.each(vList, function(index, row) {
+                newRow = [];
+                newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
+                newRow.push('<td>' + row.source  + '</td>');
+                newRow.push('<td>' + row.filename  + '</td>');
+                newRow.push('<td>' + row.created  + '</td>');
+                newRow.push('<td>' + row.size  + '</td>');
+                newRow.push('</tr>');
+
+                oBody.append(newRow.join());
+                counter = index + 1;
+            }
+
+    );
+
+    if (!dataPackage.success) {
+        msg = '<h2 class="panel-title">' + dataPackage.message + '</h2>';
+        $('#accessible-table').removeClass('show').addClass('hidden');
+    } else {
+        $('#accessible-table').removeClass('hidden').addClass('show');
+    }
+    tTitle.replaceWith(msg);
+
+    consoleLog('replaceAccessibleTableRows(rowsAdded=' + counter + ')');
+    return false;
+}
+
+/* ********************************************************
+ * JQuery Enabled Processing
+ * ********************************************************
+ */
+$(function() {
+    /**
+     * Initial
+     */
+
+    csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    $( "#users-table tbody tr" ).on( "click", function(ev) {
+        var dataPackage = $(this).data().package,
+            contentType = dataPackage.package.hasOwnProperty('access_profile');
+
+        $('#accessible-table').closest('div').prev('div').find('h2.panel-title').
+                replaceWith('<h2 class="panel-title">Accessible Content: <span class="label-info">select a ContentProfile Entry from above.</span></h2>');
+
+        $("#users-table tbody tr").removeClass('info');
+        $(ev.currentTarget).addClass('info');
+
+        if (contentType){
+          replaceAccessTableRows(dataPackage);
+        } else {
+          replaceContentTableRows(dataPackage);
+        }
+
+        consoleLog( dataPackage.username + " Selected." );
+    });
+
+    /**
+     * Content/Access Profile Table Selection
+     * - fire ajax to get data, using url on accessible-table tbody
+     * - then update accessible-table rows
+     */
+    $( "table.profile tbody tr" ).on( "click", profileTablesRequester);
+
+    /* choose first one to start things off */
+    $('#users-table tbody tr').first().click();
+});
+

@@ -10,7 +10,7 @@
             this application.
         </p>
         <p>
-            <a class="btn btn-primary btn-lg" href="<%= learn_more_path %>" role="button">Learn more</a>
+            <a class="btn btn-primary btn-lg" href="<%= learn_more_pages_path %>" role="button">Learn more</a>
         </p>
     </div>
 
@@ -21,7 +21,7 @@
                 Determines if a specific user can access or interact with a specific object by
                 type or name of object.
             </p>
-            <p><a class="btn btn-default" href="<%= details_content_path()  %>" role="button">View details &raquo;</a></p>
+            <p><a class="btn btn-default" href="<%= details_content_pages_path()  %>" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>AccessProfile</h2>
@@ -31,7 +31,7 @@
                 to navigation, click-ables, and all viewable elements. Unauthorized attempts to access
                 restricted pages, result in a redirect to the home page with an appropriate message.
             </p>
-            <p><a class="btn btn-default" href="<%= details_access_path()  %>" role="button">View details &raquo;</a></p>
+            <p><a class="btn btn-default" href="<%= details_access_pages_path()  %>" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
             <h2>Authentication</h2>
@@ -41,7 +41,7 @@
                 returns you to home page. Users are assigned username, password, remember_me token,
                 and a unique person_authentication_token(PAK).
             </p>
-            <p><a class="btn btn-default" href="<%= details_auth_path()  %>" role="button">View details &raquo;</a></p>
+            <p><a class="btn btn-default" href="<%= details_auth_pages_path()  %>" role="button">View details &raquo;</a></p>
         </div>
     </div>
 

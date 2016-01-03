@@ -31,15 +31,29 @@ security:
   ! public_pages:
    - /signout
    - /signin
-   - /home
-   - /about
-   - /learn_more
-   - /details_model
-   - /details_content
-   - /details_access
-   - details_auth
+   - /pages/home
+   - /pages/about
+   - /pages/learn_more
+   - /pages/details_model
+   - /pages/details_content
+   - /pages/details_access
+   - /pages/details_auth
    - /assests
-   - /unauthenticated
+   - /pages/unauthenticated
+   - /session
    - /sessions
-   - sessions/new
-   - sessions/create
+   - /sessions/new
+   - /sessions/create
+   - /profiles/access/accessible_content
+   - /profiles/content/accessible_content
+   - /profiles/accessible_content
+  ! user_options:
+   - Manager
+   - Staff
+   - Employee
+   - EmployeePrimary
+   - EmployeeSecondary
+   - VendorPrimary
+   - VendorSecondary
+   - AgencyPrimary
+   - AgencySecondary

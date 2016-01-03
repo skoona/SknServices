@@ -12,18 +12,20 @@ class SessionsController < ActionController::Base
   # POST From New page
   def create
     #warden.reset_session!
-    authenticate!(scope: :access_profile, message: "Signed in successfully.")
+    authenticate!(scope: :access_profile, message: "Signed in successfully.  SessionsController#create")
     flash_message(:notice, warden.message)
-    redirect_to_target_or_default home_url # "Signed in successfully."
+    redirect_to_target_or_default home_pages_url # "Signed in successfully."
   end
 
   # DELETE Logout
   def destroy
     logout()
-    flash_message(:notice, "You have been signed out.")
-    redirect_to home_url
+    flash_message(:notice, "You have been signed out.  SessionsController#destroy")
+    redirect_to home_pages_url
   end
 
+  def unauthenticated
+  end
 
   private
 

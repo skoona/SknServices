@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <%= link_to home_path, class: "navbar-brand" do %>
+      <%= link_to home_pages_path, class: "navbar-brand" do %>
         <%= logo("logo") %>
       <% end %>
     </div>
@@ -16,7 +16,7 @@
     <div id="navbar" class="collapse navbar-collapse">
 
         <ul class="nav navbar-nav" role="tablist">
-            <%= nav_link("About", about_path) %>
+            <%= nav_link("About", about_pages_path) %>
             <% if valid_user_has_access?('#Management') %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
@@ -42,10 +42,10 @@
                 </li>
                 <% if valid_user_has_access?('#Demonstration') %>
                     <% if valid_user_has_access?('profiles/access_profile_demo') %>
-                        <%= nav_link_icon("glyphicon-eye-open", "AccessProfile Demo", access_profile_demo_path) %>
+                        <%= nav_link_icon("glyphicon-eye-open", "AccessProfile Demo", access_profile_demo_profiles_path) %>
                     <% end %>
                     <% if valid_user_has_access?('profiles/content_profile_demo') %>
-                        <%= nav_link_icon("glyphicon-eye-open", "ContentProfile Demo", content_profile_demo_path) %>
+                        <%= nav_link_icon("glyphicon-eye-open", "ContentProfile Demo", content_profile_demo_profiles_path) %>
                     <% end %>
                 <% end %>
             <% end %>
@@ -61,7 +61,7 @@
         </ul>
         <% if logged_in? %>
             <p class="navbar-text pull-right">Signed in as
-                <a href="<%= user_path(current_user.id) %>">
+                <a href="<%= user_path(id: current_user.id) %>">
                 <span><i class="glyphicon glyphicon-user"></i>&nbsp;<small><%= current_user.name %></small></span></a>
             </p>
         <% end %>

@@ -106,23 +106,23 @@
     <!--============== RSpec Test Data  ========== -->
     <resource secured="false">
         <uri>testing/public</uri>
-        <description>Unsecured or Public Resource.</description>
+        <description>Unsecured or Public Resource. (Hash)</description>
         <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
     </resource>
     <resource secured="false">
         <uri>testing/public_array</uri>
-        <description>Unsecured or Public Resource.</description>
+        <description>Unsecured or Public Resource. (Array)</description>
         <userdata>"drawerid|filetype|foldertype|doctype"</userdata>
     </resource>
     <resource secured="false">
         <uri>testing/public_string</uri>
-        <description>Unsecured or Public Resource.</description>
-        <userdata>"value without vertical-basrs or semi-colons will return as string"</userdata>
+        <description>Unsecured or Public Resource. (String)</description>
+        <userdata>"value without vertical-bars or semi-colons will return as string"</userdata>
     </resource>
 
     <resource secured="true">
         <uri>testing/userdata</uri>
-        <description>Secured Content Description</description>
+        <description>Secured Content Description (Hash)</description>
         <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
         <permission type="READ">
             <authorizedRoles>
@@ -282,7 +282,18 @@
     </resource>
 
 
-    <!--============== Profiles Pages  ========== -->
+    <!--============== Profiles Pages  ========== --> profiles/accessible_content
+    <resource secured="true">
+        <uri>profiles/accessible_content</uri>
+        <description>AccessibleContent API.JSON</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
     <resource secured="true">
         <uri>profiles/access_profile_demo</uri>
         <description>AccessProfile In Action</description>
@@ -319,15 +330,27 @@
         <description>Sign-in</description>
     </resource>
     <resource secured="false">
-        <uri>/sessions</uri>
-        <description>Sign-in</description>
+        <uri>sessions/new</uri>
+        <description>Login</description>
     </resource>
     <resource secured="false">
-        <uri>pages/unauthenticated</uri>
-        <description>Your request is not authorized!</description>
+        <uri>sessions</uri>
+        <description>Create Login</description>
     </resource>
     <resource secured="false">
-        <uri>/unauthenticated</uri>
+        <uri>sessions/create</uri>
+        <description>Create Login</description>
+    </resource>
+    <resource secured="false">
+        <uri>session</uri>
+        <description>Logout</description>
+    </resource>
+    <resource secured="false">
+        <uri>sessions/destroy</uri>
+        <description>Logout</description>
+    </resource>
+    <resource secured="false">
+        <uri>sessions/unauthenticated</uri>
         <description>Your request is not authorized!</description>
     </resource>
     <resource secured="false">
@@ -335,15 +358,7 @@
         <description>Welcome to SknService</description>
     </resource>
     <resource secured="false">
-        <uri>/home</uri>
-        <description>Welcome to SknService</description>
-    </resource>
-    <resource secured="false">
         <uri>pages/about</uri>
-        <description>About</description>
-    </resource>
-    <resource secured="false">
-        <uri>/about</uri>
         <description>About</description>
     </resource>
     <resource secured="false">
@@ -351,15 +366,7 @@
         <description>Information Model Details</description>
     </resource>
     <resource secured="false">
-        <uri>/model_details</uri>
-        <description>Information Model Details</description>
-    </resource>
-    <resource secured="false">
         <uri>pages/learn_more</uri>
-        <description>More Information</description>
-    </resource>
-    <resource secured="false">
-        <uri>/learn_more</uri>
         <description>More Information</description>
     </resource>
     <resource secured="false">
@@ -367,26 +374,13 @@
         <description>ContentProfile Details</description>
     </resource>
     <resource secured="false">
-        <uri>/details_content</uri>
-        <description>ContentProfile Details</description>
-    </resource>
-    <resource secured="false">
         <uri>pages/details_access</uri>
-        <description>AccessProfile Details</description>
-    </resource>
-    <resource secured="false">
-        <uri>/details_access</uri>
         <description>AccessProfile Details</description>
     </resource>
     <resource secured="false">
         <uri>pages/details_auth</uri>
         <description>Authentication Details</description>
     </resource>
-    <resource secured="false">
-        <uri>/details_auth</uri>
-        <description>Authentication Details</description>
-    </resource>
-
 
 
     <!--============== PasswordResets Process  ========== -->

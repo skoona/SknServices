@@ -11,6 +11,7 @@
         <div class="media-body">
             <h4 class="media-heading">Username: &nbsp;<%= user.username %></h4>
             <p>Email: <%= user.email %></p>
+            <p>Options: <%= user.user_options.join(',') %></p>
             <p>State: <%= user.active ? "Active" : "inActive" %></p>
             <p>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></p>
             <p>

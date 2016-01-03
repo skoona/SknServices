@@ -4,10 +4,11 @@ class ApplicationController < ActionController::Base
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  #protect_from_forgery with: :exception
-  protect_from_forgery
+  protect_from_forgery with: :exception
+  skip_before_action [ :verify_authenticity_token, :login_required ], if: :json_request?
 
-  before_action :login_required, :establish_domain_services
+  before_action :establish_domain_services, :login_required
+
   after_action  :manage_domain_services
 
 
@@ -21,21 +22,16 @@ class ApplicationController < ActionController::Base
   end
 
 
-  private
+  protected
 
-  # AngularJS automatically sends CSRF token as a header called X-XSRF
-  # this makes sure rails gets it
-  def verified_request?
-    !protect_against_forgery? || request.get? ||
-        form_authenticity_token == params[request_forgery_protection_token] ||
-        form_authenticity_token == request.headers['X-XSRF-Token'] ||
-        form_authenticity_token == request.headers['X-CSRF-Token']
+  def json_request?
+    request.format.json?
   end
 
   # Force signout to prevent CSRF attacks
   def handle_unverified_request
     logout()
-    flash_message(:alert, "An unverified request was received! For security reasons you have been signed out.")
+    flash_message(:alert, "An unverified request was received! For security reasons you have been signed out.  ApplicationController#handle_unverified_request")
     super
   end
 
@@ -44,6 +40,7 @@ class ApplicationController < ActionController::Base
     flash_message(:alert, warden.message) if warden.message.present?
     flash_message(:alert, warden.errors.full_messages) unless warden.errors.empty?
     Rails.logger.debug "#{self.class.name}.#{__method__}() Called for session.id=#{request.session_options[:id]}"
+    true
   end
 
   # Serialize to user session
@@ -51,6 +48,7 @@ class ApplicationController < ActionController::Base
     unless controller_name.include?("sessions")
       Rails.logger.debug "#{self.class.name}.#{__method__}() Called for session.id=#{request.session_options[:id]}"
     end
+    true
   end
 
 end

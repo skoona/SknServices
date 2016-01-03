@@ -75,6 +75,7 @@
 ##
 
 # Rails.application.config.middleware.use Warden::Manager do |manager|
+# Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
 Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
   # puts "===============[DEBUG]:01 #{self.class}\##{__method__}"
   # manager.default_user_class = Secure::UserProfile
@@ -119,7 +120,7 @@ Warden::Strategies.add(:password) do
 
   def authenticate!
     user = Secure::UserProfile.find_and_authenticate_user(params["session"]["username"], params["session"]["password"])
-    (user and user.active?) ? success!(user, "Signed in successfully.") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
+    (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password!")
   rescue
     fail!("Your Credentials are invalid or expired.")
   end
@@ -138,7 +139,7 @@ Warden::Strategies.add(:remember_token) do
     remember_token = request.cookies["remember_token"]
     token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token
     user = Secure::UserProfile.fetch_remembered_user(token)
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Token Invaild!")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully. Remembered!") : fail("Your Credentials are invalid or expired. Token Invaild!")
   rescue
     fail("Your Credentials are invalid or expired. Not Authorized!")
   end
@@ -157,7 +158,7 @@ Warden::Strategies.add(:http_basic_auth) do
 
   def authenticate!
     user = Secure::UserProfile.find_and_authenticate_user(auth.credentials[0],auth.credentials[1])
-    (user.present? and user.active?) ? success!(user, "Signed in successfully.") : fail("Your Credentials are invalid or expired. Invalid username or password!")
+    (user.present? and user.active?) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!")
    rescue
     fail("Your Credentials are invalid or expired.  Not Authorized!")
   end
@@ -189,8 +190,7 @@ Warden::Manager.on_request do |proxy|
   user_object = proxy.user()
   if user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
     proxy.logout()
-    proxy.errors.add(:general,"Session Expired! Please Sign In To Continue.")
-    proxy.request.flash[:alert] = ["Session Expired! Please Sign In To Continue."]
+    proxy.request.flash[:alert] = ["Session Expired! Please Sign In To Continue.  Warden.on_request"]
     timeout_flag = true
   end
 
@@ -241,9 +241,9 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
       Secure::AccessRegistry.security_check?(full_path)
 
     unless bypass    # Controllers's login_required? will sort this out
-      auth.errors.add(:general,"Please sign in to continue. No user logged in!")
+      auth.request.flash[:notice] = "Please sign in to continue. No user logged in!   Warden.after_fetch_failed"
       auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
-      auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
+      # auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
     end
 
   Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
@@ -278,7 +278,7 @@ Warden::Manager.before_logout do |user,auth,opts|
   auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
   auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   auth.reset_session!
-  auth.errors.add(:general,opts[:message]) if opts[:message]
+  auth.request.flash[:notice] = opts[:message] if opts[:message]
 
   Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"
 end

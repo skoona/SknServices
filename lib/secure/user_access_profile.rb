@@ -19,7 +19,7 @@ module Secure
       def page_users(context='access')
         usrs = []
         self.where(active: true).find_each do |u|
-          usrs << [u.display_name, u.username ]
+          usrs << Secure::UserProfile.new(u).enable_authentication_controls(true)
         end
         usrs
       rescue Exception => e
@@ -30,7 +30,7 @@ module Secure
       def page_user(uname, context='access')
         upp = nil
         value = self.find_by(username: uname)
-        upp = self.new(value) if value.present?
+        upp = self.new(value).enable_authentication_controls(true) if value.present?
         upp = nil unless upp && value
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
         upp
@@ -105,22 +105,24 @@ module Secure
 
 
     # Warden will call this methods
-    def disable_authentication_controls
-      proxy_u.last_login = Time.now
+    def disable_authentication_controls(prepare_only=false)
+      self.last_access = Time.now
       proxy_u.save
-      remove_from_store
+      remove_from_store unless prepare_only
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      return self if prepare_only
       true
     end
 
     # Warden will call this methods
-    def enable_authentication_controls
-      proxy_u.last_login = Time.now
+    def enable_authentication_controls(prepare_only=false)
+      self.last_access = Time.now
       self.setup_access_profile
       self.setup_content_profile
 
-      add_to_store
+      add_to_store unless prepare_only
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      return self if prepare_only
       true
     end
 
@@ -150,7 +152,7 @@ module Secure
         end
       end
 
-      ary_hash.flatten.uniq
+      ary_hash.flatten.uniq.map {|au| au.merge(username: self.username, user_options: self.user_options)}
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       {}

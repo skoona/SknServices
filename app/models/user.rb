@@ -19,7 +19,7 @@
 #  person_authenticated_key :string
 #  assigned_roles           :string
 #  remember_token_digest    :string
-#  last_login               :datetime
+#  user_options             :string
 #
 
 class User < ActiveRecord::Base
@@ -30,8 +30,8 @@ class User < ActiveRecord::Base
   before_create {|user|
     user.generate_unique_token(:person_authenticated_key)   # Never Changes
     user.regenerate_remember_token!   # :remember_token Change by reset or any update
-    user.last_login = Time.now
     user.active = true
+    user.user_options = [user.user_options] unless user.user_options.is_a?(Array)
   }
 
 
@@ -46,6 +46,7 @@ class User < ActiveRecord::Base
   serialize :roles, Array
   serialize :assigned_groups, Array
   serialize :assigned_roles, Array
+  serialize :user_options, Array
 
   # validates(:assigned_groups, :roles, :assigned_roles, presence: true)
   validates(:name, presence: true, length: { maximum: 128 })

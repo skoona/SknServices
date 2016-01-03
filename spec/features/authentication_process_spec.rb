@@ -12,26 +12,26 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Username', :with => user.username
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
-      expect(current_path).to eq home_path
+      expect(current_path).to eq home_pages_path
       expect(page).to have_title("Welcome")
     end
 
     scenario "Required to sign in when page is secured." do
       visit users_url
-      expect(current_path).to eq unauthenticated_path
+      expect(current_path).to eq unauthenticated_sessions_path
       expect(page).to have_alert_message("You must sign in before accessing")
     end
 
     scenario "Not required to sign in when page is unsecured." do
-      visit about_url
-      expect(current_path).to eq about_path
+      visit about_pages_url
+      expect(current_path).to eq about_pages_path
       expect(page).to have_title("About")
     end
 
     scenario "Returned to originally requested page after signing in." do
       user = FactoryGirl.create(:manager)
       visit users_url
-      expect(current_path).to eq unauthenticated_path
+      expect(current_path).to eq unauthenticated_sessions_path
       expect(page).to have_alert_message("You must sign in before accessing")
       visit signin_url
       expect(current_path).to eq signin_path
@@ -46,7 +46,7 @@ RSpec.feature "Authentication process for all users." do
     scenario "Unauthorized access is redirected to Unauthenticated page with unauthorized message." do
       user = FactoryGirl.create(:user)
       visit new_user_url
-      expect(current_path).to eq unauthenticated_path
+      expect(current_path).to eq unauthenticated_sessions_path
       expect(page).to have_alert_message("You must sign in before accessing")
       visit signin_url
       expect(current_path).to eq signin_path
@@ -54,7 +54,7 @@ RSpec.feature "Authentication process for all users." do
       fill_in 'Password', :with => user.password
       click_button 'Sign in'
 
-      expect(current_path).to eq unauthenticated_path
+      expect(current_path).to eq unauthenticated_sessions_path
       expect(page).to have_alert_message("You are not authorized ")
       click_link 'Sign out'
     end
@@ -62,7 +62,7 @@ RSpec.feature "Authentication process for all users." do
     scenario "Returned to Home page after sign out." do
       user = FactoryGirl.create(:manager)
       visit users_url
-      expect(current_path).to eq unauthenticated_path
+      expect(current_path).to eq unauthenticated_sessions_path
       expect(page).to have_alert_message("You must sign in before accessing")
       visit signin_url
       expect(current_path).to eq signin_path
@@ -72,7 +72,7 @@ RSpec.feature "Authentication process for all users." do
 
       expect(current_path).to eq users_path
       click_link 'Sign out'
-      expect(current_url).to eq home_url
+      expect(current_url).to eq home_pages_url
       expect(page).to have_notice_message("You have been signed out")
     end
   end

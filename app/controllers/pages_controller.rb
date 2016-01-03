@@ -23,9 +23,6 @@ class PagesController < ApplicationController
   def developer
   end
 
-  def unauthenticated
-  end
-
 private
 
 end

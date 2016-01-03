@@ -24,7 +24,9 @@ module Secure
     #
     # Returns RB of ContentProfile
     def content_profile
-      self.instance_variable_get(:@content_profile) || ((setup_content_profile and @content_profile.present?) ? self.instance_variable_get(:@content_profile) :  {})
+      result = self.instance_variable_get(:@content_profile) || ((setup_content_profile and @content_profile.present?) ? self.instance_variable_get(:@content_profile) :  {})
+      Rails.logger.debug("  #{self.name.to_s}.#{__method__}() returns: #{result.to_hash}")
+      result
     end
 
     # Retrieves users content profile in ResultBean

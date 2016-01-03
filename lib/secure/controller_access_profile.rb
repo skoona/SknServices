@@ -41,14 +41,14 @@ module Secure
       unless Secure::AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
         unless authenticated?
           store_target_location
-          Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page")
-          flash_message(:alert, "You must sign in before accessing the '#{accessed_page_name}' page.")
-          redirect_to unauthenticated_url
+          Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page.")
+          flash_message(:alert, "You must sign in before accessing the '#{accessed_page_name}' page.  ControllerAccessProfile#login_required")
+          redirect_to unauthenticated_sessions_url
         else
           # This is the sole page level access control, based on controller/action URI entries in the access registry
           unless current_user_has_access?(accessed_page)
-            flash_message(:alert, "You are not authorized to access the #{accessed_page_name} page!")
-            redirect_to unauthenticated_url
+            flash_message(:alert, "You are not authorized to access the #{accessed_page_name} page!  ControllerAccessProfile#login_required")
+            redirect_to unauthenticated_sessions_url
           end
         end
       else

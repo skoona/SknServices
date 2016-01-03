@@ -78,7 +78,7 @@ RSpec.describe PasswordResetsController do
       post :create, user: {username: "some-ignored-value"}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
-      expect(response).to redirect_to home_url
+      expect(response).to redirect_to home_pages_url
     end
 
     it "redirects to signin page on error" do
@@ -94,7 +94,7 @@ RSpec.describe PasswordResetsController do
       post :create, user: {username: "some-ignored-value"}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
-      expect(response).to redirect_to home_url
+      expect(response).to redirect_to home_pages_url
     end
   end
 

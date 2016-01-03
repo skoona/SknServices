@@ -1,7 +1,7 @@
 <% provide(:title, accessed_page_name) %>
 
 <section class="container">
-
+    <article>
     <div class="row">
         <div class="jumbotron">
             <h1><%= accessed_page_name %></h1>
@@ -9,7 +9,7 @@
                 This page demonstrates the features of AccessProfile process.
             </p>
             <p>
-                <a class="btn btn-primary btn-lg" href="<%= learn_more_path %>" role="button">Learn more</a>
+                <a class="btn btn-primary btn-lg" href="<%= learn_more_pages_path %>" role="button">Learn more</a>
             </p>
         </div>
     </div>
@@ -26,7 +26,7 @@
                         <th>Username</th>
                         <th>Proper Name</th>
                         </thead>
-                        <tbody class="" data-package="<%= @page_controls.to_hash.to_json %>">
+                        <tbody class="">
                         <% @page_controls.page_users.each do |u| %>
                             <tr data-package="<%= u.to_hash.to_json %>">
                                 <td><%= u.username %></td>
@@ -41,26 +41,19 @@
         <div class="col-md-9">
             <div class="col-md-12">
                 <div class="panel panel-info ">
-                    <% if @page_controls.success %>
+                    <% if @page_controls.success and @page_controls.page_users.first.package.success %>
                         <div class="panel-heading">
-                            <h2 class="panel-title">AccessProfiles</h2>
+                            <h2 class="panel-title">AccessProfiles Entries: <span class="label-info">select a user profile</span></h2>
                         </div>
                         <!-- Table -->
                         <div class="table-responsive">
-                            <table id="access-table" class="table table-striped table-hover">
+                            <table id="access-table" class="table table-striped table-hover profile hidden">
                                 <thead>
                                 <th>Assigned From</th>
                                 <th>Role Pattern</th>
                                 <th>Description</th>
                                 </thead>
                                 <tbody class="">
-                                <% @page_controls.access_profile.each do |r| %>
-                                    <tr data-package="<%= r.to_hash.to_json %>">
-                                        <td><%= r.type %></td>
-                                        <td><%= r.name %></td>
-                                        <td><%= r.description %></td>
-                                    </tr>
-                                <% end %>
                                 </tbody>
                             </table>
                         </div>
@@ -74,32 +67,18 @@
             <div class="col-md-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h2 class="panel-title">Accessible Content</h2>
+                        <h2 class="panel-title">Accessible Content: <span class="label-info">select a AccessProfile Entry from above.</span></h2>
                     </div>
                     <!-- Table -->
                     <div class="table-responsive">
-                        <table id="accessible-table" class="table table-striped table-hover">
+                        <table id="accessible-table" class="table table-striped table-hover hidden">
                             <thead>
                             <th>Source</th>
                             <th>Filename</th>
                             <th>Created</th>
+                            <th>Size</th>
                             </thead>
-                            <tbody class="">
-                            <tr>
-                                <td>datafiles</td>
-                                <td>someFile.dat</td>
-                                <td>12/29/2015</td>
-                            </tr>
-                            <tr>
-                                <td>images</td>
-                                <td>somePic.png</td>
-                                <td>12/29/2015</td>
-                            </tr>
-                            <tr>
-                                <td>pdfs</td>
-                                <td>someFile.pdf</td>
-                                <td>12/29/2015</td>
-                            </tr>
+                            <tbody class="" data-accessible-url="<%= @page_controls.page_users.first.package.accessible_content_url %>">
                             </tbody>
                         </table>
                     </div>
@@ -108,5 +87,9 @@
         </div>
     </div>
 
-
+    </article>
+    <%= link_to :back, class: "pull-right" do %>
+        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+        Back
+    <% end %>
 </section>

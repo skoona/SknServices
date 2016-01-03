@@ -19,7 +19,7 @@
 #  person_authenticated_key :string
 #  assigned_roles           :string
 #  remember_token_digest    :string
-#  last_login               :datetime
+#  user_options             :string
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl
@@ -36,12 +36,13 @@ FactoryGirl.define do
     password_confirmation   "foobar"
     password_reset_token    {SecureRandom.urlsafe_base64}
     password_reset_date     {Time.zone.now}
-    last_login              {Time.zone.now}
+    user_options            ["Employee"]
     assigned_groups         ["EmployeeSecondary"]
     assigned_roles          ["Service.Action.ResetPassword"]
     roles                   ["Service.Action.ResetPassword"]
 
     factory :support do
+      user_options            ["Support"]
       assigned_groups             ["EmployeeSecondary"]
       assigned_roles          ["Users.Action.Update",
                                "Users.Action.Edit",
@@ -54,7 +55,8 @@ FactoryGirl.define do
     end
 
     factory :manager do
-      assigned_groups             ["EmployeePrimary"]
+      user_options            ["Manager"]
+      assigned_groups          ["EmployeePrimary"]
       assigned_roles          ["Services.Action.Admin",
                                "Services.Action.Developer"]
       roles                   ["Services.Action.Admin",

@@ -59,7 +59,7 @@ class PasswordService < ::Factory::DomainServices
   end
 
   def password_mailer(user)
-    UserMailer.password_reset(user).deliver
+    UserMailer.password_reset(user).deliver_now
   end
 
 end

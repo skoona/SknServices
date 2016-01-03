@@ -14,19 +14,24 @@
             <div class="col-md-4">
                 <h2>ContentProfile</h2>
                 <p>Determines if a specific user can access or interact with a specific object by type or name of object.</p>
-                <p><a class="btn btn-default" href="<%= home_path()  %>" role="button">Back &raquo;</a></p>
+                <p><a class="btn btn-default" href="<%= details_content_pages_path()  %>" role="button">Back &raquo;</a></p>
             </div>
             <div class="col-md-4">
                 <h2>AccessProfile</h2>
                 <p>Applies an Authorization Profile to each Authenticated User; which was created by the Administrator.  Using the roles assigned, access to navigation, and/or viewable, elements is controlled.</p>
-                <p><a class="btn btn-default" href="<%= home_path()  %>" role="button">Back &raquo;</a></p>
+                <p><a class="btn btn-default" href="<%= details_access_pages_path()  %>" role="button">Back &raquo;</a></p>
             </div>
             <div class="col-md-4">
                 <h2>Authentication</h2>
                 <p>Every incoming has both the authentication and authorization features of this site applied.  No access returns you to login or home page.  No authorization returns you to home page.  Should you attempt a url outside what is allowed and provided for, you will directed to the home page with access still being denied.</p>
-                <p><a class="btn btn-default" href="<%= home_path()  %>" role="button">Back &raquo;</a></p>
+                <p><a class="btn btn-default" href="<%= details_auth_pages_path()  %>" role="button">Back &raquo;</a></p>
             </div>
         </div>
     </section>
-
+    <section>
+        <%= link_to :back, class: "pull-right" do %>
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+            Back
+        <% end %>
+    </section>
 </section>
