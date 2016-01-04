@@ -92,5 +92,83 @@ This is where we begin.
 
 
 ## Full Application Data Model
+---
 
 ![App Data Model](app/assets/images/sknService-DataModel.png "Application Data Model")
+
+
+## ContentProfile Data Model Resulting Transactions
+---
+
+###Final Access Package on Users List
+
+```json
+
+data-package=
+    {
+        &quot;username&quot;:&quot;skoona&quot;,
+        &quot;display_name&quot;:&quot;Employee Primary User: Developer&quot;,
+        &quot;package&quot;:{
+            &quot;success&quot;:true,
+            &quot;message&quot;:&quot;&quot;,
+            &quot;accessible_content_url&quot;:&quot;/accessible_content?id=access&quot;,
+            &quot;page_user&quot;:&quot;skoona&quot;,
+            &quot;access_profile&quot;:[
+                {&quot;name&quot;:&quot;Services.Action.Admin&quot;,&quot;description&quot;:&quot;Super User&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+                {&quot;name&quot;:&quot;Services.Action.Primary&quot;,&quot;description&quot;:&quot;Super User&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+                {&quot;name&quot;:&quot;Services.Action.Developer&quot;,&quot;description&quot;:&quot;Developer&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+                {&quot;name&quot;:&quot;Services.Action.ResetPassword&quot;,&quot;description&quot;:&quot;Reset Forgotten Password via EMail&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+                {&quot;name&quot;:&quot;Services.Action.Admin.ContentProfile&quot;,&quot;description&quot;:&quot;Administer Authorization Content Profile&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+                {&quot;name&quot;:&quot;Services.Action.Admin.UserAuthorizationGroups&quot;,&quot;description&quot;:&quot;Administer Authorization Group&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+                {&quot;name&quot;:&quot;Services.Action.Admin.UserRecords&quot;,&quot;description&quot;:&quot;Administer User Records&quot;,&quot;type&quot;:&quot;EmployeePrimary&quot;},
+                {&quot;name&quot;:&quot;Services.Action.Developer&quot;,&quot;description&quot;:&quot;Developer&quot;,&quot;type&quot;:&quot;Assigned Role&quot;},
+                {&quot;name&quot;:&quot;EmployeePrimary&quot;,&quot;description&quot;:&quot;BMI Admin User&quot;,&quot;type&quot;:&quot;Assigned Group&quot;}
+                                       ]
+                            }
+    }
+
+```
+
+###Final Content Package on Users List
+
+```json
+
+data-package=
+    {
+        &quot;username&quot;:&quot;skoona&quot;,
+        &quot;display_name&quot;:&quot;Employee Primary User: Developer&quot;,
+        &quot;package&quot;:{
+            &quot;success&quot;:true,
+            &quot;message&quot;:&quot;&quot;,
+            &quot;accessible_content_url&quot;:&quot;/accessible_content?id=content&quot;,
+            &quot;page_user&quot;:&quot;skoona&quot;,
+            &quot;content_profile&quot;:{
+                &quot;username&quot;:&quot;skoona&quot;,
+                &quot;display_name&quot;:&quot;Employee Primary User: Developer&quot;,
+                &quot;entries&quot;:[
+                    { &quot;description&quot;:&quot;Determine which agency documents can be seen&quot;,
+                      &quot;topic_value&quot;:&quot;Agency&quot;,
+                      &quot;content_value&quot;:[
+                                         &quot;68601&quot;,
+                                         &quot;68602&quot;,
+                                         &quot;68603&quot;
+                                                ],
+                      &quot;content_type&quot;:&quot;Commission&quot;,
+                      &quot;content_type_description&quot;:&quot;Monthly Commission Reports and Files&quot;,
+                      &quot;topic_type&quot;:&quot;Agency&quot;,
+                      &quot;topic_type_description&quot;:&quot;Agency Actions&quot;
+                    },
+                    {&quot;description&quot;:&quot;Determine which accounts will have notification sent&quot;,&quot;topic_value&quot;:&quot;Account&quot;,&quot;content_value&quot;:[&quot;AdvCancel&quot;,&quot;FutCancel&quot;,&quot;Cancel&quot;],&quot;content_type&quot;:&quot;Notification&quot;,&quot;content_type_description&quot;:&quot;Email Notification of Related Events&quot;,&quot;topic_type&quot;:&quot;Account&quot;,&quot;topic_type_description&quot;:&quot;Account Actions&quot;},
+                    {&quot;description&quot;:&quot;Determine which States agent may operate in.&quot;,&quot;topic_value&quot;:&quot;LicensedStates&quot;,&quot;content_value&quot;:[&quot;21&quot;,&quot;9&quot;,&quot;23&quot;],&quot;content_type&quot;:&quot;Operations&quot;,&quot;content_type_description&quot;:&quot;Business Operational Metric&quot;,&quot;topic_type&quot;:&quot;LicensedStates&quot;,&quot;topic_type_description&quot;:&quot;Agent Actions&quot;}
+                                    ],
+                &quot;pak&quot;:&quot;eafbf74d395cd68e1b5743bad33a82b4&quot;,
+                &quot;profile_type&quot;:&quot;EmployeePrimary&quot;,
+                &quot;profile_type_description&quot;:&quot;BMI Admin User&quot;,
+                &quot;provider&quot;:&quot;BCrypt&quot;,
+                &quot;email&quot;:&quot;skoona@gmail.com&quot;
+                                        }
+                           }
+    }
+
+```
+
