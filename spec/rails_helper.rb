@@ -27,8 +27,8 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 
-require "rack_session_access/capybara"
 require 'capybara/mechanize'
+require "rack_session_access/capybara"
 require 'database_cleaner'
 
 require 'spec_helper'

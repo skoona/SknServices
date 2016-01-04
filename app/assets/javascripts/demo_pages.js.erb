@@ -44,32 +44,29 @@ function profileTablesRequester(ev) {
     $(ev.currentTarget).addClass('success');
 
     if (contentType) {
-        consoleLog( "AccessProfile package=>" + JSON.stringify(dataPackage));
+        consoleLog( "AccessProfile Sending package=>" + JSON.stringify(dataPackage));
     } else {
-        consoleLog( "ContentProfile package=>" + JSON.stringify(dataPackage));
+        consoleLog( "ContentProfile Sending package=>" + JSON.stringify(dataPackage));
     }
 
-    dataPackage['authenticity_token'] = csrfToken;
     $.ajax({
-//        beforeSend: function(request) {
-//            request.setRequestHeader('X-CSRF-Token', csrfToken);
-//            request.setRequestHeader('X-XSRF-Token', csrfToken);
-//        },
         headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
         method: "GET",
-        dataType: "application/json",
-        contentType: 'application/json',
+        dataType: "json",
+        contentType: 'json',
         url: accessUrl,
         data: dataPackage,
-        accepts: 'application/json'
+        accepts: 'json'
     }).done(function(data,textStatus,jqXHR) {
             textStatus = textStatus;
-            dataResponse = data;
-            replaceAccessibleTableRows(data);
+            dataResponse = data.package;
+            replaceAccessibleTableRows(dataResponse);
             console.log( "profileTablesRequester() success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
       }).fail(function(jqXHR, textStatus, errorThrown) {
             textStatus = textStatus;
             tTitle.html('No Accessible Content for ' + dataPackage.username + ': <span class="label-info">select a different ContentProfile Entry from above.</span>');
+            $('#accessible-table').removeClass('show').addClass('hidden');
+            $('#accessible-table tbody').empty();
             console.log( "profileTablesRequester() error: " + textStatus + ', thrown=' + errorThrown + ', package=' + JSON.stringify(dataPackage));
       });
 
@@ -108,6 +105,8 @@ function replaceContentTableRows(dataPackage) {
     if (!dataPackage.package.success) {
         msg = dataPackage.package.message
         $('#content-table').removeClass('show').addClass('hidden');
+        $('#accessible-table').removeClass('show').addClass('hidden');
+        $('#accessible-table tbody').empty();
     } else {
         $('#content-table').removeClass('hidden').addClass('show');
     }
@@ -146,6 +145,8 @@ function replaceAccessTableRows(dataPackage) {
     if (!dataPackage.package.success) {
         msg = dataPackage.package.message;
         $('#access-table').removeClass('show').addClass('hidden');
+        $('#accessible-table').removeClass('show').addClass('hidden');
+        $('#accessible-table tbody').empty();
     } else {
         $('#access-table').removeClass('hidden').addClass('show');
     }
@@ -173,7 +174,7 @@ function replaceAccessibleTableRows(dataPackage) {
             vList = dataPackage.package,
             newRow = [],
             counter = 0,
-            msg = 'Accessible Content for ' + dataPackage.username + ', ' + (dataPackage.hasOwnProperty('type') ? dataPackage.type : dataPackage.content_type);
+            msg = 'Accessible Content for ' + dataPackage.username + ', ' + (dataPackage.hasOwnProperty('display_name') ? dataPackage.display_name : dataPackage.content_type);
 
     oBody.empty();
     $.each(vList, function(index, row) {
@@ -193,6 +194,7 @@ function replaceAccessibleTableRows(dataPackage) {
     if (!dataPackage.success) {
         msg = dataPackage.message;
         $('#accessible-table').removeClass('show').addClass('hidden');
+        $('#accessible-table tbody').empty();
     } else {
         $('#accessible-table').removeClass('hidden').addClass('show');
     }
@@ -219,6 +221,9 @@ $(function() {
 
         $('#accessible-table').closest('div').prev('div').find('h2.panel-title').
                 html('Accessible Content: <span class="label-info">select a ContentProfile Entry from above.</span>');
+
+        $('#accessible-table tbody').empty();
+        $('#accessible-table').removeClass('show').addClass('hidden');
 
         $("#users-table tbody tr").removeClass('info');
         $(ev.currentTarget).addClass('info');

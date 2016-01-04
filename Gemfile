@@ -34,7 +34,7 @@ group :test do
   gem 'capybara-mechanize'
   gem 'rack_session_access'
   gem 'warden-rspec-rails'
-  #gem 'capybara-webkit'
+  # gem 'capybara-webkit'
   # gem 'selenium-webdriver'
 end
 group :development, :test do

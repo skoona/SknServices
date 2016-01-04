@@ -283,18 +283,8 @@
 
 
     <!--============== Profiles Pages  ========== --> profiles/accessible_content
-    <resource secured="false">
+    <resource secured="true">
         <uri>profiles/accessible_content</uri>
-        <description>AccessibleContent API.JSON</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="false">
-        <uri>profiles/available_content</uri>
         <description>AccessibleContent API.JSON</description>
         <permission type="READ">
             <authorizedRoles>
@@ -361,7 +351,7 @@
     </resource>
     <resource secured="false">
         <uri>sessions/unauthenticated</uri>
-        <description>Your request is not authorized!</description>
+        <description>Your request has not been authorized!</description>
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>

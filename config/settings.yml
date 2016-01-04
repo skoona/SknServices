@@ -39,13 +39,11 @@ security:
    - /pages/details_access
    - /pages/details_auth
    - /assests
-   - /pages/unauthenticated
    - /session
    - /sessions
    - /sessions/new
    - /sessions/create
-   - /profiles/accessible_content
-   - /profiles/available_content
+   - /sessions/unauthenticated
 
   ! user_options:
    - Manager
