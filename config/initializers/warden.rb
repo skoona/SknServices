@@ -74,6 +74,11 @@
 # :bl Callback :before_logout              UserProfile cleanup, drops token and session, resets session
 ##
 
+# env['warden'].authenticated?               # Ask the question if a request has been previously authenticated
+# env['warden'].authenticated?(:foo)         # Ask the question if a request is authenticated for the :foo scope
+# env['warden'].authenticate(:password)      # Try to authenticate via the :password strategy.  If it fails proceed anyway.
+# env['warden'].authenticate!(:password)     # Ensure authentication via the password strategy. If it fails, bail.
+
 # Rails.application.config.middleware.use Warden::Manager do |manager|
 # Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
 Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
@@ -200,11 +205,15 @@ end
 ##
 # Set remember_token only after a signin, and verify last login window
 #
+# A callback hook set to run every time after a user is set.
+# This callback is triggered the first time one of those three events happens
+# during a request: :authentication, :fetch (from session) and :set_user (when manually set).
+#
 # after_authentication is just a wrapper to after_set_user, which is only invoked
 # when the user is set through the authentication path. The options and yielded arguments
 # are the same as in after_set_user.
-#
-Warden::Manager.after_authentication do |user,auth,opts|
+# -- after_authentication --
+Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   # puts "===============[DEBUG]:aa #{self.class}\##{__method__}"
   remember = false
   remember = true if auth.request.params.key?("session") && "1".eql?(auth.request.params["session"]["remember_me_token"])
@@ -213,7 +222,7 @@ Warden::Manager.after_authentication do |user,auth,opts|
   user.enable_authentication_controls
 
   # force reload of navigation menu, which re-authorizes it too
-  auth.request.params["session"]["navigation_menu"] = nil
+  # auth.request.params["session"]["navigation_menu"] = nil
 
   if remember
     if Rails.env.production?
@@ -256,6 +265,7 @@ end
 # This callback occurs after PATH_INFO has been modified for the failure (default /unauthenticated)
 # In this callback you can mutate the environment as required by the failure application
 # If a Rails controller were used for the failure_app for example, you would need to set request[:params][:action] = :unauthenticated
+# Ref: https://github.com/hassox/warden/blob/master/lib/warden/hooks.rb
 #
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
@@ -266,7 +276,12 @@ Warden::Manager.before_failure do |env, opts|
 
   Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
   env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
-  env['action_dispatch.request.path_parameters'][:action] = :new unless bypass
+  unless bypass
+    params = Rack::Request.new(env).params
+    params[:action] = :new
+    params[:warden_failure] = opts
+  end
+  # env['action_dispatch.request.path_parameters'][:action] = :new unless bypass
 end
 
 ##

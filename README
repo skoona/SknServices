@@ -132,57 +132,59 @@ data-package="
   }
 
 [jscott@iMac SknService]$ rake routes
-                       Prefix Verb   URI Pattern                                Controller#Action
-                        users GET    /users(.:format)                           users#index
-                              POST   /users(.:format)                           users#create
-                     new_user GET    /users/new(.:format)                       users#new
-                    edit_user GET    /users/:id/edit(.:format)                  users#edit
-                         user GET    /users/:id(.:format)                       users#show
-                              PATCH  /users/:id(.:format)                       users#update
-                              PUT    /users/:id(.:format)                       users#update
-                              DELETE /users/:id(.:format)                       users#destroy
-             user_group_roles GET    /user_group_roles(.:format)                user_group_roles#index
-                              POST   /user_group_roles(.:format)                user_group_roles#create
-          new_user_group_role GET    /user_group_roles/new(.:format)            user_group_roles#new
-         edit_user_group_role GET    /user_group_roles/:id/edit(.:format)       user_group_roles#edit
-              user_group_role GET    /user_group_roles/:id(.:format)            user_group_roles#show
-                              PATCH  /user_group_roles/:id(.:format)            user_group_roles#update
-                              PUT    /user_group_roles/:id(.:format)            user_group_roles#update
-                              DELETE /user_group_roles/:id(.:format)            user_group_roles#destroy
-             content_profiles GET    /content_profiles(.:format)                content_profiles#index
-                              POST   /content_profiles(.:format)                content_profiles#create
-          new_content_profile GET    /content_profiles/new(.:format)            content_profiles#new
-         edit_content_profile GET    /content_profiles/:id/edit(.:format)       content_profiles#edit
-              content_profile GET    /content_profiles/:id(.:format)            content_profiles#show
-                              PATCH  /content_profiles/:id(.:format)            content_profiles#update
-                              PUT    /content_profiles/:id(.:format)            content_profiles#update
-                              DELETE /content_profiles/:id(.:format)            content_profiles#destroy
-              password_resets POST   /password_resets(.:format)                 password_resets#create
-           new_password_reset GET    /password_resets/new(.:format)             password_resets#new
-          edit_password_reset GET    /password_resets/:id/edit(.:format)        password_resets#edit
-               password_reset PATCH  /password_resets/:id(.:format)             password_resets#update
-                              PUT    /password_resets/:id(.:format)             password_resets#update
-     unauthenticated_sessions GET    /sessions/unauthenticated(.:format)        sessions#unauthenticated
-                     sessions POST   /sessions(.:format)                        sessions#create
-                  new_session GET    /sessions/new(.:format)                    sessions#new
-                      session DELETE /sessions/:id(.:format)                    sessions#destroy
-                   home_pages GET    /pages/home(.:format)                      pages#home
-             learn_more_pages GET    /pages/learn_more(.:format)                pages#learn_more
-                  about_pages GET    /pages/about(.:format)                     pages#about
-              developer_pages GET    /pages/developer(.:format)                 pages#developer
-          details_model_pages GET    /pages/details_model(.:format)             pages#details_model
-        details_content_pages GET    /pages/details_content(.:format)           pages#details_content
-         details_access_pages GET    /pages/details_access(.:format)            pages#details_access
-           details_auth_pages GET    /pages/details_auth(.:format)              pages#details_auth
-   accessible_content_profile GET    /profiles/:id/accessible_content(.:format) profiles#accessible_content
-content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format)   profiles#content_profile_demo
- access_profile_demo_profiles GET    /profiles/access_profile_demo(.:format)    profiles#access_profile_demo
-                      signout DELETE /signout(.:format)                         sessions#destroy
-                       signin GET    /signin(.:format)                          sessions#new
-                         root GET    /                                          pages#home
+                       Prefix Verb   URI Pattern                              Controller#Action
+                        users GET    /users(.:format)                         users#index
+                              POST   /users(.:format)                         users#create
+                     new_user GET    /users/new(.:format)                     users#new
+                    edit_user GET    /users/:id/edit(.:format)                users#edit
+                         user GET    /users/:id(.:format)                     users#show
+                              PATCH  /users/:id(.:format)                     users#update
+                              PUT    /users/:id(.:format)                     users#update
+                              DELETE /users/:id(.:format)                     users#destroy
+             user_group_roles GET    /user_group_roles(.:format)              user_group_roles#index
+                              POST   /user_group_roles(.:format)              user_group_roles#create
+          new_user_group_role GET    /user_group_roles/new(.:format)          user_group_roles#new
+         edit_user_group_role GET    /user_group_roles/:id/edit(.:format)     user_group_roles#edit
+              user_group_role GET    /user_group_roles/:id(.:format)          user_group_roles#show
+                              PATCH  /user_group_roles/:id(.:format)          user_group_roles#update
+                              PUT    /user_group_roles/:id(.:format)          user_group_roles#update
+                              DELETE /user_group_roles/:id(.:format)          user_group_roles#destroy
+             content_profiles GET    /content_profiles(.:format)              content_profiles#index
+                              POST   /content_profiles(.:format)              content_profiles#create
+          new_content_profile GET    /content_profiles/new(.:format)          content_profiles#new
+         edit_content_profile GET    /content_profiles/:id/edit(.:format)     content_profiles#edit
+              content_profile GET    /content_profiles/:id(.:format)          content_profiles#show
+                              PATCH  /content_profiles/:id(.:format)          content_profiles#update
+                              PUT    /content_profiles/:id(.:format)          content_profiles#update
+                              DELETE /content_profiles/:id(.:format)          content_profiles#destroy
+              password_resets POST   /password_resets(.:format)               password_resets#create
+           new_password_reset GET    /password_resets/new(.:format)           password_resets#new
+          edit_password_reset GET    /password_resets/:id/edit(.:format)      password_resets#edit
+               password_reset PATCH  /password_resets/:id(.:format)           password_resets#update
+                              PUT    /password_resets/:id(.:format)           password_resets#update
+     unauthenticated_sessions GET    /sessions/unauthenticated(.:format)      sessions#unauthenticated
+                     sessions POST   /sessions(.:format)                      sessions#create
+                  new_session GET    /sessions/new(.:format)                  sessions#new
+                      session DELETE /sessions/:id(.:format)                  sessions#destroy
+                   home_pages GET    /pages/home(.:format)                    pages#home
+             learn_more_pages GET    /pages/learn_more(.:format)              pages#learn_more
+                  about_pages GET    /pages/about(.:format)                   pages#about
+              developer_pages GET    /pages/developer(.:format)               pages#developer
+          details_model_pages GET    /pages/details_model(.:format)           pages#details_model
+        details_content_pages GET    /pages/details_content(.:format)         pages#details_content
+         details_access_pages GET    /pages/details_access(.:format)          pages#details_access
+           details_auth_pages GET    /pages/details_auth(.:format)            pages#details_auth
+  accessible_content_profiles GET    /profiles/accessible_content(.:format)   profiles#accessible_content
+   available_content_profiles POST   /profiles/available_content(.:format)    profiles#available_content
+content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) profiles#content_profile_demo
+ access_profile_demo_profiles GET    /profiles/access_profile_demo(.:format)  profiles#access_profile_demo
+                      signout DELETE /signout(.:format)                       sessions#destroy
+                       signin GET    /signin(.:format)                        sessions#new
+                         root GET    /                                        pages#home
 [jscott@iMac SknService]$
 
+
 Disabled :accessible_content security for developer reasons
-- Application Controller { skip_before_action if json }
 - access_registry.xml {false}
 - settings.yml { security.public_pages entry for warden bypass}
+

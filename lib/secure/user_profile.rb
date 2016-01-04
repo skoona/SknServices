@@ -19,8 +19,9 @@ module Secure
     ##
     # Initialize with a user_object only
     def initialize(user)
+        raise(Utility::Errors::NotFound, "UserProfile Requires a instance from the Users model.") if user.nil?
       @user_object = user
-      @person_authenticated_key = @user_object[:person_authenticated_key]
+      @person_authenticated_key = user[:person_authenticated_key]
       @id = @user_object.id
       @last_access = Time.now
     end

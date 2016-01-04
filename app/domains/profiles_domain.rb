@@ -37,7 +37,7 @@ class ProfilesDomain < ::Factory::DomainServices
                                    success: true,
                                    message: "",
                                    user_options: user_profile.user_options,
-                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profiles_path, {format: :json}]),
+                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profiles_path, {id: 'access', format: :json}]),
                                    page_user: user_profile.username,
                                    access_profile: get_page_access_profile(user_profile)
                                })
@@ -63,7 +63,7 @@ class ProfilesDomain < ::Factory::DomainServices
                                    success: true,
                                    message: "",
                                    user_options: user_profile.user_options,
-                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profiles_path, {format: :json}]),
+                                   accessible_content_url: factory.controller.page_action_paths([:accessible_content_profiles_path, {id: 'content', format: :json}]),
                                    page_user: user_profile.username,
                                    content_profile: get_page_content_profile(user_profile)
                                })

@@ -44,9 +44,9 @@ function profileTablesRequester(ev) {
     $(ev.currentTarget).addClass('success');
 
     if (contentType) {
-        consoleLog(dataPackage.name + ":" + dataPackage.description + ", Selected.");
+        consoleLog( "AccessProfile package=>" + JSON.stringify(dataPackage));
     } else {
-        consoleLog(dataPackage.content_type + ":" + dataPackage.content_type_description + ", Selected.");
+        consoleLog( "ContentProfile package=>" + JSON.stringify(dataPackage));
     }
 
     dataPackage['authenticity_token'] = csrfToken;
@@ -58,10 +58,10 @@ function profileTablesRequester(ev) {
         headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
         method: "GET",
         dataType: "application/json",
-        contentType: 'text/plain',
+        contentType: 'application/json',
         url: accessUrl,
-        data: $.param(dataPackage),
-        accepts: 'text/plain,application/json'
+        data: dataPackage,
+        accepts: 'application/json'
     }).done(function(data,textStatus,jqXHR) {
             textStatus = textStatus;
             dataResponse = data;
