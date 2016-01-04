@@ -7,9 +7,10 @@ this application.
 
 * UserProfiles deal with userid, password, password resets, and some preferences management.
 * AccessProfiles deal with what each user is allowed to access, click, or view.
-* ContentProfiles deal with specific content access priviledges; which document, etc.
+* ContentProfiles deal with specific content access privileges; which document, etc.
     
-UserProfiles and AccessProfiles have many different implementations available, and are well handled processes.  However,
+UserProfiles and AccessProfiles have many different implementations available, and are well handled processes. Java Class AccessController, and related classes,
+ were the original template for the AccessRegistry or AccessProfile capability; This now is an enhanced Ruby port of those capabilites. However,
 ContentProfiles are the main focus of exploration in this app, which has proven to be a significant 
 engineering challenge to handle the dynamics of Electronic Delivery.  
 
@@ -35,7 +36,7 @@ who has access to each URI will need to be created.  Something like:
 <resource secured="true">
     <uri>Agency/Commission-STMT/0034</uri>
     <description>Agency Commision Report in ImageRight</description>
-    <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
+    <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
     <permission type="READ">
         <authorizedRoles>
             <authorizedRole options="0034">ContentProfile.Access.Agency.Commission-STMT</authorizedRole>
@@ -45,7 +46,7 @@ who has access to each URI will need to be created.  Something like:
 <resource secured="true">
     <uri>Agency/Commission-CSV/0034</uri>
     <description>Agency Commision Report in csv format from ImageRight</description>
-    <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
+    <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
     <permission type="READ">
         <authorizedRoles>
             <authorizedRole options="0034">ContentProfile.Access.Agency.Commission-CSV</authorizedRole>
@@ -55,7 +56,7 @@ who has access to each URI will need to be created.  Something like:
 <resource secured="true">
     <uri>Agency/Experience-STMT/0034</uri>
     <description>Agency Experience Report in ImageRight</description>
-    <userdata>{"drawerid":"27655173","filetype":"27635476","foldertype":"27637844","doctype":"955"}</userdata>
+    <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
     <permission type="READ">
         <authorizedRoles>
             <authorizedRole options="0034">ContentProfile.Access.Agency.Experience-STMT</authorizedRole>
@@ -67,11 +68,11 @@ who has access to each URI will need to be created.  Something like:
 
 Each role would be assigned to one or more individuals via the normal assignment method, Domino in our case.  With the
 'ContentProfile.Access.Agency.Commission-RPT' role assigned to a user, and that user having agency '0034' in their 
-user profile, they would be allowed to view/download commission reports for that agency, and all agency in their user profile.  
+user profile options, they would be allowed to view/download commission reports for that agency, and all agency in their user profile.  
 
 Implementations of AccessProfile would be extended to 
 evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
-to include a user's list of assigned agencies for validation of their access privileges. 
+to include a user's list of assigned agencies (options) for validation of their access privileges. 
 
     AccessControl API Examples: 
       boolean_result = AccessProfile.has_access?(user.roles, "Agency/Commission-STMT/0034", user_object.agencies)
@@ -83,7 +84,7 @@ to include a user's list of assigned agencies for validation of their access pri
 ![ContentProfile](app/assets/images/AccessProfile-AccessRegistry.png "ContentProfile")
 
 An alternate approach would be to use a specifically implemented ContentProfile. Capable of encoding
-a persons privileges accross a reasonable spectrum of content types.  This can be accomplished with
+a persons privileges across a reasonable spectrum of content types.  This can be accomplished with
 about eight data tables, and a admin ui.   Both approaches require programmatic extension to AccessProfile
 to evaluate a users access to a specific bit of content.  
 
