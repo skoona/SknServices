@@ -19,11 +19,9 @@ end
 
 ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../../config/environment', __FILE__)
-# Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 
 require 'rspec/rails'
-# Add additional requires below this line. Rails is not loaded until this point!
 require 'capybara/rspec'
 require 'capybara/rails'
 
@@ -32,11 +30,8 @@ require "rack_session_access/capybara"
 require 'database_cleaner'
 
 require 'spec_helper'
-# require 'rails_warden'                     may not be needed, as ApplicationController/rails brings them
-# require 'rails_warden/controller_mixin'
 require 'warden/test/helpers'
 require 'warden/test/warden_helpers'
-
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 

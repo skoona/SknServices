@@ -175,7 +175,6 @@ data-package="
          details_access_pages GET    /pages/details_access(.:format)          pages#details_access
            details_auth_pages GET    /pages/details_auth(.:format)            pages#details_auth
   accessible_content_profiles GET    /profiles/accessible_content(.:format)   profiles#accessible_content
-   available_content_profiles POST   /profiles/available_content(.:format)    profiles#available_content
 content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) profiles#content_profile_demo
  access_profile_demo_profiles GET    /profiles/access_profile_demo(.:format)  profiles#access_profile_demo
                       signout DELETE /signout(.:format)                       sessions#destroy
@@ -183,8 +182,4 @@ content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) pr
                          root GET    /                                        pages#home
 [jscott@iMac SknService]$
 
-
-Disabled :accessible_content security for developer reasons
-- access_registry.xml {false}
-- settings.yml { security.public_pages entry for warden bypass}
 
