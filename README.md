@@ -1,6 +1,21 @@
 #Sknservice
 ---
 
+##Installation
+---
+
+You will need to install PostGreSQL locally first. Then execute;
+ 
+```Bash
+
+$ bin/setup
+$ rspec
+
+```
+
+##Overview
+---
+
 This application demonstrates and explores methods for Authentication, Access Authorizations,
 and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
 this application.
@@ -15,7 +30,7 @@ ContentProfiles are the main focus of exploration in this app, which has proven 
 engineering challenge to handle the dynamics of Electronic Delivery.  
 
 
-AccessProfile i.e (Secure::AccessRegistry)
+##AccessProfile i.e (Secure::AccessRegistry)
 ---
 
 The current implementation of
