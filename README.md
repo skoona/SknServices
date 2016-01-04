@@ -10,9 +10,10 @@ this application.
 * ContentProfiles deal with specific content access privileges; which document, etc.
     
 UserProfiles and AccessProfiles have many different implementations available, and are well handled processes. Java Class AccessController, and related classes,
- were the original template for the AccessRegistry or AccessProfile capability; This now is an enhanced Ruby port of those capabilites. However,
+ were the original template for the AccessRegistry or AccessProfile capability; This now is an enhanced Ruby port of those capabilities. However,
 ContentProfiles are the main focus of exploration in this app, which has proven to be a significant 
 engineering challenge to handle the dynamics of Electronic Delivery.  
+
 
 AccessProfile i.e (Secure::AccessRegistry)
 ---
@@ -78,7 +79,8 @@ to include a user's list of assigned agencies (options) for validation of their 
       boolean_result = AccessProfile.has_access?(user.roles, "Agency/Commission-STMT/0034", user_object.agencies)
       hash_result    = AccessProfile.get_userdata("Agency/Commission-STMT/0034")
 
-##ContentProfile
+
+##ContentProfile (i.e. The preferred Approach )
 ---
 
 ![ContentProfile](app/assets/images/AccessProfile-AccessRegistry.png "ContentProfile")
