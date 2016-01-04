@@ -24,7 +24,7 @@ this application.
 * AccessProfiles deal with what each user is allowed to access, click, or view.
 * ContentProfiles deal with specific content access privileges; which document, etc.
     
-UserProfiles and AccessProfiles have many different implementations available, and are well handled processes. The ![Java Access Controller](http://www.cs.ait.ac.th/~on/O/oreilly/java-ent/security/ch05_01.htm "Java Access Controller"), and related classes,
+UserProfiles and AccessProfiles have many different implementations available, and are well handled processes. The [Java Access Controller](http://www.cs.ait.ac.th/~on/O/oreilly/java-ent/security/ch05_01.htm "Java Access Controller"), and related classes,
  were the original template for the AccessRegistry or AccessProfile capability; This now is an enhanced Ruby port of those capabilities. However,
 ContentProfiles are the main focus of exploration in this app, which has proven to be a significant 
 engineering challenge to handle the dynamics of Electronic Delivery.  
