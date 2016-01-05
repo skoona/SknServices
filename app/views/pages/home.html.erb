@@ -16,32 +16,57 @@
 
     <div class="row">
         <div class="col-md-4">
+            <h2>UserProfiles</h2>
+            <p>
+                A User is any object containing the credentials; <em>username, password, remember_me token, and a unique person_authentication_token(PAK)</em>.
+                This user is wrapped by a UserProfile object provided by this application, which implements our Authentication process.
+            </p>
+            <p>
+                Every incoming request will have the authentication features of this site applied.  Incorrect credentials
+                redirect to a Sign-In page, from there only Public pages are available unless the user authenticates.  Correct
+                credentials enable all authorized pages to be available for navigation.
+            </p>
+            <p>
+                User objects for this application are implemented via a local database table.  However, the UserProfile
+                process directly supports the notion of using Google, Twitter, or any trusted entity to authenticate: provided the <em>PAK</em> never changes.
+            </p>
+            <p><a class="btn btn-default" href="<%= details_auth_pages_path()  %>" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>AccessProfile</h2>
+            <p>
+                The UserProfile object renders the pre-assigned access roles for a authenticated user. Roles which were mapped, by
+                an administrator, to compile time application resources.  AccessProfile methods, inherited by the UserProfile, enforce access privileges
+                to navigation, click-ables, and all viewable elements.
+            </p>
+            <p>
+                The AccessProfile encodes these access privileges in an XML file known as the access registry, a static data component of the AccessProfile process.  This process was strongly influenced by principles used in the <em>Java Access Controller</em>.
+            </p>
+            <p>
+                If access is not allowed, typically that element is not shown on screen.
+                Unauthorized attempts to access restricted pages, result in a redirect to the NotAuthorized page with an appropriate message.
+            </p>
+            <p><a class="btn btn-default" href="<%= details_access_pages_path()  %>" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
             <h2>ContentProfile</h2>
             <p>
                 Determines if a specific user can access or interact with a specific object by
                 type or name of object.
             </p>
+            <p>
+                Using a a data driven approach the ContentProfile encodes its structure by describing the item to be secured or protected.
+                Protected resources are organized by the operational business information type, related business entity type, and the identifier for that entity;
+                <ul>
+                    <li><em>Commissions/Agency/0034</em></li>
+                    <li><em>Notifications/Account/99</em></li>
+                    <li><em>Operations/LicensedStates/USA</em></li>
+                </ul>
+            </p>
+            <p>
+                Given this input the ContentProfile would render the content values or specific identifiers used to retrieve the content, in our case those might be imageright document ids for a commission statement.
+            </p>
             <p><a class="btn btn-default" href="<%= details_content_pages_path()  %>" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>AccessProfile</h2>
-            <p>
-                Renders per-assigned access roles to each Authenticated User. Roles which were mapped, by
-                an administrator, to compile time application resources.  AccessProfile methods enforce access privileges
-                to navigation, click-ables, and all viewable elements. Unauthorized attempts to access
-                restricted pages, result in a redirect to the home page with an appropriate message.
-            </p>
-            <p><a class="btn btn-default" href="<%= details_access_pages_path()  %>" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>Authentication</h2>
-            <p>
-                Every incoming request will have the authentication features of
-                this site applied.  Incorrect credentials redirects to login page.  No authorization
-                returns you to home page. Users are assigned username, password, remember_me token,
-                and a unique person_authentication_token(PAK).
-            </p>
-            <p><a class="btn btn-default" href="<%= details_auth_pages_path()  %>" role="button">View details &raquo;</a></p>
         </div>
     </div>
 

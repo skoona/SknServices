@@ -37,7 +37,7 @@
 # SEQUENCES: A
 # deserialize() remember_token from session if session and/or keys exists
 #   fetch() from UserProfiles UsersCache, set_user if found
-#   after_failed_fetch() likely caused by invalid token, clear all cookies
+#   after_failed_fetch() likely caused by invalid token, clear session cookies
 # on_request() if user or excluded paths, then pass
 #   if remember_token and no user, attempt warden.authenticate() with token, which will set_user
 # ApplicationController#before_filter()  Redirect to SignIn if no user was set (save original to session)
