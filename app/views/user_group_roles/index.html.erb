@@ -10,5 +10,7 @@
         <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
 
     <br />
-    <%= link_to 'New User group role', new_user_group_role_path %>
+    <% if current_user_has_create?('user_group_roles/new') %>
+        <%= link_to 'New User group role', new_user_group_role_path %>
+    <% end %>
 </section>

@@ -29,10 +29,15 @@ module Secure
     extend ActiveSupport::Concern
 
     included do
-      send( :helper_method, [ :login_required, :redirect_to_target_or_default,
-                              :accessed_page_name, :accessed_page,
-                              :valid_user_has_access?, :has_access?,
-                              :current_user_has_access?]
+      send( :helper_method, [ :redirect_to_target_or_default,
+                              :accessed_page_name,
+                              :accessed_page,
+                              :current_user_has_access?,
+                              :current_user_has_read?,
+                              :current_user_has_create?,
+                              :current_user_has_update?,
+                              :current_user_has_delete?
+                            ]
       ) if respond_to?(:helper_method)
     end
 
@@ -74,19 +79,35 @@ module Secure
       "#{controller_name}/#{action_name}"
     end
 
-    def valid_user_has_access?(uri, options=nil)
-      authenticated? and current_user_has_access?(uri, options)
-    end
-
     # called from a engine to check access with status
     def current_user_has_access?(uri, options=nil)
-      opts = options || session[:security_options] || nil
+      opts = options || current_user.try(:user_options) || nil
       current_user.present? and current_user.has_access?(uri, opts)
+    end
+    # called from a engine to check access with status
+    def current_user_has_create?(uri, options=nil)
+      opts = options || current_user.try(:user_options) || nil
+      current_user.present? and current_user.has_create?(uri, opts)
+    end
+    # called from a engine to check access with status
+    def current_user_has_read?(uri, options=nil)
+      opts = options || current_user.try(:user_options) || nil
+      current_user.present? and current_user.has_read?(uri, opts)
+    end
+    # called from a engine to check access with status
+    def current_user_has_update?(uri, options=nil)
+      opts = options || current_user.try(:user_options) || nil
+      current_user.present? and current_user.has_update?(uri, opts)
+    end
+    # called from a engine to check access with status
+    def current_user_has_delete?(uri, options=nil)
+      opts = options || current_user.try(:user_options) || nil
+      current_user.present? and current_user.has_delete?(uri, opts)
     end
 
     #Fixup header helper methods, since we don't need all helpers
-    def has_access?(uri, statuses=nil)
-      current_user_has_access?(uri, statuses)
+    def has_access?(uri, options=nil)
+      current_user_has_access?(uri, opts)
     end
 
     private

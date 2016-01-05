@@ -10,5 +10,7 @@
     <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
 
     <br />
-    <%= link_to 'New Content profile', new_content_profile_path %>
+    <% if current_user_has_create?('content_profiles/new') %>
+        <%= link_to 'New Content profile', new_content_profile_path %>
+    <% end %>
 </section>
