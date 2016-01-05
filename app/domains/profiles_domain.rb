@@ -149,7 +149,7 @@ class ProfilesDomain < ::Factory::DomainServices
   def get_page_access_profile(user_profile)
     result = user_profile.access_content_profile_model.to_hash   #  access_profile(true)
     result[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)} if result.key?(:entries)
-      raise(Utility::Errors::NotFound, "No access profile data available for #{user_profile.display_name}") if result.empty?
+      raise(Utility::Errors::NotFound, "No access profile data available for #{user_profile.display_name}") if result.empty? or result[:entries].empty?
     result
   end
 
