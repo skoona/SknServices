@@ -123,7 +123,7 @@ function replaceContentTableRows(dataPackage) {
 function replaceAccessTableRows(dataPackage) {
     var oBody = $('#access-table tbody'),
             tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
-            vList = dataPackage.package.access_profile,
+            vList = dataPackage.package.access_profile.entries,
             newRow = [],
             counter = 0,
             msg = 'AccessProfile Entries for ' + dataPackage.username + ', ' + dataPackage.display_name;
@@ -132,9 +132,10 @@ function replaceAccessTableRows(dataPackage) {
     $.each(vList, function(index, row) {
                 newRow = [];
                 newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
-                newRow.push('<td>' + row.type  + '</td>');
-                newRow.push('<td>' + row.name  + '</td>');
                 newRow.push('<td>' + row.description  + '</td>');
+                newRow.push('<td>' + row.content_type  + '</td>');
+                newRow.push('<td>' + row.topic_type  + '</td>');
+                newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
                 newRow.push('</tr>');
 
                 oBody.append(newRow.join()).find('tr').last().on( "click", profileTablesRequester);

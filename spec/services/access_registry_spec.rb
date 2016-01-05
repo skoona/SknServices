@@ -5,6 +5,8 @@
 #
 #    {"testing/role/progressive"=>
 #         {"secured"=>true,
+#          "content" => true,
+#          "userdata" => 'String,Array,Hash',
 #          "description"=>"Testing Resource Only: Progressive Capability",
 #          "READ"=>
 #              {"Test.Action.Create"=>[],
@@ -53,6 +55,13 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
   let(:manager_option) {"CLIENT-MANAGER"}
   let(:options) {["OBJECT-OWNER","CLIENT-MANAGER"]}
   let(:unknown_options) {"SOME:UNKNOWN:VALUES"}
+
+  let(:in_agency_option) {["0037"]}
+  let(:out_agency_option) {["1162"]}
+  let(:commission_all) {["Test.Agency.Commission.Statement.PDF.Access",
+                         "Test.Agency.Commission.Statement.CSV.Access",
+                         "Test.Agency.Commission.Experience.PDF.Access"]}
+  let(:commission_expr) {["Test.Agency.Commission.Experience.PDF.Access"]}
 
   let(:resource_unknown) {"any value will do"}
   let(:resource_options) {"testing/role/options"}
@@ -259,6 +268,47 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
       end
       it "Delete permission is denied." do
         expect(Secure::AccessRegistry.check_role_permissions?(employee, resource_absolutes, "DELETE", nil)).to be false
+      end
+    end
+  end
+
+  context "ContentControl provides useable content protections. " do
+    context "ContentControl succeeds as designed, given all params" do
+      it "#get_resource_content_entries returns all authorized content entries. " do
+        expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, in_agency_option)).to be_a(Array)
+        expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, in_agency_option).size).to be 3
+        expect(Secure::AccessRegistry.get_resource_content_entries(commission_expr, in_agency_option).size).to be 1
+      end
+      it "#get_resource_content_entry returns the requested entry. " do
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Agency/CSV' ,in_agency_option)).to be_a(Hash)
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Agency/CSV' ,in_agency_option).empty?).to be false
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_expr, 'Experience/Agency/PDF' ,in_agency_option).empty?).to be false
+      end
+    end
+    context "ContentControl fails as designed without options." do
+      it "#get_resource_content_entries returns no authorized content entries. " do
+        expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, nil).empty?).to be true
+      end
+      it "#get_resource_content_entry does not return the requested entry. " do
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Agency/CSV' , nil).empty?).to be true
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_expr, 'Commission/Agency/CSV' ,in_agency_option).empty?).to be true
+      end
+    end
+    context "ContentControl fails as designed with wrong options." do
+      it "#get_resource_content_entries returns no authorized content entries. " do
+        expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, out_agency_option).empty?).to be true
+      end
+      it "#get_resource_content_entry does not return the requested entry. " do
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Agency/CSV' ,out_agency_option).empty?).to be true
+      end
+    end
+    context "ContentControl fails as designed with wrong roles and correct options." do
+      it "#get_resource_content_entries returns no authorized content entries. " do
+        expect(Secure::AccessRegistry.get_resource_content_entries(admin, in_agency_option).empty?).to be true
+      end
+      it "#get_resource_content_entry does not return the requested entry. " do
+        expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Agency/CSV' ,in_agency_option).empty?).to be true
+        expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Agency/PDF', in_agency_option).empty?).to be true
       end
     end
   end

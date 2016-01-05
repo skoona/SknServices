@@ -73,12 +73,13 @@
 
    * FULL RESOURCE SYNTAX **********************************************
     
-    <resource secured="true|false">
+    <resource secured="true|false" content="true|false">
         <uri>anyString</uri>
         <description></description>
+        <userdata></userdata>
         <permission type="CREATE|READ|UPDATE|DELETE">
             <authorizedRoles>
-                <authorizedRole options="anyOption">security-role-name</authorizedRole>
+                <authorizedRole options="anyOptionOrCommaSepValue">security-role-name</authorizedRole>
                 <authorizedRole>security-user-group-name</authorizedRole>
                 <authorizedRole>All Authorized Users</authorizedRole>
             </authorizedRoles>
@@ -92,6 +93,7 @@
     <resource secured="false"> 
         <uri>anyString</uri>
         <description>Any String can be a URI.</description>
+        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
     </resource>
 
     UserData Required format/syntax is:
@@ -220,9 +222,45 @@
         </permission>
     </resource>
 
-<!--============================================================================= -->
-<!--========================= RESOURCE REGISTRY  ================================ -->
-<!--============================================================================= -->
+    <!--============== Content Access Adaptation  ========== -->
+    <resource secured="true" content="true">
+        <uri>Commission/Agency/PDF</uri>
+        <description>Agency Commission Statements</description>
+        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.PDF.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>Commission/Agency/CSV</uri>
+        <description>Agency Commission CSV Datafiles</description>
+        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.CSV.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>Experience/Agency/PDF</uri>
+        <description>Agency Experience Statements</description>
+        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Experience.PDF.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+
+
+    <!--============================================================================= -->
+    <!--========================= RESOURCE REGISTRY  ================================ -->
+    <!--============================================================================= -->
 
     <!--============== System Menu  ========== -->
     <resource secured="true">

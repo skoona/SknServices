@@ -135,6 +135,19 @@ module Secure
       wdesc ? access_profile_hash : (proxy_u.roles || [])
     end
 
+    def access_content_profile_model
+      Utility::UserContentProfileBean.new({
+              entries:  Secure::AccessRegistry.get_resource_content_entries(roles, user_options) || [],
+              pak: @person_authentication_key,
+              profile_type: "",
+              profile_type_description: "",
+              provider: "UserProfile",
+              username: username,
+              display_name: display_name,
+              email: email
+          })
+    end
+
     def access_profile_hash
       ary_hash = []
       ary_hash = proxy_u[:assigned_groups].map do |rg|

@@ -10,7 +10,7 @@
 #
 
 # <accessRegistry>
-  # <resource secured="false">
+  # <resource secured="false" content="true">
     # <description>Ajax4JSF Library Calls</description>
     # <uri>/a4j_3_1_4</uri>
     # <permission type="CREATE">
@@ -34,6 +34,8 @@
 #  access_registry = {
 #    "uri" = {
 #      "secured" => true,
+#      "content" => true,
+#      "userdata" => 'String,Array,Hash',
 #      "description" => "some description",
 #      "CREATE" => {
 #        "role name" => ["status","status",...],        
@@ -87,6 +89,9 @@ module Secure
         resource_hash[resource_uri] = {}
         resource_hash[resource_uri]["secured"] = false
         resource_hash[resource_uri]["secured"] = resource["secured"] = true if resource["secured"].present? and resource["secured"].eql?("true")
+
+        resource_hash[resource_uri]["content"] = false
+        resource_hash[resource_uri]["content"] = resource["content"] = true if resource["content"].present? and resource["content"].eql?("true")
 
         # siblings
         resource.children.each  do |sibl|

@@ -10,7 +10,7 @@ begin
       email:                 "skoona@gmail.com",
       password:                "developer99",
       password_confirmation:   "developer99",
-      user_options:            ["Manager"],
+      user_options:            ["Manager", "0034", "0037", "0040"],
       assigned_groups:         ["EmployeePrimary"],
       assigned_roles:          ["Services.Action.Developer"]
   },
@@ -41,7 +41,7 @@ begin
       email:                 "appdev2@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["AgencyPrimary"],
+      user_options:            ["AgencyPrimary", "0034", "0037", "0040"],
       assigned_groups:             ["AgencyPrimary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   },
@@ -51,9 +51,10 @@ begin
       email:                 "appdev3@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["AgencySecondary"],
+      user_options:            ["AgencySecondary", "0037"],
       assigned_groups:             ["AgencySecondary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
+      assigned_roles:          ["Services.Action.ResetPassword",
+                                "Test.Agency.Commission.Statement.CSV.Access"]
   },
   {
       username:              "vptester",
@@ -283,8 +284,10 @@ begin
   all_admin = [
       {name: "Services.Action.Admin", description: "Super User"},
       {name: "Services.Action.Primary", description: "Super User"},
-      {name: "Services.Action.Developer", description: "Developer"}
-  ]
+      {name: "Services.Action.Developer", description: "Developer"},
+      {name: "Test.Agency.Commission.Statement.PDF.Access", description: "Developer"},
+      {name: "Test.Agency.Commission.Statement.CSV.Access", description: "Developer"},
+      {name: "Test.Agency.Commission.Experience.PDF.Access", description: "Developer"}]
 
   all_users =
       {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}

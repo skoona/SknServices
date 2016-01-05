@@ -26,6 +26,40 @@
 #       3. '<pageName>.<actionName>'
 #       4. '<contentName>.<accessAction>'
 #
+# A possible Content Access scheme could be:
+#     <resource secured="true" content="true">
+#       <uri>Commission/Agency/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <description>Agency Commission Statements</description>
+#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
+#       <permission type="READ">'
+#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
+#           <authorizedRole options="0034,0037,0040">Agency.Commission.Access</authorizedRole>
+#         </authorizedRoles>
+#       </permission>'
+#     </resource>
+#
+#     <resource secured="true" content="true">
+#       <uri>Commission/Agency/CSV</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <description>Agency Commission CSV Datafiles</description>
+#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
+#       <permission type="READ">'
+#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
+#           <authorizedRole options="0034,0037,0040">Agency.Commission.Access</authorizedRole>
+#         </authorizedRoles>
+#       </permission>'
+#     </resource>
+#
+#     <resource secured="true" content="true">
+#       <uri>Experience/Agency/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <description>Agency Experience Statements</description>
+#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
+#       <permission type="READ">'
+#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
+#           <authorizedRole options="0034,0037,0040">Agency.Commission.Access</authorizedRole>
+#         </authorizedRoles>
+#       </permission>'
+#     </resource>
+#
 # The User profile object has methods to facilitate access queries; via the
 ##
 #   <APPLICATION-PROTECTED-RESOURCE-URI>  <-- mapping --> <EXTERNALLY CONTROLLED ROLE NAME>
@@ -90,6 +124,44 @@ module Secure
     end
     def self.get_resource_userdata(resource_uri)
       @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["userdata"] : ""
+    end
+    def self.get_resource_content_entries(user_roles, options=nil)
+      results = []
+      @@ar_permissions.each_pair do |uri, bundle|
+        next unless bundle[:content] and check_access_permissions?(user_roles, uri, options)
+        content_type, topic_type, topic_opts = uri.to_s.split('/')
+        results << {
+            uri: uri.to_s,
+            content_type: content_type,
+            content_value: bundle[:userdata],
+            topic_type: topic_type,
+            topic_value: topic_opts,
+            description: bundle[:description],
+            topic_type_description: bundle[:description],
+            content_type_description: bundle[:description]
+            # Todo: role options may be needed too, content_profile_entry#entry_info
+        }
+      end
+      results
+    end
+    def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
+      if @@ar_permissions.key?(resource_uri) and check_access_permissions?(user_roles, resource_uri, options)
+        content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
+        bundle = @@ar_permissions[resource_uri]
+        {
+            uri: resource_uri.to_s,
+            content_type: content_type,
+            content_value: bundle[:userdata],
+            topic_type: topic_type,
+            topic_value: topic_opts,
+            description: bundle[:description],
+            topic_type_description: bundle[:description],
+            content_type_description: bundle[:description]
+            # Todo: role options may be needed too, content_profile_entry#entry_info
+        }
+      else
+        {}
+      end
     end
     def self.get_ar_resource_keys
       @@ar_permissions.keys

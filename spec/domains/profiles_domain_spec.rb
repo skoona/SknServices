@@ -64,8 +64,8 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
     it "#get_page_access_profile() returns a array of hashes as expected." do
       expect( @service.get_page_user(@user.username, "access") ).to be_a(Secure::UserProfile)
       result = @service.get_page_access_profile(@user)
-      expect(result).to be_a(Array)
-      expect(result.first).to be_a(Hash)
+      expect(result).to be_a(Hash)
+      expect(result[:entries]).to be_a(Array)
     end
     it "#get_page_content_profile() returns a hash as expected, AFTER BEING ENABLE." do
         result = @service.get_page_content_profile(@user)
