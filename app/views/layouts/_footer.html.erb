@@ -1,8 +1,13 @@
 <footer class="footer">
     <div class="container">
-        <p  class="text-center"><span class="brockFont">&nbsp;&copy; 2015 Skoona Consulting</span><br/>
-            <span><a href="mailto:systems@skoona.net">All rights reserved.</a></span>
-        </p>
+        <% unless accessed_page.eql?('pages/home') %>
+            <%= link_to home_pages_path, class: "pull-right" do %>
+                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                Home
+            <% end %>
+        <% end %>
+
+        <p class="text-center text"><br/><span>&nbsp;&copy; 2015 Skoona Consulting</span></p>
     </div>
 </footer>
 

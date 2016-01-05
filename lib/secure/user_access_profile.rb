@@ -131,11 +131,11 @@ module Secure
     #
 
     # Return all Roles
-    def access_profile(wdesc=false)
-      wdesc ? access_profile_hash : (proxy_u.roles || [])
+    def access_roles_all()
+      proxy_u.roles || []
     end
 
-    def access_content_profile_model
+    def access_profile
       Utility::UserContentProfileBean.new({
               entries:  Secure::AccessRegistry.get_resource_content_entries(roles, user_options) || [],
               pak: @person_authentication_key,
@@ -146,26 +146,6 @@ module Secure
               display_name: display_name,
               email: email
           })
-    end
-
-    def access_profile_hash
-      ary_hash = []
-      ary_hash = proxy_u[:assigned_groups].map do |rg|
-        UserGroupRole.list_user_roles(rg, true)
-      end
-      unless ary_hash.empty?
-        proxy_u[:assigned_roles].map do |ar|
-          ug = UserRole.find_by(name: ar)
-          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Role"} if ug
-        end
-
-        proxy_u[:assigned_groups].each do |ag|
-          ug = UserGroupRole.find_by(name: ag)
-          ary_hash << {name: ug.name, description: ug.description, type: "Assigned Group"} if ug
-        end
-      end
-
-      ary_hash.flatten.uniq.map {|au| au.merge(username: self.username, user_options: self.user_options)}
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       {}
@@ -188,29 +168,29 @@ module Secure
     end
 
     def is_admin?
-      access_profile.include? ADMIN_ROLE
+      access_roles_all.include? ADMIN_ROLE
     end
 
     def has_access? (resource_uri, options=nil)
-      rc = Secure::AccessRegistry.check_access_permissions?( access_profile, resource_uri, options)
+      rc = Secure::AccessRegistry.check_access_permissions?( access_roles_all, resource_uri, options)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
       rc
     end
 
     def has_create? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "CREATE", options)
+      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "CREATE", options)
     end
 
     def has_read? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "READ", options)
+      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "READ", options)
     end
 
     def has_update? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "UPDATE", options)
+      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "UPDATE", options)
     end
 
     def has_delete? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_profile, resource_uri, "DELETE", options)
+      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "DELETE", options)
     end
 
     def get_resource_description(resource_uri)

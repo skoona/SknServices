@@ -1,7 +1,8 @@
 // import the CSS framework
 
 
-$navbar-default-bg: rgba(0, 21, 252, 0.27);
+//$navbar-default-bg: rgb(0, 21, 252);
+//$navbar-default-fg: rgb(255, 255, 255);
 
 
 @import "bootstrap-sprockets";
@@ -23,7 +24,7 @@ main {
   @extend .container-fluid;
   padding-bottom: 80px;
   width: 100%;
-  margin-top: 60px; // accommodate the navbar
+  margin-top: 120px; // accommodate the navbar
   }
 section {
   @extend .row;
@@ -87,3 +88,39 @@ img {
   @extend .btn-primary;
   @extend .btn-lg;
   }
+
+/**
+ * NavBar Choices
+ ***************************** */
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: #fffe86;  /*Sets the text hover color on navbar*/
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
+a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: white; /*BACKGROUND color for active*/
+  background-color: #030033;
+}
+
+.navbar-default {
+  background-color: #0f006f;
+  border-color: #030033;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #262626;
+  text-decoration: none;
+  background-color: #66CCFF;  /*change color of links in drop down here*/
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: silver; /*Change rollover cell color here*/
+}
+
+
+.navbar-default .navbar-nav > li > a {
+  color: white; /*Change active text color here*/
+}

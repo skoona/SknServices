@@ -33,7 +33,7 @@ class ProfilesDomain < ::Factory::DomainServices
     @accessible_type = "access" # [:access, :content]
       raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
 
-    SknUtils::PageControls.new({
+    res = SknUtils::PageControls.new({
                                    success: true,
                                    message: "",
                                    user_options: user_profile.user_options,
@@ -41,6 +41,8 @@ class ProfilesDomain < ::Factory::DomainServices
                                    page_user: user_profile.username,
                                    access_profile: get_page_access_profile(user_profile)
                                })
+    res.message = "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}"
+    res
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     SknUtils::PageControls.new({
@@ -59,7 +61,7 @@ class ProfilesDomain < ::Factory::DomainServices
     @accessible_type = "content" # [:access, :content]
       raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
 
-    SknUtils::PageControls.new({
+    res = SknUtils::PageControls.new({
                                    success: true,
                                    message: "",
                                    user_options: user_profile.user_options,
@@ -67,6 +69,8 @@ class ProfilesDomain < ::Factory::DomainServices
                                    page_user: user_profile.username,
                                    content_profile: get_page_content_profile(user_profile)
                                })
+    res.message = "ContentProfile Entry for #{user_profile.username}, #{res.content_profile.profile_type}:#{res.content_profile.profile_type_description}"
+    res
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     SknUtils::PageControls.new({
@@ -83,17 +87,30 @@ class ProfilesDomain < ::Factory::DomainServices
   ##
   # Returns content available via profile to specified user
   ##
-  # From Content
-  # Parameters: {"user_options"=>["Manager"], "description"=>"Determine which agency documents can be seen",
-  #              "username"=>"skoona", "topic_value"=>"Agency", "content_value"=>["68601", "68602", "68603"],
-  #              "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files",
-  #              "topic_type"=>"Agency", "topic_type_description"=>"Agency Actions", "id"=>"content"}
+  # REQUEST: { ContentProfile
+  #     "user_options":["Manager","0034","0037","0040"],
+  #     "topic_value":"Agency",
+  #     "content_value":["68601","68602","68603"],
+  #     "content_type":"Commission",
+  #     "content_type_description":"Monthly Commission Reports and Files",
+  #     "topic_type":"Agency",
+  #     "topic_type_description":"Agency Actions",
+  #     "description":"Determine which agency documents can be seen",
+  #     "username":"skoona"
+  # }
   ##
-  # From Access
-  # Parameters: {"user_options"=>["Manager"], "name"=>"Services.Action.Admin.ContentProfile",
-  #              "description"=>"Administer Authorization Content Profile",
-  #              "type"=>"EmployeePrimary", "username"=>"eptester", "controller"=>"profiles",
-  #              "action"=>"accessible_content", "id"=>"access", "format"=>"json"}
+  # REQUEST:  { AccessProfile
+  # "user_options":["Manager","0034","0037","0040"],
+  #     "topic_value":"PDF",
+  #     "content_value":{"doctype":"954"},
+  #     "content_type":"Commission",
+  #     "content_type_description":"Agency Commission Statements",
+  #     "topic_type":"Agency",
+  #     "topic_type_description":"Agency Commission Statements",
+  #     "description":"Agency Commission Statements",
+  #     "uri":"Commission/Agency/PDF",
+  #     "username":"skoona"
+  # }
   def api_accessible_content(params) # :access, :username, :profile
     @accessible_type = params[:id] || params[:access] # [:access, :content]
     @profile = params[:profile] # [:access=role, :content=content]
@@ -147,16 +164,16 @@ class ProfilesDomain < ::Factory::DomainServices
   end
 
   def get_page_access_profile(user_profile)
-    result = user_profile.access_content_profile_model.to_hash   #  access_profile(true)
-    result[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)} if result.key?(:entries)
+    result = user_profile.access_profile.to_hash   #  access_profile(true)
       raise(Utility::Errors::NotFound, "No access profile data available for #{user_profile.display_name}") if result.empty? or result[:entries].empty?
+    result[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)} if result.key?(:entries)
     result
   end
 
   def get_page_content_profile(user_profile)
     result = user_profile.content_profile.to_hash
+      raise(Utility::Errors::NotFound, "No content profile data available for #{user_profile.display_name}") if result.empty? or result[:entries].empty?
     result[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)} if result.key?(:entries)
-      raise(Utility::Errors::NotFound, "No content profile data available for #{user_profile.display_name}") if result.empty?
     result
   end
 

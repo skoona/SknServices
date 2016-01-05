@@ -49,27 +49,63 @@ rails g model Users username:string:index name:string email:string password:dige
 bundle exec annotate --exclude tests,fixtures,factories,serializers
 ```
 
-Input Data to accessible_content ajax call:
 
-<tr data-package=" Content
-  {
-    "username":"skoona",
-    "description":"determine which agency documents can be seen",
-    "topic_value":"agency",
+
+
+
+## Ajax Transaction
+
+```
+REQUEST: { ContentProfile
+    "user_options":["Manager","0034","0037","0040"],
+    "topic_value":"Agency",
     "content_value":["68601","68602","68603"],
-    "content_type":"commission",
-    "content_type_description":"monthly commission reports and files",
-    "topic_type":"agency",
-    "topic_type_description":"agency actions"
-  }
-
-<tr data-package=" Access
-  {
+    "content_type":"Commission",
+    "content_type_description":"Monthly Commission Reports and Files",
+    "topic_type":"Agency",
+    "topic_type_description":"Agency Actions",
+    "description":"Determine which agency documents can be seen",
+    "username":"skoona"
+    }
+RESPONSE: {
+    "content":"content"
+    "success":true,
+    "message":"",
     "username":"skoona",
-    "name":"services.action.admin",
-    "description":"super user",
-    "type":"employeeprimary"
-  }
+    "display_name":"Employee Primary User: Developer",
+    "package":[
+        {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
+        {"source":"images","filename":"somePic.png","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
+        {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:24:12.066-05:00","size":"0"}
+              ]
+    }
+
+
+REQUEST:  { AccessProfile
+    "user_options":["Manager","0034","0037","0040"],
+    "topic_value":"PDF",
+    "content_value":{"doctype":"954"},
+    "content_type":"Commission",
+    "content_type_description":"Agency Commission Statements",
+    "topic_type":"Agency",
+    "topic_type_description":"Agency Commission Statements",
+    "description":"Agency Commission Statements",
+    "uri":"Commission/Agency/PDF",
+    "username":"skoona"
+    }
+RESPONSE: {
+    "success":true,
+    "content":"access"
+    "message":"",
+    "username":"skoona",
+    "display_name":"Employee Primary User: Developer",
+    "package":[
+        {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
+        {"source":"images","filename":"somePic.png","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
+        {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:18:57.881-05:00","size":"0"}
+              ]
+    }
+```
 
 [jscott@iMac SknService]$ rake routes
                        Prefix Verb   URI Pattern                              Controller#Action

@@ -83,34 +83,34 @@ function replaceContentTableRows(dataPackage) {
             tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
             vList = dataPackage.package.content_profile.entries,
             newRow = [],
-            counter = 0,
-            msg = 'ContentProfile Entry for ' + dataPackage.username + ', ' + dataPackage.package.content_profile.profile_type + ':' + dataPackage.package.content_profile.profile_type_description;
+            counter = 0;
 
-    oBody.empty();
-    $.each(vList, function(index, row) {
-            newRow = [];
-            newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
-            newRow.push('<td>' + row.description  + '</td>');
-            newRow.push('<td>' + row.content_type  + '</td>');
-            newRow.push('<td>' + row.content_type_description  + '</td>');
-            newRow.push('<td>' + row.topic_type  + '</td>');
-            newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
-            newRow.push('</tr>');
+    tTitle.html(dataPackage.package.message);
+    if (dataPackage.package.success) {
+        $('#content-table').removeClass('hidden').addClass('show');
 
-            oBody.append(newRow.join()).find('tr').last().on( "click", profileTablesRequester);
-                counter = index + 1;
-        }
-    );
+        oBody.empty();
 
-    if (!dataPackage.package.success) {
-        msg = dataPackage.package.message
+        $.each(vList, function(index, row) {
+                newRow = [];
+                newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
+                newRow.push('<td>' + row.description  + '</td>');
+                newRow.push('<td>' + row.content_type  + '</td>');
+                newRow.push('<td>' + row.content_type_description  + '</td>');
+                newRow.push('<td>' + row.topic_type  + '</td>');
+                newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+                newRow.push('</tr>');
+
+                oBody.append(newRow.join()).find('tr').last().on( "click", profileTablesRequester);
+                    counter = index + 1;
+            }
+        );
+    } else {
         $('#content-table').removeClass('show').addClass('hidden');
+        oBody.empty();
         $('#accessible-table').removeClass('show').addClass('hidden');
         $('#accessible-table tbody').empty();
-    } else {
-        $('#content-table').removeClass('hidden').addClass('show');
     }
-    tTitle.html(msg);
 
     consoleLog('replaceContentTableRows(rowsAdded=' + counter + ')');
     return false;
@@ -125,33 +125,33 @@ function replaceAccessTableRows(dataPackage) {
             tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
             vList = dataPackage.package.access_profile.entries,
             newRow = [],
-            counter = 0,
-            msg = 'AccessProfile Entries for ' + dataPackage.username + ', ' + dataPackage.display_name;
+            counter = 0
 
-    oBody.empty();
-    $.each(vList, function(index, row) {
-                newRow = [];
-                newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
-                newRow.push('<td>' + row.description  + '</td>');
-                newRow.push('<td>' + row.content_type  + '</td>');
-                newRow.push('<td>' + row.topic_type  + '</td>');
-                newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
-                newRow.push('</tr>');
+    tTitle.html(dataPackage.package.message);
+    if (dataPackage.package.success) {
+        $('#access-table').removeClass('hidden').addClass('show');
 
-                oBody.append(newRow.join()).find('tr').last().on( "click", profileTablesRequester);
-                counter = index + 1;
-            }
-    );
+        oBody.empty();
 
-    if (!dataPackage.package.success) {
-        msg = dataPackage.package.message;
+        $.each(vList, function(index, row) {
+                    newRow = [];
+                    newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
+                    newRow.push('<td>' + row.description  + '</td>');
+                    newRow.push('<td>' + row.content_type  + '</td>');
+                    newRow.push('<td>' + row.topic_type  + '</td>');
+                    newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+                    newRow.push('</tr>');
+
+                    oBody.append(newRow.join()).find('tr').last().on( "click", profileTablesRequester);
+                    counter = index + 1;
+                }
+        );
+    } else {
+        oBody.empty();
         $('#access-table').removeClass('show').addClass('hidden');
         $('#accessible-table').removeClass('show').addClass('hidden');
         $('#accessible-table tbody').empty();
-    } else {
-        $('#access-table').removeClass('hidden').addClass('show');
     }
-    tTitle.html(msg);
 
     consoleLog('replaceAccessTableRows(rowsAdded=' + counter + ')');
     return false;

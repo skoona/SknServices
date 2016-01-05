@@ -73,7 +73,7 @@
                     <hr />
                     <h3>Access Profile</h3>
                     <ol>
-                        <% current_user.access_profile.try(:each) do |item| -%>
+                        <% current_user.access_roles_all.try(:each) do |item| -%>
                             <li><%= item %></li>
                         <% end -%>
                     </ol>

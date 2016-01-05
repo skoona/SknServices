@@ -37,7 +37,7 @@ RSpec.describe Secure::UserProfile, 'Contains the users presence.' do
 
   context "Handles Instance methods from included module." do
     it '#method access_profile returns expected object.' do
-      expect( Secure::UserProfile.new(user).access_profile ).to be_a_kind_of(Array)
+      expect( Secure::UserProfile.new(user).access_roles_all ).to be_a_kind_of(Array)
     end
   end
 

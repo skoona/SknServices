@@ -42,10 +42,10 @@
                 </li>
                 <% if current_user_has_access?('#Demonstration') %>
                     <% if current_user_has_access?('profiles/access_profile_demo') %>
-                        <%= nav_link_icon("glyphicon-eye-open", "AccessProfile Demo", access_profile_demo_profiles_path) %>
+                        <%= nav_link_icon("glyphicon-eye-open", "AccessProfile", access_profile_demo_profiles_path) %>
                     <% end %>
                     <% if current_user_has_access?('profiles/content_profile_demo') %>
-                        <%= nav_link_icon("glyphicon-eye-open", "ContentProfile Demo", content_profile_demo_profiles_path) %>
+                        <%= nav_link_icon("glyphicon-eye-open", "ContentProfile", content_profile_demo_profiles_path) %>
                     <% end %>
                 <% end %>
             <% end %>

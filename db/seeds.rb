@@ -20,7 +20,7 @@ begin
       email:                 "appdev@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["Manager"],
+      user_options:            ["Manager", "0034", "0037", "0040"],
       assigned_groups:             ["EmployeePrimary"],
       assigned_roles:          ["Services.Action.Admin"]
   },
@@ -30,9 +30,12 @@ begin
       email:                 "appdev1@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["EmployeeSecondary"],
+      user_options:            ["EmployeeSecondary", "0037"],
       assigned_groups:             ["EmployeeSecondary"],
-      assigned_roles:          ["Services.Action.Admin"]
+      assigned_roles:          ["Services.Action.Admin",
+                                "Test.Agency.Commission.Experience.PDF.Access",
+                                "Test.Agency.Commission.Statement.PDF.Access",
+                                "Test.Agency.Commission.Statement.CSV.Access"]
 
   },
   {
@@ -43,7 +46,9 @@ begin
       password_confirmation:   "nobugs",
       user_options:            ["AgencyPrimary", "0034", "0037", "0040"],
       assigned_groups:             ["AgencyPrimary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
+      assigned_roles:          ["Services.Action.ResetPassword",
+                                "Test.Agency.Commission.Experience.PDF.Access",
+                                "Test.Agency.Commission.Statement.PDF.Access"]
   },
   {
       username:              "astester",

@@ -226,7 +226,7 @@
     <resource secured="true" content="true">
         <uri>Commission/Agency/PDF</uri>
         <description>Agency Commission Statements</description>
-        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <userdata>"doctype:954"</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.PDF.Access</authorizedRole>
@@ -237,7 +237,7 @@
     <resource secured="true" content="true">
         <uri>Commission/Agency/CSV</uri>
         <description>Agency Commission CSV Datafiles</description>
-        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <userdata>"doctype:955"</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.CSV.Access</authorizedRole>
@@ -248,7 +248,7 @@
     <resource secured="true" content="true">
         <uri>Experience/Agency/PDF</uri>
         <description>Agency Experience Statements</description>
-        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <userdata>"doctype:956"</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Experience.PDF.Access</authorizedRole>
