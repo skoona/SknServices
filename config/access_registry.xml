@@ -93,7 +93,7 @@
     <resource secured="false"> 
         <uri>anyString</uri>
         <description>Any String can be a URI.</description>
-        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <userdata>"foldertype:27637844|doctype:955"</userdata>
     </resource>
 
     UserData Required format/syntax is:
@@ -400,7 +400,7 @@
         <description>About</description>
     </resource>
     <resource secured="false">
-        <uri>pages/model_details</uri>
+        <uri>pages/details_model</uri>
         <description>Information Model Details</description>
     </resource>
     <resource secured="false">

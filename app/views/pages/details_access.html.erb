@@ -1,270 +1,280 @@
 <% provide(:title, accessed_page_name) %>
 
+<article class="container">
+
+    <header class="page-header">
+        <h1><%= accessed_page_name %></h1>
+        <%= image_tag("AccessProfile-ContentProfile.png", alt: "ContentProfile", class: "large-image") %>
+    </header>
+
+    <div class="row">
+        <h3>Access Registry Component</h3>
+        <p>
+            Along with class Secure::AccessRegistry and module AccessControl, this file describes those
+            application resources that should be both secured and un-secured. This file is pre-processed
+            by the class Secure::AccessRegistryUtility to enable the Access Authorization capability.
+        </p>
+        <p>Generally every resource in your application would establish an entry in the access registry xml file.
+            That entry would be composed of the resource-uri&lt;---&gt;permission rolename.  This association is fixed
+            at compile time.  Typically three general types of URIs will be defined.
+        </p>
+        <dl class="dl-horizontal">
+            <dt>Page Entry</dt>
+            <dd>
+                Composed of URI: &lt;controller_name&gt;/&lt;action_action&gt;, example: "pages/home"
+            </dd>
+            <dt>Clickable Entry</dt>
+            <dd>
+                Composed of URI: &lt;any.string&gt; you choose to represent a click-able resource.
+                For a task link on a accounts page visually labeled 'Print' you might define
+                URI='tasklink-accounts-print'. Use that URI to represent exclusively this
+                click-able resource in your application.  The value might even work as the html id
+                of the element.
+            </dd>
+            <dt>Resource Entry</dt>
+            <dd>
+                A URI composed to represent access to a internal program action.  Actions like
+                access a directory of uploaded files, retrieval of sensitive documents, or certain
+                administrative action not represented on a page.
+            </dd>
+       </dl>
+        <p>
+            Page Entries are automatically validated by a security filter provided to the ApplicationController
+            as a part of the ControllerAccessProfile::#login_required() functionality.  If the user does not have
+            a matching role for the current controller_name/action_name then they are redirected to the home page and given
+            a 'not authorized' warning; otherwise they pass through to the desired page.
+        </p>
+        <p>
+            Clickable Entries are coded/implemented by you.  You decide on an URI syntax to composed a uri and then you
+            use that name to verify access to a particular clickable before making it visible or allowing the user
+            to take that action.  The User model includes a method called 'has_access?(uri, options)' which returns
+            true if the user's permissions/roles are included in the URI's access list; otherwise false is returned. An
+            example syntax might be "&lt;Context&gt;.&lt;PageName&gt;.&lt;ActionName&gt;" or "&lt;Context&gt;.&lt;ProcessName&gt;.&lt;ActionName&gt;"; where
+            an example uri from the latter would be "User.PasswordReset.RequestReset", or "Client.FileUpload.Upload".
+            Basically, your trying to authorize that a user "Can do a thing or action, and must give that action a uri!"
+        </p>
+        <p>
+            Resource Entries ...
+        </p>
+        <p>
+            Authorization is accomplished by first declaring URIs for all Pages, then all Resources that need to be secured.
+            URI's are plain text strings which contain the label of the thing to be secured.  On the surrounding &lt;resource&gt;
+            statement is a 'secured' attribute which indicates if this resource record is secure or not.  If its not, the
+            record is considered documentation and will always return true to the #has_access?() api.
+        </p>
+        <p>
+            Should a #has_access? request be made with a uri not recorded in the access registry, the default return is TRUE.
+            Effectively granting access to any undocumented resource.
+        </p>
+        <p>
+            Second, each entry is evaluated using the semantics of CRUD.  CREATE, READ, UPDATE, DELETE permissions
+            each contain a list of authorized roles which a user MUST match one in order to be considered as having
+            permission.  The user object is expected to have an array list of authorization 'roles' which was granted
+            them by some administrator.  Permission entries are considered and created at application design time
+            and represent the application's clickable capabilities, or pages and task links.
+        </p>
+        <p>
+            Each authorized role in a permission statement may have one additional attribute named options.  An options
+            attribute is composed of a string with one or more comma separated values; ex. options="OWNER,SCHEDULER,MANAGER".
+            These entries if present must be matched by user's provided option value and the correct role, for the users
+            authorization request to be granted.  Having the correct authorized role and the wrong or missing option, will
+            cause the request to be denied.  If an authorized role is defined with options present, it must be matched.
+            The possibility of a authorization request occurring against a authorized role that was not defined with the
+            optional options attribute will simply be ignored; i.e. no attempt will be made to evaluate an options attribute
+            that does not exist.
+        </p>
+
+        <p>
+            In summary, if every application page and clickable action is predefined in this registry and the
+            #has_[access|create|read|update|delete]? api's are used to check access; the application can secure and
+            easily administer its core capabilities.
+        </p>
+
+        <p>
+            "Services.Action.Developer" has been implemented to bypass every defined resource.  Please be careful who
+            you assign it too.
+        </p>
+
+        <hr />
+        <h3>-*-*-*-   config/access_registry.xml  -*-*-*-</h3>
+        <dl class="dl-horizontal">
+            <dt>GLOBAL Resources</dt><dd>Unsecured (login, logout, etc.)</dd>
+            <dt>GLOBAL Pages</dt><dd>Unsecured (home )</dd>
+            <dt>Task Links</dt><dd>Secured Navigation Links.  (Create Account, Admin, etc.)</dd>
+            <dt>Menu Pages</dt><dd>All pages accessable from a menu</dd>
+            <dt>Dev Resources</dt><dd>Secured pages which show system activity or state</dd>
+            <dt>RSpec Test Template</dt><dd>Fixed template to allow testing of access profile design</dd>
+        </dl>
+
+    <pre>
+       * FULL RESOURCE SYNTAX **********************************************
+
+        &lt;resource secured="true|false"&gt;
+            &lt;uri&gt;anyString&lt;/uri&gt;
+            &lt;description&gt;&lt;/description&gt;
+            &lt;userdata&gt;formatted-string&lt;/userdata&gt;
+            &lt;permission type="CREATE|READ|UPDATE|DELETE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole options="anyOption"&gt;security-role-name&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;security-user-group-name&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;All Authorized Users&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+        &lt;/resource&gt;
+
+       * A possible Content Access scheme could be:
+        &lt;resource secured="true" content="true"&gt;
+            &lt;uri&gt;Commission/Agency/PDF&lt;/uri&gt;          Todo: ContentType/TopicType/AssetType
+            &lt;description&gt;Agency Commission Statements&lt;/description&gt;
+            &lt;userdata&gt;content_value_opts&lt;/userdata&gt;'  Todo: keys to the content
+            &lt;permission type="READ"&gt;'
+              &lt;authorizedRoles&gt;         Todo: options contain comma-separated list of all agencies
+                &lt;authorizedRole options="0034,0037,0040"&gt;Agency.Commission.Access&lt;/authorizedRole&gt;
+              &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;'
+        &lt;/resource&gt;
+
+
+        * PARTIAL RESOURCE SYNTAX *******************************************
+
+        &lt;resource secured="false"&gt;
+            &lt;uri&gt;anyString&lt;/uri&gt;
+            &lt;description&gt;Any String can be a URI.&lt;/description&gt;
+            &lt;userdata&gt;formatted-string&lt;/userdata&gt;
+        &lt;/resource&gt;
+
+        UserData Required format/syntax is:
+           returns Array if value|value,...
+           returns Hash  if key:value|key:value|...
+           returns String if no format chars present
+           format chars: |:  # vertical-bar and semi-colon
+
+      </pre>
+
+      <pre class="pre-scrollable">
+        &lt;!--============== RSpec Test Data  ========== --&gt;
+        &lt;resource secured="false"&gt;
+            &lt;uri&gt;testing/public&lt;/uri&gt;
+            &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
+            &lt;userdata&gt;"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"&lt;/userdata&gt;
+        &lt;/resource&gt;
+        &lt;resource secured="false"&gt;
+            &lt;uri&gt;testing/public_array&lt;/uri&gt;
+            &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
+            &lt;userdata&gt;"drawerid|filetype|foldertype|doctype"&lt;/userdata&gt;
+        &lt;/resource&gt;
+        &lt;resource secured="false"&gt;
+            &lt;uri&gt;testing/public_string&lt;/uri&gt;
+            &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
+            &lt;userdata&gt;"value without vertical-basrs or semi-colons will return as string"&lt;/userdata&gt;
+        &lt;/resource&gt;
+
+        &lt;resource secured="true"&gt;
+            &lt;uri&gt;testing/userdata&lt;/uri&gt;
+            &lt;description&gt;Secured Content Description&lt;/description&gt;
+            &lt;userdata&gt;"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"&lt;/userdata&gt;
+            &lt;permission type="READ"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+        &lt;/resource&gt;
+
+        &lt;resource secured="true"&gt;
+            &lt;uri&gt;testing/role/progressive&lt;/uri&gt;
+            &lt;description&gt;Testing Resource Only: Progressive Capability&lt;/description&gt;
+            &lt;permission type="READ"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="UPDATE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="CREATE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="DELETE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Services.Action.Developer&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+        &lt;/resource&gt;
+
+        &lt;resource secured="true"&gt;
+            &lt;uri&gt;testing/role/absolutes&lt;/uri&gt;
+            &lt;description&gt;Testing Resource Only: Absolute Capability&lt;/description&gt;
+            &lt;permission type="READ"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="UPDATE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="CREATE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="DELETE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Services.Action.Developer&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+        &lt;/resource&gt;
+
+        &lt;resource secured="true"&gt;
+            &lt;uri&gt;testing/role/options&lt;/uri&gt;
+            &lt;description&gt;Testing Resource Only: Options Special Ownership Granting Capability&lt;/description&gt;
+            &lt;permission type="READ"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="UPDATE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole options="OBJECT-OWNER"&gt;Test.Action.Read&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="CREATE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole options="CLIENT-MANAGER"&gt;Test.Action.Read&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+            &lt;permission type="DELETE"&gt;
+                &lt;authorizedRoles&gt;
+                    &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;Services.Action.Developer&lt;/authorizedRole&gt;
+                &lt;/authorizedRoles&gt;
+            &lt;/permission&gt;
+        &lt;/resource&gt;
+      </pre>
+    </div>
+</article>
+
 <section class="container">
-    <div class="col-xs-1"></div>
-    <article class="col-xs-10">
-        <header class="page-header">
-            <h1><%= accessed_page_name %></h1>
-            <%= image_tag("AccessProfile-ContentProfile.png", alt: "ContentProfile", class: "large-image") %>
-        </header>
-
-        <section>
-            <h3>Access Registry Component</h3>
-            <p>
-                Along with class Secure::AccessRegistry and module AccessControl, this file describes those
-                application resources that should be both secured and un-secured. This file is pre-processed
-                by the class Secure::AccessRegistryUtility to enable the Access Authorization capability.
-            </p>
-            <p>Generally every resource in your application would establish an entry in the access registry xml file.
-                That entry would be composed of the resource-uri&lt;---&gt;permission rolename.  This association is fixed
-                at compile time.  Typically three general types of URIs will be defined.
-            </p>
-            <dl class="dl-horizontal">
-                <dt>Page Entry</dt>
-                <dd>
-                    Composed of URI: &lt;controller_name&gt;/&lt;action_action&gt;, example: "pages/home"
-                </dd>
-                <dt>Clickable Entry</dt>
-                <dd>
-                    Composed of URI: &lt;any.string&gt; you choose to represent a click-able resource.
-                    For a task link on a accounts page visually labeled 'Print' you might define
-                    URI='tasklink-accounts-print'. Use that URI to represent exclusively this
-                    click-able resource in your application.  The value might even work as the html id
-                    of the element.
-                </dd>
-                <dt>Resource Entry</dt>
-                <dd>
-                    A URI composed to represent access to a internal program action.  Actions like
-                    access a directory of uploaded files, retrieval of sensitive documents, or certain
-                    administrative action not represented on a page.
-                </dd>
-           </dl>
-            <p>
-                Page Entries are automatically validated by a security filter provided to the ApplicationController
-                as a part of the ControllerAccessProfile::#login_required() functionality.  If the user does not have
-                a matching role for the current controller_name/action_name then they are redirected to the home page and given
-                a 'not authorized' warning; otherwise they pass through to the desired page.
-            </p>
-            <p>
-                Clickable Entries are coded/implemented by you.  You decide on an URI syntax to composed a uri and then you
-                use that name to verify access to a particular clickable before making it visible or allowing the user
-                to take that action.  The User model includes a method called 'has_access?(uri, options)' which returns
-                true if the user's permissions/roles are included in the URI's access list; otherwise false is returned. An
-                example syntax might be "&lt;Context&gt;.&lt;PageName&gt;.&lt;ActionName&gt;" or "&lt;Context&gt;.&lt;ProcessName&gt;.&lt;ActionName&gt;"; where
-                an example uri from the latter would be "User.PasswordReset.RequestReset", or "Client.FileUpload.Upload".
-                Basically, your trying to authorize that a user "Can do a thing or action, and must give that action a uri!"
-            </p>
-            <p>
-                Resource Entries ...
-            </p>
-            <p>
-                Authorization is accomplished by first declaring URIs for all Pages, then all Resources that need to be secured.
-                URI's are plain text strings which contain the label of the thing to be secured.  On the surrounding &lt;resource&gt;
-                statement is a 'secured' attribute which indicates if this resource record is secure or not.  If its not, the
-                record is considered documentation and will always return true to the #has_access?() api.
-            </p>
-            <p>
-                Should a #has_access? request be made with a uri not recorded in the access registry, the default return is TRUE.
-                Effectively granting access to any undocumented resource.
-            </p>
-            <p>
-                Second, each entry is evaluated using the semantics of CRUD.  CREATE, READ, UPDATE, DELETE permissions
-                each contain a list of authorized roles which a user MUST match one in order to be considered as having
-                permission.  The user object is expected to have an array list of authorization 'roles' which was granted
-                them by some administrator.  Permission entries are considered and created at application design time
-                and represent the application's clickable capabilities, or pages and task links.
-            </p>
-            <p>
-                Each authorized role in a permission statement may have one additional attribute named options.  An options
-                attribute is composed of a string with one or more comma separated values; ex. options="OWNER,SCHEDULER,MANAGER".
-                These entries if present must be matched by user's provided option value and the correct role, for the users
-                authorization request to be granted.  Having the correct authorized role and the wrong or missing option, will
-                cause the request to be denied.  If an authorized role is defined with options present, it must be matched.
-                The possibility of a authorization request occurring against a authorized role that was not defined with the
-                optional options attribute will simply be ignored; i.e. no attempt will be made to evaluate an options attribute
-                that does not exist.
-            </p>
-
-            <p>
-                In summary, if every application page and clickable action is predefined in this registry and the
-                #has_[access|create|read|update|delete]? api's are used to check access; the application can secure and
-                easily administer its core capabilities.
-            </p>
-
-            <p>
-                "Services.Action.Developer" has been implemented to bypass every defined resource.  Please be careful who
-                you assign it too.
-            </p>
-            </section>
-
-            <section>
-            <hr />
-            <h3>-*-*-*-   config/access_registry.xml  -*-*-*-</h3>
-            <dl class="dl-horizontal">
-                <dt>GLOBAL Resources</dt><dd>Unsecured (login, logout, etc.)</dd>
-                <dt>GLOBAL Pages</dt><dd>Unsecured (home )</dd>
-                <dt>Task Links</dt><dd>Secured Navigation Links.  (Create Account, Admin, etc.)</dd>
-                <dt>Menu Pages</dt><dd>All pages accessable from a menu</dd>
-                <dt>Dev Resources</dt><dd>Secured pages which show system activity or state</dd>
-                <dt>RSpec Test Template</dt><dd>Fixed template to allow testing of access profile design</dd>
-            </dl>
-            <pre>
-                * FULL RESOURCE SYNTAX **********************************************
-
-                &lt;resource secured="true|false"&gt;
-                    &lt;uri&gt;anyString&lt;/uri&gt;
-                    &lt;description&gt;&lt;/description&gt;
-                    &lt;userdata&gt;formatted-string&lt;/userdata&gt;
-                    &lt;permission type="CREATE|READ|UPDATE|DELETE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole options="anyOption"&gt;security-role-name&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;security-user-group-name&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;All Authorized Users&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                &lt;/resource&gt;
-
-
-
-                * PARTIAL RESOURCE SYNTAX *******************************************
-
-                &lt;resource secured="false"&gt;
-                    &lt;uri&gt;anyString&lt;/uri&gt;
-                    &lt;description&gt;Any String can be a URI.&lt;/description&gt;
-                    &lt;userdata&gt;formatted-string&lt;/userdata&gt;
-                &lt;/resource&gt;
-
-                UserData Required format/syntax is:
-                   returns Array if value|value,...
-                   returns Hash  if key:value|key:value|...
-                   returns String if no format chars present
-                   format chars: |:  # vertical-bar and semi-colon
-
-            </pre>
-            <pre class="pre-scrollable">
-                &lt;!--============== RSpec Test Data  ========== --&gt;
-                &lt;resource secured="false"&gt;
-                    &lt;uri&gt;testing/public&lt;/uri&gt;
-                    &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
-                    &lt;userdata&gt;"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"&lt;/userdata&gt;
-                &lt;/resource&gt;
-                &lt;resource secured="false"&gt;
-                    &lt;uri&gt;testing/public_array&lt;/uri&gt;
-                    &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
-                    &lt;userdata&gt;"drawerid|filetype|foldertype|doctype"&lt;/userdata&gt;
-                &lt;/resource&gt;
-                &lt;resource secured="false"&gt;
-                    &lt;uri&gt;testing/public_string&lt;/uri&gt;
-                    &lt;description&gt;Unsecured or Public Resource.&lt;/description&gt;
-                    &lt;userdata&gt;"value without vertical-basrs or semi-colons will return as string"&lt;/userdata&gt;
-                &lt;/resource&gt;
-
-                &lt;resource secured="true"&gt;
-                    &lt;uri&gt;testing/userdata&lt;/uri&gt;
-                    &lt;description&gt;Secured Content Description&lt;/description&gt;
-                    &lt;userdata&gt;"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"&lt;/userdata&gt;
-                    &lt;permission type="READ"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                &lt;/resource&gt;
-
-                &lt;resource secured="true"&gt;
-                    &lt;uri&gt;testing/role/progressive&lt;/uri&gt;
-                    &lt;description&gt;Testing Resource Only: Progressive Capability&lt;/description&gt;
-                    &lt;permission type="READ"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="UPDATE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="CREATE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="DELETE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Services.Action.Developer&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                &lt;/resource&gt;
-
-                &lt;resource secured="true"&gt;
-                    &lt;uri&gt;testing/role/absolutes&lt;/uri&gt;
-                    &lt;description&gt;Testing Resource Only: Absolute Capability&lt;/description&gt;
-                    &lt;permission type="READ"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="UPDATE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="CREATE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="DELETE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Services.Action.Developer&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                &lt;/resource&gt;
-
-                &lt;resource secured="true"&gt;
-                    &lt;uri&gt;testing/role/options&lt;/uri&gt;
-                    &lt;description&gt;Testing Resource Only: Options Special Ownership Granting Capability&lt;/description&gt;
-                    &lt;permission type="READ"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Read&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="UPDATE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole options="OBJECT-OWNER"&gt;Test.Action.Read&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Update&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="CREATE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole options="CLIENT-MANAGER"&gt;Test.Action.Read&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Test.Action.Create&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                    &lt;permission type="DELETE"&gt;
-                        &lt;authorizedRoles&gt;
-                            &lt;authorizedRole&gt;Test.Action.Delete&lt;/authorizedRole&gt;
-                            &lt;authorizedRole&gt;Services.Action.Developer&lt;/authorizedRole&gt;
-                        &lt;/authorizedRoles&gt;
-                    &lt;/permission&gt;
-                &lt;/resource&gt;
-            </pre>
-        </section>
-        <%= link_to :back, class: "pull-right" do %>
+    <%= link_to :back, class: "pull-right" do %>
         <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
         Home
     <% end %>
-    </article>
-    <div class="col-xs-1"></div>
-
 </section>

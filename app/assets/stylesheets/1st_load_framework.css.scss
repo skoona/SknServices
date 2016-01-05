@@ -22,9 +22,9 @@ body > .container {
  }
 main {
   @extend .container-fluid;
-  padding-bottom: 80px;
+  padding-bottom: 40px;
   width: 100%;
-  margin-top: 120px; // accommodate the navbar
+  margin-top: 60px; // accommodate the navbar
   }
 section {
   @extend .row;

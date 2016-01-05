@@ -17,17 +17,6 @@ var logEnabled = <%= Rails.env.development? %>,
 }
 
 /**
- * Determines if a property with a specific value exists in object
- * @param obj    {object}
- * @param key    {property name}
- * @param value  {value to match}
- * @returns {boolean}
- */
-function hasValue(obj, key, value) {
-    return obj.hasOwnProperty(key) && obj[key] === value;
-}
-
-/**
  * Content/Access Profile Table Selection
  * - fire ajax to get data, using url on accessible-table tbody
  * - then update accessible-table rows

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= content_for?(:title) ? yield(:title) : "Skoona Services" %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Skoona Services" %>">
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Skoona Services Authentication and Authorization demo using rails 4." %>">
     <meta name="author" content="systems@skoona.net"/>
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
@@ -17,22 +17,14 @@
   </head>
 
   <body data-controller-name="<%= controller_name %>" data-controller-action="<%= action_name %>">  <%# Identifies each page so JS can act when wanted %>
+
       <main role="main">
        <%= render( 'layouts/navigation') %>
 
        <%= render 'layouts/messages' %>
 
-       <section>
-         <%= yield %>
-       </section>
-
-       <section class="container">
-         <%= debug(params) if Rails.env.development? %>
-       </section>
+       <%= yield %>
     </main>
 
-  <!--
-  -->
-  <%= render 'layouts/footer' %>
   </body>
 </html>

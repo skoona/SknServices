@@ -1,6 +1,6 @@
 <% provide(:title, accessed_page_name) %>
 
-<section class="container">
+<article class="container">
 
     <div class="jumbotron">
         <h1><%= accessed_page_name %></h1>
@@ -70,4 +70,14 @@
         </div>
     </div>
 
-</section>
+    <div class="row">
+        <p class="text-center">
+            More technical information on the components used and the engineering architecture of the app.<br/>
+            <%= link_to details_model_pages_path, class: "text-center" do %>
+                <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span>
+                Architectural Info
+            <% end %>
+        </p>
+    </div>
+
+</article>
