@@ -1,31 +1,71 @@
 <% provide(:title, accessed_page_name) %>
 
-<section class="container">
-    <div class="col-xs-1"></div>
-    <article class="col-xs-10">
-        <header class="page-header">
-            <h2><%= accessed_page_name %></h2>
-            <%= image_tag("AccessProfile-ContentProfile.png", alt: "ContentProfile", class: "large-image") %>
-        </header>
+<div class="container">
 
-        <hr />
-        <section>
+    <article>
+            <header class="page-header">
+                <h2><%= accessed_page_name %></h2>
+                <%= image_tag("SknService-Warden.jpg", alt: "ContentProfile", class: "huge-image") %>
+            </header>
             <p class="lead">
-                ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
-                engineering challenge to handle the dynamics of Electronic Delivery.  ContentProfiles deal with
-                specific content access privileges; which document, file, report, etc.
+                Authentication is involved in every http request.  In order to ensure every request
+                has been properly authenticated we use Warden to trap the request near the end of the Rack middleware pipeline.  Warden attempts to retrieve
+                the users authenticated instance from the current session if at all possible, and passes the request through to the application controller.
             </p>
-            <p>
-                UserProfiles and AccessProfiles have many different implementations available, and are well handled processes.  However,
-                ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
-                engineering challenge to handle the dynamics of Electronic Delivery.
-            </p>
-        </section>
-        <%= link_to :back, class: "pull-right" do %>
-            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-            Home
-        <% end %>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>UserProfile</h2>
+                <p>
+                    The Authentication process is primarily implemented via the UserProfile.  The UserProfile processing
+                    is aided by the ObjectStorageContainer which caches active user profiles. And includable modules for the top level
+                    ApplicationController and basic User classes; which provide access to warden to retrieve the current_user amoung other things.
+                </p>
+                <p>
+                    The application controller uses it's module to gain access to Warden.  Whenever it receives the next http
+                    request it checks to see if there is a current user value.  A byproduct of the authenticate?() check is to drive the
+                    authenticate strategies which will attempt to authenticate/login the user.  If the current user is still nil, the controller will redirect the session
+                    to sign-in page.  For valid users the controller passes them through to their original route.
+                </p>
+                <p>
+                    The basic User model has a module to interface it with the UserProfile, allowing the UserProfile
+                    to search for user objects, and extract the users person identification key; which should never,
+                    ever, ever change.  The UserProfile retains a reference the lower level user object until logout, preventing its garbage collection.
+                </p>
+                <p>
+                    Password reset via email is included in this application to round out its position as a fully featured starting point for your next Rails application.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h2>Warden</h2>
+                <p>
+                    The Warden Gem provides a small collection of critical services which take no action
+                    unless called upon.  In the case of public pages that's exactly what happens, warden
+                    is never call to check authentication.
+                </p>
+                <p>
+                    For secured pages warden works with the application controller to restore a cached
+                    user profile, or by using authentication strategies - authenticate the current user.
+                    The application controller checks to determine cache retrieval was successful and if not asks
+                    warden to authenticate.  Should authentication fail, the controller decides where
+                    to redirect the unauthenticated user; typically that's the Sign In page.
+                </p>
+                <p>
+                    When a user is authenticated, using one of several authentication strategies.  Warden calls
+                    the UserProfile to have that user added to the cache, and sets the current_user method for
+                    the controller. Likewise on logout, warden calls the UserProfile to have the current user
+                    removed from the cache, and clears the current_user method.
+                </p>
+                <p>
+                    Warden's authentication of a user is completed by calling class methods on the UserProfile.
+                    findCachedUser, findRememberedUSer, and findByUsernamePassword are in place to handle the
+                    four authentication paths available.  It is these strategies that could be expanded to allow sign-in via Google, Twitter, etc.
+                </p>
+            </div>
+        </div>
     </article>
-    <div class="col-xs-1"></div>
+    <%= link_to :back, class: "pull-right" do %>
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        Home
+    <% end %>
 
-</section>
+</div>

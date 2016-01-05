@@ -31,19 +31,19 @@ security:
   ! public_pages:
    - /signout
    - /signin
-   - /pages/home
-   - /pages/about
-   - /pages/learn_more
-   - /pages/details_model
-   - /pages/details_content
-   - /pages/details_access
-   - /pages/details_auth
+   - pages/home
+   - pages/about
+   - pages/learn_more
+   - pages/details_model
+   - pages/details_content
+   - pages/details_access
+   - pages/details_auth
    - /assests
    - /session
    - /sessions
-   - /sessions/new
-   - /sessions/create
-   - /sessions/unauthenticated
+   - sessions/new
+   - sessions/create
+   - sessions/unauthenticated
 
   ! user_options:
    - Manager

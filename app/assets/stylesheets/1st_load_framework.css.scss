@@ -63,6 +63,11 @@ img {
   margin: 0 auto;
   width: 74%;
   }
+.huge-image {
+  //  z-index: 60;
+  margin: 0 auto;
+  width: 90%;
+}
 // to make views framework-neutral
 .column {
   @extend .col-md-6;
