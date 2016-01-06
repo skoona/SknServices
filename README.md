@@ -137,7 +137,7 @@ evaluate these entries when accessing secured content.  Programmatic calls to th
 to include a user's list of assigned agencies (options) for validation of their access privileges. 
 
 
-###If the permission has options, at least one user options must match!  Along with the role of course.
+###If the permission has options, at least one user options must match!
 
 
 ```Ruby
@@ -182,8 +182,10 @@ end
 ```
 
     AccessControl API Examples: 
-      boolean_result = get_resource_content_entries(user_object.agencies)
-      hash_result    = get_resource_content_entry("Agency/Commission-STMT/0034", user_object.agencies)
+      hash_result = get_resource_content_entries(user_object.agencies)
+      hash_result = get_resource_content_entry("Agency/Commission-STMT/0034", user_object.agencies)
+      
+      hash_result has been standardized to be same as alternate method being proposed.
 
 
 ##ContentProfile (i.e. The preferred Approach )
