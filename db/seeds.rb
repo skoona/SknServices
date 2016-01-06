@@ -146,7 +146,8 @@ begin
   # requires: topic_type_id
   agency_tto = [
      {value: "0034", description: "Some Agency Number"},
-     {value: "1001", description: "Another Agency Number"}
+     {value: "1001", description: "Another Agency Number"},
+     {value: "0037", description: "More Agencies"}
   ]
   # requires: topic_type_id
   account_tto = [
