@@ -25,9 +25,9 @@ this application.
 * ContentProfiles deal with specific content access privileges; which document, etc.
     
 UserProfiles and AccessProfiles have many different implementations available, and are well handled processes. The [Java Access Controller](http://www.cs.ait.ac.th/~on/O/oreilly/java-ent/security/ch05_01.htm "Java Access Controller"), and related classes,
- were the original template for the AccessRegistry or AccessProfile capability; This now is an enhanced Ruby port of those capabilities. However,
+ were the original template for the AccessRegistry or AccessProfile capability; This now is an enhanced Ruby port of those permission capabilities. However,
 ContentProfiles are the main focus of exploration in this app, which has proven to be a significant 
-engineering challenge to handle the dynamics of Electronic Delivery.  
+engineering challenge needing to handle the dynamics of Electronic Delivery.  
 
 
 ##AccessProfile i.e (Secure::AccessRegistry)
@@ -59,6 +59,7 @@ who has access to each URI will need to be created.  Something like:
         </authorizedRoles>
     </permission>
 </resource>
+
 <resource secured="true">
     <uri>Agency/Commission-CSV/0034</uri>
     <description>Agency Commision Report in csv format from ImageRight</description>
@@ -69,6 +70,7 @@ who has access to each URI will need to be created.  Something like:
         </authorizedRoles>
     </permission>
 </resource>
+
 <resource secured="true">
     <uri>Agency/Experience-STMT/0034</uri>
     <description>Agency Experience Report in ImageRight</description>
@@ -82,17 +84,104 @@ who has access to each URI will need to be created.  Something like:
 
 ```
 
+
+    With a minor modification, listing all agencies in the Options, we can reduce the total number of records.
+
+
+```Xml
+
+<!--============== Content Access Adaptation  ========== -->
+
+<resource secured="true" content="true">
+    <uri>Commission/Agency/PDF</uri>
+    <description>Agency Commission Statements</description>
+    <userdata>"doctype:954"</userdata>
+    <permission type="READ">
+        <authorizedRoles>
+            <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.PDF.Access</authorizedRole>
+        </authorizedRoles>
+    </permission>
+</resource>
+
+<resource secured="true" content="true">
+    <uri>Commission/Agency/CSV</uri>
+    <description>Agency Commission CSV Datafiles</description>
+    <userdata>"doctype:955"</userdata>
+    <permission type="READ">
+        <authorizedRoles>
+            <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.CSV.Access</authorizedRole>
+        </authorizedRoles>
+    </permission>
+</resource>
+
+<resource secured="true" content="true">
+    <uri>Experience/Agency/PDF</uri>
+    <description>Agency Experience Statements</description>
+    <userdata>"doctype:956"</userdata>
+    <permission type="READ">
+        <authorizedRoles>
+            <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Experience.PDF.Access</authorizedRole>
+        </authorizedRoles>
+    </permission>
+</resource>
+
+```
+
+
 Each role would be assigned to one or more individuals via the normal assignment method, Domino in our case.  With the
-'ContentProfile.Access.Agency.Commission-RPT' role assigned to a user, and that user having agency '0034' in their 
+ role assigned to a user, and that user having agency '0034' in their 
 user profile options, they would be allowed to view/download commission reports for that agency, and all agency in their user profile.  
 
 Implementations of AccessProfile would be extended to 
 evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
 to include a user's list of assigned agencies (options) for validation of their access privileges. 
 
+    If the permission has options, at least one user options must match!  Along with the role of course.
+
+```Ruby
+
+def has_access? (resource_uri, options=nil)
+  rc = Secure::AccessRegistry.check_access_permissions?( access_roles_all, resource_uri, options)
+  Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+  rc
+end
+
+def has_create? (resource_uri, options=nil)
+  Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "CREATE", options)
+end
+
+def has_read? (resource_uri, options=nil)
+  Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "READ", options)
+end
+
+def has_update? (resource_uri, options=nil)
+  Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "UPDATE", options)
+end
+
+def has_delete? (resource_uri, options=nil)
+  Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "DELETE", options)
+end
+
+def get_resource_description(resource_uri)
+  Secure::AccessRegistry.get_resource_description(resource_uri)
+end
+def get_resource_userdata(resource_uri)
+  Secure::AccessRegistry.get_resource_userdata(resource_uri)
+end
+def get_resource_content_entries(opt=nil)
+  opts = opt || self[:user_options] || nil
+  Secure::AccessRegistry.get_resource_content_entries(self[:roles], opts)
+end
+def get_resource_content_entry(resource_uri, opt=nil)
+  opts = opt || self[:user_options] || nil
+  Secure::AccessRegistry.get_resource_content_entry(self[:roles], resource_uri,  opts)
+end
+
+```
+
     AccessControl API Examples: 
-      boolean_result = AccessProfile.has_access?(user.roles, "Agency/Commission-STMT/0034", user_object.agencies)
-      hash_result    = AccessProfile.get_userdata("Agency/Commission-STMT/0034")
+      boolean_result = get_resource_content_entries(user_object.agencies)
+      hash_result    = get_resource_content_entry("Agency/Commission-STMT/0034", user_object.agencies)
 
 
 ##ContentProfile (i.e. The preferred Approach )
@@ -121,69 +210,63 @@ This is where we begin.
 
 ```json
 
-{
+REQUEST:  { AccessProfile
+    "user_options":["Manager","0034","0037","0040"],
+    "topic_value":"PDF",
+    "content_value":{"doctype":"954"},
+    "content_type":"Commission",
+    "content_type_description":"Agency Commission Statements",
+    "topic_type":"Agency",
+    "topic_type_description":"Agency Commission Statements",
+    "description":"Agency Commission Statements",
+    "uri":"Commission/Agency/PDF",
+    "username":"skoona"
+    }
+    
+RESPONSE: {
+    "success":true,
+    "content":"access"
+    "message":"",
     "username":"skoona",
     "display_name":"Employee Primary User: Developer",
-    "package":{
-        "success":true,
-        "message":"",
-        "accessible_content_url":"/accessible_content?id=access",
-        "page_user":"skoona",
-        "access_profile":[
-            {"name":"Services.Action.Admin","description":"Super User","type":"EmployeePrimary"},
-            {"name":"Services.Action.Primary","description":"Super User","type":"EmployeePrimary"},
-            {"name":"Services.Action.Developer","description":"Developer","type":"EmployeePrimary"},
-            {"name":"Services.Action.ResetPassword","description":"Reset Forgotten Password via EMail","type":"EmployeePrimary"},
-            {"name":"Services.Action.Admin.ContentProfile","description":"Administer Authorization Content Profile","type":"EmployeePrimary"},
-            {"name":"Services.Action.Admin.UserAuthorizationGroups","description":"Administer Authorization Group","type":"EmployeePrimary"},
-            {"name":"Services.Action.Admin.UserRecords","description":"Administer User Records","type":"EmployeePrimary"},
-            {"name":"Services.Action.Developer","description":"Developer","type":"Assigned Role"},
-            {"name":"EmployeePrimary","description":"BMI Admin User","type":"Assigned Group"}
-                                   ]
-                        }
-}
+    "package":[
+        {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
+        {"source":"images","filename":"somePic.png","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
+        {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:18:57.881-05:00","size":"0"}
+              ]
+    }
 
 ```
 
-###Final Content Package on Users List
+###Final ContentProfile Package on Users List
 
 ```json
 
-{
+REQUEST: { 
+    "user_options":["Manager","0034","0037","0040"],
+    "topic_value":"Agency",
+    "content_value":["68601","68602","68603"],
+    "content_type":"Commission",
+    "content_type_description":"Monthly Commission Reports and Files",
+    "topic_type":"Agency",
+    "topic_type_description":"Agency Actions",
+    "description":"Determine which agency documents can be seen",
+    "username":"skoona"
+    }
+    
+RESPONSE: {
+    "content":"content"
+    "success":true,
+    "message":"",
     "username":"skoona",
     "display_name":"Employee Primary User: Developer",
-    "package":{
-        "success":true,
-        "message":"",
-        "accessible_content_url":"/accessible_content?id=content",
-        "page_user":"skoona",
-        "content_profile":{
-            "username":"skoona",
-            "display_name":"Employee Primary User: Developer",
-            "entries":[
-                { "description":"Determine which agency documents can be seen",
-                  "topic_value":"Agency",
-                  "content_value":[
-                                    "68601",
-                                    "68602",
-                                    "68603"
-                                  ],
-                  "content_type":"Commission",
-                  "content_type_description":"Monthly Commission Reports and Files",
-                  "topic_type":"Agency",
-                  "topic_type_description":"Agency Actions"
-                },
-                {"description":"Determine which accounts will have notification sent","topic_value":"Account","content_value":["AdvCancel","FutCancel","Cancel"],"content_type":"Notification","content_type_description":"Email Notification of Related Events","topic_type":"Account","topic_type_description":"Account Actions"},
-                {"description":"Determine which States agent may operate in.","topic_value":"LicensedStates","content_value":["21","9","23"],"content_type":"Operations","content_type_description":"Business Operational Metric","topic_type":"LicensedStates","topic_type_description":"Agent Actions"}
-                                ],
-            "pak":"eafbf74d395cd68e1b5743bad33a82b4",
-            "profile_type":"EmployeePrimary",
-            "profile_type_description":"BMI Admin User",
-            "provider":"BCrypt",
-            "email":"skoona@gmail.com"
-                                    }
-                       }
-}
+    "package":[
+        {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
+        {"source":"images","filename":"somePic.png","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
+        {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:24:12.066-05:00","size":"0"}
+              ]
+    }
+
 
 ```
 

@@ -5,9 +5,32 @@ class ProfilesController < ApplicationController
 
   def access_profile_demo
     @page_controls = access_profile_service.handle_demo_page(params)
+    if @page_controls.success
+      if json_request?
+        results = @page_controls.to_hash
+        render json: results, status: :accepted, layout: false, content_type: :json and return
+      end
+    else
+      if json_request?
+        results = @page_controls.to_hash
+        render json: results, status: :conflict, layout: false, content_type: :json and return
+      end
+    end
   end
+
   def content_profile_demo
     @page_controls = content_profile_service.handle_demo_page(params)
+    if @page_controls.success
+      if json_request?
+        results = @page_controls.to_hash
+        render json: results, status: :accepted, layout: false, content_type: :json and return
+      end
+    else
+      if json_request?
+        results = @page_controls.to_hash
+        render json: results, status: :conflict, layout: false, content_type: :json and return
+      end
+    end
   end
 
   # json api, requires :username and access: [:access, :content]

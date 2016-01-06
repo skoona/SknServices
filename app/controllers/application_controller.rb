@@ -23,6 +23,10 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def json_request?
+    request.format.json?
+  end
+
   # Force signout to prevent CSRF attacks
   def handle_unverified_request
     logout()
