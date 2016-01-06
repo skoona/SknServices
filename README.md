@@ -44,8 +44,10 @@ the ContentProfile.  It would do this by creating an entry for each content type
 * 'Agency/Commission-CSV/1003'
 * 'Agency/Experience-STMT/1003'
     
-The above would need to be repeated for each agency, and content type. Security roles for administrating
+The syntax thinking is A/B/C.  Where A is the topic, B is the action, and C is the topic identifier. A <userdata> contains
+the identifiers for B action.  The would need to be coded and repeated for each agency, and content type. Security roles for administrating
 who has access to each URI will need to be created.  Something like:
+
 
 ```Xml
 
@@ -151,15 +153,12 @@ end
 def has_create? (resource_uri, options=nil)
   Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "CREATE", options)
 end
-
 def has_read? (resource_uri, options=nil)
   Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "READ", options)
 end
-
 def has_update? (resource_uri, options=nil)
   Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "UPDATE", options)
 end
-
 def has_delete? (resource_uri, options=nil)
   Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "DELETE", options)
 end
@@ -209,6 +208,48 @@ This is where we begin.
 
 ## ContentProfile Data Model Resulting Transactions
 ---
+
+###Final Access Package listing: One for each user is available in the API
+
+```json 
+
+{
+  "user_options":["Manager","0034","0037","0040"],
+  "username":"skoona",
+  "display_name":"Employee Primary User: Developer",
+  "package":{
+    "success":true,
+    "message":"AccessProfile Entries for skoona:Employee Primary User: Developer Options=Manager,0034,0037,0040",
+    "user_options":["Manager","0034","0037","0040"],
+    "accessible_content_url":"/profiles/accessible_content.json?id=access",
+    "page_user":"skoona",
+    "access_profile":{
+        "username":"skoona","entries":[
+           {"user_options":["Manager","0034","0037","0040"],
+            "topic_value":"PDF",
+            "content_value":{"doctype":"954"},
+            "content_type":"Commission",
+            "content_type_description":"Agency Commission Statements",
+            "topic_type":"Agency",
+            "topic_type_description":"Agency Commission Statements",
+            "description":"Agency Commission Statements",
+            "username":"skoona",
+            "uri":"Commission/Agency/PDF"
+           },
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"skoona","uri":"Commission/Agency/CSV"},
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"skoona","uri":"Experience/Agency/PDF"}
+                                     ],
+        "pak":null,
+        "profile_type":"",
+        "profile_type_description":"",
+        "provider":"UserProfile",
+        "display_name":"Employee Primary User: Developer",
+        "email":"skoona@gmail.com"
+    }
+  }
+}
+
+```
 
 ###Final Access Package on Users List
 

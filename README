@@ -161,3 +161,39 @@ content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) pr
 [jscott@iMac SknService]$
 
 
+Every User produces the following json object.
+{
+  "user_options":["Manager","0034","0037","0040"],
+  "username":"skoona",
+  "display_name":"Employee Primary User: Developer",
+  "package":{
+    "success":true,
+    "message":"AccessProfile Entries for skoona:Employee Primary User: Developer Options=Manager,0034,0037,0040",
+    "user_options":["Manager","0034","0037","0040"],
+    "accessible_content_url":"/profiles/accessible_content.json?id=access",
+    "page_user":"skoona",
+    "access_profile":{
+        "username":"skoona","entries":[
+           {"user_options":["Manager","0034","0037","0040"],
+            "topic_value":"PDF",
+            "content_value":{"doctype":"954"},
+            "content_type":"Commission",
+            "content_type_description":"Agency Commission Statements",
+            "topic_type":"Agency",
+            "topic_type_description":"Agency Commission Statements",
+            "description":"Agency Commission Statements",
+            "username":"skoona",
+            "uri":"Commission/Agency/PDF"
+           },
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"skoona","uri":"Commission/Agency/CSV"},
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"skoona","uri":"Experience/Agency/PDF"}
+                                     ],
+        "pak":null,
+        "profile_type":"",
+        "profile_type_description":"",
+        "provider":"UserProfile",
+        "display_name":"Employee Primary User: Developer",
+        "email":"skoona@gmail.com"
+    }
+  }
+}
