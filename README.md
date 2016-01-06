@@ -85,7 +85,7 @@ who has access to each URI will need to be created.  Something like:
 ```
 
 
-    With a minor modification, listing all agencies in the Options, we can reduce the total number of records.
+###With a minor modification, listing all agencies in the Options, we can reduce the total number of records.
 
 
 ```Xml
@@ -136,7 +136,9 @@ Implementations of AccessProfile would be extended to
 evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
 to include a user's list of assigned agencies (options) for validation of their access privileges. 
 
-    If the permission has options, at least one user options must match!  Along with the role of course.
+
+###If the permission has options, at least one user options must match!  Along with the role of course.
+
 
 ```Ruby
 
