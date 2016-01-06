@@ -240,7 +240,7 @@ end
 ##
 # A callback that runs if no user could be fetched, meaning there is now no user logged in.
 # - cleanup no-good cookies, and maybe session
-# - All atempts to auth have been tried (i.e. all valid stratgies)
+# - All attempts to auth have been tried (i.e. all valid strategies)
 #
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"

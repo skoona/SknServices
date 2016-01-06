@@ -14,5 +14,21 @@ class ContentType < ActiveRecord::Base
   has_and_belongs_to_many :content_type_opts, :join_table => :content_options
   has_one :content_profile_entry, inverse_of: :content_type
 
+  accepts_nested_attributes_for :content_type_opts, allow_destroy: false
+
   validates_presence_of :name, :description
+
+  def self.ct_options_selects
+    self.all.map do |cts|
+      [cts.name, cts.id, {data_description: cts.description}]
+    end
+  end
+
+  # options_for_select(ct_instance.options_selects, selected)   -- multi selections
+  def options_selects
+    content_type_opts.map do |opts|
+      [opts.value, opts.id, {data_description: opts.description}]
+    end
+  end
+
 end

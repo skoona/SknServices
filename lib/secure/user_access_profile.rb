@@ -16,6 +16,7 @@ module Secure
 
     module ClassMethods   # mostly called by Warden
 
+      # AccessProfile will call this
       def page_users(context='access')
         usrs = []
         self.where(active: true).find_each do |u|
@@ -27,6 +28,7 @@ module Secure
         []
       end
 
+      # AccessProfile will call this
       def page_user(uname, context='access')
         upp = nil
         value = self.find_by(username: uname)
@@ -39,6 +41,7 @@ module Secure
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
         nil
       end
+
       # find user in database
       def find_and_authenticate_user(uname, upass)
         upp = nil
@@ -137,7 +140,7 @@ module Secure
 
     def access_profile
       Utility::UserContentProfileBean.new({
-              entries:  Secure::AccessRegistry.get_resource_content_entries(roles, user_options) || [],
+              entries:  get_resource_content_entries() || [],
               pak: @person_authentication_key,
               profile_type: "",
               profile_type_description: "",
@@ -198,6 +201,14 @@ module Secure
     end
     def get_resource_userdata(resource_uri)
       Secure::AccessRegistry.get_resource_userdata(resource_uri)
+    end
+    def get_resource_content_entries(opt=nil)
+      opts = opt || self[:user_options] || nil
+      Secure::AccessRegistry.get_resource_content_entries(self[:roles], opts)
+    end
+    def get_resource_content_entry(resource_uri, opt=nil)
+      opts = opt || self[:user_options] || nil
+      Secure::AccessRegistry.get_resource_content_entry(self[:roles], resource_uri,  opts)
     end
 
     protected

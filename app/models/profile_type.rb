@@ -13,4 +13,11 @@ class ProfileType < ActiveRecord::Base
   has_one :content_profile
 
   validates_presence_of :name, :description
+
+  def self.pt_options_selects
+    self.all.map do |pts|
+      [pts.name, pts.id, {data_description: pts.description}]
+    end
+  end
+
 end

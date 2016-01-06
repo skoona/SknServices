@@ -401,7 +401,7 @@
     </resource>
     <resource secured="false">
         <uri>pages/details_model</uri>
-        <description>Information Model Details</description>
+        <description>Application Architectural Details</description>
     </resource>
     <resource secured="false">
         <uri>pages/learn_more</uri>

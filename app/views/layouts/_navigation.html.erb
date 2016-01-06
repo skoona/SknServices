@@ -60,7 +60,7 @@
             </li>
         </ul>
         <% if authenticated? %>
-            <p class="navbar-text pull-right">Signed in as
+            <p class="navbar-text navbar-right">Signed in as
                 <a href="<%= user_path(id: current_user.id) %>">
                 <span><i class="glyphicon glyphicon-user"></i>&nbsp;<small><%= current_user.name %></small></span></a>
             </p>

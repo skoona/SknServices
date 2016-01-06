@@ -55,7 +55,7 @@
         <div style="margin-left: 17px;">
             <div>
                 <% if authenticated? %>
-                    <p>Has Access to this page '/' = <%= current_user.has_access?("/") ? "True": "False" %></p>
+                    <p>Has Access to this page '/' = <%= current_user_has_access?("/") ? "True": "False" %></p>
                     <hr />
                     <h3>Assigned Groups</h3>
                     <ol>

@@ -2,7 +2,9 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :person_authentication_key %>
+    <% unless accessed_page.include?("edit") %>
+        <%= f.input :person_authentication_key %>
+    <% end %>
     <%= f.association :profile_type %>
     <%= f.input :authentication_provider %>
     <%= f.input :username %>

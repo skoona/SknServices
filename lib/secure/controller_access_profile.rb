@@ -29,24 +29,25 @@ module Secure
     extend ActiveSupport::Concern
 
     included do
-      send( :helper_method, [ :redirect_to_target_or_default,
+      send( :helper_method, [ :accessed_page,
                               :accessed_page_name,
-                              :accessed_page,
                               :current_user_has_access?,
                               :current_user_has_read?,
                               :current_user_has_create?,
                               :current_user_has_update?,
-                              :current_user_has_delete?
+                              :current_user_has_delete?,
+                              :redirect_to_target_or_default
                             ]
       ) if respond_to?(:helper_method)
     end
 
 
     def login_required
-      unless Secure::AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
+      public_page = Secure::AccessRegistry.security_check?(accessed_page) # TODO this is a bypass for non-secure pages, require tight AR
+      unless public_page
         unless authenticated?
           store_target_location
-          Rails.logger.debug("Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page.")
+          Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page. ControllerAccessProfile#login_required")
           flash_message(:alert, "You must sign in before accessing the '#{accessed_page_name}' page.  ControllerAccessProfile#login_required")
           redirect_to unauthenticated_sessions_url
         else
@@ -58,12 +59,12 @@ module Secure
         end
       else
         if flash.notice.present? and flash.notice.is_a?(Array)
-          flash.notice.flatten.delete_if {|f| f.include?("Please sign in to continue.") }
+          flash.notice.flatten.delete_if {|f| f.include?("Please sign in to continue") }
         else
-          flash.delete(:notice) if flash.notice.eql?("Please sign in to continue.") unless flash.notice.nil?
+          flash.delete(:notice) if flash.notice.include?("Please sign in to continue") unless flash.notice.nil?
         end
       end
-      Rails.logger.debug("Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
+      Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
     end
 
     def redirect_to_target_or_default(default, *args)
@@ -105,12 +106,7 @@ module Secure
       current_user.present? and current_user.has_delete?(uri, opts)
     end
 
-    #Fixup header helper methods, since we don't need all helpers
-    def has_access?(uri, options=nil)
-      current_user_has_access?(uri, opts)
-    end
-
-    private
+    protected
 
     def store_target_location
       session[:return_to] = request.original_url

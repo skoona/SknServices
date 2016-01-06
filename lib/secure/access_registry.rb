@@ -142,13 +142,15 @@ module Secure
             # Todo: role options may be needed too, content_profile_entry#entry_info
         }
       end
+      Rails.logger.info("#{self.class.name}.#{__method__}() opts=#{options}, #{results}") if Rails.logger.present?
       results
     end
     def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
+      results = {}
       if @@ar_permissions.key?(resource_uri) and check_access_permissions?(user_roles, resource_uri, options)
         content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
         bundle = @@ar_permissions[resource_uri]
-        {
+        results = {
             uri: resource_uri.to_s,
             content_type: content_type,
             content_value: bundle[:userdata],
@@ -160,9 +162,12 @@ module Secure
             # Todo: role options may be needed too, content_profile_entry#entry_info
         }
       else
-        {}
+        results = {}
       end
+      Rails.logger.info("#{self.class.name}.#{__method__}() #{resource_uri} opts=#{options}, #{results}") if Rails.logger.present?
+      results
     end
+
     def self.get_ar_resource_keys
       @@ar_permissions.keys
     end

@@ -56,6 +56,8 @@ bundle exec annotate --exclude tests,fixtures,factories,serializers
 ## Ajax Transaction
 
 ```
+Parameters: {"id"=>"content", "user_options"=>["AgencyPrimary", "0034", "0037", "0040"], "topic_value"=>"Agency", "content_value"=>["68601", "68602", "68603"], "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files", "topic_type"=>"Agency", "topic_type_description"=>"Agency Actions", "description"=>"Determine which agency documents can be seen", "username"=>"aptester"}
+
 REQUEST: { ContentProfile
     "user_options":["Manager","0034","0037","0040"],
     "topic_value":"Agency",
@@ -80,7 +82,7 @@ RESPONSE: {
               ]
     }
 
-
+Parameters: {"id"=>"access", "user_options"=>["AgencyPrimary", "0034", "0037", "0040"], "topic_value"=>"PDF", "content_value"=>{"doctype"=>"954"}, "content_type"=>"Commission", "content_type_description"=>"Agency Commission Statements", "topic_type"=>"Agency", "topic_type_description"=>"Agency Commission Statements", "description"=>"Agency Commission Statements", "uri"=>"Commission/Agency/PDF", "username"=>"aptester"}
 REQUEST:  { AccessProfile
     "user_options":["Manager","0034","0037","0040"],
     "topic_value":"PDF",

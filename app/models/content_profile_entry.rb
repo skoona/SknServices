@@ -20,7 +20,15 @@ class ContentProfileEntry < ActiveRecord::Base
 
   serialize :content_value, Array
 
+  accepts_nested_attributes_for :content_type, :topic_type, allow_destroy: false
+
   validates_presence_of :topic_value, :description
+
+  def self.cpe_options_selects
+    self.all.map do |cpes|
+      [cpes.description, cpes.id, {data_description: "#{cpes.content_type.name}:#{cpes.topic_type.name}"}]
+    end
+  end
 
   def content_type_name
     content_type.name
