@@ -249,9 +249,9 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
       Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
       Secure::AccessRegistry.security_check?(full_path)
 
-    unless bypass    # Controllers's login_required? will sort this out
+    unless bypass or (opts.key?(:event) ? (opts[:event] == :fetch) : false)   # Controllers's login_required? will sort this out
       auth.request.flash[:notice] = "Please sign in to continue. No user logged in!   Warden.after_fetch_failed"
-      auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
+      # auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
       # auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
     end
 

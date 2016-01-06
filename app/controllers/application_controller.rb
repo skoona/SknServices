@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery
 
-  before_action :login_required, :establish_domain_services
+  before_action :establish_domain_services, :login_required
 
   after_action  :manage_domain_services
 

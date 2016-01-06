@@ -140,8 +140,8 @@ module Secure
 
     def access_profile
       Utility::UserContentProfileBean.new({
-              entries:  get_resource_content_entries() || [],
-              pak: @person_authentication_key,
+              entries: get_resource_content_entries() || [],
+              pak: person_authenticated_key,
               profile_type: "",
               profile_type_description: "",
               provider: "UserProfile",

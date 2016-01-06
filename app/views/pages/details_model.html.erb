@@ -25,6 +25,111 @@
             <h2>[Business Process] DomainService</h2>
             <p>words.</p>
         </div>
+        <div class="col-md-12 well well-lg">
+            <h2>JSON APIs</h2>
+            <p>words.</p>
+            <pre class="pre-scrollable">
+                    Final Access Package listing: One for each user is available in the API
+                    GET: /profiles/content_profile_demo.json
+                    GET: /profiles/access_profile_demo.json
+
+    {
+      "user_options":["Manager","0034","0037","0040"],
+      "username":"skoona",
+      "display_name":"Employee Primary User: Developer",
+      "package":{
+        "success":true,
+        "message":"AccessProfile Entries for skoona:Employee Primary User: Developer Options=Manager,0034,0037,0040",
+        "user_options":["Manager","0034","0037","0040"],
+        "accessible_content_url":"/profiles/accessible_content.json?id=access",
+        "page_user":"skoona",
+        "access_profile":{
+            "username":"skoona","entries":[
+               {"user_options":["Manager","0034","0037","0040"],
+                "topic_value":"PDF",
+                "content_value":{"doctype":"954"},
+                "content_type":"Commission",
+                "content_type_description":"Agency Commission Statements",
+                "topic_type":"Agency",
+                "topic_type_description":"Agency Commission Statements",
+                "description":"Agency Commission Statements",
+                "username":"skoona",
+                "uri":"Commission/Agency/PDF"
+               },
+               {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"skoona","uri":"Commission/Agency/CSV"},
+               {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"skoona","uri":"Experience/Agency/PDF"}
+                                         ],
+            "pak":null,
+            "profile_type":"",
+            "profile_type_description":"",
+            "provider":"UserProfile",
+            "display_name":"Employee Primary User: Developer",
+            "email":"skoona@gmail.com"
+        }
+      }
+    }
+
+
+                    Final Access Package on Users List
+                    GET: /profiles/accessible_content.json?id=access
+
+    REQUEST:  {
+        "user_options":["Manager","0034","0037","0040"],
+        "topic_value":"PDF",
+        "content_value":{"doctype":"954"},
+        "content_type":"Commission",
+        "content_type_description":"Agency Commission Statements",
+        "topic_type":"Agency",
+        "topic_type_description":"Agency Commission Statements",
+        "description":"Agency Commission Statements",
+        "uri":"Commission/Agency/PDF",
+        "username":"skoona"
+        }
+
+    RESPONSE: {
+        "success":true,
+        "content":"access"
+        "message":"",
+        "username":"skoona",
+        "display_name":"Employee Primary User: Developer",
+        "package":[
+            {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
+            {"source":"images","filename":"somePic.png","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
+            {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:18:57.881-05:00","size":"0"}
+                  ]
+        }
+
+
+                    Final ContentProfile Package on Users List
+                    GET: /profiles/accessible_content.json?id=content
+
+    REQUEST: {
+        "user_options":["Manager","0034","0037","0040"],
+        "topic_value":"Agency",
+        "content_value":["68601","68602","68603"],
+        "content_type":"Commission",
+        "content_type_description":"Monthly Commission Reports and Files",
+        "topic_type":"Agency",
+        "topic_type_description":"Agency Actions",
+        "description":"Determine which agency documents can be seen",
+        "username":"skoona"
+        }
+
+    RESPONSE: {
+        "content":"content"
+        "success":true,
+        "message":"",
+        "username":"skoona",
+        "display_name":"Employee Primary User: Developer",
+        "package":[
+            {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
+            {"source":"images","filename":"somePic.png","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
+            {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:24:12.066-05:00","size":"0"}
+                  ]
+        }
+        </pre>
+
+        </div>
         <div class="col-md-6 well well-lg">
             <h2>ServiceFactory</h2>
             <p>words.</p>
