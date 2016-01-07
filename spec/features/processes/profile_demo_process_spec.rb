@@ -1,7 +1,7 @@
 # spec/features/profile/profile_demo_process_spec.rb
 #
 
-RSpec.feature "Profile Demo Process." do
+RSpec.feature "Profile Demo Process.", {js: true} do
 
   context "AccessProfile Demo. " do
 
@@ -17,9 +17,9 @@ RSpec.feature "Profile Demo Process." do
       visit access_profile_demo_profiles_url
       expect(current_path).to eq access_profile_demo_profiles_path
 
-      # expect(page).to have_css('#access-table tbody tr')
-      # find('#access-table tbody tr').click
-      # expect(page).to have_css('#accessible-table tbody tr.success')
+      expect(page).to have_css('table.profile tbody tr')
+      # find('table.profile tbody tr').click
+      # expect(page).to have_css('table.profile tbody tr.success')
 
       click_link 'Sign out'
     end

@@ -22,28 +22,39 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 
 require 'rspec/rails'
-require 'capybara/rspec'
-require 'capybara/rails'
-
-require 'capybara/mechanize'
-require 'capybara/poltergeist'
-require "rack_session_access/capybara"
-require 'database_cleaner'
-
 require 'spec_helper'
+
 require 'warden/test/helpers'
 require 'warden/test/warden_helpers'
 
+require 'capybara/rspec'
+require 'capybara/rails'
+require "rack_session_access/capybara"
+require 'capybara/mechanize'
+require 'capybara-screenshot/rspec'
+require 'capybara/poltergeist'
+require 'database_cleaner'
+
+# Do we want code coverage
+if "true".eql?(ENV['COVERAGE'])
+  require 'simplecov'
+  require 'code_coverage'
+end
+
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
-# RackSessionAccess config
-Rails.application.config do
-  config.middleware.use RackSessionAccess::Middleware
-end
+# Rack::Test Supports
+# def app
+#   Rails.application
+# end
+
+##
+# See config/initializers/warden.rb for RackTest middleware insertion before warden
+##
 
 # fixes: 'Missing host to link to! Please provide the :host parameter,
 #         set default_url_options[:host], or set :only_path to true'
-Rails.application.routes.default_url_options[:host] = 'www.example.com'
+Rails.application.routes.default_url_options[:host] = 'http://localhost'
 
 # Checks for pending migration and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -62,6 +73,7 @@ RSpec.configure do |config|
   config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
   config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
   config.include Warden::Test::ControllerHelpers, type: :controller
+  config.include FeatureHelpers, type: :feature       # logged_as(user) session injection for cucumber/capybara
 
 
   # Turn on FactoryGirl
@@ -72,9 +84,16 @@ RSpec.configure do |config|
     load Rails.root.join("db/seeds.rb")
   end
 
+  config.before(:each) do
+    Capybara.use_default_driver       # switch back to default driver
+    Capybara.default_host = 'http://localhost'
+  end
+
   config.after(:each) do
     Warden.test_reset!
+    Capybara.current_session.driver.reset!
   end
+
   def sign_in(user, opts=nil)
     warden.set_user(user,opts)
   end

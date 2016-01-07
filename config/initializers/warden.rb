@@ -112,6 +112,11 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
   end
 end
 
+# RackSessionAccess config
+if Rails.env.test?
+  Rails.application.config.middleware.insert_before RailsWarden::Manager, RackSessionAccess::Middleware
+end
+
 
 ##
 # Use the fields from the Signin page to authorize user
@@ -190,16 +195,36 @@ Warden::Manager.on_request do |proxy|
   # puts "===============[DEBUG]:or #{self.class}\##{__method__}"
   Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, original_fullpath=#{proxy.request.original_fullpath}, session.keys=#{proxy.raw_session.keys}"
   timeout_flag = false
+  bypass_flag = false
+  attempted_remember_flag = false
+
+  full_path = proxy.request.original_fullpath
+  bypass_flag = full_path.eql?("/") ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+      Secure::AccessRegistry.security_check?(full_path)
+
+  remembered = true
+  remembered = false if proxy.request.cookies["remember_token"].present?
 
   # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
   user_object = proxy.user()
-  if user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
-    proxy.logout()
-    proxy.request.flash[:alert] = ["Session Expired! Please Sign In To Continue.  Warden.on_request"]
+  if !bypass_flag && user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
     timeout_flag = true
   end
 
-  Rails.logger.debug " Warden::Manager.on_request(EXIT) timeout=#{timeout_flag}, userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
+  # see if we can restore a session using remember token
+  if (timeout_flag and remembered) or (!bypass_flag and !user_object.present? and remembered)
+    attempted_remember_flag = true
+    proxy.authenticate(:remember_token)
+    unless proxy.authenticated?
+      proxy.logout()
+      proxy.request.flash[:alert] = ["Session Expired! Please Sign In To Continue.  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
+    else
+      proxy.request.flash[:alert] = ["Session Expired! Restored by Remember Flag, Please continue!  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
+    end
+  end
+
+  Rails.logger.debug " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
 end
 
 ##
@@ -216,7 +241,7 @@ end
 Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   # puts "===============[DEBUG]:aa #{self.class}\##{__method__}"
   remember = false
-  remember = true if auth.request.params.key?("session") && "1".eql?(auth.request.params["session"]["remember_me_token"])
+  remember = user.remember_token.present?
 
   # setup user for session and object caching, and resolve authorization groups/roles
   user.enable_authentication_controls
@@ -252,7 +277,6 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
     unless bypass    # Controllers's login_required? will sort this out
       auth.request.flash[:notice] = "Please sign in to continue. No user logged in!   Warden.after_fetch_failed"
       auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
-      # auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
     end
 
   Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"

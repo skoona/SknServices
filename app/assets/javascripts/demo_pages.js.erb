@@ -210,35 +210,83 @@ $(function() {
 
     csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    $( "#users-table tbody tr" ).on( "click", function(ev) {
-        var dataPackage = $(this).data().package,
-            contentType = dataPackage.package.hasOwnProperty('access_profile');
+    /* Make all tables dataTables */
+    $('#users-table', 'table.profile', '#assessible-table').DataTable({
+        responsive: true,
+        autoWidth: true,
+        paging: no,
+        searchable: no,
+        select: {
+            style: 'single'
+        }
+    });
 
+    /* There two events are given information about the item selected in the form
+       of what item type it is (row, column or cell) and its data index (see row().index(),
+       column().index() and cell().index()).
+
+           e = jQuery event object
+          dt = DataTables API instance
+        type = Items being selected. This can be 'rows', 'columns' or 'cells'.
+     indexes = The DataTables' indexes of the selected items. This can be used
+               with the table selector methods (rows() for example). please
+               refer to row().index(),
+    */
+    $('#users-table').DataTable({
+
+    }).on( 'select', 'tbody tr', function ( e, dt, type, indexes ) {
+            /*
+              RowSelected Do something Here
+            */
+        var dataPackage = $(this).data().package,
+                contentType = dataPackage.package.hasOwnProperty('access_profile');
+
+        /*
+          Initialize Title on Accessible Content Table
+        */
         $('#accessible-table').closest('div').prev('div').find('h2.panel-title').
                 html('Accessible Content: <span class="label-info">select a ContentProfile Entry from above.</span>');
 
-        $('#accessible-table tbody').empty();
-        $('#accessible-table').removeClass('show').addClass('hidden');
+//        $('#accessible-table tbody').empty();
+//        $('#accessible-table').removeClass('show').addClass('hidden');
 
-        $("#users-table tbody tr").removeClass('info');
-        $(ev.currentTarget).addClass('info');
+//        $("#users-table tbody tr").removeClass('info');
+//        $(ev.currentTarget).addClass('info');
 
         if (contentType){
-          replaceAccessTableRows(dataPackage);
+            replaceAccessTableRows(dataPackage);
         } else {
-          replaceContentTableRows(dataPackage);
+            replaceContentTableRows(dataPackage);
         }
 
         consoleLog( dataPackage.username + " Selected."  + JSON.stringify(dataPackage));
     });
 
+    $('table.profile').DataTable({
+        columns: [
+            { data: 'description' },
+            { data: 'content_type' },
+            { data: 'topic_type' },
+            { data: JSON.stringify(content_value) }
+        ]
+    }).on( 'select', 'tbody tr', function ( e, dt, type, indexes ) {
+        var rowData = table.rows( indexes ).data().toArray();
+        /* RowSelected Do something Here */
+    });
+
+    $('#assessible-table').DataTable({
+
+    }).on( 'select', 'tbody tr', function ( e, dt, type, indexes ) {
+        var rowData = table.rows( indexes ).data().toArray();
+        /* RowSelected Do something Here */
+    });
+
+
+    $( "#users-table tbody tr" ).on( "click", function(ev) {
+    });
+
     /* choose first one to start things off */
     $('#users-table tbody tr').first().click();
-
-    $('#users-table', 'table.profile', '#assessible-table').DataTable({
-        responsive: true,
-        autoWidth: false
-    });
 
 //    $('.datatable').DataTable({
         // ajax: ...,
