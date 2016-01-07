@@ -130,8 +130,17 @@ module Secure
       @@ar_permissions.each_pair do |uri, bundle|
         next unless bundle[:content] and check_access_permissions?(user_roles, uri, options)
         content_type, topic_type, topic_opts = uri.to_s.split('/')
+
+        opts = [] # [ user role, options ]
+        user_roles.map do |user_role|
+          CRUD_MODES.map do |crud_mode|
+            opts << [user_role, bundle[crud_mode][user_role]] if has_options_ary?(user_role,uri,crud_mode)
+          end
+        end
+
         results << {
             uri: uri.to_s,
+            resource_options: opts,
             content_type: content_type,
             content_value: bundle[:userdata],
             topic_type: topic_type,
@@ -147,11 +156,20 @@ module Secure
     end
     def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
       results = {}
-      if @@ar_permissions.key?(resource_uri) and check_access_permissions?(user_roles, resource_uri, options)
+      if bundle[:content] and check_access_permissions?(user_roles, resource_uri, options)
         content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
         bundle = @@ar_permissions[resource_uri]
+        opts = [] # [ user role, options ]
+
+        user_roles.map do |user_role|
+          CRUD_MODES.map do |crud_mode|
+            opts << [user_role, bundle[crud_mode][user_role]] if has_options_ary?(user_role,resource_uri,crud_mode)
+          end
+        end
+
         results = {
             uri: resource_uri.to_s,
+            resource_options: opts,
             content_type: content_type,
             content_value: bundle[:userdata],
             topic_type: topic_type,
