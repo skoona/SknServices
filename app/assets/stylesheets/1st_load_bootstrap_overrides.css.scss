@@ -28,7 +28,7 @@ main {
   margin-top: 51px; // accommodate the navbar
   padding-left: 60px;
   padding-right: 60px;
-//  padding-bottom: 60px;
+  padding-bottom: 60px;
 
 }
 article {
@@ -38,12 +38,12 @@ article {
   padding-top: 0px;
   padding-left: 60px;
   padding-right: 60px;
-//  padding-bottom: 60px;
+  padding-bottom: 60px;
 }
 section {
   @extend .row;
   margin-top: 6px;
-//  overflow: auto;
+  overflow: auto;
 }
 
 /* Sticky footer styles

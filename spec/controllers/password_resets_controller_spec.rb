@@ -1,6 +1,6 @@
 # spec/controllers/password_resets_controller_spec.rb
 
-RSpec.describe PasswordResetsController do
+describe PasswordResetsController do
   let!(:user) {FactoryGirl.create(:user)}
   before :each do
     login_as(user, scope: :access_profile)

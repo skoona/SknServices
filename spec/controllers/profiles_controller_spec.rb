@@ -1,6 +1,6 @@
 # spec/controllers/profiles_controller_spec.rb
 
-RSpec.describe ProfilesController, "Verify the basic API is working." do
+describe ProfilesController, "Verify the basic API is working." do
   let!(:user) {Secure::UserProfile.page_user("eptester")}
   before :each do
     sign_in(user, scope: :access_profile)

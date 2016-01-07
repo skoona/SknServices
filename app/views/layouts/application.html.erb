@@ -28,7 +28,6 @@
   </head>
 
   <body data-controller-name="<%= controller_name %>" data-controller-action="<%= action_name %>">  <%# Identifies each page so JS can act when wanted %>
-
     <%= render( 'layouts/navigation') %>
 
     <main class="container" role="main">
@@ -41,9 +40,6 @@
         </section>
     </main>
 
-
-    <footer class="footer">
-      <p class="text-center">&copy; James Scott, Jr. 2015</p>
-    </footer>
+    <%= render( 'layouts/footer') %>
   </body>
 </html>
