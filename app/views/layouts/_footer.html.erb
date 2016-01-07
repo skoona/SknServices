@@ -2,12 +2,16 @@
     <div class="container">
         <% unless accessed_page.eql?('pages/home') %>
             <%= link_to home_pages_path, class: "pull-right" do %>
-                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                Home
+                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home<br/>
+                <span>&nbsp;&copy; 2015 Skoona Consulting</span>
             <% end %>
         <% end %>
 
-        <p class="text-center text"><br/><span>&nbsp;&copy; 2015 Skoona Consulting</span></p>
+        <%= link_to details_model_pages_path, class: "pull-left" do %>
+            <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span>Architectural Information<br/>
+            More technical information on the components used and the engineering architecture of the app.
+        <% end %>
     </div>
 </footer>
+
 

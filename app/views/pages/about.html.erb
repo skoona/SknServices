@@ -1,14 +1,13 @@
 <% content_for(:title, accessed_page_name) %>
 
 
-<article class="container">
-    <header class="page-header">
+<article>
+    <div class="jumbotron">
         <h2>About SknService</h2>
+        <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "huge-image") %>
+    </div>
 
-        <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "large-image") %>
-    </header>
-
-    <div class="row">
+    <section>
         <p class="lead">
             SknService application project exists to explore Authentication and Authorization services.
             With additional focus on content-based authorization using expanded UserProfile Permission properties.
@@ -71,12 +70,7 @@
             Secure::AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
             also could be administered via LDAP or SQL.
         </p>
-    </div>
+    </section>
+
 </article>
 
-<section class="container">
-<%= link_to :back, class: "pull-right" do %>
-    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-    Home
-<% end %>
-</section>

@@ -256,6 +256,17 @@
         </permission>
     </resource>
 
+    <resource secured="true" content="true">
+        <uri>Commission/Agency/99</uri>
+        <description>Test where RoleName has no Options</description>
+        <userdata>"doctype:956"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="">Test.Agency.Commission.Agency.PDF.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
 
 
     <!--============================================================================= -->

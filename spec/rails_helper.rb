@@ -26,6 +26,7 @@ require 'capybara/rspec'
 require 'capybara/rails'
 
 require 'capybara/mechanize'
+require 'capybara/poltergeist'
 require "rack_session_access/capybara"
 require 'database_cleaner'
 

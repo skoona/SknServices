@@ -1,45 +1,50 @@
+
+/*
+  *= require jquery-ui
+  *=require "dataTables/bootstrap/3/jquery.dataTables.bootstrap"
+  *=require dataTables/extras/dataTables.responsive
+*/
+
 // import the CSS framework
-
-
-//$navbar-default-bg: rgb(0, 21, 252);
-//$navbar-default-fg: rgb(255, 255, 255);
-
-
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
 
 /* my custom page
 -------------------------------------------------- */
 html {
   position: relative;
   min-height: 100%;
- }
+}
 body > .container {
   /* Padding for Navigation height */
-    padding-top: 60px;
+    padding-top: 10px;
   /* Margin bottom by footer height */
     margin-bottom: 60px;
- }
+}
 main {
   @extend .container-fluid;
-  padding-bottom: 40px;
   width: 100%;
-  margin-top: 60px; // accommodate the navbar
-  }
+  margin-top: 51px; // accommodate the navbar
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 60px;
+
+}
+article {
+  @extend .container;
+  margin-top: 0px;
+  margin-bottom: 60px;
+  padding-top: 0px;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 60px;
+}
 section {
   @extend .row;
   margin-top: 6px;
   overflow: auto;
- }
-textarea {
-  resize: vertical;
- }
-.center {
-  text-align: center;
- }
-.center h1 {
-  margin-bottom: 10px;
- }
+}
 
 /* Sticky footer styles
  -------------------------- */
@@ -49,45 +54,57 @@ textarea {
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 60px;
-  padding-top: 6px;
+  padding-top: 8px;
   background-color: #eee;
-  }
+}
+
+textarea {
+  resize: vertical;
+}
+.center {
+  text-align: center;
+}
+.center h1 {
+  margin-bottom: 10px;
+}
 
 
 /* make all images responsive by default */
 img {
   @extend .img-responsive;
   margin: 0 auto;
-  }
-.large-image {
-  //  z-index: 60;
-  margin: 0 auto;
-  width: 74%;
-  }
+}
+.brand-image {
+  margin: 1 1;
+  padding: 2 0;
+}
 .huge-image {
-  //  z-index: 60;
-  margin: 0 auto;
+  //    padding: 60px 60px;
   width: 90%;
 }
+.large-image {
+  width: 74%;
+}
+
 // to make views framework-neutral
 .column {
   @extend .col-md-6;
   @extend .text-center;
-  }
+}
 .form {
   @extend .col-md-offset-3;
   @extend .col-md-6;
-  }
+}
 .form-centered {
   @extend .col-md-offset-3;
   @extend .col-md-6;
   @extend .text-center;
-  }
+}
 .submit {
   @extend .btn;
   @extend .btn-primary;
   @extend .btn-lg;
-  }
+}
 
 /**
  * NavBar Choices
@@ -124,3 +141,4 @@ a:hover, .navbar-default .navbar-nav > .active > a:focus {
 .navbar-default .navbar-nav > li > a {
   color: white; /*Change active text color here*/
 }
+
