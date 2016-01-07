@@ -50,7 +50,9 @@ bundle exec annotate --exclude tests,fixtures,factories,serializers
 ```
 
 
+###Neat Thingys
 
+    my_hash.try(:[], 'key1').try(:[], 'key2').try(:[], 'key3')
 
 
 ## Ajax Transaction

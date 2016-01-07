@@ -7,13 +7,15 @@
         <%= image_tag("SknService-Warden.jpg", alt: "ContentProfile", class: "huge-image") %>
     </header>
 
-    <p class="lead">
-        Authentication is involved in every http request.  In order to ensure every request
-        has been properly authenticated we use Warden to trap the request near the end of the Rack middleware pipeline.  Warden attempts to retrieve
-        the users authenticated instance from the current session if at all possible, and passes the request through to the application controller.
-    </p>
+    <section>
+        <p class="lead">
+            Authentication is involved in every http request.  In order to ensure every request
+            has been properly authenticated we use Warden to trap the request near the end of the Rack middleware pipeline.  Warden attempts to retrieve
+            the users authenticated instance from the current session if at all possible, and passes the request through to the application controller.
+        </p>
+    </section>
 
-    <div class="row">
+    <section>
         <div class="col-md-6">
             <h2>UserProfile</h2>
             <p>
@@ -62,12 +64,5 @@
                 four authentication paths available.  It is these strategies that could be expanded to allow sign-in via Google, Twitter, etc.
             </p>
         </div>
-    </div>
+    </section>
 </article>
-
-<section class="container">
-    <%= link_to :back, class: "pull-right" do %>
-        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-        Home
-    <% end %>
-</section>

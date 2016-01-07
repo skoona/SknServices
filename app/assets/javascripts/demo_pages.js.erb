@@ -1,5 +1,9 @@
 /**
  * Created by jscott on 1/1/16.
+ * Refs: https://github.com/rweng/jquery-datatables-rails
+ *       http://api.jquery.com/jQuery.getJSON/
+ *       http://getbootstrap.com/components/#panels
+ *       http://datatables.net
  */
 
 
@@ -230,5 +234,28 @@ $(function() {
 
     /* choose first one to start things off */
     $('#users-table tbody tr').first().click();
+
+    $('#users-table', 'table.profile', '#assessible-table').DataTable({
+        responsive: true,
+        autoWidth: false
+    });
+
+//    $('.datatable').DataTable({
+        // ajax: ...,
+        // autoWidth: false,
+        // pagingType: 'full_numbers',
+        // processing: true,
+        // serverSide: true,
+
+        // Optional, if you want full pagination controls.
+        // Check dataTables documentation to learn more about available options.
+        // http://datatables.net/reference/option/pagingType
+//    });
+
+
+
+
+
+
 });
 

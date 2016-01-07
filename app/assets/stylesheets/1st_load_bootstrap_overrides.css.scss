@@ -1,0 +1,144 @@
+
+/*
+  *= require jquery-ui
+  *=require "dataTables/bootstrap/3/jquery.dataTables.bootstrap"
+  *=require dataTables/extras/dataTables.responsive
+*/
+
+// import the CSS framework
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+
+/* my custom page
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body > .container {
+  /* Padding for Navigation height */
+    padding-top: 10px;
+  /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+main {
+  @extend .container-fluid;
+  width: 100%;
+  margin-top: 51px; // accommodate the navbar
+  padding-left: 60px;
+  padding-right: 60px;
+//  padding-bottom: 60px;
+
+}
+article {
+  @extend .container;
+  margin-top: 0px;
+  margin-bottom: 60px;
+  padding-top: 0px;
+  padding-left: 60px;
+  padding-right: 60px;
+//  padding-bottom: 60px;
+}
+section {
+  @extend .row;
+  margin-top: 6px;
+//  overflow: auto;
+}
+
+/* Sticky footer styles
+ -------------------------- */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  padding-top: 8px;
+  background-color: #eee;
+}
+
+textarea {
+  resize: vertical;
+}
+.center {
+  text-align: center;
+}
+.center h1 {
+  margin-bottom: 10px;
+}
+
+
+/* make all images responsive by default */
+img {
+  @extend .img-responsive;
+  margin: 0 auto;
+}
+.brand-image {
+  margin: 1 1;
+  padding: 2 0;
+}
+.huge-image {
+  //    padding: 60px 60px;
+  width: 90%;
+}
+.large-image {
+  width: 74%;
+}
+
+// to make views framework-neutral
+.column {
+  @extend .col-md-6;
+  @extend .text-center;
+}
+.form {
+  @extend .col-md-offset-3;
+  @extend .col-md-6;
+}
+.form-centered {
+  @extend .col-md-offset-3;
+  @extend .col-md-6;
+  @extend .text-center;
+}
+.submit {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .btn-lg;
+}
+
+/**
+ * NavBar Choices
+ ***************************** */
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: #fffe86;  /*Sets the text hover color on navbar*/
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
+a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: white; /*BACKGROUND color for active*/
+  background-color: #030033;
+}
+
+.navbar-default {
+  background-color: #0f006f;
+  border-color: #030033;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #262626;
+  text-decoration: none;
+  background-color: #66CCFF;  /*change color of links in drop down here*/
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: silver; /*Change rollover cell color here*/
+}
+
+
+.navbar-default .navbar-nav > li > a {
+  color: white; /*Change active text color here*/
+}
+

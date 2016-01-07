@@ -1,18 +1,19 @@
 <% provide(:title, accessed_page_name) %>
 
-<article class="container">
+<article class="container" xmlns="http://www.w3.org/1999/html">
 
     <header class="page-header">
         <h2><%= accessed_page_name %></h2>
-
         <%= image_tag("sknService-CoreComponents.jpg", alt: "Main Path", class: "huge-image") %>
     </header>
 
-    <p class="lead">
-        Overall design guidance.
-    </p>
+    <section>
+        <p class="lead">
+            Design guidance.
+        </p>
+    </section>
 
-    <div class="row">
+    <section>
         <div class="col-md-6 well well-lg">
             <h2>AccessProfileService</h2>
             <p>words.</p>
@@ -53,17 +54,10 @@
             <h2>RSpec Testing</h2>
             <p>words.</p>
         </div>
-    </div>
+    </section>
 
-    <div class="row">
+    </section class="well">
         <h2>Application Data Model</h2>
         <%= image_tag("sknService-DataModel.png", alt: "Main Path", class: "huge-image") %>
-    </div>
+    </section>
 </article>
-
-<section class="container">
-    <%= link_to :back, class: "pull-right" do %>
-        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
-        Back
-    <% end %>
-</section>

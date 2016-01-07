@@ -31,19 +31,19 @@
 
     <%= render( 'layouts/navigation') %>
 
-    <div class="container" role="main">
-        <div class="row">
+    <main class="container" role="main">
+        <section>
             <%= render 'layouts/messages' %>
-        </div>
+        </section>
 
-        <div class="row">
+        <section>
             <%= yield %>
-        </div>
-    </div>
+        </section>
+    </main>
 
 
-    <footer>
-      <p>&copy; James Scott, Jr. 2015</p>
+    <footer class="footer">
+      <p class="text-center">&copy; James Scott, Jr. 2015</p>
     </footer>
   </body>
 </html>

@@ -128,42 +128,24 @@ module Secure
     def self.get_resource_content_entries(user_roles, options=nil)
       results = []
       @@ar_permissions.each_pair do |uri, bundle|
-        next unless bundle[:content] and check_access_permissions?(user_roles, uri, options)
-        content_type, topic_type, topic_opts = uri.to_s.split('/')
-
-        opts = [] # [ user role, options ]
-        user_roles.map do |user_role|
-          CRUD_MODES.map do |crud_mode|
-            opts << [user_role, bundle[crud_mode][user_role]] if has_options_ary?(user_role,uri,crud_mode)
-          end
-        end
-
-        results << {
-            uri: uri.to_s,
-            resource_options: opts,
-            content_type: content_type,
-            content_value: bundle[:userdata],
-            topic_type: topic_type,
-            topic_value: topic_opts,
-            description: bundle[:description],
-            topic_type_description: bundle[:description],
-            content_type_description: bundle[:description]
-            # Todo: role options may be needed too, content_profile_entry#entry_info
-        }
+        next unless bundle[:content]
+        result = get_resource_content_entry(user_roles, uri, options)
+        results << result unless result.empty?
       end
       Rails.logger.info("#{self.class.name}.#{__method__}() opts=#{options}, #{results}") if Rails.logger.present?
       results
     end
     def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
+      bundle = @@ar_permissions[resource_uri]
       results = {}
-      if bundle[:content] and check_access_permissions?(user_roles, resource_uri, options)
+      if check_access_permissions?(user_roles, resource_uri, options) and bundle.present? and bundle[:content]
         content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
-        bundle = @@ar_permissions[resource_uri]
-        opts = [] # [ user role, options ]
 
+        opts = {}
         user_roles.map do |user_role|
           CRUD_MODES.map do |crud_mode|
-            opts << [user_role, bundle[crud_mode][user_role]] if has_options_ary?(user_role,resource_uri,crud_mode)
+            next unless bundle.key?(crud_mode)
+            opts.merge!({uri: resource_uri, role: user_role, role_opts: bundle[crud_mode][user_role]}) if has_options_ary?(user_role,resource_uri,crud_mode)
           end
         end
 
@@ -182,7 +164,7 @@ module Secure
       else
         results = {}
       end
-      Rails.logger.info("#{self.class.name}.#{__method__}() #{resource_uri} opts=#{options}, #{results}") if Rails.logger.present?
+      Rails.logger.info("#{self.name}.#{__method__}() #{resource_uri} opts=#{options}, #{results} ++ bundle=#{bundle}") if Rails.logger.present?
       results
     end
 
@@ -208,7 +190,7 @@ module Secure
             #puts "\tCHECK_ROLE_PERMISSIONS?(#{user_role}->#{crud_mode}) returned=#{result}"
             next unless result
             opts    = has_options_ary?(user_role,resource_uri,crud_mode)
-            result  = role_in_resource_crud_with_option?(user_role,resource_uri,crud_mode,options) if result and opts
+            result  = role_in_resource_crud_with_option?(user_role,resource_uri,crud_mode,options) if opts
             #puts "\t\tCHECK_ROLE_PERMISSIONS?(#{crud_mode}) returned=#{result}"
             throw :found, true if result
           end # end user roles
@@ -216,7 +198,7 @@ module Secure
         end # end catch
       else
         # TODO: Enable logging of all unregistered
-        Rails.logger.info("#{self.class.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
+        Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
         result = false
       end
 
@@ -270,7 +252,10 @@ module Secure
     protected
 
     def self.has_options_ary?(role_name, resource_uri, crud_mode="READ")
-      !@@ar_permissions[resource_uri][crud_mode][role_name].empty?
+      !(@@ar_permissions.key?(resource_uri) and
+          @@ar_permissions[resource_uri].key?(crud_mode) and
+            (@@ar_permissions[resource_uri][crud_mode].key?(role_name) ?
+                  @@ar_permissions[resource_uri][crud_mode][role_name].empty? : true))
     end
 
     def self.role_in_resource_crud?(role_name, resource_uri, crud_mode)
