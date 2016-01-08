@@ -1,7 +1,7 @@
 # spec/features/authentication_process_spec.rb
 #
 
-feature "Authentication process for all users." do
+feature "Authentication process for all users.", js: true do
 
 
   context "Users " do
@@ -71,9 +71,9 @@ feature "Authentication process for all users." do
       click_button 'Sign in'
 
       expect(current_path).to eq users_path
-      # click_link 'Sign out'
-      # expect(current_url).to eq home_pages_url
-      # expect(page).to have_notice_message("You have been signed out")
+      click_link 'Sign out'
+      expect(current_url).to eq home_pages_url
+      expect(page).to have_notice_message("You have been signed out")
     end
   end
 
