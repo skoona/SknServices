@@ -29,11 +29,7 @@ security:
   remembered_for:  <%= -> { 12.hours.from_now } %>
   verify_login_after_msecs: 28800000   # 8 hours
   ! public_pages: # no easily stored in the xml, because of leading slash
-   - /signout
-   - /signin
    - /assets
-   - /rails/info/routes
-   - /rails/info/properties
 
   ! user_options:
    - Manager

@@ -9,7 +9,7 @@ module Secure
     include Secure::UserContentProfile
     include Secure::UserAccessProfile
 
-    attr_accessor :id, :person_authenticated_key, :last_access
+    attr_accessor :id, :person_authenticated_key, :last_access, :test_pwd
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
     class << self
@@ -24,6 +24,7 @@ module Secure
       @person_authenticated_key = user[:person_authenticated_key]
       @id = @user_object.id
       @last_access = Time.now
+      @test_pwd = user.password_digest
     end
 
     def active?

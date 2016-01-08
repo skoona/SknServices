@@ -1,17 +1,15 @@
-
 /*
-  *= require jquery-ui
-  *= require jquery.dataTables.css.erb
-  *= require dataTables.bootstrap
+ *= require jquery-ui
+ *= require jquery.dataTables.css.erb
+ *= require dataTables.bootstrap
 */
 
 // import the CSS framework
-
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
 /*
-
+ *
 */
 
 
@@ -80,8 +78,8 @@ img {
   margin: 0 auto;
 }
 .brand-image {
-  margin: 16 16;
-  padding: 16 16;
+  margin: 4 6;
+  padding: 4 6;
 }
 .huge-image {
   //    padding: 60px 60px;

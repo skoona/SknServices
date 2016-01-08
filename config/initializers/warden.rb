@@ -200,11 +200,12 @@ Warden::Manager.on_request do |proxy|
   attempted_remember_flag = false
   user_object = proxy.user()
   full_path = proxy.request.original_fullpath
-  uri = full_path[1..-1] if full_path[0].eql?('/') # remove leading /
+  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
 
   bypass_flag = full_path.eql?("/") ||
       Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
-      Secure::AccessRegistry.security_check?(uri)
+      Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
+      Secure::AccessRegistry.security_check?(uri)            #  'signin'
 
   remembered = proxy.request.cookies["remember_token"].present?
 
@@ -215,7 +216,7 @@ Warden::Manager.on_request do |proxy|
   end
 
   # see if we can restore a session using remember token
-  if (timeout_flag and remembered) or (!bypass_flag and !user_object.present? and remembered)
+  if (!bypass_flag and !user_object.present? and remembered) or (timeout_flag and remembered)
     attempted_remember_flag = true
     proxy.authenticate(:remember_token)
     unless proxy.authenticated?
@@ -247,7 +248,7 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   remember = user.try(:remember_token).present?
 
   # setup user for session and object caching, and resolve authorization groups/roles
-  user.enable_authentication_controls
+  user.try(:enable_authentication_controls)
 
   # force reload of navigation menu, which re-authorizes it too
   # auth.request.params["session"]["navigation_menu"] = nil
@@ -273,16 +274,19 @@ end
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
   full_path = auth.request.original_fullpath
-  bypass = full_path.eql?("/") ||
-      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
-      Secure::AccessRegistry.security_check?(full_path)
+  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
 
-    unless bypass    # Controllers's login_required? will sort this out
+  bypass_flag = full_path.eql?("/") ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+      Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
+      Secure::AccessRegistry.security_check?(uri)            #  'signin'
+
+    unless bypass_flag    # Controllers's login_required? will sort this out
       auth.request.flash[:notice] = "Please sign in to continue. No user logged in!   Warden.after_fetch_failed"
       auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
     end
 
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass_flag}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
 end
 
 ##
@@ -297,13 +301,16 @@ end
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
   full_path = env['warden'].request.original_fullpath
-  bypass = full_path.eql?("/") ||
-      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
-      Secure::AccessRegistry.security_check?(full_path)
+  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
 
-  Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
+  bypass_flag = full_path.eql?("/") ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+      Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
+      Secure::AccessRegistry.security_check?(uri)            #  'signin'
+
+  Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass_flag}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
   env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
-  unless bypass
+  unless bypass_flag
     params = Rack::Request.new(env).params
     params[:action] = :new
     params[:warden_failure] = opts

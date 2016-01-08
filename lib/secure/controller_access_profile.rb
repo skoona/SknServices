@@ -58,11 +58,7 @@ module Secure
           end
         end
       else
-        if flash.notice.present? and flash.notice.is_a?(Array)
-          flash.notice.flatten.delete_if {|f| f.include?("Please sign in to continue") }
-        else
-          flash.delete(:notice) if flash.notice.include?("Please sign in to continue") unless flash.notice.nil?
-        end
+        flash.delete(:notice) if !!flash.notice and !flash.notice.first.nil? and flash.notice.include?("Please sign in to continue")
       end
       Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
     end

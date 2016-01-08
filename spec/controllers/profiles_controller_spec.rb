@@ -1,10 +1,10 @@
 # spec/controllers/profiles_controller_spec.rb
 
 describe ProfilesController, "Verify the basic API is working." do
-  let!(:user) {Secure::UserProfile.page_user("eptester")}
+  let!(:user) { user_eptester()}
   before :each do
     sign_in(user, scope: :access_profile)
-    @request.host = 'www.example.com'
+    # @request.host = 'www.example.com'
   end
 
   describe "#accessible_content are valid" do

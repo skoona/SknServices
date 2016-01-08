@@ -5,7 +5,7 @@ gem 'config'
 gem 'pg'
 gem "rails_warden"
 
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', :require => true
 gem 'sass-rails', '~> 5.0'
 gem 'autoprefixer-rails'
 gem 'uglifier', '>= 1.3.0'

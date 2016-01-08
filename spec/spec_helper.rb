@@ -5,6 +5,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'support/utilities'
+require 'support/test_users'
 require 'support/test_data_serializers'
 
 RSpec.configure do |config|
@@ -37,6 +38,7 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true # prefer true
   end
 
+  config.include TestUsers
   config.include Utilities
   config.include TestDataSerializers
 
