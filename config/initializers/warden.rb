@@ -112,6 +112,11 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
   end
 end
 
+# RackSessionAccess config
+if Rails.env.test?
+  Rails.application.config.middleware.insert_before RailsWarden::Manager, RackSessionAccess::Middleware
+end
+
 
 ##
 # Use the fields from the Signin page to authorize user
@@ -190,16 +195,40 @@ Warden::Manager.on_request do |proxy|
   # puts "===============[DEBUG]:or #{self.class}\##{__method__}"
   Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, original_fullpath=#{proxy.request.original_fullpath}, session.keys=#{proxy.raw_session.keys}"
   timeout_flag = false
+  bypass_flag = false
+  remembered = false
+  attempted_remember_flag = false
+  user_object = proxy.user()
+  full_path = proxy.request.original_fullpath
+  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
+
+  bypass_flag = full_path.eql?("/") ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+      Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
+      Secure::AccessRegistry.security_check?(uri)            #  'signin'
+
+  remembered = proxy.request.cookies["remember_token"].present?
 
   # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
-  user_object = proxy.user()
-  if user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
-    proxy.logout()
-    proxy.request.flash[:alert] = ["Session Expired! Please Sign In To Continue.  Warden.on_request"]
+
+  if !bypass_flag && user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
     timeout_flag = true
   end
 
-  Rails.logger.debug " Warden::Manager.on_request(EXIT) timeout=#{timeout_flag}, userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
+  # see if we can restore a session using remember token
+  if (!bypass_flag and !user_object.present? and remembered) or (timeout_flag and remembered)
+    attempted_remember_flag = true
+    proxy.authenticate(:remember_token)
+    unless proxy.authenticated?
+      proxy.logout()
+      proxy.cookies.delete :remember_token, domain: proxy.env["SERVER_NAME"]
+      proxy.request.flash[:notice] = ["Session Expired! Please Sign In To Continue.  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag}) Cleared Token!"]
+    else
+      proxy.request.flash[:notice] = ["Session Expired! Restored by Remember Flag, Please continue!  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
+    end
+  end
+
+  Rails.logger.debug " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
 end
 
 ##
@@ -216,10 +245,10 @@ end
 Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   # puts "===============[DEBUG]:aa #{self.class}\##{__method__}"
   remember = false
-  remember = true if auth.request.params.key?("session") && "1".eql?(auth.request.params["session"]["remember_me_token"])
+  remember = user.try(:remember_token).present?
 
   # setup user for session and object caching, and resolve authorization groups/roles
-  user.enable_authentication_controls
+  user.try(:enable_authentication_controls)
 
   # force reload of navigation menu, which re-authorizes it too
   # auth.request.params["session"]["navigation_menu"] = nil
@@ -245,17 +274,19 @@ end
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
   full_path = auth.request.original_fullpath
-  bypass = full_path.eql?("/") ||
-      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
-      Secure::AccessRegistry.security_check?(full_path)
+  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
 
-    unless bypass or (opts.key?(:event) ? (opts[:event] == :fetch) : false)   # Controllers's login_required? will sort this out
+  bypass_flag = full_path.eql?("/") ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+      Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
+      Secure::AccessRegistry.security_check?(uri)            #  'signin'
+
+    unless bypass_flag    # Controllers's login_required? will sort this out
       auth.request.flash[:notice] = "Please sign in to continue. No user logged in!   Warden.after_fetch_failed"
-      # auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
-      # auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
+      auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
     end
 
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass_flag}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
 end
 
 ##
@@ -270,13 +301,16 @@ end
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
   full_path = env['warden'].request.original_fullpath
-  bypass = full_path.eql?("/") ||
-      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
-      Secure::AccessRegistry.security_check?(full_path)
+  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
 
-  Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
+  bypass_flag = full_path.eql?("/") ||
+      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+      Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
+      Secure::AccessRegistry.security_check?(uri)            #  'signin'
+
+  Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass_flag}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
   env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
-  unless bypass
+  unless bypass_flag
     params = Rack::Request.new(env).params
     params[:action] = :new
     params[:warden_failure] = opts

@@ -28,23 +28,8 @@ security:
   session_expires: <%= -> { 4.hours.from_now } %>
   remembered_for:  <%= -> { 12.hours.from_now } %>
   verify_login_after_msecs: 28800000   # 8 hours
-  ! public_pages:
-   - /signout
-   - /signin
-   - /pages/home
-   - /pages/about
-   - /pages/learn_more
-   - /pages/details_model
-   - /pages/details_content
-   - /pages/details_access
-   - /pages/details_auth
+  ! public_pages: # no easily stored in the xml, because of leading slash
    - /assets
-   - /session
-   - /sessions
-   - /sessions/new
-   - /sessions/create
-   - /sessions/destroy
-   - /sessions/unauthenticated
 
   ! user_options:
    - Manager
@@ -59,3 +44,4 @@ security:
    - '0034'
    - '0037'
    - '0040'
+   - '9999'

@@ -5,13 +5,12 @@ gem 'config'
 gem 'pg'
 gem "rails_warden"
 
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', :require => true
 gem 'sass-rails', '~> 5.0'
 gem 'autoprefixer-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'jquery-datatables-rails', '~> 3.3.0'
 gem 'bootstrap-will_paginate'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 
@@ -24,6 +23,7 @@ gem 'gravatar_image_tag'
 
 group :development do
   gem 'annotate'
+  gem 'pry'
   gem 'pry-rails'
   gem 'better_errors'
   gem 'quiet_assets'
@@ -32,16 +32,12 @@ end
 group :test do
   gem 'launchy'
   gem 'capybara'
-  gem 'database_cleaner'
   gem 'capybara-mechanize'
   gem 'rack_session_access'
   gem 'warden-rspec-rails'
   gem 'poltergeist'
-  # gem 'capybara-webkit'
-  # gem 'selenium-webdriver'
 end
 group :development, :test do
-  # gem 'web-console', '~> 2.0'
   # gem 'ruby-debug'
   # gem 'ruby-debug-base'
   # gem 'ruby-debug-ide'
@@ -50,4 +46,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
   gem 'faker'
+  gem 'cucumber-rails', :require => false
+  gem 'database_cleaner'
 end

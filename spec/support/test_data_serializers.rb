@@ -21,4 +21,17 @@ module TestDataSerializers
     YAML::load( IO.read(fname) )
   end
 
+  def get_uploaded_test_file()
+    content = "image/png"
+    headers = {name: "auto[1-20b-files][]"}
+    temp = ""
+    file = Tempfile.open(["image_file",".png"])
+    file.binmode
+    file.write(IO.binread(Rails.root.join('spec', 'factories', "rails_png_upload_test_file.png")))
+    file.flush
+    file.rewind
+    # do not close it -- user will close this file
+    ActionDispatch::Http::UploadedFile.new(tempfile: file, filename: "rails_png_upload_test_file.png", head: headers, type: content)
+  end
+
 end

@@ -728,7 +728,7 @@
       </permission>
   </resource>
     <resource secured="false">
-        <uri>"/rails/info/routes"</uri>
+        <uri>/rails/info/routes</uri>
         <description>Rails Routes</description>
     </resource>
     <resource secured="false">

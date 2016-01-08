@@ -40,7 +40,7 @@ describe PasswordResetsController do
       put :update, id: user.id, user: {password: "somevalue", password_confirmation: "somevalue"}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
-      expect(response).to redirect_to signin_url
+      expect(response).to redirect_to signin_path
     end
 
     it "renders edit page on error." do
@@ -78,7 +78,7 @@ describe PasswordResetsController do
       post :create, user: {username: "some-ignored-value"}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
-      expect(response).to redirect_to home_pages_url
+      expect(response).to redirect_to home_pages_path
     end
 
     it "redirects to signin page on error" do
@@ -94,7 +94,7 @@ describe PasswordResetsController do
       post :create, user: {username: "some-ignored-value"}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
-      expect(response).to redirect_to home_pages_url
+      expect(response).to redirect_to home_pages_path
     end
   end
 

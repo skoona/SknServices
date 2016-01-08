@@ -60,6 +60,7 @@ module Secure
         upp = self.new(value) if value.present?
         upp = nil unless upp && value && value.token_authentic?(token)
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        upp.last_access = Time.now if upp
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
