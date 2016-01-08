@@ -196,18 +196,20 @@ Warden::Manager.on_request do |proxy|
   Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, original_fullpath=#{proxy.request.original_fullpath}, session.keys=#{proxy.raw_session.keys}"
   timeout_flag = false
   bypass_flag = false
+  remembered = false
   attempted_remember_flag = false
-
+  user_object = proxy.user()
   full_path = proxy.request.original_fullpath
+  uri = full_path[1..-1] if full_path[0].eql?('/') # remove leading /
+
   bypass_flag = full_path.eql?("/") ||
       Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
-      Secure::AccessRegistry.security_check?(full_path)
+      Secure::AccessRegistry.security_check?(uri)
 
-  remembered = true
-  remembered = false if proxy.request.cookies["remember_token"].present?
+  remembered = proxy.request.cookies["remember_token"].present?
 
   # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
-  user_object = proxy.user()
+
   if !bypass_flag && user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
     timeout_flag = true
   end
@@ -218,9 +220,10 @@ Warden::Manager.on_request do |proxy|
     proxy.authenticate(:remember_token)
     unless proxy.authenticated?
       proxy.logout()
-      proxy.request.flash[:alert] = ["Session Expired! Please Sign In To Continue.  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
+      proxy.cookies.delete :remember_token, domain: proxy.env["SERVER_NAME"]
+      proxy.request.flash[:notice] = ["Session Expired! Please Sign In To Continue.  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag}) Cleared Token!"]
     else
-      proxy.request.flash[:alert] = ["Session Expired! Restored by Remember Flag, Please continue!  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
+      proxy.request.flash[:notice] = ["Session Expired! Restored by Remember Flag, Please continue!  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
     end
   end
 
@@ -241,7 +244,7 @@ end
 Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   # puts "===============[DEBUG]:aa #{self.class}\##{__method__}"
   remember = false
-  remember = user.remember_token.present?
+  remember = user.try(:remember_token).present?
 
   # setup user for session and object caching, and resolve authorization groups/roles
   user.enable_authentication_controls

@@ -73,7 +73,7 @@ RSpec.configure do |config|
   config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
   config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
   config.include Warden::Test::ControllerHelpers, type: :controller
-  config.include FeatureHelpers, type: :feature       # logged_as(user) session injection for cucumber/capybara
+  config.include FeatureHelpers #, type: :feature       # logged_as(user) session injection for cucumber/capybara
 
 
   # Turn on FactoryGirl

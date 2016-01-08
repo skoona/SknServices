@@ -119,11 +119,11 @@ class ProfilesDomain < ::Factory::DomainServices
 
     results = case @accessible_type
                 when 'access'
-                  {package: {success: true, message: "", content: 'access',
+                  {package: {success: true, message: params[:content_type_description], content: 'access',
                    username: pg_u.username, display_name: pg_u.display_name ,
                   package: user_accessible_content(pg_u, "access", @profile)}}
                 when 'content'
-                  {package: {success: true, message: "", content: 'content',
+                  {package: {success: true, message: params[:content_type_description], content: 'content',
                    username: pg_u.username, display_name: pg_u.display_name ,
                    package: user_accessible_content(pg_u, "content", @profile)}}
                 else

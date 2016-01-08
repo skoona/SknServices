@@ -11,7 +11,6 @@ gem 'autoprefixer-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'jquery-datatables-rails', '~> 3.3.0'
 gem 'bootstrap-will_paginate'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 

@@ -1,13 +1,18 @@
 
 /*
   *= require jquery-ui
-  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
-  *= require dataTables/extras/dataTables.responsive
+  *= require jquery.dataTables.css.erb
+  *= require dataTables.bootstrap
 */
 
 // import the CSS framework
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
+/*
+
+*/
 
 
 /* my custom page
@@ -33,7 +38,7 @@ main {
 }
 article {
   @extend .container;
-  margin-top: 0px;
+  margin-top: 51px;
   margin-bottom: 60px;
   padding-top: 0px;
   padding-left: 60px;
@@ -75,8 +80,8 @@ img {
   margin: 0 auto;
 }
 .brand-image {
-  margin: 1 1;
-  padding: 2 0;
+  margin: 16 16;
+  padding: 16 16;
 }
 .huge-image {
   //    padding: 60px 60px;

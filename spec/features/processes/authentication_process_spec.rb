@@ -1,7 +1,7 @@
 # spec/features/authentication_process_spec.rb
 #
 
-RSpec.feature "Authentication process for all users." do
+feature "Authentication process for all users." do
 
 
   context "Users " do

@@ -8,7 +8,12 @@
 
 
 var logEnabled = <%= Rails.env.development? %>,
-    csrfToken;
+    csrfToken,
+    userTable,
+    accessTable,
+    contentTable,
+    resultTable;
+
 
 /**
  * Prevents debuging messages from going to console none development mode
@@ -27,20 +32,13 @@ var logEnabled = <%= Rails.env.development? %>,
  */
 function profileTablesRequester(ev) {
     var dataPackage = $(ev.currentTarget).data().package,
-        contentType = dataPackage.hasOwnProperty('name'), // then AccessProfile
+        contentType = dataPackage.hasOwnProperty('resource_options'), // then AccessProfile
         accessUrl = $("#accessible-table tbody" ).data().accessibleUrl,
-        tTitle = $('#accessible-table').closest('div').prev('div').find('h2.panel-title'),
         dataResponse = {},
         textStatus = "";
 
     $("table.profile tbody tr").removeClass('success');
     $(ev.currentTarget).addClass('success');
-
-    if (contentType) {
-        consoleLog( "AccessProfile Sending package=>" + JSON.stringify(dataPackage));
-    } else {
-        consoleLog( "ContentProfile Sending package=>" + JSON.stringify(dataPackage));
-    }
 
     $.ajax({
         headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
@@ -57,9 +55,7 @@ function profileTablesRequester(ev) {
             console.log( "profileTablesRequester() success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
       }).fail(function(jqXHR, textStatus, errorThrown) {
             textStatus = textStatus;
-            tTitle.html('No Accessible Content for ' + dataPackage.username + ': <span class="label-info">select a different ContentProfile Entry from above.</span>');
-            $('#accessible-table').removeClass('show').addClass('hidden');
-            $('#accessible-table tbody').empty();
+            resultTable.clear().draw();
             console.log( "profileTablesRequester() error: " + textStatus + ', thrown=' + errorThrown + ', package=' + JSON.stringify(dataPackage));
       });
 
@@ -72,38 +68,35 @@ function profileTablesRequester(ev) {
  * @param dataPackage {contentProfile}
  */
 function replaceContentTableRows(dataPackage) {
-    var oBody = $('#content-table tbody'),
-            tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
+    var tTitle = $('#content-title'),
             vList = dataPackage.package.content_profile.entries,
             newRow = [],
-            counter = 0;
+            counter = 0,
+            trNode,
+            trRow;
 
     tTitle.html(dataPackage.package.message);
     if (dataPackage.package.success) {
-        $('#content-table').removeClass('hidden').addClass('show');
 
-        oBody.empty();
+        contentTable.rows().remove().draw();
 
         $.each(vList, function(index, row) {
-                newRow = [];
-                newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
-                newRow.push('<td>' + row.description  + '</td>');
-                newRow.push('<td>' + row.content_type  + '</td>');
-                newRow.push('<td>' + row.content_type_description  + '</td>');
-                newRow.push('<td>' + row.topic_type  + '</td>');
-                newRow.push('<td>' + row.topic_value  + '</td>');
-                newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
-                newRow.push('</tr>');
+            newRow = [];
+            newRow.push('<td>' + row.description  + '</td>');
+            newRow.push('<td>' + row.content_type  + '</td>');
+            newRow.push('<td>' + row.content_type_description  + '</td>');
+            newRow.push('<td>' + row.topic_type  + '</td>');
+//            newRow.push('<td>' + row.topic_value  + '</td>');
+            newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+            trRow = $('<tr>').append(newRow.join());
 
-                oBody.append(newRow.join()).find('tr').last().on( "click", profileTablesRequester);
-                    counter = index + 1;
-            }
-        );
+            trNode = contentTable.row.add(trRow).draw().node();
+            $(trNode).data('package', row).on( "click", profileTablesRequester);
+            counter = index + 1;
+        });
     } else {
-        $('#content-table').removeClass('show').addClass('hidden');
-        oBody.empty();
-        $('#accessible-table').removeClass('show').addClass('hidden');
-        $('#accessible-table tbody').empty();
+        contentTable.rows().remove().draw();
+        resultTable.rows().remove().draw();
     }
 
     consoleLog('replaceContentTableRows(rowsAdded=' + counter + ')');
@@ -115,36 +108,34 @@ function replaceContentTableRows(dataPackage) {
  * @param dataPackage {accessProfile}
  */
 function replaceAccessTableRows(dataPackage) {
-    var oBody = $('#access-table tbody'),
-            tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
+    var tTitle = $('#access-title'),
             vList = dataPackage.package.access_profile.entries,
             newRow = [],
-            counter = 0
+            counter = 0,
+            trNode,
+            trRow;
 
     tTitle.html(dataPackage.package.message);
     if (dataPackage.package.success) {
-        $('#access-table').removeClass('hidden').addClass('show');
-
-        oBody.empty();
+        accessTable.clear().draw();
 
         $.each(vList, function(index, row) {
-                    newRow = [];
-                    newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
-                    newRow.push('<td>' + row.description  + '</td>');
-                    newRow.push('<td>' + row.content_type  + '</td>');
-                    newRow.push('<td>' + row.topic_type  + '</td>');
-                    newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
-                    newRow.push('</tr>');
+            newRow = [];
+            newRow.push('<td>' + row.description  + '</td>');
+            newRow.push('<td>' + row.content_type  + '</td>');
+            newRow.push('<td>' + row.content_type_description  + '</td>');
+            newRow.push('<td>' + row.topic_type  + '</td>');
+            newRow.push('<td>' + row.topic_value  + '</td>');
+            newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+            trRow = $('<tr>').append(newRow.join());
 
-                    oBody.append(newRow.join()).find('tr').last().on( "click", profileTablesRequester);
-                    counter = index + 1;
-                }
-        );
+            trNode = accessTable.row.add(trRow).draw().node();
+            $(trNode).data('package', row).on( "click", profileTablesRequester);
+            counter = index + 1;
+        });
     } else {
-        oBody.empty();
-        $('#access-table').removeClass('show').addClass('hidden');
-        $('#accessible-table').removeClass('show').addClass('hidden');
-        $('#accessible-table tbody').empty();
+        accessTable.clear().draw();
+        resultTable.clear().draw();
     }
 
     consoleLog('replaceAccessTableRows(rowsAdded=' + counter + ')');
@@ -164,36 +155,31 @@ function replaceAccessTableRows(dataPackage) {
  *                }
  */
 function replaceAccessibleTableRows(dataPackage) {
-    var oBody = $('#accessible-table tbody'),
-            tTitle = oBody.closest('div').prev('div').find('h2.panel-title'),
+    var tTitle = $('#accessible-title'),
             vList = dataPackage.package,
             newRow = [],
             counter = 0,
-            msg = 'Accessible Content for ' + dataPackage.username + ', ' + (dataPackage.hasOwnProperty('display_name') ? dataPackage.display_name : dataPackage.content_type);
+            trNode,
+            trRow;
 
-    oBody.empty();
-    $.each(vList, function(index, row) {
-                newRow = [];
-                newRow.push('<tr data-package=\'' + JSON.stringify(row) + '\'>');
-                newRow.push('<td>' + row.source  + '</td>');
-                newRow.push('<td>' + row.filename  + '</td>');
-                newRow.push('<td>' + row.created  + '</td>');
-                newRow.push('<td>' + row.size  + '</td>');
-                newRow.push('</tr>');
+    tTitle.html(dataPackage.message);
+    if (dataPackage.success) {
+        resultTable.clear().draw();
+        $.each(vList, function(index, row) {
+                    newRow = [];
+                    newRow.push('<td>' + row.source  + '</td>');
+                    newRow.push('<td>' + row.filename  + '</td>');
+                    newRow.push('<td>' + row.created  + '</td>');
+                    newRow.push('<td>' + row.size  + '</td>');
+                    trRow = $('<tr>').append(newRow.join());
 
-                oBody.append(newRow.join());
-                counter = index + 1;
-            }
-    );
-
-    if (!dataPackage.success) {
-        msg = dataPackage.message;
-        $('#accessible-table').removeClass('show').addClass('hidden');
-        $('#accessible-table tbody').empty();
+                    trNode = resultTable.row.add(trRow).draw().node();
+                    $(trNode).data('package', row); // .on( "click", profileTablesRequester);
+                    counter = index + 1;
+        });
     } else {
-        $('#accessible-table').removeClass('hidden').addClass('show');
+        resultTable.clear().draw();
     }
-    tTitle.html(msg);
 
     consoleLog('replaceAccessibleTableRows(rowsAdded=' + counter + ')');
     return false;
@@ -210,48 +196,128 @@ $(function() {
 
     csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    /* Make all tables dataTables */
-    $('#users-table', 'table.profile', '#assessible-table').DataTable({
-        responsive: true,
-        autoWidth: true,
-        paging: no,
-        searchable: no,
+    accessTable = $('#access-table').DataTable({
+        "autoWidth": true,
+        "paging": false,
+        "searching": false,
+        "scrollY": "420px",
+        "scrollCollapse": true,
+        "scroller": true,
         select: {
-            style: 'single'
+            selector: 'tr',
+            style: "single",
+            items: "row",
+            info: true
+        },
+        "language": {
+            "emptyTable": "Please make a choice from the Users table on the left."
         }
     });
 
-    /* There two events are given information about the item selected in the form
-       of what item type it is (row, column or cell) and its data index (see row().index(),
-       column().index() and cell().index()).
+    accessTable.on( 'select', 'tr', function ( e, dt, type, indexes ) {
+        consoleLog( "Access-Table Selected: " + type );
+        /* RowSelected Do something Here */
+    });
 
-           e = jQuery event object
-          dt = DataTables API instance
-        type = Items being selected. This can be 'rows', 'columns' or 'cells'.
+    contentTable = $('#content-table').DataTable({
+        "autoWidth": true,
+        "paging": false,
+        "searching": false,
+        "scrollY": "420px",
+        "scrollCollapse": true,
+        "scroller": true,
+        select: {
+            selector: 'tr',
+            style: "single",
+            items: "row",
+            info: true
+        },
+        "language": {
+            "emptyTable": "Please make a choice from the Users table on the left."
+        }
+    });
+
+    contentTable.on( 'select', 'tr', function ( e, dt, type, indexes ) {
+        consoleLog( "Content-Table Selected: " + type );
+        /* RowSelected Do something Here */
+    });
+
+
+
+    resultTable = $('#accessible-table').DataTable({
+        "autoWidth": true,
+        "paging": false,
+        "searching": false,
+        "scrollY": "420px",
+        "scrollCollapse": true,
+        "scroller": true,
+        select: {
+            selector: 'tr',
+            style: "single",
+            items: "row",
+            info: true
+        },
+        "language": {
+            "emptyTable": "Please make a choice from content table above."
+        }
+    });
+
+    resultTable.on( 'select', 'tr', function ( e, dt, type, indexes ) {
+        consoleLog( "Accessible-Table Selected: " + type );
+        /* RowSelected Do something Here */
+    });
+
+
+    /** TODO: Select Extension is NOT Working
+
+     There two events are given information about the item selected in the form
+     of what item type it is (row, column or cell) and its data index (see row().index(),
+     column().index() and cell().index()).
+
+     e = jQuery event object
+     dt = DataTables API instance
+     type = Items being selected. This can be 'rows', 'columns' or 'cells'.
      indexes = The DataTables' indexes of the selected items. This can be used
-               with the table selector methods (rows() for example). please
-               refer to row().index(),
-    */
-    $('#users-table').DataTable({
+     with the table selector methods (rows() for example). please
+     refer to row().index(),
+     */
+    userTable = $('#users-table').DataTable({
+        "autoWidth": true,
+        "paging": false,
+        "searching": false,
+        "scrollY": "620px",
+        "scrollCollapse": true,
+        "scroller": true,
+        "select": {
+            "selector": "tr",
+            "style": "single",
+            "items": "row",
+            "info": true
+        },
+        "data": null,
+        "columns": [
+            { "data": 'username' },
+            { "data": 'display_name' }
+        ],
+        "language": {
+            "emptyTable": "No User Available!"
+        }
+    });
 
-    }).on( 'select', 'tbody tr', function ( e, dt, type, indexes ) {
-            /*
-              RowSelected Do something Here
-            */
-        var dataPackage = $(this).data().package,
-                contentType = dataPackage.package.hasOwnProperty('access_profile');
+    $('#users-table tbody tr').on('click', function(event) {
+        var dataPackage = $(event.currentTarget).data().package,
+            contentType = dataPackage.package.hasOwnProperty('access_profile');
 
         /*
-          Initialize Title on Accessible Content Table
-        */
-        $('#accessible-table').closest('div').prev('div').find('h2.panel-title').
-                html('Accessible Content: <span class="label-info">select a ContentProfile Entry from above.</span>');
+         Initialize Title on Accessible Content Table
+         */
+        $('#accessible-title').
+           html('Accessible Content for ' + dataPackage.username + ":" + dataPackage.display_name );
 
-//        $('#accessible-table tbody').empty();
-//        $('#accessible-table').removeClass('show').addClass('hidden');
+        resultTable.clear().draw();
 
-//        $("#users-table tbody tr").removeClass('info');
-//        $(ev.currentTarget).addClass('info');
+        $("#users-table tbody tr").removeClass('info');
+        $(event.currentTarget).addClass('info');
 
         if (contentType){
             replaceAccessTableRows(dataPackage);
@@ -262,44 +328,8 @@ $(function() {
         consoleLog( dataPackage.username + " Selected."  + JSON.stringify(dataPackage));
     });
 
-    $('table.profile').DataTable({
-        columns: [
-            { data: 'description' },
-            { data: 'content_type' },
-            { data: 'topic_type' },
-            { data: JSON.stringify(content_value) }
-        ]
-    }).on( 'select', 'tbody tr', function ( e, dt, type, indexes ) {
-        var rowData = table.rows( indexes ).data().toArray();
-        /* RowSelected Do something Here */
-    });
-
-    $('#assessible-table').DataTable({
-
-    }).on( 'select', 'tbody tr', function ( e, dt, type, indexes ) {
-        var rowData = table.rows( indexes ).data().toArray();
-        /* RowSelected Do something Here */
-    });
-
-
-    $( "#users-table tbody tr" ).on( "click", function(ev) {
-    });
-
     /* choose first one to start things off */
     $('#users-table tbody tr').first().click();
-
-//    $('.datatable').DataTable({
-        // ajax: ...,
-        // autoWidth: false,
-        // pagingType: 'full_numbers',
-        // processing: true,
-        // serverSide: true,
-
-        // Optional, if you want full pagination controls.
-        // Check dataTables documentation to learn more about available options.
-        // http://datatables.net/reference/option/pagingType
-//    });
-
 
 
 
