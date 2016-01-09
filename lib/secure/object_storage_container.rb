@@ -3,7 +3,7 @@
 #
 ## Stores Objects in memory using ThreadSafe methods
 #  - keys are expected to be unique and greater than 16 bytes long or (UUIDs)
-#  - context is a prefex for keys, which allows multiple caches in same storage container
+#  - context is a prefix for keys, which allows multiple caches in same storage container
 
 module Secure
   class ObjectStorageContainer

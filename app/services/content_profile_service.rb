@@ -6,7 +6,7 @@
 
 class ContentProfileService < ::ProfilesDomain
 
-# attr_accessor :factory, :user, :current_user, :page_user  -- initialize by DomainService
+# attr_accessor :factory, :current_user, :page_user  -- initialize by DomainService
 
   PROFILE_CONTEXT='content'
 
