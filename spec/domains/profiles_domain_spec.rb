@@ -38,7 +38,7 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
       expect( @service ).to be_a ProfilesDomain
     end
     it "#current_user and #user returns a UserProfile object." do
-      expect( @service.user ).to be_a Secure::UserProfile
+      expect( @service.current_user ).to be_a Secure::UserProfile
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
       expect( @service.factory.user ).to be_a Secure::UserProfile
       expect( @service.current_user ).to be_a Secure::UserProfile

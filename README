@@ -50,6 +50,13 @@ bundle exec annotate --exclude tests,fixtures,factories,serializers
 ```
 
 
+###Annoying Things
+
+    poltergeist is the pits, signout_url fails because of the delete method
+                javascript interactions are flaky
+                webkit is no real alternative, since it has mac install issues
+
+
 ###Neat Thingys
 
     my_hash.try(:[], 'key1').try(:[], 'key2').try(:[], 'key3')

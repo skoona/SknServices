@@ -3,11 +3,11 @@
 <section class="container">
     <h1><%= accessed_page_name %></h1>
 
-        <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
+        <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
         <section class="container">
             <%= render @user_group_roles %>
         </section>
-        <%= will_paginate class: "pagination col-xs-3 col-md-offset-9 pull-right" %>
+        <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
 
     <br />
     <% if current_user_has_create?('user_group_roles/new') %>

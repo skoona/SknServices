@@ -41,13 +41,11 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
       expect( @service.factory ).to be_a ServiceFactory
       expect( @service.factory.factory ).to be_a ApplicationController
       expect( @service.factory.controller ).to be_a ApplicationController
-      expect( @service.controller ).to be_a ApplicationController
     end
-    it "#current_user and #user returns a UserProfile object." do
+    it "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
       expect( @service.factory.user ).to be_a Secure::UserProfile
       expect( @service.current_user ).to be_a Secure::UserProfile
-      expect( @service.user ).to be_a Secure::UserProfile
     end
   end
 

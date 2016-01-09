@@ -153,7 +153,7 @@ begin
   account_tto = [
      {value: "Agency", description: "All Agency Accounts"},
      {value: "Agent",  description: "All Agent Accounts"},
-     {value: "None",   description: "All Agent Accounts"}
+     {value: "None",   description: "No Agency Agent Options"}
   ]
   # requires: topic_type_id
   licensed_states_tto = [
@@ -181,13 +181,6 @@ begin
     {name: "Agency",  description: "Agency Actions",  value_based_y_n: "Y"},
     {name: "Account", description: "Account Actions", value_based_y_n: "N"},
     {name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y"}
-  ]
-
-  pt  = [
-    {name: "AgencyPrimary",   description: "Agency Super User"},
-    {name: "AgencySecondary", description: "Limited User"},
-    {name: "EmployeePrimary",   description: "BMI Admin User"},
-    {name: "EmployeeSecondary", description: "BMI Limited User"}
   ]
 
   control_opts = {
@@ -218,6 +211,13 @@ begin
     rec.save!
     rec
   end
+
+  pt  = [
+      {name: "AgencyPrimary",   description: "Agency Super User"},
+      {name: "AgencySecondary", description: "Limited User"},
+      {name: "EmployeePrimary",   description: "BMI Admin User"},
+      {name: "EmployeeSecondary", description: "BMI Limited User"}
+  ]
   pt_recs = ProfileType.create!(pt)
 
   ##
@@ -238,6 +238,7 @@ begin
       rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
       rec.content_type=content_rec
       rec.topic_type=topic_rec
+      # rec.topic_value=topic_rec.
       rec.save!
       rec.id
   end
