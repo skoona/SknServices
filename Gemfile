@@ -5,14 +5,15 @@ gem 'config'
 gem 'pg'
 gem "rails_warden"
 
-gem 'bootstrap-sass', :require => true
+gem 'bootstrap-sass', '~> 3.2.0'
 gem 'sass-rails', '~> 5.0'
 gem 'autoprefixer-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'bootstrap-will_paginate'
-gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'sprockets-rails' # , :require => 'sprockets/railtie'
+gem 'jquery-datatables-rails', '~> 3.3.0'
 
 gem 'jbuilder', '~> 2.0'
 gem 'simple_form'

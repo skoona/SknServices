@@ -195,13 +195,11 @@ $(function() {
     /* Save this token for the Ajax calls */
     csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    /* save url to fetch assible files from */
-    accessibleUrl = $("#accessible-table tbody" ).data().accessibleUrl;
-
     /*
      * Initial Establish the dataTables
      */
 
+//        responsive: true,
     $.extend( $.fn.dataTable.defaults, {
         dom: 'fti',
         colReorder: false,
@@ -253,6 +251,9 @@ $(function() {
     $('#users-table tbody tr').on('click', function(event) {
         var dataPackage = $(event.currentTarget).data().package,
             contentType = dataPackage.package.hasOwnProperty('access_profile');
+
+        /* save url to fetch accessible files from */
+        accessibleUrl = $("#accessible-table tbody" ).data().accessibleUrl;
 
         /*
          Initialize Title on Accessible Content Table
