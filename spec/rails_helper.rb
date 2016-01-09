@@ -30,7 +30,6 @@ require 'warden/test/warden_helpers'
 require 'capybara/rspec'
 require 'capybara/rails'
 require "rack_session_access/capybara"
-require 'capybara/mechanize'
 require 'capybara-screenshot/rspec'
 require 'capybara/poltergeist'
 require 'database_cleaner'
@@ -57,7 +56,6 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 Rails.application.routes.default_url_options[:host] = 'http://localhost'
 
 # Checks for pending migration and applies them before tests are run.
-# If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|

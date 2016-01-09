@@ -42,7 +42,7 @@ class ContentProfile < ActiveRecord::Base
   end
 
   def profile
-    Utility::UserContentProfileBean.new({
+    Utility::ContentProfileBean.new({
       entries: content_profile_entries.map(&:entry_info) || [],
       pak: person_authentication_key,
       profile_type: profile_type.name,

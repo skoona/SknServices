@@ -14,16 +14,16 @@ Capybara.configure do |config|
   config.always_include_port = true
 end
 
+# Ref: https://github.com/mattheworiordan/capybara-screenshot
+Capybara::Screenshot.autosave_on_failure = true
+
 Capybara.register_driver :rack_test do |app|
    Capybara::RackTest::Driver.new(app)
    # Capybara::RackTest::Driver.new(app, :browser => :safari)
-end
-
-Capybara.register_driver :mechanize do |app|
-  Capybara::Mechanize::Driver.new(app)
 end
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, {timeout: 300})
   #Capybara::Poltergeist::Driver.new(app, {timeout: 300, debug: true})
 end
+

@@ -1,8 +1,8 @@
 ## app/domains/service_factory.rb
 #
 # Replace factory helpers with Factory Object for DomainServices
-# - Domain services live for one request cycle and are expensive to create, this object memotize them
-# - This factory should be passed around like "factory" was
+# - Domain services live for one request cycle and are expensive to create, this object memotizes them
+# - This factory should be passed around like "factory"
 # - Should make testing easier
 #
 
@@ -10,6 +10,7 @@
 # factory is the thing that initialized us: i.e. controller is really factory
 
 class ServiceFactory
+  include Factory::ObjectStorageServices
 
   attr_accessor :factory
 
@@ -36,6 +37,7 @@ class ServiceFactory
     @ct_content_profile_service
   end
 
+
   ##
   # The controller knows itself as 'self'
   # so we bridge to it for our Services
@@ -49,6 +51,7 @@ class ServiceFactory
     @user ||= @factory.current_user
   end
 
+  protected
 
   # Support the regular respond_to? method by
   # answering for any attr that user_object actually handles
@@ -58,38 +61,7 @@ class ServiceFactory
   end
 
 
-  protected
-  FACTORY_PREFIX = 'ServiceFactory'.freeze
-
-  # generate a new unique storage key
-  def storage_generate_new_key
-    object_store.generate_unique_key
-  end
-  # tests for keys existence
-  def query_storage_key?(storage_key)
-    object_store.has_storage_key?(storage_key, FACTORY_PREFIX)
-  end
-  # returns stored object
-  def retrieve_storage_key(storage_key)
-    object_store.get_stored_object(storage_key, FACTORY_PREFIX)
-  end
-  # Saves user object to InMemory Container
-  def persist_storage_key(storage_key, obj)
-    object_store.add_to_store(storage_key.to_sym, obj, FACTORY_PREFIX)
-  end
-  # Removes saved user object from InMemory Container
-  def release_storage_key(storage_key)
-    object_store.remove_from_store(storage_key.to_sym, FACTORY_PREFIX)
-  end
-
   private
-
-  ##
-  # Object Storage Container
-  # - keeps a reference to hold object in memory between requests
-  def object_store
-    Secure::ObjectStorageContainer.instance
-  end
 
   # Easier to code than delegation, or forwarder
   def method_missing(method, *args, &block)
