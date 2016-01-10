@@ -1,5 +1,5 @@
 <%# Rails flash messages styled for Bootstrap 3.0 %>
-<section class="container">
+<div class="container">
     <% flash.each do |name, msg| %>
       <%# puts "HELP FLASH=#{name}:#{msg.class.name}:#{msg}" %>
       <% if msg.is_a?(String) %>
@@ -8,8 +8,7 @@
           <%= content_tag :div, msg, :id => "flash_#{name}" %>
         </div>
       <% elsif msg.is_a?(Array) %>
-            <% rflag = msg.flatten.size > 1 %>
-        <div class="row">
+        <% rflag = msg.flatten.size > 1 %>
         <% msg.flatten.each_with_index do |m,i| %>
             <div class="<%= rflag ? 'col-md-6' : 'col-md-12' %>">
                 <div class="alert alert-<%= name.to_s == 'notice' ? 'success' : 'danger' %>">
@@ -18,7 +17,6 @@
                 </div>
             </div>
         <% end %>
-        </div>
       <% end %>
     <% end %>
-</section>
+</div>

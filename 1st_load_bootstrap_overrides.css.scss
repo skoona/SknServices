@@ -95,11 +95,11 @@ img {
   @extend .text-center;
 }
 .form {
-  @extend .col-md-offset-3;
+  @extend .col-md-push-3;
   @extend .col-md-6;
 }
 .form-centered {
-  @extend .col-md-offset-3;
+  @extend .col-md-push-3;
   @extend .col-md-6;
   @extend .text-center;
 }
@@ -139,7 +139,6 @@ a:hover, .navbar-default .navbar-nav > .active > a:focus {
   text-decoration: none;
   background-color: silver; /*Change rollover cell color here*/
 }
-
 
 .navbar-default .navbar-nav > li > a {
   color: white; /*Change active text color here*/

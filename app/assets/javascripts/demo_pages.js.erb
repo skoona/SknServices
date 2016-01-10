@@ -34,8 +34,7 @@ var logEnabled = <%= Rails.env.development? %>,
 function profileTablesRequester(ev) {
     var dataPackage = $(ev.currentTarget).data().package,
         contentType = dataPackage.hasOwnProperty('resource_options'), // then AccessProfile
-        dataResponse = {},
-        textStatus = "";
+        dataResponse = {};
 
     /* flag selected in content table */
     $("table.profile tbody tr").removeClass('success');
@@ -50,12 +49,10 @@ function profileTablesRequester(ev) {
         data: dataPackage,
         accepts: 'json'
     }).done(function(data,textStatus,jqXHR) {
-            textStatus = textStatus;
             dataResponse = data.package;
             replaceAccessibleTableRows(dataResponse);
             console.log( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
       }).fail(function(jqXHR, textStatus, errorThrown) {
-            textStatus = textStatus;
             accessibleTable.clear().draw();
             console.log( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
       });
@@ -186,12 +183,11 @@ function replaceAccessibleTableRows(dataPackage) {
     return false;
 }
 
-/* ********************************************************
- * JQuery Enabled Processing
- * ********************************************************
+/**
+ * Initialization Routine for Demo Pages
+ * @returns {boolean}
  */
-$(function() {
-
+function handleDemoPages() {
     /* Save this token for the Ajax calls */
     csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -200,7 +196,7 @@ $(function() {
      */
 
 //        responsive: true,
-    $.extend( $.fn.dataTable.defaults, {
+    $.extend($.fn.dataTable.defaults, {
         dom: 'fti',
         colReorder: false,
         fixedHeader: true,
@@ -216,7 +212,7 @@ $(function() {
             items: "row",
             info: true
         }
-    } );
+    });
 
     accessTable = $('#access-table').DataTable({
         language: {
@@ -248,38 +244,54 @@ $(function() {
     /**
      *  Activate the UI, Track clicks from UsersTable to control both pages
      */
-    $('#users-table tbody tr').on('click', function(event) {
+    var userRows = $('#users-table tbody tr');
+
+    userRows.on('click', function (event) {
         var dataPackage = $(event.currentTarget).data().package,
             contentType = dataPackage.package.hasOwnProperty('access_profile');
 
         /* save url to fetch accessible files from */
-        accessibleUrl = $("#accessible-table tbody" ).data().accessibleUrl;
+        accessibleUrl = $("#accessible-table tbody").data().accessibleUrl;
 
         /*
          Initialize Title on Accessible Content Table
          */
         $('#accessible-title').
-           html('Accessible Content for ' + dataPackage.username + ":" + dataPackage.display_name );
+                html('Accessible Content for ' + dataPackage.username + ":" + dataPackage.display_name);
 
         /* maintain accessibleTable's state */
         accessibleTable.clear().draw();
 
         /* maintain selected item on users table */
-        $("#users-table tbody tr").removeClass('info');
+        userRows.removeClass('info');
         $(event.currentTarget).addClass('info');
 
         /* Determine which page we are on and use that table loader */
-        if (contentType){
+        if (contentType) {
             replaceAccessTableRows(dataPackage);
         } else {
             replaceContentTableRows(dataPackage);
         }
 
-        consoleLog( dataPackage.username + " Selected."  + JSON.stringify(dataPackage));
+        consoleLog(dataPackage.username + " Selected." + JSON.stringify(dataPackage));
     });
 
     /* choose first one to start things off */
-    $('#users-table tbody tr').first().click();
+    userRows.first().click();
+
+    return true;
+} // end function
+
+/* ********************************************************
+ * JQuery Enabled Processing
+ * ********************************************************
+ */
+$(function() {
+
+    /* Only for the proper page */
+    if ( $('#users-table').length == 1) {
+        handleDemoPages();
+    }
 
 });
 

@@ -12,12 +12,11 @@
 //
 //= require jquery2
 //= require jquery_ujs
-//= require jquery-ui
+//= require bootstrap-sprockets
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+//= require dataTables/extras/dataTables.responsive
+//= require dataTables/extras/dataTables.scroller
 //= require dataTables/extras/dataTables.fixedColumns
 //= require dataTables/extras/dataTables.fixedHeader
-//= require dataTables/extras/dataTables.scroller
-//= require dataTables/extras/dataTables.responsive
-//= require bootstrap-sprockets
 //= require_tree .
