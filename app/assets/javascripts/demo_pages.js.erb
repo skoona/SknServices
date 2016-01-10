@@ -34,7 +34,7 @@ var logEnabled = <%= Rails.env.development? %>,
 function profileTablesRequester(ev) {
     var dataPackage = $(ev.currentTarget).data().package,
         contentType = dataPackage.hasOwnProperty('resource_options'), // then AccessProfile
-        dataResponse = {};
+        dataResponse;
 
     /* flag selected in content table */
     $("table.profile tbody tr").removeClass('success');
@@ -48,7 +48,7 @@ function profileTablesRequester(ev) {
         url: accessibleUrl,
         data: dataPackage,
         accepts: 'json'
-    }).done(function(data,textStatus,jqXHR) {
+    }).done(function(data,textStatus) {
             dataResponse = data.package;
             replaceAccessibleTableRows(dataResponse);
             console.log( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
@@ -177,6 +177,7 @@ function replaceAccessibleTableRows(dataPackage) {
         });
     } else {
         accessibleTable.clear().draw();
+        $("table.profile tbody tr").removeClass('success');
     }
 
     consoleLog('replaceAccessibleTableRows(rowsAdded=' + counter + ')');
@@ -190,29 +191,6 @@ function replaceAccessibleTableRows(dataPackage) {
 function handleDemoPages() {
     /* Save this token for the Ajax calls */
     csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-    /*
-     * Initial Establish the dataTables
-     */
-
-//        responsive: true,
-    $.extend($.fn.dataTable.defaults, {
-        dom: 'fti',
-        colReorder: false,
-        fixedHeader: true,
-        autoWidth: true,
-        paging: false,
-        searching: true,
-        scrollY: "420px",
-        scrollCollapse: true,
-        scroller: true,
-        select: {
-            selector: 'tr',
-            style: "single",
-            items: "row",
-            info: true
-        }
-    });
 
     accessTable = $('#access-table').DataTable({
         language: {
@@ -233,7 +211,6 @@ function handleDemoPages() {
     });
 
     userTable = $('#users-table').DataTable({
-        fixedColumns: false,
         scrollY: "620px",
         language: {
             emptyTable: "No User Available!"
@@ -263,8 +240,8 @@ function handleDemoPages() {
         accessibleTable.clear().draw();
 
         /* maintain selected item on users table */
-        userRows.removeClass('info');
-        $(event.currentTarget).addClass('info');
+        userRows.removeClass('success');
+        $(event.currentTarget).addClass('success');
 
         /* Determine which page we are on and use that table loader */
         if (contentType) {
@@ -290,6 +267,29 @@ $(function() {
 
     /* Only for the proper page */
     if ( $('#users-table').length == 1) {
+        /*
+         * Initial Establish the dataTables
+         */
+        $.extend( $.fn.dataTable.defaults, {
+            dom: "fti",
+            colReorder: false,
+            fixedColumns: false,
+            fixedHeader: false,
+            autoWidth: true,
+            paging: false,
+            searching: true,
+            scrollY: "420px",
+            scrollCollapse: true,
+            scroller: true,
+            responsive: true,
+            select: {
+                selector: "tr",
+                style: "single",
+                items: "row",
+                info: true
+            }
+        });
+
         handleDemoPages();
     }
 

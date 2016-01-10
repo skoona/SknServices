@@ -11,12 +11,9 @@
  *
  */
 
+@import "jquery-ui";
 @import "bootstrap-sprockets";
 @import "bootstrap";
-@import "dataTables/bootstrap/3/jquery.dataTables.bootstrap";
-@import "dataTables/extras/dataTables.responsive";
-@import "dataTables/extras/dataTables.scroller";
-@import "dataTables/extras/dataTables.fixedColumns";
-@import "dataTables/extras/dataTables.fixedHeader";
+@import "dataTables.bootstrap";
 
 @import "skn-custom";
