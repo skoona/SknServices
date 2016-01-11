@@ -155,6 +155,7 @@ Warden::Strategies.add(:remember_token) do
   end
 end
 
+# Todo: Create more of these specialty classes to wrap encodings
 Warden::Strategies.add(:http_basic_auth) do
   def auth
     @auth ||= Rack::Auth::Basic::Request.new(env)  # TODO: how long does this last, or for how many users?
@@ -245,7 +246,7 @@ end
 Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   # puts "===============[DEBUG]:aa #{self.class}\##{__method__}"
   remember = false
-  remember = user.try(:remember_token).present?
+  remember = user.remember_token
 
   # setup user for session and object caching, and resolve authorization groups/roles
   user.try(:enable_authentication_controls)

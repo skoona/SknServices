@@ -21,7 +21,7 @@
     <%= render( 'layouts/navigation') %>
     <div class="container-fluid">
 
-        <div class="container" role="main">
+        <main role="main">
             <div class="row">
                 <%= render 'layouts/messages' %>
             </div>
@@ -29,7 +29,7 @@
             <div class="row">
                 <%= yield %>
             </div>
-        </div>
+        </main>
 
     </div>
     <%= render( 'layouts/footer') %>

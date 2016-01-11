@@ -34,7 +34,7 @@ module Secure
         value = self.find_by(username: uname)
         upp = self.new(value).enable_authentication_controls(true) if value.present?
         upp = nil unless upp && value
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
         upp
 
       rescue Exception => e
@@ -42,51 +42,44 @@ module Secure
         nil
       end
 
-      # find user in database
+      # Warden calls this
       def find_and_authenticate_user(uname, upass)
         upp = nil
         value = self.find_by(username: uname).authenticate(upass)
         upp = self.new(value) if value.present?
         upp = nil unless upp && value
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
         nil
       end
+      # Warden calls this
       def fetch_remembered_user (token=nil)
         upp = nil
         value = self.find_by(remember_token: token)
         upp = self.new(value) if value.present?
         upp = nil unless upp && value && value.token_authentic?(token)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
         upp.last_access = Time.now if upp
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
         nil
       end
-      # find user from our internal list
+      # Warden calls this
       def fetch_cached_user (token)
-        value = users_store.get_stored_object(token)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{users_store.size_of_store}:#{users_store.stored_keys}")
+        value = retrieve_storage_key(token)
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
         value
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
         nil
       end
-
+      # Warden calls this or any service
       def logout(token)
-        u_object = users_store.get_stored_object(token.to_sym)
+        u_object = retrieve_storage_key(token.to_sym)
         u_object.disable_authentication_controls if u_object.present?
-      end
-
-      def get_new_secure_digest(token)
-        BCrypt::Password.create(token, cost: (BCrypt::Engine::MIN_COST + Settings.security.extra_digest_strength)) # Good and Strong
-      end
-
-      def get_new_secure_token
-        users_store.generate_unique_key
       end
 
       def last_login_time_expired?(person)
@@ -97,59 +90,22 @@ module Secure
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username if person}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
         rc
       end
-
-      def users_store
-        Secure::ObjectStorageContainer.instance
-      end
-    end
+    end # end class methods
 
     #
     # Instance Methods
     #
-
-
-    # Warden will call this methods
-    def disable_authentication_controls(prepare_only=false)
-      self.last_access = Time.now
-      proxy_u.save
-      remove_from_store unless prepare_only
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
-      return self if prepare_only
-      true
-    end
-
-    # Warden will call this methods
-    def enable_authentication_controls(prepare_only=false)
-      self.last_access = Time.now
-      self.setup_access_profile
-      self.setup_content_profile
-
-      add_to_store unless prepare_only
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
-      return self if prepare_only
-      true
-    end
-
-    ##
-    # Core methods
-    #
-
-    # Return all Roles
-    def access_roles_all()
-      proxy_u.roles || []
-    end
-
     def access_profile
       Utility::ContentProfileBean.new({
-              entries: get_resource_content_entries() || [],
-              pak: person_authenticated_key,
-              profile_type: "",
-              profile_type_description: "",
-              provider: "UserProfile",
-              username: username,
-              display_name: display_name,
-              email: email
-          })
+                                          entries: get_resource_content_entries() || [],
+                                          pak: person_authenticated_key,
+                                          profile_type: "",
+                                          profile_type_description: "",
+                                          provider: "UserProfile",
+                                          username: username,
+                                          display_name: display_name,
+                                          email: email
+                                      })
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       {}
@@ -169,6 +125,11 @@ module Secure
         rc = proxy_u.save
       end
       rc
+    end
+
+    # Return all Roles
+    def access_roles_all()
+      proxy_u.roles || []
     end
 
     def is_admin?
@@ -212,16 +173,5 @@ module Secure
       Secure::AccessRegistry.get_resource_content_entry(self[:roles], resource_uri,  opts)
     end
 
-    protected
-
-    # Saves user object to InMemory Container
-    def add_to_store()
-      Secure::ObjectStorageContainer.instance.add_to_store(person_authenticated_key.to_sym, self)
-    end
-
-    # Removes saved user object from InMemory Container
-    def remove_from_store()
-      Secure::ObjectStorageContainer.instance.remove_from_store(person_authenticated_key.to_sym)
-    end
   end # end AccessControl
 end # end Secure

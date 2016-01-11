@@ -5,7 +5,8 @@
 #
 #
 module Secure
-  class UserProfile
+  class UserProfile < Factory::BaseServices
+
     include Secure::UserContentProfile
     include Secure::UserAccessProfile
 
@@ -13,9 +14,10 @@ module Secure
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
     class << self
-      delegate :find_by, :find_each, :where,
+      delegate :find_by, :find_each, :where, :remember_token, :username,
                :to => ::User
     end
+
     ##
     # Initialize with a user_object only
     def initialize(user)
@@ -25,6 +27,7 @@ module Secure
       @id = @user_object.id
       @last_access = Time.now
     end
+
 
     def active?
       @user_object.active and id.present?
@@ -44,6 +47,28 @@ module Secure
         @user_object.authenticate(unencrypted_password) && self
     end
 
+    # Warden will call this methods
+    def disable_authentication_controls(prepare_only=false)
+      self.last_access = Time.now
+      proxy_u.save
+      remove_from_store unless prepare_only
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      return self if prepare_only
+      true
+    end
+
+    # Warden will call this methods
+    def enable_authentication_controls(prepare_only=false)
+      self.last_access = Time.now
+      self.setup_access_profile
+      self.setup_content_profile
+
+      add_to_store unless prepare_only
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      return self if prepare_only
+      true
+    end
+
 
     # Support the regular respond_to? method by
     # answering for any attr that user_object actually handles
@@ -53,6 +78,7 @@ module Secure
     end
 
     private
+
     # Easier to code than delegation, or forwarder
     def method_missing(method, *args, &block)
       if @user_object.respond_to?(method)
@@ -61,6 +87,20 @@ module Secure
       else
         super(method, *args, &block)
       end
+    end
+
+    #
+    # Wraps methods from Secure::ObjectStorageServices to apply our default key
+    #
+
+    # Saves user object to InMemory Container
+    def add_to_store()
+      save_existing_object(person_authenticated_key.to_sym, self)
+    end
+
+    # Removes saved user object from InMemory Container
+    def remove_from_store()
+      remove_existing_object(person_authenticated_key.to_sym)
     end
 
   end # end UserProfile

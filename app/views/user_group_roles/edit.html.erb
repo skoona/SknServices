@@ -1,10 +1,7 @@
 <% provide(:title, accessed_page_name) %>
 
-<section class="container">
+<header class="page-header">
     <h1 class="text-center"><%= accessed_page_name %></h1>
+</header>
 
-    <%= render 'form' %>
-
-    <%= link_to 'Show', @user_group_role %> |
-    <%= link_to 'Back', user_group_roles_path %>
-</section>
+<%= render 'form' %>

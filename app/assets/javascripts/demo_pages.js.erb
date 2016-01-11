@@ -13,7 +13,9 @@ var logEnabled = <%= Rails.env.development? %>,
     userTable,
     accessTable,
     contentTable,
-    accessibleTable;
+    accessibleTable,
+    controllerAction,
+    controllerName;
 
 
 /**
@@ -265,8 +267,11 @@ function handleDemoPages() {
  */
 $(function() {
 
+    controllerAction = $('body').data().controllerAction;
+    controllerName = $('body').data().controllerName;
+
     /* Only for the proper page */
-    if ( $('#users-table').length == 1) {
+    if ( controllerName.startsWith('profile') ) {
         /*
          * Initial Establish the dataTables
          */

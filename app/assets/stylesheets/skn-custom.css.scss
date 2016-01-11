@@ -8,19 +8,20 @@ html {
   position: relative;
   min-height: 100%;
 }
-body > .container-fluid {
+body > .container-fluid { // top level wrapper in layout
   margin-top: 60px;
   margin-bottom: 60px;
-  padding-top: 20px;
+  padding-top: 0px;
 }
-body > .container {
-  padding: 60px 15px 0;
+main {                   // main page container, without menu or footer
+  @extend .container;
+  padding: 24px 0px 24px 0px; // top right bottom left
 }
-article {
+article {                     // a whole page typically
   @extend .container;
   padding-bottom: 40px;
 }
-section {
+section {                     // a piece of a page
   @extend .row;
   overflow: auto;
 }

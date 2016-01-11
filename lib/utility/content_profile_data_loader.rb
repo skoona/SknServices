@@ -1,98 +1,10 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+##
+# Creates initial data load for content profile using advanced active record|model methods
 #
 # http://guides.rubyonrails.org/form_helpers.html#building-complex-forms
 #
 #
 begin
-  Rails.logger.info "Defining  Users"
-  users =[ {
-      username:              "skoona",
-      name:                  "Employee Primary User: Developer",
-      email:                 "skoona@gmail.com",
-      password:                "developer99",
-      password_confirmation:   "developer99",
-      user_options:            ["Manager", "0034", "0037", "0040"],
-      assigned_groups:         ["EmployeePrimary"],
-      assigned_roles:          ["Services.Action.Developer"]
-  },
-  {
-      username:              "eptester",
-      name:                  "Employee Primary User",
-      email:                 "appdev@brotherhoodmutual.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["Manager", "0034", "0037", "0040"],
-      assigned_groups:             ["EmployeePrimary"],
-      assigned_roles:          ["Services.Action.Admin"]
-  },
-  {
-      username:              "estester",
-      name:                  "Employee Secondary User",
-      email:                 "appdev1@brotherhoodmutual.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["EmployeeSecondary", "0037"],
-      assigned_groups:             ["EmployeeSecondary"],
-      assigned_roles:          ["Services.Action.Admin",
-                                "Test.Agency.Commission.Experience.PDF.Access",
-                                "Test.Agency.Commission.Statement.PDF.Access",
-                                "Test.Agency.Commission.Statement.CSV.Access"]
-
-  },
-  {
-      username:              "aptester",
-      name:                  "Agency Primary User",
-      email:                 "appdev2@brotherhoodmutual.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["AgencyPrimary", "0034", "0037", "0040"],
-      assigned_groups:             ["AgencyPrimary"],
-      assigned_roles:          ["Services.Action.ResetPassword",
-                                "Test.Agency.Commission.Experience.PDF.Access",
-                                "Test.Agency.Commission.Statement.PDF.Access"]
-  },
-  {
-      username:              "astester",
-      name:                  "Agency Secondary User",
-      email:                 "appdev3@brotherhoodmutual.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["AgencySecondary", "0037"],
-      assigned_groups:             ["AgencySecondary"],
-      assigned_roles:          ["Services.Action.ResetPassword",
-                                "Test.Agency.Commission.Statement.CSV.Access"]
-  },
-  {
-      username:              "vptester",
-      name:                  "Vendor Long Term User",
-      email:                 "appdev4@brotherhoodmutual.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["VendorPrimary"],
-      assigned_groups:             ["VendorPrimary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
-  },
-  {
-      username:              "vstester",
-      name:                  "Vendor Short Term User",
-      email:                 "appdev5@brotherhoodmutual.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["VendorSecondary"],
-      assigned_groups:             ["VendorSecondary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
-  }
-  ]
-
-  Rails.logger.info "Clear existing User Table"
-  User.delete_all
-
-  urecs = User.create!(users)
-  Rails.logger.info "Users Created #{urecs.size}"
-
-
-
   ##
   #
   # Authorization Content Profile Initialization

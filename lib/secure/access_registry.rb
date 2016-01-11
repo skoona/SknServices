@@ -83,6 +83,7 @@
 #  access_registry = {
 #    "uri" = {
 #      "secured" => true,
+#      "content" => true,
 #      "description" => "some description",
 #      "CREATE" => {
 #        "role name" => ["options","options",...],        
@@ -120,10 +121,13 @@ module Secure
     # Core Methods
     #
     def self.get_resource_description(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["description"] : ""
+      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:description] : ""
+    end
+    def self.get_resource_type(resource_uri)
+      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:content] : false
     end
     def self.get_resource_userdata(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["userdata"] : ""
+      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:userdata] : ""
     end
     def self.get_resource_content_entries(user_roles, options=nil)
       results = []

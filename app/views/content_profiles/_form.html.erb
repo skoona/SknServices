@@ -1,19 +1,23 @@
-<%= simple_form_for(@content_profile, :html => { :class => 'form form-horizontal', :authenticity_token => true }) do |f| %>
-  <%= f.error_notification %>
+<section>
+    <%= simple_form_for(@content_profile, :html => { :class => 'form form-horizontal', :authenticity_token => true }) do |f| %>
+      <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <% unless accessed_page.include?("edit") %>
-        <%= f.input :person_authentication_key %>
+      <div class="form-inputs">
+        <% unless accessed_page.include?("edit") %>
+            <%= f.input :person_authentication_key %>
+        <% end %>
+        <%= f.association :profile_type %>
+        <%= f.input :authentication_provider %>
+        <%= f.input :username %>
+        <%= f.input :display_name %>
+        <%= f.input :email %>
+      </div>
+
+      <div class="form-actions">
+        <div class="col-md-push-3 col-md-9">
+            <%= f.button :submit, class: 'btn btn-primary submit' %>
+            <%= link_to "Cancel", !action_name.eql?('new') ? content_profile_path(@content_profile) : content_profiles_path, class: 'btn' %>
+        </div>
+      </div>
     <% end %>
-    <%= f.association :profile_type %>
-    <%= f.input :authentication_provider %>
-    <%= f.input :username %>
-    <%= f.input :display_name %>
-    <%= f.input :email %>
-  </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, class: 'btn btn-primary submit' %>
-      <%= link_to "Cancel", content_profile_path(@content_profile), class: 'btn' %>
-  </div>
-<% end %>
+</section>

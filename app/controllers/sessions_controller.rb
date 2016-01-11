@@ -31,6 +31,6 @@ class SessionsController < ActionController::Base
 
   def do_flashes
     flash_message(:alert, warden.message) if warden.message.present?
-    flash_message(:notice, warden.errors.full_messages) unless warden.errors.empty?
+    flash_message(:alert, warden.errors.full_messages) unless warden.errors.empty?
   end
 end

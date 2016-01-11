@@ -30,8 +30,8 @@ RSpec.describe Secure::UserProfile, 'Contains the users presence.' do
   end
 
   context "Handles Class methods from included module." do
-    it '#method get_new_secure_token returns expected token.' do
-      expect( Secure::UserProfile.get_new_secure_token ).to be_a_kind_of(String)
+    it '#method storage_generate_new_key returns expected token.' do
+      expect( Secure::UserProfile.storage_generate_new_key ).to be_a_kind_of(String)
     end
   end
 
@@ -56,7 +56,7 @@ RSpec.describe Secure::UserProfile, 'Contains the users presence.' do
     it '#method fetch_cached_user() works as expected.' do
       u = Secure::UserProfile.new(user)
       expect( u.enable_authentication_controls() ).to be true
-      expect( Secure::UserProfile.users_store.size_of_store).to be > 0
+      expect( Secure::UserProfile.count_objects_stored).to be > 0
       expect( Secure::UserProfile.fetch_cached_user(u.person_authenticated_key)).to be_a_kind_of(Secure::UserProfile)
       expect( u.disable_authentication_controls() ).to be true
     end
