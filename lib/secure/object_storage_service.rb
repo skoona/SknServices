@@ -13,13 +13,57 @@ module Secure
     # @@object_storage_service_prefix = "Factory"
 
     # def self.included(base)
-    included do 
+    included do
       # base.class_variable_set(:@@object_storage_service_prefix, base.name.to_s)
       # base.extend StorageClassMethods
     end # end  #included
 
+    #
+    # Instance Methods
+    #
 
-    module StorageClassMethods
+    # Saves object to inMemory ObjectStore
+    # Returns storage key, needed to retrieve
+    def save_new_object(obj)
+      key = self.storage_generate_new_key()
+      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) saved as new with key:#{key}")
+      self.persist_storage_key(key, obj)
+      key
+    end
+
+    # Updates existing container with new object reference
+    # returns object
+    def save_existing_object(key, obj)
+      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
+      self.persist_storage_key(key, obj)
+      obj
+    end
+
+    # Retrieves object from InMemory Storage
+    # returns object
+    def get_existing_object(key)
+      obj = self.retrieve_storage_key(key)
+      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
+      obj
+    end
+
+    # Releases object from InMemory Storage
+    # returns object, if present
+    def remove_existing_object(key)
+      obj = self.release_storage_key(key)
+      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) removed existing object with key:#{key}")
+      obj
+    end
+
+    # Checks if object is in Storage
+    # returns true|false
+    def existing_object_stored?(key)
+      rc = self.query_storage_key?(key)
+      Rails.logger.debug("#{self.name.to_s}.#{__method__}() existing object with key:#{key}, exists?:#{rc ? 'True' : 'False'}")
+      rc
+    end
+
+    module ClassMethods
       # @@object_storage_service_prefix = self.name.to_s
       STORAGE_PREFIX = self.name.to_s
 
@@ -66,51 +110,6 @@ module Secure
       end
 
     end # end  StorageClassMethods
-
-    #
-    # Instance Methods
-    #
-
-    # Saves object to inMemory ObjectStore
-    # Returns storage key, needed to retrieve
-    def save_new_object(obj)
-      key = self.storage_generate_new_key()
-      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) saved as new with key:#{key}")
-      self.persist_storage_key(key, obj)
-      key
-    end
-
-    # Updates existing container with new object reference
-    # returns object
-    def save_existing_object(key, obj)
-      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
-      self.persist_storage_key(key, obj)
-      obj
-    end
-
-    # Retrieves object from InMemory Storage
-    # returns object
-    def get_existing_object(key)
-      obj = self.retrieve_storage_key(key)
-      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
-      obj
-    end
-
-    # Releases object from InMemory Storage
-    # returns object, if present
-    def remove_existing_object(key)
-      obj = self.release_storage_key(key)
-      Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) removed existing object with key:#{key}")
-      obj
-    end
-
-    # Checks if object is in Storage
-    # returns true|false
-    def existing_object_stored?(key)
-      rc = self.query_storage_key?(key)
-      Rails.logger.debug("#{self.name.to_s}.#{__method__}() existing object with key:#{key}, exists?:#{rc ? 'True' : 'False'}")
-      rc
-    end
 
   end # end ObjectStorageServices namespace
 end # end factory namespace
