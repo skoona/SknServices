@@ -53,7 +53,7 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # fixes: 'Missing host to link to! Please provide the :host parameter,
 #         set default_url_options[:host], or set :only_path to true'
-Rails.application.routes.default_url_options[:host] = 'http://localhost'
+Rails.application.routes.default_url_options[:host] = 'http://test.localdomain.com'
 
 # Checks for pending migration and applies them before tests are run.
 ActiveRecord::Migration.maintain_test_schema!
@@ -78,18 +78,15 @@ RSpec.configure do |config|
   # ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md
   config.include FactoryGirl::Syntax::Methods
 
-  config.before(:suite) do
-    load Rails.root.join("db/seeds.rb")
-  end
-
   config.before(:each) do
     Capybara.use_default_driver       # switch back to default driver
-    Capybara.default_host = 'http://localhost'
+    # Capybara.default_host = 'http://test.host'
   end
 
-  config.after(:each) do
+  config.append_after(:each) do
     Warden.test_reset!
-    Capybara.current_session.driver.reset!
+    # Capybara.current_session.driver.reset!
+    Capybara.reset_sessions!
   end
 
   def sign_in(user, opts=nil)

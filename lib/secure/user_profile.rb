@@ -7,16 +7,15 @@
 module Secure
   class UserProfile < Factory::BaseServices
 
-    include Secure::UserContentProfile
     include Secure::UserAccessProfile
+    include Secure::UserContentProfile
 
     attr_accessor :id, :person_authenticated_key, :last_access
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
-    class << self
-      delegate :find_by, :find_each, :where, :remember_token, :username,
-               :to => ::User
-    end
+    # class << self
+      singleton_class.send :delegate, :find_by, :find_each, :where, :remember_token, :username, :to => ::User
+    # end
 
     ##
     # Initialize with a user_object only

@@ -9,7 +9,7 @@
 # self is factory
 # factory is the thing that initialized us: i.e. controller is really factory
 
-class ServiceFactory < Factory::BaseServices
+class ServiceFactory < ::Factory::BaseServices
 
   attr_accessor :factory
 

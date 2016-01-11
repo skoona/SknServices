@@ -92,13 +92,24 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
                          :strategies => [:remember_token, :password, :http_basic_auth, :not_authorized],
                          :action => :new
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
+end
 
-  # otherwise wrap class Warden::SessionSerializer, def serialize(record); def deserialize(keys)
-  manager.serialize_into_session do |record|
-    # puts "===============[DEBUG]:st #{self.class}\##{__method__}"
+# RackSessionAccess config
+if Rails.env.test?
+  Rails.application.config.middleware.insert_before RailsWarden::Manager, RackSessionAccess::Middleware
+end
+
+class Warden::SessionSerializer
+  ##
+  # Save the userProfile id to session store
+  def serialize(record)
     [record.class.name, record.person_authenticated_key]
   end
-  manager.serialize_from_session do |keys|
+
+  ##
+  # Restore a klass name and id from session store
+  # Use id to find the existing object
+  def deserialize(keys)
     # puts "===============[DEBUG]:sf #{self.class}\##{__method__}"
     klass, token = keys
     klass = case klass
@@ -107,14 +118,8 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
               when String, Symbol
                 klass.to_s.classify.constantize
             end
-    user = klass.fetch_cached_user( token )
-    user
+    klass.fetch_cached_user( token )
   end
-end
-
-# RackSessionAccess config
-if Rails.env.test?
-  Rails.application.config.middleware.insert_before RailsWarden::Manager, RackSessionAccess::Middleware
 end
 
 
