@@ -4,7 +4,7 @@
 #
 #
 
-class ProfilesDomain < ::Factory::DomainServices
+class ProfilesDomain < ::Factory::DomainsBase
 
 
 

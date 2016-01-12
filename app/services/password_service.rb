@@ -1,4 +1,4 @@
-class PasswordService < ::Factory::DomainServices
+class PasswordService < ::Factory::DomainsBase
 
 	# attr_accessor :factory, :user, :current_user  -- initialize by service factory
 

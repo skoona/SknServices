@@ -5,7 +5,7 @@
 #
 #
 module Secure
-  class UserProfile < Factory::BaseServices
+  class UserProfile < Factory::ServicesBase
 
     include Secure::UserAccessProfile
     include Secure::UserContentProfile
@@ -89,7 +89,7 @@ module Secure
     end
 
     #
-    # Wraps methods from Secure::ObjectStorageServices to apply our default key
+    # Wraps methods from Factory::ObjectStorageServices to apply our default key
     #
 
     # Saves user object to InMemory Container
