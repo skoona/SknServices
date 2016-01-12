@@ -27,5 +27,9 @@ module SknService
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # config.log_formatter = ActiveSupport::TaggedLogging::Formatter
+    config.log_tags = [Proc.new {Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')}, Proc.new {SknService::Application.config.log_level.upcase}]
+    config.logger = ActiveSupport::TaggedLogging.new(Logger.new("#{Rails.root}/log/#{Rails.env}.log", 'daily'))
   end
 end

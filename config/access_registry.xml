@@ -716,7 +716,7 @@
     </resource>
 
     <!--=========================  DEVELOPMENT RESOURCES  ============================ -->
-  <resource secured="true">
+  <resource secured="false">
       <uri>pages/developer</uri>
       <description>System Status Page for Developers</description>
       <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>

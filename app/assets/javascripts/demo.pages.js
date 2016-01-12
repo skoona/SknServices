@@ -7,26 +7,11 @@
  */
 
 
-var logEnabled = <%= Rails.env.development? %>,
-    csrfToken,
-    accessibleUrl,
+var accessibleUrl,
     userTable,
     accessTable,
     contentTable,
-    accessibleTable,
-    controllerAction,
-    controllerName;
-
-
-/**
- * Prevents debuging messages from going to console none development mode
- * @param message {string}  to log on console
- */
-        function consoleLog(message) {
-    if (logEnabled) {
-        console.log(message);
-    }
-}
+    accessibleTable;
 
 /**
  * Content/Access Profile Table Selection
@@ -191,8 +176,6 @@ function replaceAccessibleTableRows(dataPackage) {
  * @returns {boolean}
  */
 function handleDemoPages() {
-    /* Save this token for the Ajax calls */
-    csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     accessTable = $('#access-table').DataTable({
         language: {
@@ -266,9 +249,6 @@ function handleDemoPages() {
  * ********************************************************
  */
 $(function() {
-
-    controllerAction = $('body').data().controllerAction;
-    controllerName = $('body').data().controllerName;
 
     /* Only for the proper page */
     if ( controllerName.startsWith('profile') ) {

@@ -15,14 +15,15 @@
         </p>
     </div>
 
-    <section>
+    <div class="row">
         <div class="col-md-3">
             <div class="panel panel-success ">
                 <div class="panel-heading">
                     <h2 id="users-title" class="panel-title">UserProfiles</h2>
                 </div>
-                <!-- Table -->
-                <table id="users-table" class="table table-hover table-striped display responsive no-wrap" cellspacing="0" width="100%">
+                <!-- Table bootstrap responsive -->
+                <div class="table-responsive">
+                <table id="users-table" class="table table-hover table-striped display" cellspacing="0" width="100%">
                     <thead>
                         <th>Username</th>
                         <th>Proper Name</th>
@@ -36,46 +37,49 @@
                     <% end  %>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
         <div class="col-md-9">
-            <div class="col-md-12">
-                <div class="panel panel-info ">
-                    <div class="panel-heading">
-                        <h2 id="access-title" class="panel-title">AccessProfiles Entries: <span class="label-info">select a user profile</span></h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info ">
+                        <div class="panel-heading">
+                            <h2 id="access-title" class="panel-title">AccessProfiles Entries: <span class="label-info">select a user profile</span></h2>
+                        </div>
+                        <!-- Table -->
+                        <table id="access-table" class="table table-hover table-striped profile display responsive no-wrap" cellspacing="0" width="100%">
+                            <thead>
+                                <th>Entry Description</th>
+                                <th>Content</th>
+                                <th>Topic</th>
+                                <th>Topic Value</th>
+                                <th>Content Value</th>
+                            </thead>
+                            <tbody class="">
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- Table -->
-                    <table id="access-table" class="table table-hover table-striped profile display responsive no-wrap" cellspacing="0" width="100%">
-                        <thead>
-                            <th>Entry Description</th>
-                            <th>Content</th>
-                            <th>Topic</th>
-                            <th>Topic Value</th>
-                            <th>Content Value</th>
-                        </thead>
-                        <tbody class="">
-                        </tbody>
-                    </table>
                 </div>
-            </div>
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h2 id="accessible-title" class="panel-title">Accessible Content: <span class="label-info">select a AccessProfile Entry from above.</span></h2>
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h2 id="accessible-title" class="panel-title">Accessible Content: <span class="label-info">select a AccessProfile Entry from above.</span></h2>
+                        </div>
+                        <!-- Table -->
+                        <table id="accessible-table" class="table table-hover table-striped table-bordered display responsive no-wrap" cellspacing="0" width="100%">
+                            <thead>
+                                <th>Filename</th>
+                                <th>Source</th>
+                                <th>Created</th>
+                                <th>Size</th>
+                            </thead>
+                            <tbody class="" data-accessible-url="<%= @page_controls.page_users.first.package.accessible_content_url %>">
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- Table -->
-                    <table id="accessible-table" class="table table-hover table-striped display responsive no-wrap" cellspacing="0" width="100%">
-                        <thead>
-                            <th>Filename</th>
-                            <th>Source</th>
-                            <th>Created</th>
-                            <th>Size</th>
-                        </thead>
-                        <tbody class="" data-accessible-url="<%= @page_controls.page_users.first.package.accessible_content_url %>">
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </article>

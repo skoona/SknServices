@@ -1,34 +1,23 @@
 <% provide(:title, accessed_page_name) %>
 
-<script type="text/javascript">
-    function getRailsInfo(placeHolder) {
-        info =  document.getElementById(placeHolder);
-        if (window.XMLHttpRequest)
-        { xhr = new XMLHttpRequest(); }
-        else
-        { xhr = new ActiveXObject("Microsoft.XMLHTTP"); }
-        xhr.open("GET", info.closest("a").attr('href'),false);
-        xhr.send("");
-
-        info.hide().innerHTML($.contents('body',xhr.responseText)).fadeIn();
-        document.getElementById(placeHolder).style.display = 'block';
-    }
-</script>
+<header class="page-header">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+</header>
 
 <%# rails/info/routes #%>
 
-<section class="container" id="page">
-    <div id="content">
-        <h1>SknService home#developer</h1>
 
-        <div>
-            <% if logged_in? %>
-             <h3>Welcome <%= current_user.name %>.</h3>
-            <% end %>
+<article id="page">
+
+    <% if logged_in? %>
+        <h3 class="text-center">Welcome <%= current_user.name %><br/><small>SknService home#developer</small></h3>
+    <% end %>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2 class="panel-title">Platform Configuration Values</h2>
         </div>
-
-        <div>
-            <h3>Platform Configuration Values</h3>
+        <div class="panel-body">
             <p>Router Direct Page Accessed => <%= accessed_page() %></p>
             <p>AccessRegistry Access Page Name => <%= accessed_page_name() %></p>
             <p>Controller name => <%= controller_name %></p>
@@ -37,86 +26,160 @@
             <p>Request fullpath => <%= request.fullpath() %></p>
             <p>Request original fullpath => <%= request.original_fullpath() %></p>
             <p>Rails Environment => <%= Rails.env.to_s %></p>
-            <%# <p>ActiveRecord Username => <%= ActiveRecord::Base.connection.raw_connection.config[:username] || ActiveRecord::Base.connection.raw_connection.config[:adapter] %>
+            <%# {"encoding"=>"unicode", "username"=>"postgres", "adapter"=>"postgresql", "port"=>5432, "host"=>"localhost", "password"=>"postgres", "database"=>"somename", "pool"=>5} %>
+            <p>ActiveRecord Username => <%= Rails.configuration.database_configuration[Rails.env]["username"] || 'unknown' %></p>
+            <p>ActiveRecord Database => <%= Rails.configuration.database_configuration[Rails.env]["database"] || 'unknown' %></p>
+            <p>ActiveRecord  Adapter => <%= Rails.configuration.database_configuration[Rails.env]["adapter"] || 'unknown' %></p>
+            <p>ActiveRecord PoolSize => <%= Rails.configuration.database_configuration[Rails.env]["pool"] || 'unknown' %></p>
             <p>isDeveloper => <%= Settings.Packaging.isDeveloper.to_s %></p>
             <p>isDevelopment => <%= Settings.Packaging.isDevelopment.to_s %></p>
             <p>isProduction => <%= Settings.Packaging.isProduction.to_s %></p>
             <p>Development Version <%= Settings.Packaging.pomVersion.to_s %></p>
         </div>
-        <div id="about">
-                <h3><a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">click here for environment info.</a></h3>
-                <div id="about-content" style="display: none"></div>
-        </div>
-        <div id="routes">
-            <h3><a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false;">click here for route info.</a></h3>
-            <div id="route-content" style="display: none"></div>
-        </div>
-        <hr />
-        <div style="margin-left: 17px;">
-            <div>
-                <% if authenticated? %>
-                    <p>Has Access to this page '/' = <%= current_user_has_access?("/") ? "True": "False" %></p>
-                    <hr />
-                    <h3>Assigned Groups</h3>
-                    <ol>
-                        <% current_user.assigned_groups.each do |item| -%>
-                            <li><%= item %></li>
-                        <% end -%>
-                    </ol>
-                    <hr />
-                    <h3>Assigned Roles</h3>
-                    <ol>
-                        <% current_user.assigned_roles.each do |item| -%>
-                            <li><%= item %></li>
-                        <% end -%>
-                    </ol>
-                    <hr />
-                    <h3>Access Profile</h3>
-                    <ol>
-                        <% current_user.access_roles_all.try(:each) do |item| -%>
-                            <li><%= item %></li>
-                        <% end -%>
-                    </ol>
-                    <hr />
-                    <h3>Content Profile</h3>
-                    <ol>
-                        <% current_user.content_profile.try(:attributes).each_pair do |item, value| -%>
-                            <% if item.eql?(:entries) %>
-                                <l1><h4><%= item%></h4>
-                                    <% value.each do |ary| %>
-                                      <ol>
-                                        <% ary.each_pair do |k,v| %>
-                                           <li><%= k %> => <%= v %></li>
-                                        <% end %>
-                                        <li>---</li>
-                                      </ol>
-                                    <% end %>
-                                </l1>
-                                <% else %>
-                            <li><%= item %> => <%= value %></li>
-                                <% end %>
-                        <% end -%>
-                    </ol>
-                <% end %>
+    </div>
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Rails Info
+                    </a>
+                </h4>
             </div>
-            <hr />
-            <div>
-            <h3>Current Session Values</h3>
-                <ol>
-                    <% session.keys.each do |k| -%>
-                        <li> <%= k %>: <%= session[k] %> </li>
-                    <% end -%>
-                </ol>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                    <h2 id="about"><a href="#" class="btn btn-lg btn-primary" data-header="#about" data-url="rails/info/properties" data-place="#about-content">Click to Load.</a></h2>
+                    <div id="about-content" class=""></div>
+                </div>
             </div>
-            <hr />
-            <div>
-             <h3>Cookies on Current Request</h3>
-                 <ol>
-                    <% cookies.each do |item| -%>
-                        <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
-                    <% end -%>
-                </ol>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingTwo">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Route Info
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="panel-body">
+                    <h2 id="route"><a href="#" class="btn btn-lg btn-primary" data-header="#route" data-url="rails/info/routes" data-place="#route-content">Click to Load.</a></h2>
+                    <div id="route-content" class=""></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingThree">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
+                        AccessRegistry XML
+                        <span class="badge"><%= Secure::AccessRegistry.get_ar_resource_keys.length %></span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="panel-body">
+                    <h2 id="access">Summary Listing </h2>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <th>Index</th>
+                        <th>URI</th>
+                        <th>Description</th>
+                        <th>UserData</th>
+                        </thead>
+                        <tbody>
+
+                        <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
+                            <tr>
+                                <td><%= '%05d' % index %></td>
+                                <td><%= ar.to_s %></td>
+                                <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
+                                <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
+                            </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
         </div>
     </div>
-</section>
+
+    <% if authenticated? %>
+        <div class="alert alert-success" role="alert">
+            <p>Has Access to this page '/' = <%= current_user_has_access?("/") ? "True": "False" %></p>
+        </div>
+
+        <div class="well-lg">
+            <h3>Assigned Groups</h3>
+            <ol>
+                <% current_user.assigned_groups.each do |item| -%>
+                    <li><%= item %></li>
+                <% end -%>
+            </ol>
+        </div>
+
+        <div class="well-lg">
+            <h3>Assigned Roles</h3>
+            <ol>
+                <% current_user.assigned_roles.each do |item| -%>
+                    <li><%= item %></li>
+                <% end -%>
+            </ol>
+        </div>
+
+        <div class="well-lg">
+            <h3>Access Profile</h3>
+            <ol>
+                <% current_user.access_roles_all.try(:each) do |item| -%>
+                    <li><%= item %></li>
+                <% end -%>
+            </ol>
+        </div>
+
+        <div class="well-lg">
+            <h3>Content Profile</h3>
+            <ol>
+                <% res = current_user.content_profile %>
+                <% if res.username? %>
+                    <% res.to_hash.each_pair do |item, value| -%>
+                        <% if item.eql?(:entries) %>
+                            <l1><h4><%= item%></h4>
+                                <% value.each do |ary| %>
+                                  <ol>
+                                    <% ary.each_pair do |k,v| %>
+                                       <li><%= k %> => <%= v %></li>
+                                    <% end %>
+                                    <li>---</li>
+                                  </ol>
+                                <% end %>
+                            </l1>
+                            <% else %>
+                        <li><%= item %> => <%= value %></li>
+                            <% end %>
+                    <% end -%>
+                <% end %>
+            </ol>
+        </div>
+    <% end %>
+
+    <div class="well-lg">
+        <h3>Current Session Values</h3>
+        <ol>
+            <% session.keys.each do |k| -%>
+                <li> <%= k %>: <%= session[k] %> </li>
+            <% end -%>
+        </ol>
+    </div>
+
+    <div class="well-lg">
+        <h3>Cookies on Current Request</h3>
+        <ol>
+            <% cookies.each do |item| -%>
+                <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
+            <% end -%>
+        </ol>
+   </div>
+
+</article>

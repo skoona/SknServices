@@ -25,6 +25,18 @@ section {                     // a piece of a page
   @extend .row;
   overflow: auto;
 }
+.route_table { // Rails Route Info Table
+  @extend .table;
+  @extend .table-striped;
+  @extend .table-hover;
+}
+div.show > table {  // Rails Properties Table
+  @extend .table;
+  @extend .table-striped;
+  @extend .table-hover;
+}
+
+
 
 /* Sticky footer styles
  -------------------------- */
