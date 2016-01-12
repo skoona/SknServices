@@ -1,8 +1,10 @@
 <% provide(:title, accessed_page_name) %>
 
-<section class="container">
-    <h1><%= accessed_page_name %></h1>
+<header class="page-header">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+</header>
 
+<section>
     <%= render @user_group_role %>
 </section>
 

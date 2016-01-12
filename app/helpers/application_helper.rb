@@ -38,7 +38,7 @@ module ApplicationHelper
   end
 
   # Returns the Gravatar (http://gravatar.com/) for the given employee.
-  def gravatar_for(user, options = { :size => 50 })
+  def gravatar_for(user, options = { :size => 75 })
     gravatar_image_tag(user.email.strip,  :alt => h(user.name),
                        :class => 'gravatar round',
                        :gravatar => options)

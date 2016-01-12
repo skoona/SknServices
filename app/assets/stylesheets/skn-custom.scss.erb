@@ -1,0 +1,209 @@
+/*
+ * skn-custom.css.scss
+ * - style for SknServices
+ *
+ */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body > .container-fluid { // top level wrapper in layout
+  margin-top: 60px;
+  margin-bottom: 60px;
+  padding-top: 0px;
+}
+main {                   // main page container, without menu or footer
+  @extend .container;
+  padding: 24px 0px 24px 0px; // top right bottom left
+}
+article {                     // a whole page typically
+  @extend .container;
+  padding-bottom: 40px;
+}
+section {                     // a piece of a page
+  @extend .row;
+  overflow: auto;
+}
+.route_table { // Rails Route Info Table
+  @extend .table;
+  @extend .table-striped;
+  @extend .table-hover;
+}
+div.show > table {  // Rails Properties Table
+  @extend .table;
+  @extend .table-striped;
+  @extend .table-hover;
+}
+
+
+
+/* Sticky footer styles
+ -------------------------- */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 55px;
+  background-color: #eee;
+}
+.footer > .container {
+  padding-top: 15px;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+  color: #fffe86;  /*Sets the text hover color on navbar*/
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >
+a:hover, .navbar-default .navbar-nav > .active > a:focus {
+  color: white; /*BACKGROUND color for active*/
+  background-color: #030033;
+}
+.navbar-default {
+  background-color: #0f006f;
+  border-color: #030033;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #262626;
+  text-decoration: none;
+  background-color: #66CCFF;  /*change color of links in drop down here*/
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: silver; /*Change rollover cell color here*/
+}
+.navbar-default .navbar-nav > li > a {
+  color: white; /*Change active text color here*/
+}
+
+
+img {
+  @extend .img-responsive;
+  margin: 0 auto;
+}
+.huge-image {
+  width: 90%;
+}
+.large-image {
+  width: 74%;
+}
+.brand-image {
+  margin-top: -8px;
+  margin-left: -8px;
+  padding: 0 0 0 0;
+}
+
+@media only screen and (min-width: 768px) {
+.galaxy-home { // .jumbotron.galaxy
+    position: relative;
+    background: #000 url("<%= image_path('galaxy-view-2007.png') %>") center center;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    overflow: hidden;
+}
+.galaxy-home h1.big-chalk {
+    text-shadow: 2px 2px 2px rgba(0,0,0,.3);
+    font-weight: bold;
+    color: #fff;
+    font-size:800%;
+}
+.galaxy-home p {
+    color: #fff;
+    font-weight: bold;
+}
+.galaxy-man { // .jumbotron.galaxy
+    position: relative;
+    background: #000 url("<%= image_path('galaxy-man.png') %>") center center;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    overflow: hidden;
+}
+.galaxy-man h1.big-chalk {
+    text-shadow: 2px 2px 2px rgba(0,0,0,.3);
+    font-weight: bold;
+    color: #fff;
+    font-size:800%;
+}
+.galaxy-man p {
+    color: #fff;
+    font-weight: bold;
+}
+.galaxy-man ul > li {
+    color: #fff;
+    font-weight: bold;
+}
+.galaxy-squared { // .jumbotron.galaxy
+    position: relative;
+    background: #000 url("<%= image_path('galaxy-squared.png') %>") center center;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    overflow: hidden;
+}
+.galaxy-squared h1.big-chalk {
+    text-shadow: 2px 2px 2px rgba(0,0,0,.3);
+    font-weight: bold;
+    color: #fff;
+    font-size:800%;
+}
+.galaxy-squared p {
+    color: #fff;
+    font-weight: bold;
+}
+.galaxy-squared ul > li {
+    color: #fff;
+    font-weight: bold;
+}
+}
+
+.column {
+  @extend .col-md-6;
+  @extend .text-center;
+}
+.form {
+  @extend .col-md-push-3;
+  @extend .col-md-6;
+}
+.form-centered {
+  @extend .col-md-push-3;
+  @extend .col-md-6;
+  @extend .text-center;
+}
+.submit {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .btn-lg;
+}
+
+.bottom-note {
+    background:#00aeef;
+    padding:40px;
+    margin-top:25px;
+    margin-bottom:25px;
+    text-align:center;
+}
+.bottom-note h1 {
+    text-shadow: none;
+    font-weight: normal;
+    color: #fff;
+}
+
+// scroll boxes
+div.check_boxes > div.permissions {
+    @extend .col-sm-9;
+    height: 200px;
+    overflow: auto;
+    width: 75%;
+    border: 1px solid #000;
+    list-style-type: none;
+    overflow-x: hidden;
+    label:hover {
+        background-color: Highlight;
+        color: HighlightText;
+        width: 100%;
+    }
+}

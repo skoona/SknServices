@@ -1,15 +1,16 @@
 <% provide(:title, accessed_page_name) %>
 
+<header class="page-header">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+</header>
+
 <section class="container">
-    <h1><%= accessed_page_name %></h1>
-
     <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
-    <section class="container">
+    <div class="row">
         <%= render @content_profiles %>
-    </section>
+    </div>
     <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
 
-    <br />
     <% if current_user_has_create?('content_profiles/new') %>
         <%= link_to 'New Content profile', new_content_profile_path %>
     <% end %>

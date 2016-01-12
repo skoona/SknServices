@@ -222,15 +222,15 @@ Warden::Manager.on_request do |proxy|
   end
 
   # see if we can restore a session using remember token
-  if (!bypass_flag and !user_object.present? and remembered) or (timeout_flag and remembered)
+  if (!user_object.present? and remembered) or (timeout_flag and remembered)
     attempted_remember_flag = true
+    Rails.logger.debug " Warden::Manager.on_request(BeforeAuth)"
     proxy.authenticate(:remember_token)
     unless proxy.authenticated?
       proxy.logout()
-      proxy.cookies.delete :remember_token, domain: proxy.env["SERVER_NAME"]
       proxy.request.flash[:notice] = ["Session Expired! Please Sign In To Continue.  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag}) Cleared Token!"]
     else
-      proxy.request.flash[:notice] = ["Session Expired! Restored by Remember Flag, Please continue!  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
+      proxy.request.flash[:notice] = ["Session Interrupted! Restored by remember flag action, Please continue!  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
     end
   end
 
@@ -287,10 +287,9 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
       Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
       Secure::AccessRegistry.security_check?(uri)            #  'signin'
 
-    unless bypass_flag    # Controllers's login_required? will sort this out
-      auth.request.flash[:notice] = "Please sign in to continue. No user logged in!   Warden.after_fetch_failed"
-      auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
-    end
+  unless bypass_flag    # Controllers's login_required? will sort this out
+    auth.request.flash[:notice] = "Please sign in to continue. No user logged in!   Warden.after_fetch_failed"
+  end
 
   Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass_flag}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
 end

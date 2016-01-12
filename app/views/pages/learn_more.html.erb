@@ -1,12 +1,10 @@
 <% provide(:title, accessed_page_name) %>
 
 <article>
-    <div class="jumbotron">
-        <h1><%= accessed_page_name %></h1>
-        <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "large-image") %>
-    </div>
+    <div class="jumbotron galaxy-man">
+        <h1 class="big-chalk"><%= accessed_page_name %></h1>
+        <%# <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "large-image") %>
 
-    <section>
         <p class="lead">
             This application demonstrates and explores methods for Authentication, Access Authorizations,
             and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
@@ -30,7 +28,7 @@
             ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
             engineering challenge to handle the dynamics of Electronic Delivery.
         </p>
-    </section>
+    </div>
 
      <div class="row">
          <div class="col-md-6">

@@ -1,44 +1,54 @@
 <% provide(:title, accessed_page_name) %>
 
-<header class="page-header">
-    <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
-
-<%# rails/info/routes #%>
-
-
 <article id="page">
+
+    <div class="jumbotron galaxy-squared">
+        <h1 class="big-chalk"><%= accessed_page_name %></h1>
+        <p>
+            This page show the current application status, and details of its internal structure.
+        </p>
+        <p>Content and Access profiles for the current user are also displayed below.</p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="<%= details_model_pages_path %>" role="button">Learn more</a>
+        </p>
+    </div>
+
 
     <% if logged_in? %>
         <h3 class="text-center">Welcome <%= current_user.name %><br/><small>SknService home#developer</small></h3>
     <% end %>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h2 class="panel-title">Platform Configuration Values</h2>
-        </div>
-        <div class="panel-body">
-            <p>Router Direct Page Accessed => <%= accessed_page() %></p>
-            <p>AccessRegistry Access Page Name => <%= accessed_page_name() %></p>
-            <p>Controller name => <%= controller_name %></p>
-            <p>Controller Action => <%= action_name %></p>
-            <p>Controller Path => <%= controller_path() %></p>
-            <p>Request fullpath => <%= request.fullpath() %></p>
-            <p>Request original fullpath => <%= request.original_fullpath() %></p>
-            <p>Rails Environment => <%= Rails.env.to_s %></p>
-            <%# {"encoding"=>"unicode", "username"=>"postgres", "adapter"=>"postgresql", "port"=>5432, "host"=>"localhost", "password"=>"postgres", "database"=>"somename", "pool"=>5} %>
-            <p>ActiveRecord Username => <%= Rails.configuration.database_configuration[Rails.env]["username"] || 'unknown' %></p>
-            <p>ActiveRecord Database => <%= Rails.configuration.database_configuration[Rails.env]["database"] || 'unknown' %></p>
-            <p>ActiveRecord  Adapter => <%= Rails.configuration.database_configuration[Rails.env]["adapter"] || 'unknown' %></p>
-            <p>ActiveRecord PoolSize => <%= Rails.configuration.database_configuration[Rails.env]["pool"] || 'unknown' %></p>
-            <p>isDeveloper => <%= Settings.Packaging.isDeveloper.to_s %></p>
-            <p>isDevelopment => <%= Settings.Packaging.isDevelopment.to_s %></p>
-            <p>isProduction => <%= Settings.Packaging.isProduction.to_s %></p>
-            <p>Development Version <%= Settings.Packaging.pomVersion.to_s %></p>
-        </div>
-    </div>
-
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingZero">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
+                        Platform Configuration Values
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseZero" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingZero">
+                <div class="panel-body">
+                    <p>Router Direct Page Accessed => <%= accessed_page() %></p>
+                    <p>AccessRegistry Access Page Name => <%= accessed_page_name() %></p>
+                    <p>Controller name => <%= controller_name %></p>
+                    <p>Controller Action => <%= action_name %></p>
+                    <p>Controller Path => <%= controller_path() %></p>
+                    <p>Request fullpath => <%= request.fullpath() %></p>
+                    <p>Request original fullpath => <%= request.original_fullpath() %></p>
+                    <p>Rails Environment => <%= Rails.env.to_s %></p>
+                    <%# {"encoding"=>"unicode", "username"=>"postgres", "adapter"=>"postgresql", "port"=>5432, "host"=>"localhost", "password"=>"postgres", "database"=>"somename", "pool"=>5} %>
+                    <p>ActiveRecord Username => <%= Rails.configuration.database_configuration[Rails.env]["username"] || 'unknown' %></p>
+                    <p>ActiveRecord Database => <%= Rails.configuration.database_configuration[Rails.env]["database"] || 'unknown' %></p>
+                    <p>ActiveRecord  Adapter => <%= Rails.configuration.database_configuration[Rails.env]["adapter"] || 'unknown' %></p>
+                    <p>ActiveRecord PoolSize => <%= Rails.configuration.database_configuration[Rails.env]["pool"] || 'unknown' %></p>
+                    <p>isDeveloper => <%= Settings.Packaging.isDeveloper.to_s %></p>
+                    <p>isDevelopment => <%= Settings.Packaging.isDevelopment.to_s %></p>
+                    <p>isProduction => <%= Settings.Packaging.isProduction.to_s %></p>
+                    <p>Development Version <%= Settings.Packaging.pomVersion.to_s %></p>
+                </div>
+            </div>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
@@ -47,13 +57,14 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
                     <h2 id="about"><a href="#" class="btn btn-lg btn-primary" data-header="#about" data-url="rails/info/properties" data-place="#about-content">Click to Load.</a></h2>
                     <div id="about-content" class=""></div>
                 </div>
             </div>
         </div>
+
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
@@ -91,7 +102,7 @@
                         <tbody>
 
                         <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
-                            <tr>
+                            <tr class="<%= Secure::AccessRegistry.get_resource_type(ar) ? 'success' : '' %>">
                                 <td><%= '%05d' % index %></td>
                                 <td><%= ar.to_s %></td>
                                 <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>

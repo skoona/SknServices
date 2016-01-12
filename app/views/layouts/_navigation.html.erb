@@ -23,9 +23,15 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <% if current_user_has_access?('#Administration') %>
+                            <% if current_user_has_access?('#UserProfileManagement') %>
                                 <% if current_user_has_access?('users/index') %>
                                     <%= nav_link_icon("glyphicon-user", "Manage UserProfiles", users_path) %>
+                                <% end %>
+                            <% end %>
+
+                            <% if current_user_has_access?('#AccessProfileManagement') %>
+                                <% if current_user_has_access?('user_group_roles/index') %>
+                                    <%= nav_link_icon("glyphicon-lock", "Manage AccessProfiles", user_group_roles_path) %>
                                 <% end %>
                             <% end %>
 
@@ -35,9 +41,9 @@
                                 <% end %>
                             <% end %>
 
-                            <% if current_user_has_access?('#GroupManagement') %>
-                                <% if current_user_has_access?('user_group_roles/index') %>
-                                    <%= nav_link_icon("glyphicon-lock", "Manage GroupRoles", user_group_roles_path) %>
+                            <% if current_user_has_access?('#SystemInformation') %>
+                                <% if current_user_has_access?('content_profiles/index') %>
+                                    <%= nav_link_icon("glyphicon-cog", "System Information", developer_pages_path) %>
                                 <% end %>
                             <% end %>
                         </ul>
