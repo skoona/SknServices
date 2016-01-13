@@ -140,7 +140,7 @@ namespace :access_registry do
       end
     end
 
-    desc 'Lists XML ContentProfiles.[false|true] false is content only entries.'
+    desc 'Creates ProfileType records.'
     task create_profile_types:  :environment do |t, args|
       begin
         print "\tCreating ProfileTypes: "
@@ -163,6 +163,165 @@ namespace :access_registry do
         []
       end
     end
+
+    desc 'Creates ContentProfileEntry records.'
+    task create_content_profile_entries:  :environment do |t, args|
+      begin
+
+        Rake::Task['access_registry:preload:drop_profiles'].invoke
+
+        print "\tCreating ContentProfileEntry, ContentType/ContentTypeOpts, TopicType/TopicTypeOpts: "
+        res = []
+
+        # HBTM needs a key prefix (content_type_opts_attributes),
+        # BO/HO doesn't need the key prefix (content_type_attributes)
+        cpe = [
+            {topic_value: ["Agency"],     content_value: [], description: 'Determine which agency documents can be seen',
+               content_type_attributes: {
+                      name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+                           content_type_opts_attributes: {
+                               "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
+                               "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
+                               "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }
+               },
+              topic_type_attributes: {
+                     name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+                           topic_type_opts_attributes: {
+                               "0" => {value: "0034", description: "Some Agency Number"},
+                               "1" => {value: "1001", description: "Another Agency Number"},
+                               "2" => {value: "0037", description: "More Agencies"} }
+              }
+            },
+            {topic_value: ["Account"],    content_value: [], description: 'Determine which accounts will have notification sent',
+               content_type_attributes: {
+                     name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
+                           content_type_opts_attributes: {
+                               "0" => {value: "AdvCancel", description: "Advance Cancel" },
+                               "1" => {value: "FutCancel", description: "Future Cancel" },
+                               "2" => {value: "Cancel",    description: "Cancel" }}
+               },
+               topic_type_attributes: {
+                     name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+                            topic_type_opts_attributes: {
+                                "0" => {value: "Agency", description: "All Agency Accounts"},
+                                "1" => {value: "Agent",  description: "All Agent Accounts"},
+                                "2" => {value: "None",   description: "No Agency Agent Options"}}
+               }
+            },
+            {topic_value: ["LicensedStates"], content_value: [], description: 'Determine which States agent may operate in.',
+               content_type_attributes: {
+                    name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
+                            content_type_opts_attributes: {
+                                "0" => {value: "21", description: "Michigan"},
+                                "1" => {value: "9",  description: "Ohio"},
+                                "2" => {value: "23", description: "Illinois"}}
+               },
+               topic_type_attributes: {
+                    name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
+                            topic_type_opts_attributes: {
+                                "0" => {value: "USA", description: "United States of America"},
+                                "1" => {value: "CAN", description: "Canada"}}
+               }
+            }
+        ]
+
+        res = ContentProfileEntry.create!(cpe)
+
+        puts "Success!."
+        res
+      rescue Exception => e
+        Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+        puts "Failed"
+        []
+      end
+    end
+
+
+    desc 'Creates ContentProfile records.'
+    task create_content_profiles:  :environment do |t, args|
+      begin
+
+        Rake::Task['access_registry:preload:drop_profiles'].invoke
+        Rake::Task['access_registry:preload:create_profile_types'].invoke
+
+        print "\tCreating ContentProfile, ContentProfileEntry, ContentType/ContentTypeOpts, TopicType/TopicTypeOpts: "
+        res = []
+
+        # HBTM needs a key prefix (content_type_opts_attributes),
+        # BO/HO doesn't need the key prefix (content_type_attributes)
+        cpe = [
+            {topic_value: ["Agency"],     content_value: [], description: 'Determine which agency documents can be seen',
+             content_type_attributes: {
+                 name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+                 content_type_opts_attributes: {
+                     "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
+                     "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
+                     "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }
+             },
+             topic_type_attributes: {
+                 name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+                 topic_type_opts_attributes: {
+                     "0" => {value: "0034", description: "Some Agency Number"},
+                     "1" => {value: "1001", description: "Another Agency Number"},
+                     "2" => {value: "0037", description: "More Agencies"} }
+             }
+            },
+            {topic_value: ["Account"],    content_value: [], description: 'Determine which accounts will have notification sent',
+             content_type_attributes: {
+                 name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
+                 content_type_opts_attributes: {
+                     "0" => {value: "AdvCancel", description: "Advance Cancel" },
+                     "1" => {value: "FutCancel", description: "Future Cancel" },
+                     "2" => {value: "Cancel",    description: "Cancel" }}
+             },
+             topic_type_attributes: {
+                 name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+                 topic_type_opts_attributes: {
+                     "0" => {value: "Agency", description: "All Agency Accounts"},
+                     "1" => {value: "Agent",  description: "All Agent Accounts"},
+                     "2" => {value: "None",   description: "No Agency Agent Options"}}
+             }
+            },
+            {topic_value: ["LicensedStates"], content_value: [], description: 'Determine which States agent may operate in.',
+             content_type_attributes: {
+                 name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
+                 content_type_opts_attributes: {
+                     "0" => {value: "21", description: "Michigan"},
+                     "1" => {value: "9",  description: "Ohio"},
+                     "2" => {value: "23", description: "Illinois"}}
+             },
+             topic_type_attributes: {
+                 name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
+                 topic_type_opts_attributes: {
+                     "0" => {value: "USA", description: "United States of America"},
+                     "1" => {value: "CAN", description: "Canada"}}
+             }
+            }
+        ]
+
+        # loop thru users
+        #  rec = ContentProfile.new
+        #  rec.populate from user
+        #     create pris or secs CPEs based on assigned_group = ends_with('Primary')
+        #           cpe_ids = ContentProfileEntry.create!(cpe_primary)   # CPEs are not shared, they belong_to CPs and CTs,TTs
+        #           cpe_ids = ContentProfileEntry.create!(cpe_secondary) # CTs and TTs can be shared by CPEs
+        #                                                                # CP has_many CPEs
+        #                                                                # CP belong_to PTs
+        #  set cpe_ids
+        #  set pt_id
+        #  rec.save
+        # end user loop
+
+
+        puts "Success!."
+        res
+      rescue Exception => e
+        Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+        puts "Failed"
+        []
+      end
+    end
+
   end
 
   namespace :reports do

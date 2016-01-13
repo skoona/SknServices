@@ -14,7 +14,7 @@ class TopicType < ActiveRecord::Base
   has_and_belongs_to_many :topic_type_opts, :join_table => :topic_options
   has_one  :content_profile_entry, inverse_of: :topic_type
 
-  accepts_nested_attributes_for :topic_type_opts, allow_destroy: false
+  accepts_nested_attributes_for :topic_type_opts, allow_destroy: true
 
   validates_presence_of :name, :description
 

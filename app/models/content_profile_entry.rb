@@ -32,7 +32,7 @@ class ContentProfileEntry < ActiveRecord::Base
   serialize :content_value, Array
   serialize :topic_value, Array
 
-  accepts_nested_attributes_for :content_type, :topic_type, allow_destroy: false
+  accepts_nested_attributes_for :content_type, :topic_type, allow_destroy: true
 
   validates_presence_of :topic_value, :description
 

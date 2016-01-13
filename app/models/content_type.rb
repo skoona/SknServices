@@ -14,7 +14,7 @@ class ContentType < ActiveRecord::Base
   has_and_belongs_to_many :content_type_opts, :join_table => :content_options
   has_one :content_profile_entry, inverse_of: :content_type
 
-  accepts_nested_attributes_for :content_type_opts, allow_destroy: false
+  accepts_nested_attributes_for :content_type_opts, allow_destroy: true
 
   validates_presence_of :name, :description
 
