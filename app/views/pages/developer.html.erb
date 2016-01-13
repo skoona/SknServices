@@ -153,7 +153,7 @@
             <h3>Content Profile</h3>
             <ol>
                 <% res = current_user.content_profile %>
-                <% if res.username? %>
+                <% if res.present? and res.username? %>
                     <% res.to_hash.each_pair do |item, value| -%>
                         <% if item.eql?(:entries) %>
                             <l1><h4><%= item%></h4>
