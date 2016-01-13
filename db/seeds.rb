@@ -237,8 +237,8 @@ begin
       content_rec = ct_recs.detect {|t| t.name.eql?(human_content_choice[item[:topic_value].first])}
       rec = ContentProfileEntry.create!(item)
       rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
-      rec.content_type=content_rec
-      rec.topic_type=topic_rec
+      rec.content_types=[content_rec]
+      rec.topic_types=[topic_rec]
       rec.topic_value=[human_topic_choice[item[:topic_value].first]]
       rec.save!
       rec.id
@@ -265,8 +265,8 @@ begin
     content_rec = ct_recs.detect {|t| t.name.eql?(human_content_choice[item[:topic_value].first])}
     rec = ContentProfileEntry.create!(item)
     rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
-    rec.content_type=content_rec
-    rec.topic_type=topic_rec
+    rec.content_types=[content_rec]
+    rec.topic_types=[topic_rec]
     rec.topic_value=[human_topic_choice[item[:topic_value].first]]
     rec.save!
     rec.id

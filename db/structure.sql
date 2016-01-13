@@ -67,9 +67,6 @@ CREATE TABLE content_profile_entries (
     id integer NOT NULL,
     topic_value character varying,
     content_value character varying,
-    content_type_id integer,
-    topic_type_id integer,
-    content_profile_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     description character varying
@@ -194,6 +191,96 @@ CREATE SEQUENCE content_types_id_seq
 --
 
 ALTER SEQUENCE content_types_id_seq OWNED BY content_types.id;
+
+
+--
+-- Name: join_contents; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE join_contents (
+    id integer NOT NULL,
+    content_profile_entry_id integer,
+    content_type_id integer
+);
+
+
+--
+-- Name: join_contents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE join_contents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: join_contents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE join_contents_id_seq OWNED BY join_contents.id;
+
+
+--
+-- Name: join_entries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE join_entries (
+    id integer NOT NULL,
+    content_profile_id integer,
+    content_profile_entry_id integer
+);
+
+
+--
+-- Name: join_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE join_entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: join_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE join_entries_id_seq OWNED BY join_entries.id;
+
+
+--
+-- Name: join_topics; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE join_topics (
+    id integer NOT NULL,
+    content_profile_entry_id integer,
+    topic_type_id integer
+);
+
+
+--
+-- Name: join_topics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE join_topics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: join_topics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE join_topics_id_seq OWNED BY join_topics.id;
 
 
 --
@@ -511,6 +598,27 @@ ALTER TABLE ONLY content_types ALTER COLUMN id SET DEFAULT nextval('content_type
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY join_contents ALTER COLUMN id SET DEFAULT nextval('join_contents_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY join_entries ALTER COLUMN id SET DEFAULT nextval('join_entries_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY join_topics ALTER COLUMN id SET DEFAULT nextval('join_topics_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY profile_types ALTER COLUMN id SET DEFAULT nextval('profile_types_id_seq'::regclass);
 
 
@@ -604,6 +712,30 @@ ALTER TABLE ONLY content_types
 
 
 --
+-- Name: join_contents_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY join_contents
+    ADD CONSTRAINT join_contents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: join_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY join_entries
+    ADD CONSTRAINT join_entries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: join_topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY join_topics
+    ADD CONSTRAINT join_topics_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: profile_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -682,27 +814,6 @@ CREATE INDEX index_content_options_on_content_type_opt_id ON content_options USI
 
 
 --
--- Name: index_content_profile_entries_on_content_profile_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_content_profile_entries_on_content_profile_id ON content_profile_entries USING btree (content_profile_id);
-
-
---
--- Name: index_content_profile_entries_on_content_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_content_profile_entries_on_content_type_id ON content_profile_entries USING btree (content_type_id);
-
-
---
--- Name: index_content_profile_entries_on_topic_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_content_profile_entries_on_topic_type_id ON content_profile_entries USING btree (topic_type_id);
-
-
---
 -- Name: index_content_profiles_on_person_authentication_key; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -714,6 +825,48 @@ CREATE UNIQUE INDEX index_content_profiles_on_person_authentication_key ON conte
 --
 
 CREATE INDEX index_content_profiles_on_profile_type_id ON content_profiles USING btree (profile_type_id);
+
+
+--
+-- Name: index_join_contents_on_content_profile_entry_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_join_contents_on_content_profile_entry_id ON join_contents USING btree (content_profile_entry_id);
+
+
+--
+-- Name: index_join_contents_on_content_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_join_contents_on_content_type_id ON join_contents USING btree (content_type_id);
+
+
+--
+-- Name: index_join_entries_on_content_profile_entry_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_join_entries_on_content_profile_entry_id ON join_entries USING btree (content_profile_entry_id);
+
+
+--
+-- Name: index_join_entries_on_content_profile_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_join_entries_on_content_profile_id ON join_entries USING btree (content_profile_id);
+
+
+--
+-- Name: index_join_topics_on_content_profile_entry_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_join_topics_on_content_profile_entry_id ON join_topics USING btree (content_profile_entry_id);
+
+
+--
+-- Name: index_join_topics_on_topic_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_join_topics_on_topic_type_id ON join_topics USING btree (topic_type_id);
 
 
 --
@@ -787,14 +940,6 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
--- Name: fk_rails_299814260a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY content_profile_entries
-    ADD CONSTRAINT fk_rails_299814260a FOREIGN KEY (topic_type_id) REFERENCES topic_types(id);
-
-
---
 -- Name: fk_rails_2e964899e5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -803,11 +948,19 @@ ALTER TABLE ONLY user_group_roles_user_roles
 
 
 --
--- Name: fk_rails_406ccb0056; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_4fe83e9a4a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_profile_entries
-    ADD CONSTRAINT fk_rails_406ccb0056 FOREIGN KEY (content_profile_id) REFERENCES content_profiles(id);
+ALTER TABLE ONLY join_entries
+    ADD CONSTRAINT fk_rails_4fe83e9a4a FOREIGN KEY (content_profile_id) REFERENCES content_profiles(id);
+
+
+--
+-- Name: fk_rails_5a5f41d81f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY join_topics
+    ADD CONSTRAINT fk_rails_5a5f41d81f FOREIGN KEY (content_profile_entry_id) REFERENCES content_profile_entries(id);
 
 
 --
@@ -816,6 +969,14 @@ ALTER TABLE ONLY content_profile_entries
 
 ALTER TABLE ONLY content_profiles
     ADD CONSTRAINT fk_rails_5ddd6208a6 FOREIGN KEY (profile_type_id) REFERENCES profile_types(id);
+
+
+--
+-- Name: fk_rails_7207991aa8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY join_contents
+    ADD CONSTRAINT fk_rails_7207991aa8 FOREIGN KEY (content_profile_entry_id) REFERENCES content_profile_entries(id);
 
 
 --
@@ -851,19 +1012,35 @@ ALTER TABLE ONLY content_options
 
 
 --
+-- Name: fk_rails_ca0493a174; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY join_contents
+    ADD CONSTRAINT fk_rails_ca0493a174 FOREIGN KEY (content_type_id) REFERENCES content_types(id);
+
+
+--
+-- Name: fk_rails_dd6a020dd5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY join_entries
+    ADD CONSTRAINT fk_rails_dd6a020dd5 FOREIGN KEY (content_profile_entry_id) REFERENCES content_profile_entries(id);
+
+
+--
+-- Name: fk_rails_ddec8e0316; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY join_topics
+    ADD CONSTRAINT fk_rails_ddec8e0316 FOREIGN KEY (topic_type_id) REFERENCES topic_types(id);
+
+
+--
 -- Name: fk_rails_e7238fdd67; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY content_options
     ADD CONSTRAINT fk_rails_e7238fdd67 FOREIGN KEY (content_type_id) REFERENCES content_types(id);
-
-
---
--- Name: fk_rails_f0d2f02c51; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY content_profile_entries
-    ADD CONSTRAINT fk_rails_f0d2f02c51 FOREIGN KEY (content_type_id) REFERENCES content_types(id);
 
 
 --
@@ -913,4 +1090,10 @@ INSERT INTO schema_migrations (version) VALUES ('20151226230202');
 INSERT INTO schema_migrations (version) VALUES ('20151228161812');
 
 INSERT INTO schema_migrations (version) VALUES ('20160103024528');
+
+INSERT INTO schema_migrations (version) VALUES ('20160113200600');
+
+INSERT INTO schema_migrations (version) VALUES ('20160113200621');
+
+INSERT INTO schema_migrations (version) VALUES ('20160113200706');
 

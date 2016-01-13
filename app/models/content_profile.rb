@@ -15,9 +15,9 @@
 
 class ContentProfile < ActiveRecord::Base
   belongs_to :profile_type
-  has_many :content_profile_entries, inverse_of: :content_profile
+  has_and_belongs_to_many :content_profile_entries, inverse_of: :content_profiles, :join_table => :join_entries
 
-  accepts_nested_attributes_for :content_profile_entries, :profile_type, allow_destroy: true
+  accepts_nested_attributes_for :content_profile_entries, :profile_type, allow_destroy: true, reject_if: lambda {|attributes| attributes['description'].blank?}
 
   validates :person_authentication_key, uniqueness: true, on: [:create, :update]
 

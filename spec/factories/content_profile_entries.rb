@@ -2,15 +2,12 @@
 #
 # Table name: content_profile_entries
 #
-#  id                 :integer          not null, primary key
-#  topic_value        :string
-#  content_value      :string
-#  content_type_id    :integer
-#  topic_type_id      :integer
-#  content_profile_id :integer
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  description        :string
+#  id            :integer          not null, primary key
+#  topic_value   :string
+#  content_value :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  description   :string
 #
 
 FactoryGirl.define do

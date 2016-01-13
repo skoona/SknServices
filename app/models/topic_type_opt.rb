@@ -10,7 +10,7 @@
 #
 
 class TopicTypeOpt < ActiveRecord::Base
-  has_and_belongs_to_many :topic_types, :join_table => :topic_options
+  has_and_belongs_to_many :topic_types, :join_table => :topic_options, reject_if: lambda {|attributes| attributes['value'].blank?}
 
   validates_presence_of :value, :description
 end

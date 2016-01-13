@@ -12,9 +12,9 @@
 
 class ContentType < ActiveRecord::Base
   has_and_belongs_to_many :content_type_opts, :join_table => :content_options
-  has_one :content_profile_entry, inverse_of: :content_type
+  has_and_belongs_to_many :content_profile_entries, inverse_of: :content_types, :join_table => :join_contents
 
-  accepts_nested_attributes_for :content_type_opts, allow_destroy: true
+  accepts_nested_attributes_for :content_type_opts, allow_destroy: true, reject_if: lambda {|attributes| attributes['value'].blank?}
 
   validates_presence_of :name, :description
 

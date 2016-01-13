@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                       :integer          not null, primary key
+#  username                 :string
+#  name                     :string
+#  email                    :string
+#  password_digest          :string
+#  remember_token           :string
+#  password_reset_token     :string
+#  password_reset_date      :datetime
+#  assigned_groups          :string
+#  roles                    :string
+#  active                   :boolean          default(TRUE)
+#  file_access_token        :string
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  person_authenticated_key :string
+#  assigned_roles           :string
+#  remember_token_digest    :string
+#  user_options             :string
+#
+
 class UsersController < ApplicationController
   before_filter :target_object, only: [:show, :edit, :update, :destroy]
 

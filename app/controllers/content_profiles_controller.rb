@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: content_profiles
+#
+#  id                        :integer          not null, primary key
+#  person_authentication_key :string
+#  profile_type_id           :integer
+#  authentication_provider   :string
+#  username                  :string
+#  display_name              :string
+#  email                     :string
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#
+
 class ContentProfilesController < ApplicationController
   before_action :set_content_profile, only: [:show, :edit, :update, :destroy]
 

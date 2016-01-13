@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160103024528) do
+ActiveRecord::Schema.define(version: 20160113200706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,17 +27,10 @@ ActiveRecord::Schema.define(version: 20160103024528) do
   create_table "content_profile_entries", force: :cascade do |t|
     t.string   "topic_value"
     t.string   "content_value"
-    t.integer  "content_type_id"
-    t.integer  "topic_type_id"
-    t.integer  "content_profile_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.string   "description"
   end
-
-  add_index "content_profile_entries", ["content_profile_id"], name: "index_content_profile_entries_on_content_profile_id", using: :btree
-  add_index "content_profile_entries", ["content_type_id"], name: "index_content_profile_entries_on_content_type_id", using: :btree
-  add_index "content_profile_entries", ["topic_type_id"], name: "index_content_profile_entries_on_topic_type_id", using: :btree
 
   create_table "content_profiles", force: :cascade do |t|
     t.string   "person_authentication_key"
@@ -67,6 +60,30 @@ ActiveRecord::Schema.define(version: 20160103024528) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
+
+  create_table "join_contents", force: :cascade do |t|
+    t.integer "content_profile_entry_id"
+    t.integer "content_type_id"
+  end
+
+  add_index "join_contents", ["content_profile_entry_id"], name: "index_join_contents_on_content_profile_entry_id", using: :btree
+  add_index "join_contents", ["content_type_id"], name: "index_join_contents_on_content_type_id", using: :btree
+
+  create_table "join_entries", force: :cascade do |t|
+    t.integer "content_profile_id"
+    t.integer "content_profile_entry_id"
+  end
+
+  add_index "join_entries", ["content_profile_entry_id"], name: "index_join_entries_on_content_profile_entry_id", using: :btree
+  add_index "join_entries", ["content_profile_id"], name: "index_join_entries_on_content_profile_id", using: :btree
+
+  create_table "join_topics", force: :cascade do |t|
+    t.integer "content_profile_entry_id"
+    t.integer "topic_type_id"
+  end
+
+  add_index "join_topics", ["content_profile_entry_id"], name: "index_join_topics_on_content_profile_entry_id", using: :btree
+  add_index "join_topics", ["topic_type_id"], name: "index_join_topics_on_topic_type_id", using: :btree
 
   create_table "profile_types", force: :cascade do |t|
     t.string   "name"
@@ -151,10 +168,13 @@ ActiveRecord::Schema.define(version: 20160103024528) do
 
   add_foreign_key "content_options", "content_type_opts"
   add_foreign_key "content_options", "content_types"
-  add_foreign_key "content_profile_entries", "content_profiles"
-  add_foreign_key "content_profile_entries", "content_types"
-  add_foreign_key "content_profile_entries", "topic_types"
   add_foreign_key "content_profiles", "profile_types"
+  add_foreign_key "join_contents", "content_profile_entries"
+  add_foreign_key "join_contents", "content_types"
+  add_foreign_key "join_entries", "content_profile_entries"
+  add_foreign_key "join_entries", "content_profiles"
+  add_foreign_key "join_topics", "content_profile_entries"
+  add_foreign_key "join_topics", "topic_types"
   add_foreign_key "topic_options", "topic_type_opts"
   add_foreign_key "topic_options", "topic_types"
   add_foreign_key "user_group_roles_user_roles", "user_group_roles"
