@@ -18,9 +18,19 @@ class ContentProfileEntry < ActiveRecord::Base
   belongs_to :topic_type
   belongs_to :content_profile, inverse_of: :content_profile_entries
 
+  before_create { |record|
+    record.topic_value = [record.topic_value].flatten unless record.topic_value.is_a?(Array)
+    record.content_value = [record.content_value].flatten unless record.content_value.is_a?(Array)
+  }
+
+  before_save { |record|
+    record.topic_value = [record.topic_value].flatten unless record.topic_value.is_a?(Array)
+    record.content_value = [record.content_value].flatten unless record.content_value.is_a?(Array)
+  }
+
+
   serialize :content_value, Array
   serialize :topic_value, Array
-
 
   accepts_nested_attributes_for :content_type, :topic_type, allow_destroy: false
 

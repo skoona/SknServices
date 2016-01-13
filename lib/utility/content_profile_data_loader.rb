@@ -129,19 +129,19 @@ module Utility
       }
 
       cpe = [
-        {topic_value: "Agency",     content_value: [], description: 'Determine which agency documents can be seen'},
-        {topic_value: "Account",    content_value: [], description: 'Determine which accounts will have notification sent'},
-        {topic_value: "LicensedStates", content_value: [], description: 'Determine which States agent may operate in.'}
+        {topic_value: ["Agency"],     content_value: [], description: 'Determine which agency documents can be seen'},
+        {topic_value: ["Account"],    content_value: [], description: 'Determine which accounts will have notification sent'},
+        {topic_value: ["LicensedStates"], content_value: [], description: 'Determine which States agent may operate in.'}
       ]
 
       cpe_recs_ids = cpe.map do |item|
-          topic_rec = tt_recs.detect {|t| t.name.eql?(item[:topic_value])}
-          content_rec = ct_recs.detect {|t| t.name.eql?(human_content_choice[item[:topic_value]])}
+          topic_rec = tt_recs.detect {|t| t.name.eql?(item[:topic_value].first)}
+          content_rec = ct_recs.detect {|t| t.name.eql?(human_content_choice[item[:topic_value].first])}
           rec = ContentProfileEntry.create!(item)
           rec.content_value = content_rec.content_type_opts.map {|v| v.value}.uniq
           rec.content_type=content_rec
           rec.topic_type=topic_rec
-          rec.topic_value=human_topic_choice[item[:topic_value]]
+          rec.topic_value=[human_topic_choice[item[:topic_value].first]]
           rec.save!
           rec.id
       end
