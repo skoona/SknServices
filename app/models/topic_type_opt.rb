@@ -3,8 +3,8 @@
 # Table name: topic_type_opts
 #
 #  id          :integer          not null, primary key
-#  value       :string
-#  description :string
+#  value       :string(255)
+#  description :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

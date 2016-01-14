@@ -3,9 +3,9 @@
 # Table name: user_group_roles
 #
 #  id          :integer          not null, primary key
-#  name        :string
-#  description :string
-#  group_type  :string
+#  name        :string(255)
+#  description :string(255)
+#  group_type  :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

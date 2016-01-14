@@ -3,9 +3,9 @@
 # Table name: content_types
 #
 #  id              :integer          not null, primary key
-#  name            :string
-#  description     :string
-#  value_data_type :string
+#  name            :string(255)
+#  description     :string(255)
+#  value_data_type :string(255)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #

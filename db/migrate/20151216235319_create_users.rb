@@ -8,8 +8,8 @@ class CreateUsers < ActiveRecord::Migration
       t.string :remember_token
       t.string :password_reset_token
       t.datetime :password_reset_date
-      t.string :assigned_groups
-      t.string :roles
+      t.string :assigned_groups, limit: 4096
+      t.string :roles, limit: 4096
       t.boolean :active, default: true
       t.string :file_access_token
 

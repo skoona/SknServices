@@ -11,6 +11,8 @@
     $ RAILS_ENV=test rake db:create db:migrate db:seed
     $ rspec
     $ bundle exec rails server
+    $
+    $ rake access_registry:reports:db_profiles access_registry:preload:create_content_profiles access_registry:reports:db_profiles
 ```
 
 
@@ -31,6 +33,8 @@
       #   :date=>Thu, 09 Jul 2015 17:35:27 +0000
       # },
 ```
+
+
 
 === Model Templates
 

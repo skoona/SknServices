@@ -3,9 +3,9 @@
 # Table name: topic_types
 #
 #  id              :integer          not null, primary key
-#  name            :string
-#  description     :string
-#  value_based_y_n :string
+#  name            :string(255)
+#  description     :string(255)
+#  value_based_y_n :string(255)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #

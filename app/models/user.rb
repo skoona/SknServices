@@ -3,23 +3,23 @@
 # Table name: users
 #
 #  id                       :integer          not null, primary key
-#  username                 :string
-#  name                     :string
-#  email                    :string
-#  password_digest          :string
-#  remember_token           :string
-#  password_reset_token     :string
+#  username                 :string(255)
+#  name                     :string(255)
+#  email                    :string(255)
+#  password_digest          :string(255)
+#  remember_token           :string(255)
+#  password_reset_token     :string(255)
 #  password_reset_date      :datetime
-#  assigned_groups          :string
-#  roles                    :string
+#  assigned_groups          :string(4096)
+#  roles                    :string(4096)
 #  active                   :boolean          default(TRUE)
-#  file_access_token        :string
+#  file_access_token        :string(255)
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  person_authenticated_key :string
-#  assigned_roles           :string
-#  remember_token_digest    :string
-#  user_options             :string
+#  person_authenticated_key :string(255)
+#  assigned_roles           :string(4096)
+#  remember_token_digest    :string(255)
+#  user_options             :string(4096)
 #
 
 class User < ActiveRecord::Base

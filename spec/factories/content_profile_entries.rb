@@ -3,11 +3,11 @@
 # Table name: content_profile_entries
 #
 #  id            :integer          not null, primary key
-#  topic_value   :string
-#  content_value :string
+#  topic_value   :string(255)
+#  content_value :string(255)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  description   :string
+#  description   :string(255)
 #
 
 FactoryGirl.define do

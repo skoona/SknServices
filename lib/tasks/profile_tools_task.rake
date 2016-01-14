@@ -178,7 +178,7 @@ namespace :access_registry do
         # HBTM needs a key prefix (content_type_opts_attributes),
         # BO/HO doesn't need the key prefix (content_type_attributes)
         cpe = [
-            {topic_value: ["Agency"],     content_value: [], description: 'Determine which agency documents can be seen',
+            {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
@@ -193,7 +193,7 @@ namespace :access_registry do
             "1" => {value: "1001", description: "Another Agency Number"},
             "2" => {value: "0037", description: "More Agencies"} }}}
         },
-            {topic_value: ["Account"],    content_value: [], description: 'Determine which accounts will have notification sent',
+            {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
             content_types_attributes: {
             "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
             content_type_opts_attributes: {
@@ -208,7 +208,7 @@ namespace :access_registry do
             "1" => {value: "Agent",  description: "All Agent Accounts"},
             "2" => {value: "None",   description: "No Agency Agent Options"} }}}
         },
-            {topic_value: ["LicensedStates"], content_value: [], description: 'Determine which States agent may operate in.',
+            {topic_value: [], content_value: [], description: 'Determine which States agent may operate in.',
             content_types_attributes: {
             "0" => {name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
             content_type_opts_attributes: {
@@ -240,8 +240,10 @@ namespace :access_registry do
     task create_content_profiles:  :environment do |t, args|
       begin
 
-        Rake::Task['access_registry:preload:drop_profiles'].invoke
         Rake::Task['access_registry:reports:db_profiles'].invoke
+
+        Rake::Task['access_registry:preload:drop_profiles'].invoke
+
         Rake::Task['access_registry:preload:create_profile_types'].invoke
 
         print "\tCreating ContentProfile, ContentProfileEntry, ContentType/ContentTypeOpts, TopicType/TopicTypeOpts: "
@@ -321,12 +323,12 @@ namespace :access_registry do
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "68613", description: "Imageright Agency Experience Document Type ID"} }}
+            "0" => {value: "68701", description: "Imageright Project Status Report Document Type ID"} }}
         },
             topic_types_attributes: {
             "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0038", description: "Some Agency Number"}}}}
+            "0" => {value: "9999", description: "Some Agency Number"}}}}
         }
         ]
 
@@ -336,6 +338,7 @@ namespace :access_registry do
 
         # loop thru users
         res = User.find_each do |u|
+          next if 'VendorSecondary'.eql?( u.assigned_groups.first )
           rec = ContentProfile.new
           rec.person_authentication_key = u.person_authenticated_key
           rec.authentication_provider = 'SknService::Bcrypt'
@@ -359,8 +362,6 @@ namespace :access_registry do
         end
 
         puts "Success!."
-
-        Rake::Task['access_registry:reports:db_profiles'].invoke
 
         res
       rescue Exception => e

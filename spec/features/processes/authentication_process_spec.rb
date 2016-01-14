@@ -59,7 +59,7 @@ feature "Authentication process for all users.", js: true do
       # click_link 'Sign out'
     end
 
-    xscenario "Returned to Home page after sign out." do
+    xscenario "Returned to Home page after sign out." do  # uses :get vs the coded :delete method, add route for :get to resolve
       user = page_user_eptester
       visit users_url
       expect(current_path).to eq unauthenticated_sessions_path
