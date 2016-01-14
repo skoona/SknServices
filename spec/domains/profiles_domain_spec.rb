@@ -79,7 +79,7 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
       let!(:aptesterA) {@service.get_page_user("aptester", "access")}
       let!(:estesterA) {@service.get_page_user("estester", "access")}
       let!(:aptesterC) {@service.get_page_user("aptester", "content")}
-      let!(:estesterC) {@service.get_page_user("estester", "content")}
+      let!(:estesterC) {@service.get_page_user("vstester", "content")}
 
       before() do
         @access = controller.service_factory.access_profile_service
