@@ -29,10 +29,11 @@ module Secure
       end
 
       # AccessProfile will call this
-      def page_user(uname, context='access')
+      def page_user(uname, context='access', enable=true)
         upp = nil
         value = self.find_by(username: uname)
-        upp = self.new(value).enable_authentication_controls(true) if value.present?
+        upp = self.new(value) if value.present?
+        upp.enable_authentication_controls(true) if upp and enable
         upp = nil unless upp && value
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
         upp

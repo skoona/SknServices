@@ -12,7 +12,7 @@ RSpec.configure do |config|
 
   Kernel.srand config.seed
 
-  if config.files_to_run.one?
+  if 10 > config.files_to_run.length   # .one?
     config.formatter = :documentation
   else
     config.formatter = :progress
@@ -25,9 +25,10 @@ RSpec.configure do |config|
 
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
+  config.silence_filter_announcements = true
 
   # TODO: Causes the Feature tag to fail in Capybara specs
-  # config.disable_monkey_patching!  # -- breaks rspec runtime
+  # config.disable_monkey_patching!  # -- breaks rspec runtime  requires Rspec.describe vs describe
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

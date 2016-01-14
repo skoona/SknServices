@@ -148,7 +148,9 @@ namespace :access_registry do
             {name: "AgencyPrimary",   description: "Agency Super User"},
             {name: "AgencySecondary", description: "Limited User"},
             {name: "EmployeePrimary",   description: "BMI Admin User"},
-            {name: "EmployeeSecondary", description: "BMI Limited User"}
+            {name: "EmployeeSecondary", description: "BMI Limited User"},
+            {name: "VendorPrimary",   description: "External Vendor Primary Role"},
+            {name: "VendorSecondary", description: "External Vendor Secondary Role"}
         ]
 
         pt_types = []
@@ -177,52 +179,49 @@ namespace :access_registry do
         # BO/HO doesn't need the key prefix (content_type_attributes)
         cpe = [
             {topic_value: ["Agency"],     content_value: [], description: 'Determine which agency documents can be seen',
-               content_type_attributes: {
-                      name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
-                           content_type_opts_attributes: {
-                               "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
-                               "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
-                               "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }
-               },
-              topic_type_attributes: {
-                     name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
-                           topic_type_opts_attributes: {
-                               "0" => {value: "0034", description: "Some Agency Number"},
-                               "1" => {value: "1001", description: "Another Agency Number"},
-                               "2" => {value: "0037", description: "More Agencies"} }
-              }
-            },
+            content_types_attributes: {
+            "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+            content_type_opts_attributes: {
+            "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
+            "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
+            "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }}
+        },
+            topic_types_attributes: {
+            "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+            topic_type_opts_attributes: {
+            "0" => {value: "0034", description: "Some Agency Number"},
+            "1" => {value: "1001", description: "Another Agency Number"},
+            "2" => {value: "0037", description: "More Agencies"} }}}
+        },
             {topic_value: ["Account"],    content_value: [], description: 'Determine which accounts will have notification sent',
-               content_type_attributes: {
-                     name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
-                           content_type_opts_attributes: {
-                               "0" => {value: "AdvCancel", description: "Advance Cancel" },
-                               "1" => {value: "FutCancel", description: "Future Cancel" },
-                               "2" => {value: "Cancel",    description: "Cancel" }}
-               },
-               topic_type_attributes: {
-                     name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
-                            topic_type_opts_attributes: {
-                                "0" => {value: "Agency", description: "All Agency Accounts"},
-                                "1" => {value: "Agent",  description: "All Agent Accounts"},
-                                "2" => {value: "None",   description: "No Agency Agent Options"}}
-               }
-            },
+            content_types_attributes: {
+            "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
+            content_type_opts_attributes: {
+            "0" => {value: "AdvCancel", description: "Advance Cancel" },
+            "1" => {value: "FutCancel", description: "Future Cancel" },
+            "2" => {value: "Cancel",    description: "Cancel" } }}
+        },
+            topic_types_attributes: {
+            "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+            topic_type_opts_attributes: {
+            "0" => {value: "Agency", description: "All Agency Accounts"},
+            "1" => {value: "Agent",  description: "All Agent Accounts"},
+            "2" => {value: "None",   description: "No Agency Agent Options"} }}}
+        },
             {topic_value: ["LicensedStates"], content_value: [], description: 'Determine which States agent may operate in.',
-               content_type_attributes: {
-                    name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
-                            content_type_opts_attributes: {
-                                "0" => {value: "21", description: "Michigan"},
-                                "1" => {value: "9",  description: "Ohio"},
-                                "2" => {value: "23", description: "Illinois"}}
-               },
-               topic_type_attributes: {
-                    name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
-                            topic_type_opts_attributes: {
-                                "0" => {value: "USA", description: "United States of America"},
-                                "1" => {value: "CAN", description: "Canada"}}
-               }
-            }
+            content_types_attributes: {
+            "0" => {name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
+            content_type_opts_attributes: {
+            "0" => {value: "21", description: "Michigan"},
+            "1" => {value: "9",  description: "Ohio"},
+            "2" => {value: "23", description: "Illinois"} }}
+        },
+            topic_types_attributes: {
+            "0" => {name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
+            topic_type_opts_attributes: {
+            "0" => {value: "USA", description: "United States of America"},
+            "1" => {value: "CAN", description: "Canada"} }}}
+        }
         ]
 
         res = ContentProfileEntry.create!(cpe)
@@ -242,6 +241,7 @@ namespace :access_registry do
       begin
 
         Rake::Task['access_registry:preload:drop_profiles'].invoke
+        Rake::Task['access_registry:reports:db_profiles'].invoke
         Rake::Task['access_registry:preload:create_profile_types'].invoke
 
         print "\tCreating ContentProfile, ContentProfileEntry, ContentType/ContentTypeOpts, TopicType/TopicTypeOpts: "
@@ -249,75 +249,124 @@ namespace :access_registry do
 
         # HBTM needs a key prefix (content_type_opts_attributes),
         # BO/HO doesn't need the key prefix (content_type_attributes)
-        cpe = [
-            {topic_value: ["Agency"],     content_value: [], description: 'Determine which agency documents can be seen',
-             content_type_attributes: {
-                 name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+        cpep = [
+            {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
+             content_types_attributes: {
+                "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
                  content_type_opts_attributes: {
                      "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
                      "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
-                     "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }
+                     "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }}
              },
-             topic_type_attributes: {
-                 name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+             topic_types_attributes: {
+                "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
                  topic_type_opts_attributes: {
-                     "0" => {value: "0034", description: "Some Agency Number"},
-                     "1" => {value: "1001", description: "Another Agency Number"},
-                     "2" => {value: "0037", description: "More Agencies"} }
-             }
-            },
-            {topic_value: ["Account"],    content_value: [], description: 'Determine which accounts will have notification sent',
-             content_type_attributes: {
-                 name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
+                     "0" => {value: "0034", description: "Some Agency Number"} }}}
+             },
+            {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
+             content_types_attributes: {
+                "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
                  content_type_opts_attributes: {
                      "0" => {value: "AdvCancel", description: "Advance Cancel" },
                      "1" => {value: "FutCancel", description: "Future Cancel" },
-                     "2" => {value: "Cancel",    description: "Cancel" }}
+                     "2" => {value: "Cancel",    description: "Cancel" } }}
              },
-             topic_type_attributes: {
-                 name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+             topic_types_attributes: {
+                "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
                  topic_type_opts_attributes: {
-                     "0" => {value: "Agency", description: "All Agency Accounts"},
-                     "1" => {value: "Agent",  description: "All Agent Accounts"},
-                     "2" => {value: "None",   description: "No Agency Agent Options"}}
-             }
+                     "0" => {value: "Agency", description: "All Agency Accounts"} }}}
             },
-            {topic_value: ["LicensedStates"], content_value: [], description: 'Determine which States agent may operate in.',
-             content_type_attributes: {
-                 name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
+            {topic_value: [], content_value: [], description: 'Determine which States agent may operate in.',
+             content_types_attributes: {
+                "0" => {name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
                  content_type_opts_attributes: {
                      "0" => {value: "21", description: "Michigan"},
                      "1" => {value: "9",  description: "Ohio"},
-                     "2" => {value: "23", description: "Illinois"}}
+                     "2" => {value: "23", description: "Illinois"} }}
              },
-             topic_type_attributes: {
-                 name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
+             topic_types_attributes: {
+                "0" => {name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
                  topic_type_opts_attributes: {
-                     "0" => {value: "USA", description: "United States of America"},
-                     "1" => {value: "CAN", description: "Canada"}}
-             }
+                     "0" => {value: "USA", description: "United States of America"} }}}
             }
         ]
 
-        # loop thru users
-        #  rec = ContentProfile.new
-        #  rec.populate from user
-        #     create pris or secs CPEs based on assigned_group = ends_with('Primary')
-        #           cpe_ids = ContentProfileEntry.create!(cpe_primary)   # CPEs are not shared, they belong_to CPs and CTs,TTs
-        #           cpe_ids = ContentProfileEntry.create!(cpe_secondary) # CTs and TTs can be shared by CPEs
-        #                                                                # CP has_many CPEs
-        #                                                                # CP belong_to PTs
-        #  set cpe_ids
-        #  set pt_id
-        #  rec.save
-        # end user loop
+        cpes = [
+          {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
+            content_types_attributes: {
+             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+              content_type_opts_attributes: {
+                "0" => {value: "68613", description: "Imageright Agency Experience Document Type ID"} }}
+            },
+            topic_types_attributes: {
+              "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+               topic_type_opts_attributes: {
+                "0" => {value: "0038", description: "Some Agency Number"}}}}
+          },
+          {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
+            content_types_attributes: {
+              "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
+               content_type_opts_attributes: {
+                "0" => {value: "AdvCancel", description: "Advance Cancel" } }}
+            },
+            topic_types_attributes: {
+              "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+               topic_type_opts_attributes: {
+                "1" => {value: "Agent",  description: "All Agent Accounts"} }}}
+          }
+        ]
 
+      cpev = [
+        {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
+            content_types_attributes: {
+            "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+            content_type_opts_attributes: {
+            "0" => {value: "68613", description: "Imageright Agency Experience Document Type ID"} }}
+        },
+            topic_types_attributes: {
+            "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+            topic_type_opts_attributes: {
+            "0" => {value: "0038", description: "Some Agency Number"}}}}
+        }
+        ]
+
+        cpep_recs = ContentProfileEntry.create!(cpep)
+        cpes_recs = ContentProfileEntry.create!(cpes)
+        cpev_recs = ContentProfileEntry.create!(cpev)
+
+        # loop thru users
+        res = User.find_each do |u|
+          rec = ContentProfile.new
+          rec.person_authentication_key = u.person_authenticated_key
+          rec.authentication_provider = 'SknService::Bcrypt'
+          rec.username = u.username
+          rec.display_name = u.display_name
+          rec.email = u.email
+          rec.save
+          rec.reload
+          rec.profile_type = ProfileType.find_by(name: u.assigned_groups.first)
+          rec.content_profile_entries = case u.assigned_groups.first
+                                        when  'EmployeePrimary'
+                                          cpep_recs
+                                        when 'EmployeeSecondary'
+                                          cpes_recs
+                                        when 'AgencyPrimary'
+                                          cpes_recs
+                                        else
+                                          cpev_recs
+                                        end
+          rec.save!
+        end
 
         puts "Success!."
+
+        Rake::Task['access_registry:reports:db_profiles'].invoke
+
         res
       rescue Exception => e
         Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
         puts "Failed"
+        puts e.message
         []
       end
     end

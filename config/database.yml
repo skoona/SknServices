@@ -13,7 +13,7 @@
 defaults: &defaults
   adapter: postgresql
   encoding: unicode
-  pool: 5
+  pool: 10
   username: <%= Settings.PostgreSQL.username %>
   password: <%= Settings.PostgreSQL.password %>
   host: <%= Settings.PostgreSQL.host %>

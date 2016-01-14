@@ -28,10 +28,10 @@ class ContentProfile < ActiveRecord::Base
   end
 
   def profile_type_name
-    profile_type.name
+    profile_type.try(:name)
   end
   def profile_type_description
-    profile_type.description
+    profile_type.try(:description)
   end
 
   # options_for_select(tt_instance.options_selects, selected)  -- single selection

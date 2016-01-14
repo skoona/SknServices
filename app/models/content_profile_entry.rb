@@ -31,7 +31,7 @@ class ContentProfileEntry < ActiveRecord::Base
 
   accepts_nested_attributes_for :content_types, :topic_types, allow_destroy: true, reject_if: lambda {|attributes| attributes['name'].blank?}
 
-  validates_presence_of :topic_value, :description
+  validates_presence_of :description
 
   def self.cpe_options_selects
     self.all.map do |cpes|
@@ -47,11 +47,13 @@ class ContentProfileEntry < ActiveRecord::Base
   end
 
   def entry_info
+    ctv = content_types.map {|r| r.content_type_opts.map(&:value) }.flatten
+    ttv = topic_types.map {|r| r.topic_type_opts.map(&:value) }.flatten
     {
-      content_value: content_value,
+      content_value: ctv,
       content_type: content_type_name,
       content_type_description: content_types.first.try(:description) || "not assigned",
-      topic_value: topic_value,
+      topic_value: ttv,
       topic_type: topic_type_name,
       topic_type_description: topic_types.first.try(:description) || "not assigned",
       description: description

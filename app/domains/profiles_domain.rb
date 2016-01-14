@@ -114,7 +114,7 @@ class ProfilesDomain < ::Factory::DomainsBase
   def api_accessible_content(params) # :access, :username, :profile
     @accessible_type = params[:id] || params[:access] # [:access, :content]
     @profile = params[:profile] # [:access=role, :content=content]
-    pg_u = get_page_user(params[:username], @accessible_type)
+    pg_u = get_page_user(params[:username], @accessible_type, false)
       raise(Utility::Errors::NotFound, "No profile data available for user") unless pg_u.present?
 
     results = case @accessible_type
@@ -159,8 +159,8 @@ class ProfilesDomain < ::Factory::DomainsBase
                                })
   end
 
-  def get_page_user(uname, context=PROFILE_CONTEXT)
-    @page_user = Secure::UserProfile.page_user(uname)
+  def get_page_user(uname, context=PROFILE_CONTEXT, enable=true)
+    @page_user = Secure::UserProfile.page_user(uname, context, enable)
   end
 
   def get_page_access_profile(user_profile)

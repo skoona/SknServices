@@ -1,9 +1,11 @@
 <% provide(:title, "Sign in") %>
 
+<header class="page-header">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+</header>
+
 <section class="container">
     <%= form_tag( url_for(sessions_path),  class: 'form', :authenticity_token => true  ) do |f| %>
-            <h2 class="form-signin-heading">Please sign in</h2>
-
                 <label for="session_username" class="sr-only">Username</label>
                 <input autofocus="autofocus" placeholder="Your Username" type="text" name="session[username]" id="session_username" class="form-control" required>
 

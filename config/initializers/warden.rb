@@ -199,17 +199,17 @@ end
 #    attempt to authenticate using token, fail to signin page, else pass
 Warden::Manager.on_request do |proxy|
   # puts "===============[DEBUG]:or #{self.class}\##{__method__}"
-  Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, original_fullpath=#{proxy.request.original_fullpath}, session.keys=#{proxy.raw_session.keys}"
+  Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.env['PATH_INFO']}, session.keys=#{proxy.raw_session.keys}"
   timeout_flag = false
   bypass_flag = false
   remembered = false
   attempted_remember_flag = false
   user_object = proxy.user()
-  full_path = proxy.request.original_fullpath
-  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
+  full_path = proxy.env['PATH_INFO']
+  uri = (full_path.present? and full_path.starts_with?('/')) ? full_path[1..-1] : full_path
 
-  bypass_flag = full_path.eql?("/") ||
-      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+  bypass_flag = ("/").eql?(full_path) ||
+      Settings.security.public_pages.map {|p| p.eql?(full_path) }.any? ||
       Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
       Secure::AccessRegistry.security_check?(uri)            #  'signin'
 
@@ -227,14 +227,14 @@ Warden::Manager.on_request do |proxy|
     Rails.logger.debug " Warden::Manager.on_request(BeforeAuth)"
     proxy.authenticate(:remember_token)
     unless proxy.authenticated?
-      proxy.logout()
+      proxy.cookies.delete(:remember_token, {domain: proxy.env["SERVER_NAME"]})
       proxy.request.flash[:notice] = ["Session Expired! Please Sign In To Continue.  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag}) Cleared Token!"]
     else
       proxy.request.flash[:notice] = ["Session Interrupted! Restored by remember flag action, Please continue!  Warden.on_request(remembered:#{attempted_remember_flag}:TimeOut:#{timeout_flag})"]
     end
   end
 
-  Rails.logger.debug " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{proxy.request.fullpath}, sessionId=#{proxy.request.session_options[:id]}"
+  Rails.logger.debug " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]}"
 end
 
 ##
@@ -279,11 +279,11 @@ end
 #
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
-  full_path = auth.request.original_fullpath
-  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
+  full_path = auth.request.env['PATH_INFO']
+  uri = (full_path.present? and full_path.starts_with?('/')) ? full_path[1..-1] : full_path
 
-  bypass_flag = full_path.eql?("/") ||
-      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+  bypass_flag = ("/").eql?(full_path) ||
+      Settings.security.public_pages.map {|p| p.eql?(full_path) }.any? ||
       Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
       Secure::AccessRegistry.security_check?(uri)            #  'signin'
 
@@ -305,11 +305,11 @@ end
 #
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
-  full_path = env['warden'].request.original_fullpath
-  uri = full_path[1..-1] if full_path.starts_with?('/') # remove leading /
+  full_path = env['PATH_INFO']
+  uri = (full_path.present? and full_path.starts_with?('/')) ? full_path[1..-1] : full_path
 
-  bypass_flag = full_path.eql?("/") ||
-      Settings.security.public_pages.map {|p| full_path.include?(p) }.any? ||
+  bypass_flag = ("/").eql?(full_path) ||
+      Settings.security.public_pages.map {|p| p.eql?(full_path) }.any? ||
       Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
       Secure::AccessRegistry.security_check?(uri)            #  'signin'
 

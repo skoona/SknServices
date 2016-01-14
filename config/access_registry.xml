@@ -390,15 +390,15 @@
     </resource>
     <resource secured="false">
         <uri>sessions/new</uri>
-        <description>Login</description>
+        <description>Please Sign In</description>
     </resource>
     <resource secured="false">
         <uri>sessions</uri>
-        <description>Create Login</description>
+        <description>Login</description>
     </resource>
     <resource secured="false">
         <uri>sessions/create</uri>
-        <description>Create Login</description>
+        <description>Login</description>
     </resource>
     <resource secured="false">
         <uri>session</uri>
