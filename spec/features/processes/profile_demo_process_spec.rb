@@ -28,7 +28,7 @@ RSpec.feature "Profile Demo Process.", {js: true} do
     scenario "Clicking profile loads Accessible table" do
       visit signin_url
       expect(current_path).to eq signin_path
-      fill_in 'Username', :with => "skoona"
+      fill_in 'Username', :with => "developer"
       fill_in 'Password', :with => "developer99"
       click_button 'Sign in'
       expect(current_path).to eq home_pages_path

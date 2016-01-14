@@ -2,8 +2,8 @@ module TestUsers
 
   ##
   # Valid DB User with cached enablement  - i.e. findable by warden deserialization
-  def user_skoona
-    Secure::UserProfile.find_and_authenticate_user("skoona", "developer99")
+  def user_developer
+    Secure::UserProfile.find_and_authenticate_user("developer", "developer99")
   end
   def user_eptester
     Secure::UserProfile.find_and_authenticate_user("eptester", "nobugs")
@@ -20,8 +20,8 @@ module TestUsers
 
   ##
   # Valid DB User without cached enablement
-  def page_user_skoona
-    Secure::UserProfile.page_user("skoona")
+  def page_user_developer
+    Secure::UserProfile.page_user("developer")
   end
   def page_user_eptester
     Secure::UserProfile.page_user("eptester")

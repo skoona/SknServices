@@ -7,7 +7,7 @@
 begin
   Rails.logger.info "Defining  Users"
   users =[ {
-      username:              "skoona",
+      username:              "developer",
       name:                  "Employee Primary User: Developer",
       email:                 "skoona@gmail.com",
       password:                "developer99",
@@ -105,7 +105,7 @@ begin
   #                        {Operations/LicensedStates/USA => "21,30,34,45"}
   # ]                      ContentType/TopicType/TopicTypeOpts => ContentTypeOpts
 
-  Utility::ContentProfileDataLoader.new().refresh_full_data_model
+  Utility::ContentProfileTestDataLoader.new().refresh_full_data_model
 
   Rails.logger.info "Completed Creating ContentProfile Models"
 

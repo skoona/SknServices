@@ -414,7 +414,7 @@
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
-        <description>Welcome to SknService</description>
+        <description>Welcome to Authorized Service</description>
     </resource>
     <resource secured="false">
         <uri>pages/about</uri>

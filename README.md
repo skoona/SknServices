@@ -1,4 +1,4 @@
-#Sknservice
+#AuthService
 ---
 
 ##Installation
@@ -203,7 +203,7 @@ This is where we begin.
 ## Full Application Data Model
 ---
 
-![App Data Model](app/assets/images/sknService-DataModel.png "Application Data Model")
+![App Data Model](app/assets/images/AuthService-DataModel.png "Application Data Model")
 
 
 ## ContentProfile Data Model Resulting Transactions
@@ -215,16 +215,16 @@ This is where we begin.
 
 {
   "user_options":["Manager","0034","0037","0040"],
-  "username":"skoona",
+  "username":"developer",
   "display_name":"Employee Primary User: Developer",
   "package":{
     "success":true,
-    "message":"AccessProfile Entries for skoona:Employee Primary User: Developer Options=Manager,0034,0037,0040",
+    "message":"AccessProfile Entries for developer:Employee Primary User: Developer Options=Manager,0034,0037,0040",
     "user_options":["Manager","0034","0037","0040"],
     "accessible_content_url":"/profiles/accessible_content.json?id=access",
-    "page_user":"skoona",
+    "page_user":"developer",
     "access_profile":{
-        "username":"skoona","entries":[
+        "username":"developer","entries":[
            {"user_options":["Manager","0034","0037","0040"],
             "topic_value":"PDF",
             "content_value":{"doctype":"954"},
@@ -233,18 +233,18 @@ This is where we begin.
             "topic_type":"Agency",
             "topic_type_description":"Agency Commission Statements",
             "description":"Agency Commission Statements",
-            "username":"skoona",
+            "username":"developer",
             "uri":"Commission/Agency/PDF"
            },
-           {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"skoona","uri":"Commission/Agency/CSV"},
-           {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"skoona","uri":"Experience/Agency/PDF"}
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"developer","uri":"Commission/Agency/CSV"},
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"developer","uri":"Experience/Agency/PDF"}
                                      ],
         "pak":null,
         "profile_type":"",
         "profile_type_description":"",
         "provider":"UserProfile",
         "display_name":"Employee Primary User: Developer",
-        "email":"skoona@gmail.com"
+        "email":"developer@gmail.com"
     }
   }
 }
@@ -265,14 +265,14 @@ REQUEST:  { AccessProfile
     "topic_type_description":"Agency Commission Statements",
     "description":"Agency Commission Statements",
     "uri":"Commission/Agency/PDF",
-    "username":"skoona"
+    "username":"developer"
     }
     
 RESPONSE: {
     "success":true,
     "content":"access"
     "message":"",
-    "username":"skoona",
+    "username":"developer",
     "display_name":"Employee Primary User: Developer",
     "package":[
         {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
@@ -296,14 +296,14 @@ REQUEST: {
     "topic_type":"Agency",
     "topic_type_description":"Agency Actions",
     "description":"Determine which agency documents can be seen",
-    "username":"skoona"
+    "username":"developer"
     }
     
 RESPONSE: {
     "content":"content"
     "success":true,
     "message":"",
-    "username":"skoona",
+    "username":"developer",
     "display_name":"Employee Primary User: Developer",
     "package":[
         {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:24:12.066-05:00","size":"0"},

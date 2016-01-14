@@ -4,7 +4,7 @@
 # Reads a control file from <rails_root>/config/access_registry.xml into a control hash
 # offers static routines to callers which validate access to controlled resources
 #
-# Author: James Scott, Jr. <jscott@skoona.net>
+# Author: James Scott, Jr. <skoona@gmail.com>
 # Date: 2/27/2013
 ##
 #

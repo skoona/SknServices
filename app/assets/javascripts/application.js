@@ -16,7 +16,7 @@
 //= require bootstrap-sprockets
 //= require dataTables.bootstrap
 //= require jquery.dataTables
-//= require skn.common
+//= require dsvc.common.js.erb
 //= require demo.pages
 //= require developer.page
 //= require_tree .

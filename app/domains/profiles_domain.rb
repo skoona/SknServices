@@ -96,7 +96,7 @@ class ProfilesDomain < ::Factory::DomainsBase
   #     "topic_type":"Agency",
   #     "topic_type_description":"Agency Actions",
   #     "description":"Determine which agency documents can be seen",
-  #     "username":"skoona"
+  #     "username":"developer"
   # }
   ##
   # REQUEST:  { AccessProfile
@@ -109,7 +109,7 @@ class ProfilesDomain < ::Factory::DomainsBase
   #     "topic_type_description":"Agency Commission Statements",
   #     "description":"Agency Commission Statements",
   #     "uri":"Commission/Agency/PDF",
-  #     "username":"skoona"
+  #     "username":"developer"
   # }
   def api_accessible_content(params) # :access, :username, :profile
     @accessible_type = params[:id] || params[:access] # [:access, :content]

@@ -24,7 +24,7 @@ module ApplicationHelper
   end
 
   def logo(logo_id="logo")
-    logo = image_tag("AvatarSMP.gif", id: logo_id, alt: "Skoona Services", class: "brand-image")
+    logo = image_tag("LinuxSMP.png", id: logo_id, alt: "Authorized Services", class: "brand-image")
   end
 
   # Return title on a per-page basis.

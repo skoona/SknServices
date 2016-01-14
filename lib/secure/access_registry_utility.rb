@@ -5,7 +5,7 @@
 # -  Inputs: AccessRegistry xmlFile
 # - Outputs: a hash with the contents of the xml file
 #
-# Author: James Scott, Jr. <jscott@skoona.net>
+# Author: James Scott, Jr. <skoona@gmail.com>
 # Feb 27, 2013
 #
 
