@@ -47,6 +47,8 @@
                                 <p><code>:establish_domain_services</code> and <code>:manage_domain_services</code> work to recover assets from the request session, and to save keys
                                     to those assets into the session just before the controller exits back to the browser.  The ServiceFactory is lightwieght and would derive no real benefit from being
                                     serialized into a session.  So it is simply created anew with each request/response cycle.</p>
+                                <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
+                                    To instantiate a AccessProfileService use: <code>service_factory.access_profile_service.some_method_name(params)</code>.</p>
                                 <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all service/domain objects in the application. And to additionally
                                     provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
                                 <p>Inside of services, like ContentprofileService or AccessProfileService, reference the service_factory as <code>:factory</code>, as in: <code>factory.access_profile_service.some_method</code> .</p>
@@ -140,9 +142,7 @@
                             <dt>Instantiate</dt>
                             <dd>
                                 <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                                <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
-                                   To instantiate a AccessProfileService use: <code>service_factory.access_profile_service.some_method_name(params)</code>.</p>
-                                <p>The intended use of services object methods is to handle all operations for controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
+                                <p>The intended use of services object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
                                 on the <code>SknUtils::PageControls</code> group of result bean containers.</p>
                             </dd>
                             <dt>Inheritance</dt>
@@ -175,8 +175,6 @@
                             <dt>Instantiate</dt>
                             <dd>
                                 <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                                <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
-                                    To instantiate a ContentProfileService use: <code>service_factory.content_profile_service.some_method_name(params)</code>.</p>
                                 <p>The intended use of services object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
                                     on the <code>SknUtils::PageControls</code> group of result bean containers.</p>
                             </dd>
@@ -234,6 +232,22 @@
                     <p>The Business Process Interface is here.</p>
                 </div>
                 <p>Inherited by: <code>ContentProfileService, AccessProfileService, ...</code></p>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#SknUtils" aria-expanded="false" aria-controls="collapseTwo">
+                            ResultBean Value Containers
+                        </a>
+                    </h4>
+                </div>
+                <div id="SknUtils" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        SknUtils:PageControls
+                    </div>
+                </div>
+                <p>skn_utils.gem</p>
             </div>
 
             <div class="panel panel-info">

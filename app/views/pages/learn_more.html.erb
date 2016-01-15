@@ -6,26 +6,26 @@
         <%# <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "large-image") %>
 
         <p class="lead">
-            This application is focused on collecting and correlating information from multiple sources to meet
-            or contribute to the following objectives:
+            The ultimate goal is to provide sensitive documents electronically to the people authorized to access them.
+        </p>
+        <p class="lead">
+            For each person we record the document type identifiers for documents they are allowed to see, by business entity, or Agency.
+        </p>
+        <p class="lead">
+            The resulting encoding may look like: <br/><small>person1=agency-authorized/agency=0034/content=commission/docid=6654,6656,6657</small>
         </p>
     </div>
 
 
     <div class="row">
         <blockquote>
+            <h4>Electronic delivery scenarios:</h4>
             <ol>
-                <li>Clearly indicate an employee, agent, agency owner, CSR, or any business ACTOR role!<br/>
-                    <strong>* by identifying the person(s) using a permanent and persistent identifier from an authenticated source.</strong>
+                <li>An Insured has enrolled in 'Direct-Pay' and wants electronic access to related relationship documents.  Later, they wish to add other people to the list of authorized participants.
                 </li>
-                <li>When an Insured enrolls in 'DirectPay' what additional documents have they chosen to have delivered electronically to them?<br/>
-                    <strong>* by identifying the person(s), and encoding which person is authorized to view specific electronic documents.</strong>
+                <li>An Agency Owner has designated a short list of people be allowed to access the Commission Statement, CSV file, and the Agency Experience Document.
                 </li>
-                <li>Who has an AgencyOwner authorized to receive and/or view their monthly Commission Statement, Commission CSV File, and Agency Experience Report?<br/>
-                    <strong>* by identifying the person(s), and encoding which person is authorized to view specific electronic documents.</strong>
-                </li>
-                <li>When a Policy changes its LifeCycle Status, who receives notification; and how should that notification be sent?<br/>
-                    <strong>* by identifying the person(s), and encoding which person is authorized to receive notifications by type, where type includes and/or implies the delivery method.</strong>
+                <li>An Agent has requested notification of certain policy life-cycle events, for either all their accounts or a short list of accounts.
                 </li>
             </ol>
         </blockquote>
@@ -39,24 +39,25 @@
             <h4>Identify the Person and their Role.</h4>
             <p>Using any available authentication system.  We trust those systems to enroll and
             consistently identify users, provided they offer an unique <em>persistent identifier key (pak)</em>
-            that does not change between registrations.</p>
-            <p>The AccessProfile is an implementation model provided by this application, which assures compliance with this requirement.</p>
+            that does not change between logins.</p>
+            <p>The AccessProfile is a authentication process provided by this application. It assures compliance with this identity requirement.</p>
         </blockquote>
 
         <blockquote class="col-md-6">
             <h4>Encode their Permissions</h4>
             <p>This application, via administrator specification, a self-service facility,
             or business policy standards, matches a participants identity key to a ContentProfile.</p>
-            <p>The ContentProfile is an implementation model provided by this application, which assures compliance with this requirement.</p>
+            <p>The ContentProfile is a authorization process provided by this application.  It assures compliance with this authoritative requirement.</p>
         </blockquote>
 
-        <div class="panel col-md-12">
+        <div class="col-md-12">
             <h4 class="text-center">Content-based Authorization Specification</h4>
             <dl class="dl-horizontal">
                 <dt>UserProfile</dt>
                     <dd>The top level external representation of this user.</dd>
                     <dd>Can be sourced from any authentication system. i.e. internal, Google, etc.</dd>
                     <dd>Maintains user Identity key</dd>
+                    <dd>An AccessProfile provided construct.</dd>
                 <dt>ContentProfile</dt>
                     <dd>Top level internal representation, identifying the user and their role.</dd>
                     <dd>Contains a collection of topical permissions, called ContentProfileEntries.</dd>
