@@ -93,7 +93,7 @@ module Factory
 
     # Updates existing container with new object reference
     # returns object
-    def save_existing_object(key, obj)
+    def set_existing_object(key, obj)
       Rails.logger.debug("#{self.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
       obj

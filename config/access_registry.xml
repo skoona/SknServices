@@ -106,23 +106,23 @@
 -->
 
     <!--============== RSpec Test Data  ========== -->
-    <resource secured="false">
+    <resource secured="false" content="true">
         <uri>testing/public</uri>
         <description>Unsecured or Public Resource. (Hash)</description>
         <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
     </resource>
-    <resource secured="false">
+    <resource secured="false" content="true">
         <uri>testing/public_array</uri>
         <description>Unsecured or Public Resource. (Array)</description>
         <userdata>"drawerid|filetype|foldertype|doctype"</userdata>
     </resource>
-    <resource secured="false">
+    <resource secured="false" content="true">
         <uri>testing/public_string</uri>
         <description>Unsecured or Public Resource. (String)</description>
         <userdata>"value without vertical-bars or semi-colons will return as string"</userdata>
     </resource>
 
-    <resource secured="true">
+    <resource secured="true" content="true">
         <uri>testing/userdata</uri>
         <description>Secured Content Description (Hash)</description>
         <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
@@ -414,11 +414,11 @@
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
-        <description>Welcome to Authorized Service</description>
+        <description>Welcome to Authorized Services</description>
     </resource>
     <resource secured="false">
         <uri>pages/about</uri>
-        <description>About</description>
+        <description>About Authorized Services</description>
     </resource>
     <resource secured="false">
         <uri>pages/details_model</uri>

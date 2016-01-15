@@ -253,6 +253,11 @@ module Secure
       (@@ar_permissions.has_key?(resource_uri) && !@@ar_permissions[resource_uri]["secured"]) # prefer the actual value or use the default
     end
 
+    def self.ar_reload_configuration_file
+      @@ar_permissions = Secure::AccessRegistryUtility.new(Settings.access_profile.registry_filename.basename).from_xml()
+      Rails.logger.info("#{self.name}.#{__method__}() Configuration file reloaded!") if Rails.logger.present?
+    end
+
     protected
 
     def self.has_options_ary?(role_name, resource_uri, crud_mode="READ")

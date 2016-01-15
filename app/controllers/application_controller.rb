@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   # New Services extension
   def service_factory
-    @service_factory || ::ServiceFactory.new({controller: self})
+    @service_factory ||= ::ServiceFactory.new({controller: self})
   end
 
 

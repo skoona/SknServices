@@ -94,7 +94,7 @@ module Secure
 
     # Saves user object to InMemory Container
     def add_to_store()
-      save_existing_object(person_authenticated_key.to_sym, self)
+      set_existing_object(person_authenticated_key.to_sym, self)
     end
 
     # Removes saved user object from InMemory Container

@@ -8,13 +8,123 @@
     </header>
 
     <section>
+        <h3>Design Guidance</h3>
         <p class="lead">
-            Design guidance.
+            This application is a Rails 4.2.5+ app.  However, WE DO NOT FOLLOW THE RAILS WAY.</p>
+        <p>Doing it our way, is going to become more difficult
+            as Rails continues to mature in the wrong direction; Rails 5 may be the last platform we engage.  Rails has not yet provided a container or
+            methodology to include business logic safely or in a scalable way.  Our Way, has adopted a strategy to co-exist with Rails as the Web Interface.
+            ActiveSupport::Concerns, among other features, is now challenging our strategy for co-existence.  When Rails impacts Core Ruby principals, like <code>Module#included</code>,
+            we have to pay attention and make an informed and educated choice; make your voice heard!.
         </p>
+        <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our code from it.  Calling on Rails only when we absolutely needed to exchange
+            results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
+        <p>The persistence assumptions, by Rails Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
+            technologies; is very dangerous and Microsoft-ish.  For examples of the wrong direction read the Rails Release notes starting a 4.0, up to verison 5.
+            Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
+        <p>This application source, and implementation, serve as a model for how successful web application can be engineered without dumbing down or wasting time.</p>
     </section>
 
     <section>
-        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <%# <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"> %>
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ServiceFactory" aria-expanded="false" aria-controls="collapseTwo">
+                            ServiceFactory
+                        </a>
+                    </h4>
+                </div>
+                <div id="ServiceFactory" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        <h5>ServiceFactory</h5>
+                        <dl class="dl-horizontal">
+                            <dt>Instantiate</dt>
+                            <dd>
+                                <p>ServiceFactory is instantiated by the top level Application Controller using a <code>:before_action</code> callback to a private method
+                                    called <code>:establish_domain_services</code>.  There is also a twin to this callback referred to as <code>:manage_domain_services</code>,
+                                    called by the <code>:after_action</code> callback.</p>
+                                <p><code>:establish_domain_services</code> and <code>:manage_domain_services</code> work to recover assets from the request session, and to save keys
+                                    to those assets into the session just before the controller exits back to the browser.  The ServiceFactory is lightwieght and would derive no real benefit from being
+                                    serialized into a session.  So it is simply created anew with each request/response cycle.</p>
+                                <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all service/domain objects in the application. And to additionally
+                                    provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
+                                <p>Inside of services, like ContentprofileService or AccessProfileService, reference the service_factory as <code>:factory</code>, as in: <code>factory.access_profile_service.some_method</code> .</p>
+                            </dd>
+                            <dt>Inheritance</dt>
+                            <dd><p>ServiceFactory, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
+                                object across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
+                                retention until there useage is complete.</p>
+                            <dt>Provides</dt>
+                            <dd>
+                                <p>ServiceFactory provides Services with the <code>:current_user</code>, <code>:controller</code> reference, and a <code>:method_missing</code> feature capable of
+                                    directing no found method calls to the controller to be serviced if possible.</p>
+                                <p>Services should truly limit their demands of the controller object to zero if possible, and have the service_factory devise a solution to their requirements.  The most often
+                                    experienced demand for the controller is when a service needs to resolve a named route or render a template partial to embed in a json response.</p>
+                                <p>Let's not recreate the application controller, for those types of requirements use the controller, just wrap those patterns in a method defined in the service_factory or a
+                                    controller helper/presenter.  This way it can be easily mocked out later for testing.  In fact, I do use a <code>:page_actions</code> view helper located in the
+                                    ApplicationHelper module, to handle rendering and route resolutions from a hashed set of control data from a service.  Basically, outsourcing to the ActionView those things it does best; and totally removing the need for a controller object in the majority of services and domains.</p>
+                                <p>Engineering objectives shall include, avoidance of the controller in all services, domains, and specialty business services classes.  It is possible and practical, your RSpec tests will demonstrate it later.</p>
+                                <dl>
+                                    <dt>ObjectStorageService API</dt>
+                                    <dd>
+                                                <div class="well-sm">
+                                                <p># Saves object to inMemory ObjectStore<br/>
+                                                   # Returns storage key, needed to retrieve<br/>
+                                                    <code>:save_new_object(obj)</code></p>
+                                                </div>
+                                                <div class="well-sm">
+                                                 <p># Updates existing container with new object reference<br/>
+                                                    # returns object<br/>
+                                                    <code>:set_existing_object(key, obj)</code></p>
+                                                </div>
+                                                <div class="well-sm">
+                                                    <p># Retrieves object from InMemory Storage<br/>
+                                                    # returns object<br/>
+                                                    <code>:get_existing_object(key)</code></p>
+                                                </div>
+                                                <div class="well-sm">
+                                                    <p># Releases object from InMemory Storage<br/>
+                                                    # returns object, if present<br/>
+                                                    <code>:remove_existing_object(key)</code></p>
+                                                </div>
+                                    </dd>
+                                    <dt>Session API</dt>
+                                    <dd>
+                                        <div class="well-sm">
+                                            <p><code>:get_session_params(key)</code><br/>
+                                            <code>:set_session_params(key, value)</code></p>
+                                        </div>
+                                    </dd>
+                                    <dt>Named Route Helpers</dt>
+                                    <dd>
+                                        <div class="well-sm">
+                                            <p>### Converts named routes to string<br/>
+                                            #  Basic '/some/hardcoded/string/path'<br/>
+                                            #        '[:named_route_path]'<br/>
+                                            #        '[:named_route_path, {options}]'<br/>
+                                            #        '[:named_route_path, {options}, '?query_string']'<br/>
+                                            #<br/>
+                                            # Advanced ==> {engine: :demo,<br/>
+                                            #               path: :demo_profiles_path,<br/>
+                                            #               options: {id: 111304},<br/>
+                                            #               query: '?query_string'}<br/>
+                                            #
+                                            #              {engine: , path: , options: {}, query: ''}<br/>
+                                            <code>:page_action_paths(paths)</code></p>
+                                            <p>Example: <code>factory.page_action_paths(paths)</code></p>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <p>As a local method to all Services: <code>factory.get_session_param(key)</code></p>
+                            </dd>
+                        </dl>
+                        <p>All Services, like AccessProfileService or ContentProfileService, should be instantiated via the service_factory facilities.</p>
+                    </div>
+                </div>
+                <p>Container, and Provider of Business Object Services!</p>
+            </div>
+
             <div class="panel panel-info">
                 <div class="panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
@@ -23,13 +133,31 @@
                         </a>
                     </h4>
                 </div>
-                <div id="AccessProfileService" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div id="AccessProfileService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                     <div class="panel-body">
-                        <p>In the body proper</p>
+                        <h5>AccessProfileService</h5>
+                        <dl class="dl-horizontal">
+                            <dt>Instantiate</dt>
+                            <dd>
+                                <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
+                                <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
+                                   To instantiate a AccessProfileService use: <code>service_factory.access_profile_service.some_method_name(params)</code>.</p>
+                                <p>The intended use of services object methods is to handle all operations for controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
+                                on the <code>SknUtils::PageControls</code> group of result bean containers.</p>
+                            </dd>
+                            <dt>Inheritance</dt>
+                            <dd><p>AccessProfileService, inherits io routines and common business logic from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
+                                which yields common initialization services, like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
+                                object storage services and session storage services through its inheritance chain.</p>
+                            <dt>Provides</dt>
+                            <dd><p>AccessProfileService provides customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
+                            in a <code>@page_controls</code> bean container, and all exceptions are trapped by its top level method.   PageControl bean containers are required to include <code>success: true|false, and message: error_message|success_message|empty</code> values at a minimum.</p>
+                                <p>JSON Api methods are hosted by this service.</p>
+                            </dd>
+                        </dl>
                     </div>
-                    <p>In the box: More Stuff like tables</p>
                 </div>
-                <p>Out of the box: More Stuff like tables</p>
+                <p>Instantiated by: <code>service_factory()</code></p>
             </div>
 
             <div class="panel panel-info">
@@ -42,10 +170,30 @@
                 </div>
                 <div id="ContentProfileService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
-                        ContentProfileService
+                        <h5>ContentProfileService</h5>
+                        <dl class="dl-horizontal">
+                            <dt>Instantiate</dt>
+                            <dd>
+                                <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
+                                <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
+                                    To instantiate a ContentProfileService use: <code>service_factory.content_profile_service.some_method_name(params)</code>.</p>
+                                <p>The intended use of services object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
+                                    on the <code>SknUtils::PageControls</code> group of result bean containers.</p>
+                            </dd>
+                            <dt>Inheritance</dt>
+                            <dd><p>ContentProfileService, inherits io routines and common business logic from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
+                                which yields common initialization services of like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
+                                object storage services and session storage services through its inheritance chain.</p>
+                            <dt>Provides</dt>
+                            <dd><p>ContentProfileService provides customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
+                                in a <code>@page_controls</code> bean container, and all exceptions are trapped by its top level method.   PageControl bean containers are required to include
+                                <code>success: true|false, and message: error_message|success_message|empty</code> values at a minimum.</p>
+                                <p>JSON Api methods are hosted by this service.</p>
+                            </dd>
+                        </dl>
                     </div>
                 </div>
-                <p>More Stuff like tables</p>
+                <p>Instantiated by: <code>service_factory()</code></p>
             </div>
 
             <div class="panel panel-info">
@@ -58,10 +206,34 @@
                 </div>
                 <div id="DomainServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                     <div class="panel-body">
-                        DomainServices
+                        <h5>DomainServices</h5>
+                        <dl class="dl-horizontal">
+                            <dt>Instantiate</dt>
+                            <dd>
+                                <p>DomainServices are not instantiated directly, they are inherited by higher level and more specialized service classes.</p>
+                                <p>The intended use of domain services classes methods is to offer a business logic control of a single business domain.  It is the starting point for all business domains objects and process services.</p>
+                            </dd>
+                            <dt>Inheritance</dt>
+                            <dd><p>DomainServices, like the <code>ProfilesDomain</code>, inherit directly from the <code>::Factory::DomainsBase</code> class, and yield business logic methods to higher level service objects.
+                                Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
+                            <dt>Provides</dt>
+                            <dd><p>DomainServices provide logical access to the service factory and all other peer services the factory manages.  Typically you would find two to three levels of methods in a DomainServices class.</p>
+                                <dl>
+                                    <dt>Level One</dt>
+                                    <dd>Top level business interface.  Methods at this level take responsibility for doing the whole task; process a order or payment, would be an example of this.</dd>
+                                    <dt>Level Two</dt>
+                                    <dd>The notion of the whole task, is likely to have component steps involved.  At this level methods are expected to perform one elements of the whole task.
+                                        For this single-responsibility reason, we recommend creating dedicated objects to handle these component parts.</dd>
+                                    <dt>level Three</dt>
+                                    <dd>Is rarely needed, but if so would handle very narrow objectives; like I/O or RESTFul routines.</dd>
+                                </dl>
+                                <p>This is the best place to exploit object-oriented design principles.</p>
+                            </dd>
+                        </dl>
                     </div>
+                    <p>The Business Process Interface is here.</p>
                 </div>
-                <p>More Stuff like tables</p>
+                <p>Inherited by: <code>ContentProfileService, AccessProfileService, ...</code></p>
             </div>
 
             <div class="panel panel-info">
@@ -182,21 +354,6 @@
             <div class="panel panel-info">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ServiceFactory" aria-expanded="false" aria-controls="collapseTwo">
-                            ServiceFactory
-                        </a>
-                    </h4>
-                </div>
-                <div id="ServiceFactory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    <div class="panel-body">
-                        ServiceFactory
-                    </div>
-                </div>
-                <p>More Stuff like tables</p>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading" role="tab" id="headingTwo">
-                    <h4 class="panel-title">
                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ProcessController" aria-expanded="false" aria-controls="collapseTwo">
                             [Process] Controller
                         </a>
@@ -219,7 +376,7 @@
                 </div>
                 <div id="Configuration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
-                        Configuration
+                        Config.gem
                     </div>
                 </div>
                 <p>More Stuff like tables</p>
@@ -234,7 +391,7 @@
                 </div>
                 <div id="RailsModel" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
-                        Rails Model
+                        Rails Model: has_and_belongs_to_many was chosen as the method of interaction, to allow maximum reuse of existing patterns contained in Content/Topic and ContentTypeEntries models.
                     </div>
                 </div>
                 <p>More Stuff like tables</p>
@@ -249,7 +406,7 @@
                 </div>
                 <div id="RailsViews" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
-                        Rails Views
+                        Rails Views: BootStrap, JQuery DataTables, and SimpleForms are our choice for classic erb page composition and rendering.
                     </div>
                 </div>
                 <p>More Stuff like tables</p>
@@ -264,7 +421,7 @@
                 </div>
                 <div id="RailsApplicationControllers" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
-                        Rails Application Controllers
+                        Rails Application Controllers are a neccessary evil, which we tolerate.
                     </div>
                 </div>
                 <p>More Stuff like tables</p>
@@ -279,10 +436,26 @@
                 </div>
                 <div id="RSpecTesting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
-                        RSpec Testing
+                        RSpec Testing: This Rocks
                     </div>
                 </div>
                 <p>More Stuff like tables</p>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#AuthorizationDataModel" aria-expanded="false" aria-controls="collapseTwo">
+                            Authorization Data Models
+                        </a>
+                    </h4>
+                </div>
+                <div id="AuthorizationDataModel" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        <h2>Authorization Data Models</h2>
+                        <%= image_tag("AuthService-ContentModelOnly.png", alt: "ContentProfile Data Tables", class: "huge-image") %>
+                    </div>
+                </div>
+                <p>Authorization Data Models</p>
             </div>
             <div class="panel panel-info">
                 <div class="panel-heading" role="tab" id="headingTwo">
@@ -295,12 +468,12 @@
                 <div id="ApplicationDataModel" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
                         <h2>Application Data Model</h2>
-                        <%= image_tag("AuthService-DataModel.png", alt: "Main Path", class: "huge-image") %>
+                        <%= image_tag("AuthService-DataModel.png", alt: "Application Data Model", class: "huge-image") %>
                     </div>
                 </div>
                 <p>Authentication and Authorization Data Models</p>
             </div>
-        </div>
+        <%# </div> %>
     </section>
 
 </article>

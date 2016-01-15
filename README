@@ -6,12 +6,13 @@
 ```bash
 
     $ bundle install
-    $ RAILS_ENV=development rake db:create db:migrate db:seed
+    $ RAILS_ENV=development rake db:create db:migrate db:seed   or rake db:reset
     $ RAILS_ENV=production rake db:create db:migrate db:seed
     $ RAILS_ENV=test rake db:create db:migrate db:seed
     $ rspec
     $ bundle exec rails server
     $
+    $ # to reload data either db:seed or the following
     $ rake access_registry:reports:db_profiles access_registry:preload:create_content_profiles access_registry:reports:db_profiles
 ```
 

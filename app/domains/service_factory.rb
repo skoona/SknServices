@@ -50,6 +50,14 @@ class ServiceFactory < ::Factory::ServicesBase
     @user ||= @factory.current_user
   end
 
+  # User Session Handler
+  def get_session_params(key)
+    @factory.session[key]
+  end
+  def set_session_params(key, value)
+    @factory.session[key] = value
+  end
+
   protected
 
   # Support the regular respond_to? method by
