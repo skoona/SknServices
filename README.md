@@ -1,10 +1,26 @@
 #AuthService
 ---
 
+Author: James Scott <jscott@brotherhoodmutual.com>
+Date: Dec 2015
+
+
 ##Installation
 ---
 
-You will need to install PostGreSQL locally first. Then execute;
+You will need to install PostGreSQL, and add/edit database credentials:
+ 
+    config/settings.yml, 
+    config/settings/development.yml or create and edit config/settings/development.local.yml
+    config/settings/test.yml or create and edit config/settings/test.local.yml
+ 
+It might be helpful to set these environment parms too:
+    
+    export COVERAGE=true
+    export JRUBY='--server --debug'
+    export BUNDLE_PATH='vendor/bundle'
+    
+Then execute;
  
 ```Bash
 
@@ -12,6 +28,7 @@ $ bin/setup
 $ rspec
 
 ```
+
 
 ##Overview
 ---
@@ -27,14 +44,27 @@ this application.
 UserProfiles and AccessProfiles have many different implementations available, and are well handled processes. The [Java Access Controller](http://www.cs.ait.ac.th/~on/O/oreilly/java-ent/security/ch05_01.htm "Java Access Controller"), and related classes,
  were the original template for the AccessRegistry or AccessProfile capability; This now is an enhanced Ruby port of those permission capabilities. However,
 ContentProfiles are the main focus of exploration in this app, which has proven to be a significant 
-engineering challenge needing to handle the dynamics of Electronic Delivery.  
+engineering challenge when it comes to handling the dynamics of Electronic Delivery.  
+
+
+##Objective
+---
+
+The system shall contribute to resolving these initial use cases:
+
+1. Clearly indicate an employee, agent, agency owner, CSR, or any business ACTOR role!
+    * by identifying the person(s) using a permanent and persistent identifier from an authenticated source.
+2. When an Insured enrolls in 'DirectPay' what additional documents have they chosen to have delivered electronically to them?
+    * by identifying the person(s), and encoding which person is authorized to view specific electronic documents.
+3. Who has an AgencyOwner authorized to receive and/or view their monthly Commission Statement, Commission CSV File, and Agency Experience Report?
+    * by identifying the person(s), and encoding which person is authorized to view specific electronic documents.
+4. When a Policy changes its LifeCycle Status, who receives notification; and how should that notification be sent?
+    * by identifying the person(s), and encoding which person is authorized to receive notifications by type, where type includes the delivery method.
 
 
 ##AccessProfile i.e (Secure::AccessRegistry)
 ---
-
-The current implementation of
-AccessProfile contains an XML Secure::AccessRegistry file which could embody the specific requirements of
+The current implementation of AccessProfile contains an XML Secure::AccessRegistry file which could embody the specific requirements of
 the ContentProfile.  It would do this by creating an entry for each content type uri; like:
 
 * 'Agency/Commission-STMT/0034'

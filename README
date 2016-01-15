@@ -1,18 +1,26 @@
 ===AuthService
-================
+---
+
+Author: James Scott <jscott@brotherhoodmutual.com>
+Date: Dec 2015
+
+This file contains a collection of notes and data used during development
+The Readme.md file is more like documentation; outside of the app itself.
+
+
 
 ===PostgreSQL Required
 
 ```bash
 
     $ bundle install
-    $ RAILS_ENV=development rake db:create db:migrate db:seed   or rake db:reset
-    $ RAILS_ENV=production rake db:create db:migrate db:seed
-    $ RAILS_ENV=test rake db:create db:migrate db:seed
+    $ RAILS_ENV=development rake db:reset
+    $ RAILS_ENV=production rake db:reset
+    $ RAILS_ENV=test rake db:reset
     $ rspec
     $ bundle exec rails server
     $
-    $ # to reload data either db:seed or the following
+    $ # to reload test data either db:seed or the following
     $ rake access_registry:reports:db_profiles access_registry:preload:create_content_profiles access_registry:reports:db_profiles
 ```
 
@@ -47,11 +55,12 @@ rails generate scaffold NAME [field[:type][:index] field[:type][:index]] [option
 Make sure you edit config/initializers/generators.rb first
 
 ```bash
+
 rails g model Users username:string:index name:string email:string password:digest remember_token:string:index password_reset_token:string password_reset_date:datetime assigned_groups:string roles:string active:boolean file_access_token:string
 
 
 # Gem 'annotate'
-bundle exec annotate --exclude tests,fixtures,factories,serializers
+bundle exec annotate
 ```
 
 
@@ -211,3 +220,62 @@ Every User produces the following json object.
     }
   }
 }
+
+# WIP Notes
+        <p class="lead">
+            This application demonstrates and explores methods for Authentication, Access Authorizations,
+            and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
+            this application.
+        </p>
+
+        <ul class="lead">
+            <li>
+                UserProfiles deal with userid, password, password resets, and some preferences management.
+            </li>
+            <li>
+                AccessProfiles deal with what each user is allowed to access, click, or view.
+            </li>
+            <li>
+                ContentProfiles deal with specific content access priviledges; which document, etc.
+            </li>
+        </ul>
+
+        <p>
+            UserProfiles and AccessProfiles have many different implementations available, and are well handled processes.  However,
+            ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
+            engineering challenge to handle the dynamics of Electronic Delivery.
+        </p>
+
+     <div class="row">
+         <div class="col-md-6">
+            <h4>All secured page elements shall be assigned an unique id, called URI, by a developer.</h4>
+            <p>
+                Authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and
+                for each <em>showable data element</em>.  Page Access authorization is automated by examining the
+                the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
+                authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
+                have two levels of authorization available; Clickable, and content-based
+                authorization using the expanded UserProfile permissions, both use the Secure::AccessRegistry.
+            </p>
+        </div>
+        <div class="panel panel-info col-md-6">
+            <div class="panel-body">
+                <p>
+                    A user might have general access to the Account page which could list five
+                    sensitive documents types, but is only allowed to view two document types for that specific
+                    account.  Content-based authorization requires a document-type permissions list by account, to
+                    enforce access restrictions.
+                </p>
+            </div>
+        </div>
+    </div>
+
+ContentProfile's implementation encdoes the requirements by:
+
+        <p>
+            Secure::AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
+            application to access role strings; which could be externally administered via LDAP or SQL.  The
+            Secure::AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
+            also could be administered via LDAP or SQL.
+        </p>
+

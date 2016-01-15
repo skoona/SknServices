@@ -3,3 +3,14 @@ Packaging:
   isTest: false
   isDevelopment: true
   isProduction: false
+
+PostgreSQL:
+  username: postgres
+  password: postgres
+  host: localhost
+
+
+security:
+  session_expires: <%= -> { 30.minutes.from_now } %>
+  remembered_for:  <%= -> { 60.minutes.from_now } %>
+  verify_login_after_msecs: 360000   # 5 minutes

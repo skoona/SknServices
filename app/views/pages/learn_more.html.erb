@@ -6,85 +6,75 @@
         <%# <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "large-image") %>
 
         <p class="lead">
-            This application demonstrates and explores methods for Authentication, Access Authorizations,
-            and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
-            this application.
-        </p>
-
-        <ul class="lead">
-            <li>
-                UserProfiles deal with userid, password, password resets, and some preferences management.
-            </li>
-            <li>
-                AccessProfiles deal with what each user is allowed to access, click, or view.
-            </li>
-            <li>
-                ContentProfiles deal with specific content access priviledges; which document, etc.
-            </li>
-        </ul>
-
-        <p>
-            UserProfiles and AccessProfiles have many different implementations available, and are well handled processes.  However,
-            ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
-            engineering challenge to handle the dynamics of Electronic Delivery.
+            This application is focused on collecting and correlating information from multiple sources to meet
+            or contribute to the following objectives:
         </p>
     </div>
 
-     <div class="row">
-         <div class="col-md-6">
-            <h4>All secured page elements shall be assigned an unique id, called URI, by a developer.</h4>
-            <p>
-                Authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and
-                for each <em>showable data element</em>.  Page Access authorization is automated by examining the
-                the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
-                authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
-                have two levels of authorization available; Clickable, and content-based
-                authorization using the expanded UserProfile permissions, both use the Secure::AccessRegistry.
-            </p>
-        </div>
-        <div class="panel panel-info col-md-6">
-            <div class="panel-body">
-                <p>
-                    A user might have general access to the Account page which could list five
-                    sensitive documents types, but is only allowed to view two document types for that specific
-                    account.  Content-based authorization requires a document-type permissions list by account, to
-                    enforce access restrictions.
-                </p>
-            </div>
+
+    <div class="row">
+        <blockquote>
+            <ol>
+                <li>Clearly indicate an employee, agent, agency owner, CSR, or any business ACTOR role!<br/>
+                    <strong>* by identifying the person(s) using a permanent and persistent identifier from an authenticated source.</strong>
+                </li>
+                <li>When an Insured enrolls in 'DirectPay' what additional documents have they chosen to have delivered electronically to them?<br/>
+                    <strong>* by identifying the person(s), and encoding which person is authorized to view specific electronic documents.</strong>
+                </li>
+                <li>Who has an AgencyOwner authorized to receive and/or view their monthly Commission Statement, Commission CSV File, and Agency Experience Report?<br/>
+                    <strong>* by identifying the person(s), and encoding which person is authorized to view specific electronic documents.</strong>
+                </li>
+                <li>When a Policy changes its LifeCycle Status, who receives notification; and how should that notification be sent?<br/>
+                    <strong>* by identifying the person(s), and encoding which person is authorized to receive notifications by type, where type includes and/or implies the delivery method.</strong>
+                </li>
+            </ol>
+        </blockquote>
+
+        <blockquote>
+            <h4>Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization schemes.</h4>
+            <p class="lead">It first identifies access authorization to a specific business entity. Then permission to interact with secure objects related to that entity is permitted.</p>
+        </blockquote>
+
+        <blockquote class="col-md-6">
+            <h4>Identify the Person and their Role.</h4>
+            <p>Using any available authentication system.  We trust those systems to enroll and
+            consistently identify users, provided they offer an unique <em>persistent identifier key (pak)</em>
+            that does not change between registrations.</p>
+            <p>The AccessProfile is an implementation model provided by this application, which assures compliance with this requirement.</p>
+        </blockquote>
+
+        <blockquote class="col-md-6">
+            <h4>Encode their Permissions</h4>
+            <p>This application, via administrator specification, a self-service facility,
+            or business policy standards, matches a participants identity key to a ContentProfile.</p>
+            <p>The ContentProfile is an implementation model provided by this application, which assures compliance with this requirement.</p>
+        </blockquote>
+
+        <div class="panel col-md-12">
+            <h4 class="text-center">Content-based Authorization Specification</h4>
+            <dl class="dl-horizontal">
+                <dt>UserProfile</dt>
+                    <dd>The top level external representation of this user.</dd>
+                    <dd>Can be sourced from any authentication system. i.e. internal, Google, etc.</dd>
+                    <dd>Maintains user Identity key</dd>
+                <dt>ContentProfile</dt>
+                    <dd>Top level internal representation, identifying the user and their role.</dd>
+                    <dd>Contains a collection of topical permissions, called ContentProfileEntries.</dd>
+                    <dd>Each User has only one of these profiles per UserProfile.</dd>
+                <dt>ContentProfileEntry</dt>
+                    <dd>Describes the intended use of this entry.</dd>
+                    <dd>Encodes the TYPE of business Information. i.e. Commission or Notifications</dd>
+                    <dd>Encodes the identifier for that TYPE of business Information, like Agency or Account number.</dd>
+                    <dd>Encodes the CONTENT of business Information</dd>
+                    <dd>Encodes the identifier for that CONTENT of business Information, like commission docid, or notification type.</dd>
+                    <dd>Each User can have as many of these entriesas needed, these entries can also be shared or reused.</dd>
+                <dt>ContentType/TopicType</dt>
+                    <dd>Convenience collection of identity values related to topic and/or content types.</dd>
+                    <dd>Ensure identifiers are usable and correct to the company standards.</dd>
+                    <dd>Each individual value includes a description.  For licensed state number 21, 'Michigan' would be its description.</dd>
+                    <dd>The application may only allow selection from the approved list of account numbers, agency numbers, etc.</dd>
+            </dl>
         </div>
     </div>
-
-    <section>
-        <h4>Authorization shall consider business entities when determining access restrictions.</h4>
-        <p>
-            Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization outcomes.
-            It first identifies access authorization to a specific business entity. Then specific access, by type, to secure objects related to that entity.
-        </p>
-        <div class="panel panel-info">
-            <div class="panel-body">
-                <h5>Content-based Authorization Specification</h5>
-                <dl class="dl-horizontal">
-                    <dt>Key/Value tuple where:</dt>
-                    <dd>key is a single record for each user labeled ContentProfile.</dd>
-                    <dd>value is collection of associated ContentProfileEntry(s).</dd>
-                    <dd>Content Profiles are indentified by an unique token assigned by the authentication service.</dd>
-                    <dt>Profile: One</dt>
-                    <dd>key is an unique combination of: &lt;UUID&gt;/&lt;ProfileType&gt;</dd>
-                    <dd>value is collection of &lt;ProfileEntry&gt; the user shall access.</dd>
-                    <dd>Each User has only one of these.</dd>
-                    <dt>Profile Entry: Many</dt>
-                    <dd>key is unique combination of: &lt;ContentType&gt;/&lt;EntityType&gt;/&lt;EntityTypeOpts&gt;</dd>
-                    <dd>value is collection of &lt;ContentTypeOpts&gt; the user shall access.</dd>
-                    <dd>Each User can have many of these.</dd>
-                </dl>
-            </div>
-        </div>
-        <p>
-            Secure::AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
-            application to access role strings; which could be externally administered via LDAP or SQL.  The
-            Secure::AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
-            also could be administered via LDAP or SQL.
-        </p>
-    </section>
 
 </article>

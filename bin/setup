@@ -9,7 +9,8 @@ Dir.chdir APP_ROOT do
   # Add necessary setup steps to this file:
 
   puts "== Installing dependencies =="
-  system "gem install bundler --conservative"
+  system "gem install bundler rake rspec --conservative"
+  ENV['BUNDLE_PATH'] = 'vendor/bundle'
   system "bundle check || bundle install || bundle clean"
 
   # puts "\n== Copying sample files =="
@@ -18,14 +19,13 @@ Dir.chdir APP_ROOT do
   # end
 
   puts "\n== Preparing databases =="
-  system "RAILS_ENV=development bin/rake db:drop db:create db:migrate db:seed"
-  system "RAILS_ENV=test bin/rake db:drop db:create db:migrate db:seed"
-  system "RAILS_ENV=production bin/rake db:drop db:create db:migrate db:seed"
+  system "RAILS_ENV=development bin/rake db:reset"
+  system "RAILS_ENV=test bin/rake db:reset"
+  system "RAILS_ENV=production bin/rake db:reset"
 
   puts "\n== Removing old logs and tempfiles =="
   system "rm -f log/*"
   system "rm -rf tmp/cache"
 
-  puts "\n== Restarting application server =="
-  system "touch tmp/restart.txt"
+  puts "Setup Complete\n\n"
 end
