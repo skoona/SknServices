@@ -222,52 +222,6 @@
         </permission>
     </resource>
 
-    <!--============== Content Access Adaptation  ========== -->
-    <resource secured="true" content="true">
-        <uri>Commission/Agency/PDF</uri>
-        <description>Agency Commission Statements</description>
-        <userdata>"doctype:954"</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.PDF.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>Commission/Agency/CSV</uri>
-        <description>Agency Commission CSV Datafiles</description>
-        <userdata>"doctype:955"</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.CSV.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>Experience/Agency/PDF</uri>
-        <description>Agency Experience Statements</description>
-        <userdata>"doctype:956"</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Experience.PDF.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>Commission/Agency/99</uri>
-        <description>Test where RoleName has no Options</description>
-        <userdata>"doctype:956"</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="">Test.Agency.Commission.Agency.PDF.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-
 
     <!--============================================================================= -->
     <!--========================= RESOURCE REGISTRY  ================================ -->

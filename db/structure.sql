@@ -65,11 +65,11 @@ ALTER SEQUENCE content_options_id_seq OWNED BY content_options.id;
 
 CREATE TABLE content_profile_entries (
     id integer NOT NULL,
-    topic_value character varying,
-    content_value character varying,
+    topic_value character varying(255),
+    content_value character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description character varying
+    description character varying(255)
 );
 
 
@@ -98,12 +98,12 @@ ALTER SEQUENCE content_profile_entries_id_seq OWNED BY content_profile_entries.i
 
 CREATE TABLE content_profiles (
     id integer NOT NULL,
-    person_authentication_key character varying,
+    person_authentication_key character varying(255),
     profile_type_id integer,
-    authentication_provider character varying,
-    username character varying,
-    display_name character varying,
-    email character varying,
+    authentication_provider character varying(255),
+    username character varying(255),
+    display_name character varying(255),
+    email character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -134,8 +134,8 @@ ALTER SEQUENCE content_profiles_id_seq OWNED BY content_profiles.id;
 
 CREATE TABLE content_type_opts (
     id integer NOT NULL,
-    value character varying,
-    description character varying,
+    value character varying(255),
+    description character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -166,9 +166,9 @@ ALTER SEQUENCE content_type_opts_id_seq OWNED BY content_type_opts.id;
 
 CREATE TABLE content_types (
     id integer NOT NULL,
-    name character varying,
-    description character varying,
-    value_data_type character varying,
+    name character varying(255),
+    description character varying(255),
+    value_data_type character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -289,8 +289,8 @@ ALTER SEQUENCE join_topics_id_seq OWNED BY join_topics.id;
 
 CREATE TABLE profile_types (
     id integer NOT NULL,
-    name character varying,
-    description character varying,
+    name character varying(255),
+    description character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -320,7 +320,7 @@ ALTER SEQUENCE profile_types_id_seq OWNED BY profile_types.id;
 --
 
 CREATE TABLE schema_migrations (
-    version character varying NOT NULL
+    version character varying(255) NOT NULL
 );
 
 
@@ -360,8 +360,8 @@ ALTER SEQUENCE topic_options_id_seq OWNED BY topic_options.id;
 
 CREATE TABLE topic_type_opts (
     id integer NOT NULL,
-    value character varying,
-    description character varying,
+    value character varying(255),
+    description character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -392,9 +392,9 @@ ALTER SEQUENCE topic_type_opts_id_seq OWNED BY topic_type_opts.id;
 
 CREATE TABLE topic_types (
     id integer NOT NULL,
-    name character varying,
-    description character varying,
-    value_based_y_n character varying,
+    name character varying(255),
+    description character varying(255),
+    value_based_y_n character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -425,9 +425,9 @@ ALTER SEQUENCE topic_types_id_seq OWNED BY topic_types.id;
 
 CREATE TABLE user_group_roles (
     id integer NOT NULL,
-    name character varying,
-    description character varying,
-    group_type character varying,
+    name character varying(255),
+    description character varying(255),
+    group_type character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -488,8 +488,8 @@ ALTER SEQUENCE user_group_roles_user_roles_id_seq OWNED BY user_group_roles_user
 
 CREATE TABLE user_roles (
     id integer NOT NULL,
-    name character varying,
-    description character varying,
+    name character varying(255),
+    description character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -520,23 +520,23 @@ ALTER SEQUENCE user_roles_id_seq OWNED BY user_roles.id;
 
 CREATE TABLE users (
     id integer NOT NULL,
-    username character varying,
-    name character varying,
-    email character varying,
-    password_digest character varying,
-    remember_token character varying,
-    password_reset_token character varying,
+    username character varying(255),
+    name character varying(255),
+    email character varying(255),
+    password_digest character varying(255),
+    remember_token character varying(255),
+    password_reset_token character varying(255),
     password_reset_date timestamp without time zone,
-    assigned_groups character varying,
-    roles character varying,
+    assigned_groups character varying(4096),
+    roles character varying(4096),
     active boolean DEFAULT true,
-    file_access_token character varying,
+    file_access_token character varying(255),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    person_authenticated_key character varying,
-    assigned_roles character varying,
-    remember_token_digest character varying,
-    user_options character varying
+    person_authenticated_key character varying(255),
+    assigned_roles character varying(4096),
+    remember_token_digest character varying(255),
+    user_options character varying(4096)
 );
 
 
@@ -1048,52 +1048,6 @@ ALTER TABLE ONLY content_options
 --
 
 SET search_path TO "$user",public;
-
-INSERT INTO schema_migrations (version) VALUES ('20151216235319');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025036');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025121');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025157');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025221');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025245');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025331');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025354');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222025546');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222035102');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222172102');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222172216');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222173809');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222223016');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222223045');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222224227');
-
-INSERT INTO schema_migrations (version) VALUES ('20151222224252');
-
-INSERT INTO schema_migrations (version) VALUES ('20151223040759');
-
-INSERT INTO schema_migrations (version) VALUES ('20151226230202');
-
-INSERT INTO schema_migrations (version) VALUES ('20151228161812');
-
-INSERT INTO schema_migrations (version) VALUES ('20160103024528');
-
-INSERT INTO schema_migrations (version) VALUES ('20160113200600');
-
-INSERT INTO schema_migrations (version) VALUES ('20160113200621');
 
 INSERT INTO schema_migrations (version) VALUES ('20160113200706');
 

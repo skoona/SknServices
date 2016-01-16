@@ -18,8 +18,11 @@ remote_log:
 access_profile:
   default_unknown_to_unsecure: false
   options_keyword: options
-  registry_filename:  # defaults to <root>/config  -- no override
+  access_registry_filename:  # defaults to <root>/config  -- no override
     basename: access_registry
+    extension: xml
+  content_registry_filename:  # defaults to <root>/config  -- no override
+    basename: content_registry
     extension: xml
 
 security:

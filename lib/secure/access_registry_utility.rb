@@ -62,11 +62,12 @@ module Secure
     @@ar_options_keyword = Settings.access_profile.options_keyword
 
     # Initialize object and load the xmlFile
-    def initialize (xml_filename)
+    def initialize (xml_filename, rootPath='accessRegistry')
+      relative_xpath = "/#{rootPath}/resource"
       relative_xmlfile = "#{Rails.root}/config/#{xml_filename}.xml"
       raise AccessRegistryError, "No such file or directory - #{relative_xmlfile}" unless File.exist? relative_xmlfile
 
-      @xml_doc =  Nokogiri::XML(File.open(relative_xmlfile, "r")).xpath("/accessRegistry/resource")
+      @xml_doc =  Nokogiri::XML(File.open(relative_xmlfile, "r")).xpath(relative_xpath)
       Rails.logger.debug "Processing xml file => [#{relative_xmlfile}]"
     end
 

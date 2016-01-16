@@ -1,0 +1,89 @@
+﻿<?xml version="1.0"?>
+<contentRegistry>
+<!--
+   config/content_registry.xml
+
+
+   * FULL RESOURCE SYNTAX **********************************************
+    
+    <resource secured="true|false" content="true|false">
+        <uri>anyString</uri>
+        <description></description>
+        <userdata></userdata>
+        <permission type="CREATE|READ|UPDATE|DELETE">
+            <authorizedRoles>
+                <authorizedRole options="anyOptionOrCommaSepValue">security-role-name</authorizedRole>
+                <authorizedRole>security-user-group-name</authorizedRole>
+                <authorizedRole>All Authorized Users</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    
+    
+    
+   * PARTIAL RESOURCE SYNTAX *******************************************
+    
+    <resource secured="false"> 
+        <uri>anyString</uri>
+        <description>Any String can be a URI.</description>
+        <userdata>"foldertype:27637844|doctype:955"</userdata>
+    </resource>
+
+    UserData Required format/syntax is:
+       returns Array if value|value,...
+       returns Hash  if key:value|key:value|...
+       returns String if no reserve chars present
+       Reserved chars: |:  # vertical-bar and semi-colon
+
+
+-->
+    <!--============================================================================= -->
+    <!--================== Content RESOURCE REGISTRY  =============================== -->
+    <!--============================================================================= -->
+
+    <!--============== Content Access Adaptation  ========== -->
+    <resource secured="true" content="true">
+        <uri>Commission/Agency/PDF</uri>
+        <description>Agency Commission Statements</description>
+        <userdata>"doctype:954"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.PDF.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>Commission/Agency/CSV</uri>
+        <description>Agency Commission CSV Datafiles</description>
+        <userdata>"doctype:955"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.CSV.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>Experience/Agency/PDF</uri>
+        <description>Agency Experience Statements</description>
+        <userdata>"doctype:956"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Experience.PDF.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>Commission/Agency/99</uri>
+        <description>Test where RoleName has no Options</description>
+        <userdata>"doctype:956"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="">Test.Agency.Commission.Agency.PDF.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+</contentRegistry>

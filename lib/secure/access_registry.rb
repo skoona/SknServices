@@ -109,7 +109,10 @@ module Secure
   class AccessRegistry
 
     CRUD_MODES = ["CREATE","READ","UPDATE","DELETE"].freeze
-    @@ar_permissions = Secure::AccessRegistryUtility.new(Settings.access_profile.registry_filename.basename).from_xml()
+    @@ar_permissions = (
+        Secure::AccessRegistryUtility.new(Settings.access_profile.access_registry_filename.basename).from_xml().merge(
+          Secure::AccessRegistryUtility.new(Settings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml())
+    )
     @@ar_strict_mode = Settings.access_profile.default_unknown_to_unsecure
 
     def initialize
@@ -254,8 +257,13 @@ module Secure
     end
 
     def self.ar_reload_configuration_file
-      @@ar_permissions = Secure::AccessRegistryUtility.new(Settings.access_profile.registry_filename.basename).from_xml()
+      access_registry = Secure::AccessRegistryUtility.new(Settings.access_profile.access_registry_filename.basename).from_xml()
+      content_registry = Secure::AccessRegistryUtility.new(Settings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml()
+      @@ar_permissions = access_registry.merge(content_registry)
       Rails.logger.info("#{self.name}.#{__method__}() Configuration file reloaded!") if Rails.logger.present?
+    rescue Exception => e
+      @@ar_permissions = access_registry
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     end
 
     protected

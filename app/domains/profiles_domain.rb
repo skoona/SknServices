@@ -172,7 +172,7 @@ class ProfilesDomain < ::Factory::DomainsBase
 
   def get_page_content_profile(user_profile)
     result = user_profile.content_profile.to_hash
-      raise(Utility::Errors::NotFound, "No content profile data available for #{user_profile.display_name}") if result.empty? or result[:entries].empty?
+      raise(Utility::Errors::NotFound, "No content profile data available for #{user_profile.display_name}") if result.nil? or result.empty? or result[:entries].empty?
     result[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)} if result.key?(:entries)
     result
   end
