@@ -17,10 +17,10 @@ module Secure
     module ClassMethods   # mostly called by Warden
 
       # AccessProfile will call this
-      def page_users(context='access')
+      def page_users(context='access', state=true)
         usrs = []
         self.where(active: true).find_each do |u|
-          usrs << Secure::UserProfile.new(u).enable_authentication_controls(true)
+          usrs << Secure::UserProfile.new(u).enable_authentication_controls(state)
         end
         usrs
       rescue Exception => e

@@ -279,3 +279,23 @@ ContentProfile's implementation encdoes the requirements by:
             also could be administered via LDAP or SQL.
         </p>
 
+
+AccessprofileEntry
+["AgencySecondary", "0037"],
+[
+  {
+     :uri=>"Commission/Agency/CSV",
+     :resource_options=>{
+            :uri=>"Commission/Agency/CSV",
+            :role=>"Test.Agency.Commission.Statement.CSV.Access",
+            :role_opts=>["0034", "0037", "0040"]
+     },
+     :content_type=>"Commission",
+     :content_value=>{"doctype"=>"955"},
+     :topic_type=>"Agency",
+     :topic_value=>"CSV",
+     :description=>"Agency Commission CSV Datafiles",
+     :topic_type_description=>"Agency Commission CSV Datafiles",
+     :content_type_description=>"Agency Commission CSV Datafiles"
+  }
+ ]

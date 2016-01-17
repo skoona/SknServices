@@ -123,6 +123,9 @@ module Secure
     ##
     # Core Methods
     #
+    def self.get_crud_modes
+      CRUD_MODES
+    end
     def self.get_resource_description(resource_uri)
       @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:description] : ""
     end

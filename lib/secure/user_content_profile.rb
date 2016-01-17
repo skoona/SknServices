@@ -24,7 +24,10 @@ module Secure
     #
     # Returns RB of ContentProfile
     def content_profile
-      result = self.instance_variable_get(:@content_profile) || ((setup_content_profile and @content_profile.present?) ? self.instance_variable_get(:@content_profile) :  Utility::ContentProfileBean.new({success: false, message: 'Not Found'}))
+      result = self.instance_variable_get(:@content_profile) ||
+          ((setup_content_profile and @content_profile.present?) ?
+              self.instance_variable_get(:@content_profile) :
+              Utility::ContentProfileBean.new({success: false, message: "No content profile data available for #{self.display_name}", entries:[]}))
       Rails.logger.debug("  #{self.name.to_s}.#{__method__}() returns: #{result.to_hash}")
       result
     end

@@ -13,9 +13,7 @@ module Secure
     attr_accessor :id, :person_authenticated_key, :last_access
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
-    # class << self
       singleton_class.send :delegate, :find_by, :find_each, :where, :remember_token, :username, :to => ::User
-    # end
 
     ##
     # Initialize with a user_object only
@@ -58,12 +56,13 @@ module Secure
 
     # Warden will call this methods
     def enable_authentication_controls(prepare_only=false)
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      return self if prepare_only
       self.last_access = Time.now
       self.setup_access_profile
       self.setup_content_profile
 
       add_to_store unless prepare_only
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       true
     end

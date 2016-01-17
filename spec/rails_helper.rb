@@ -47,10 +47,6 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 #   Rails.application
 # end
 
-##
-# See config/initializers/warden.rb for RackTest middleware insertion before warden
-##
-
 # fixes: 'Missing host to link to! Please provide the :host parameter,
 #         set default_url_options[:host], or set :only_path to true'
 Rails.application.routes.default_url_options[:host] = 'http://test.localdomain.com'

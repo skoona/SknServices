@@ -7,7 +7,8 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
   before do
     @user = Secure::UserProfile.new( User.first )
     sign_in(@user, scope: :access_profile)
-    @service = ProfilesDomain.new({factory: controller, controller: controller, user: @user})
+    @sf = ServiceFactory.new(factory: controller)
+    @service = @sf.access_profile_service
   end
 
   context "Initialization "  do
@@ -108,22 +109,22 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
 
     context "For user aptester, that has content and access profiles available. " do
       it "#access_profile_package(access) return a PageControls object. " do
-        expect(@access.access_profile_package(aptesterA)).to be_a(SknUtils::PageControls)
-        expect(@access.access_profile_package(aptesterA).success).to be true
+        expect(@access.access_profile_package(aptesterA)).to be_a(Hash)
+        expect(@access.access_profile_package(aptesterA)[:success]).to be true
       end
       it "#content_profile_package(content) return a PageControls object." do
-        expect(@content.content_profile_package(aptesterC)).to be_a(SknUtils::PageControls)
-        expect(@content.content_profile_package(aptesterC).success).to be true
+        expect(@content.content_profile_package(aptesterC)).to be_a(Hash)
+        expect(@content.content_profile_package(aptesterC)[:success]).to be true
       end
     end
     context "For user estester, that has access but no content profile available. " do
       it "#access_profile_package(access) return a PageControls object." do
-        expect(@access.access_profile_package(estesterA)).to be_a(SknUtils::PageControls)
-        expect(@access.access_profile_package(estesterA).success).to be true
+        expect(@access.access_profile_package(estesterA)).to be_a(Hash)
+        expect(@access.access_profile_package(estesterA)[:success]).to be true
       end
       it "#content_profile_package(content) return a PageControls object. " do
-        expect(@content.content_profile_package(estesterC)).to be_a(SknUtils::PageControls)
-        expect(@content.content_profile_package(estesterC).success).to be false
+        expect(@content.content_profile_package(estesterC)).to be_a(Hash)
+        expect(@content.content_profile_package(estesterC)[:success]).to be false
       end
     end
   end

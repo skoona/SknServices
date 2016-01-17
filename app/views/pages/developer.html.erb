@@ -27,7 +27,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapseZero" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingZero">
+            <div id="collapseZero" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingZero">
                 <div class="panel-body">
                     <p>Router Direct Page Accessed => <%= accessed_page() %></p>
                     <p>AccessRegistry Access Page Name => <%= accessed_page_name() %></p>
@@ -84,7 +84,7 @@
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
-                        AccessRegistry XML
+                        AccessRegistry AccessXML
                         <span class="badge"><%= Secure::AccessRegistry.get_ar_resource_keys.length %></span>
                     </a>
                 </h4>
@@ -102,7 +102,44 @@
                         <tbody>
 
                         <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
-                            <tr class="<%= Secure::AccessRegistry.get_resource_type(ar) ? 'success' : '' %>">
+                            <% next if Secure::AccessRegistry.get_resource_type(ar) %>
+                            <tr>
+                                <td><%= '%05d' % index %></td>
+                                <td><%= ar.to_s %></td>
+                                <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
+                                <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
+                            </tr>
+                        <% end %>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingFour">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
+                        AccessRegistry ContentXML
+                        <span class="badge"><%= Secure::AccessRegistry.get_ar_resource_keys.length %></span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="panel-body">
+                    <h2 id="access">Summary Listing </h2>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <th>Index</th>
+                        <th>URI</th>
+                        <th>Description</th>
+                        <th>UserData</th>
+                        </thead>
+                        <tbody>
+
+                        <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
+                            <% next unless Secure::AccessRegistry.get_resource_type(ar) %>
+                            <tr>
                                 <td><%= '%05d' % index %></td>
                                 <td><%= ar.to_s %></td>
                                 <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
@@ -117,83 +154,96 @@
         </div>
     </div>
 
-    <% if authenticated? %>
-        <div class="alert alert-success" role="alert">
-            <p>Has Access to this page '/' = <%= current_user_has_access?("/") ? "True": "False" %></p>
+    <div class="panel panel-success">
+        <div class="panel-heading" role="tab" id="headingFive">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    Current User Info
+                </a>
+            </h4>
         </div>
+        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+            <div class="panel-body">
 
-        <div class="well-lg">
-            <h3>Assigned Groups</h3>
-            <ol>
-                <% current_user.assigned_groups.each do |item| -%>
-                    <li><%= item %></li>
-                <% end -%>
-            </ol>
-        </div>
+            <% if authenticated? %>
+                <div class="well-lg">
+                    <h3>Assigned Groups</h3>
+                    <ol>
+                        <% current_user.assigned_groups.each do |item| -%>
+                            <li><%= item %></li>
+                        <% end -%>
+                    </ol>
+                </div>
 
-        <div class="well-lg">
-            <h3>Assigned Roles</h3>
-            <ol>
-                <% current_user.assigned_roles.each do |item| -%>
-                    <li><%= item %></li>
-                <% end -%>
-            </ol>
-        </div>
+                <div class="well-lg">
+                    <h3>Assigned Roles</h3>
+                    <ol>
+                        <% current_user.assigned_roles.each do |item| -%>
+                            <li><%= item %></li>
+                        <% end -%>
+                    </ol>
+                </div>
 
-        <div class="well-lg">
-            <h3>Access Profile</h3>
-            <ol>
-                <% current_user.access_roles_all.try(:each) do |item| -%>
-                    <li><%= item %></li>
-                <% end -%>
-            </ol>
-        </div>
+                <div class="well-lg">
+                    <h3>Access Profile</h3>
+                    <ol>
+                        <% current_user.access_roles_all.try(:each) do |item| -%>
+                            <li><%= item %></li>
+                        <% end -%>
+                    </ol>
+                </div>
 
-        <div class="well-lg">
-            <h3>Content Profile</h3>
-            <ol>
-                <% res = current_user.content_profile %>
-                <% if res.present? and res.username? %>
-                    <% res.to_hash.each_pair do |item, value| -%>
-                        <% if item.eql?(:entries) %>
-                            <l1><h4><%= item%></h4>
-                                <% value.each do |ary| %>
-                                  <ol>
-                                    <% ary.each_pair do |k,v| %>
-                                       <li><%= k %> => <%= v %></li>
+                <div class="well-lg">
+                    <h3>Content Profile</h3>
+                    <ol>
+                        <% res = current_user.content_profile %>
+                        <% if res.present? and res.username? %>
+                            <% res.to_hash.each_pair do |item, value| -%>
+                                <% if item.eql?(:entries) %>
+                                    <l1><h4><%= item%></h4>
+                                        <% value.each do |ary| %>
+                                          <ol>
+                                            <% ary.each_pair do |k,v| %>
+                                               <li><%= k %> => <%= v %></li>
+                                            <% end %>
+                                            <li>---</li>
+                                          </ol>
+                                        <% end %>
+                                    </l1>
+                                    <% else %>
+                                <li><%= item %> => <%= value %></li>
                                     <% end %>
-                                    <li>---</li>
-                                  </ol>
-                                <% end %>
-                            </l1>
-                            <% else %>
-                        <li><%= item %> => <%= value %></li>
-                            <% end %>
-                    <% end -%>
-                <% end %>
-            </ol>
-        </div>
-    <% end %>
+                            <% end -%>
+                        <% end %>
+                    </ol>
+                </div>
+            <% else %>
+                <p>No Authorized User</p>
+            <% end %>
 
-    <div class="well-lg">
-        <h3>Current Session Values</h3>
-        <ol>
-            <% session.keys.each do |k| -%>
-                <li> <%= k %>: <%= session[k] %> </li>
-            <% end -%>
-        </ol>
+            <div class="well-lg">
+                <h3>Current Session Values</h3>
+                <ol>
+                    <% session.keys.each do |k| -%>
+                        <li> <%= k %>: <%= session[k] %> </li>
+                    <% end -%>
+                </ol>
+            </div>
+
+            <div class="well-lg">
+                <h3>Cookies on Current Request</h3>
+                <ol>
+                    <% cookies.each do |item| -%>
+                        <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
+                    <% end -%>
+                </ol>
+           </div>
+            </div>
+        </div>
     </div>
 
-    <div class="well-lg">
-        <h3>Cookies on Current Request</h3>
-        <ol>
-            <% cookies.each do |item| -%>
-                <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
-            <% end -%>
-        </ol>
-   </div>
     <div class="well">
-        <%= link_to "Reload AccessRegistry",  developer_pages_path(id: 'xml'), class: 'btn btn-primary btn-lg btn-block' %>
+        <%= link_to "Reload AccessRegistry",  developer_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
     </div>
 
 </article>
