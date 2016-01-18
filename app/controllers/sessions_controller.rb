@@ -1,5 +1,5 @@
 class SessionsController < ActionController::Base
-  include Secure::ControllerAccessProfile
+  include Secure::ControllerAccessControl
   include ApplicationHelper
   layout "application"
 

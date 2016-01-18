@@ -25,7 +25,7 @@ class AccessRegistryTestUser
       "assigned_groups", "remember_token", "person_authenticated_key"
     ]
   end
-  include Secure::UserAccessProfile
+  include Secure::UserAccessControl
 
   def key
     unique_id

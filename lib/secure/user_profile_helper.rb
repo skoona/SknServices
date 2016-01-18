@@ -3,10 +3,13 @@ module Secure
     extend ActiveSupport::Concern
 
     included do
-      # Todo: Breaks Test User for now
-      # raise Utility::Errors::SecurityImplementionError,
-      #       "You are missing a critical security var: :person_authenticated_key; Please implement!" unless
-      #     self.attribute_names.include?("person_authenticated_key")
+      raise Utility::Errors::SecurityImplementionError,
+            "You are missing one or more critical security fields; Please implement!" unless
+            self.attribute_names.include?("person_authenticated_key") and
+            self.attribute_names.include?("assigned_groups") and
+            self.attribute_names.include?("assigned_roles") and
+            self.attribute_names.include?("user_options") and
+            self.attribute_names.include?("roles")
     end
 
     module ClassMethods

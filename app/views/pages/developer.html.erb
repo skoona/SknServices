@@ -166,7 +166,109 @@
             <div class="panel-body">
 
             <% if authenticated? %>
-                <div class="well-lg">
+                    <% res = profile_builder.access_profile(current_user, true) %>
+                    <% if res.present? and res.username? %>
+                    <h3>Access Profile</h3>
+                        <div class="table-responsive">
+                            <table id="access-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <caption><h4><%= res.display_name %> at <%= res.email %></h4></caption>
+                                <thead class="bg-primary">
+                                    <th>Profile Type</th>
+                                    <th>Description</th>
+                                    <th>Provider</th>
+                                    <th>PAK</th>
+                                    <th>Username</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><%= res.profile_type %></td>
+                                    <td><%= res.profile_type_description %></td>
+                                    <td><%= res.provider %></td>
+                                    <td><%= res.pak %></td>
+                                    <td><%= res.username %></td>
+                                </tr>
+                                <tr>
+                                    <table id="access-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                        <caption>Content Profile Entries</caption>
+                                        <thead class="bg-primary">
+                                            <th>Entry Description</th>
+                                            <th>Content</th>
+                                            <th>Content Description</th>
+                                            <th>Topic</th>
+                                            <th>Topic Value</th>
+                                            <th>Content Value</th>
+                                        </thead>
+                                        <tbody>
+                                        <% res.entries.each do |row| %>
+                                            <tr>
+                                                <td><%= row.description %></td>
+                                                <td><%= row.content_type %></td>
+                                                <td><%= row.content_type_description %></td>
+                                                <td><%= row.topic_type %></td>
+                                                <td><%= row.topic_value.join(',') %></td>
+                                                <td><%= row.content_value.map(&:to_hash) %></td>
+                                            </tr>
+                                        <% end %>
+                                        </tbody>
+                                    </table>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% end %>
+
+                    <% res = profile_builder.content_profile(current_user, true) %>
+                    <% if res.present? and res.username? %>
+                        <h3>Content Profile</h3>
+                        <div class="table-responsive">
+                            <table id="content-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <caption><h4><%= res.display_name %> at <%= res.email %></h4></caption>
+                                <thead class="bg-primary">
+                                    <th>Profile Type</th>
+                                    <th>Description</th>
+                                    <th>Provider</th>
+                                    <th>PAK</th>
+                                    <th>Username</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><%= res.profile_type %></td>
+                                        <td><%= res.profile_type_description %></td>
+                                        <td><%= res.provider %></td>
+                                        <td><%= res.pak %></td>
+                                        <td><%= res.username %></td>
+                                    </tr>
+                                    <tr>
+                                        <table id="content-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                            <caption>Content Profile Entries</caption>
+                                            <thead class="bg-primary">
+                                                <th>Entry Description</th>
+                                                <th>Content</th>
+                                                <th>Content Description</th>
+                                                <th>Topic</th>
+                                                <th>Topic Value</th>
+                                                <th>Content Value</th>
+                                            </thead>
+                                            <tbody>
+                                            <% res.entries.each do |row| %>
+                                                <tr>
+                                                    <td><%= row.description %></td>
+                                                    <td><%= row.content_type %></td>
+                                                    <td><%= row.content_type_description %></td>
+                                                    <td><%= row.topic_type %></td>
+                                                    <td><%= row.topic_value.join(',') %></td>
+                                                    <td><%= row.content_value.join(',') %></td>
+                                                </tr>
+                                            <% end %>
+                                            </tbody>
+                                        </table>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% end %>
+
+                <div class="well">
                     <h3>Assigned Groups</h3>
                     <ol>
                         <% current_user.assigned_groups.each do |item| -%>
@@ -175,7 +277,7 @@
                     </ol>
                 </div>
 
-                <div class="well-lg">
+                <div class="well">
                     <h3>Assigned Roles</h3>
                     <ol>
                         <% current_user.assigned_roles.each do |item| -%>
@@ -184,44 +286,20 @@
                     </ol>
                 </div>
 
-                <div class="well-lg">
-                    <h3>Access Profile</h3>
+                <div class="well">
+                    <h3>Rendered Access Roles</h3>
                     <ol>
-                        <% current_user.access_roles_all.try(:each) do |item| -%>
+                        <% current_user.combined_access_roles.try(:each) do |item| -%>
                             <li><%= item %></li>
                         <% end -%>
                     </ol>
                 </div>
 
-                <div class="well-lg">
-                    <h3>Content Profile</h3>
-                    <ol>
-                        <% res = current_user.content_profile %>
-                        <% if res.present? and res.username? %>
-                            <% res.to_hash.each_pair do |item, value| -%>
-                                <% if item.eql?(:entries) %>
-                                    <l1><h4><%= item%></h4>
-                                        <% value.each do |ary| %>
-                                          <ol>
-                                            <% ary.each_pair do |k,v| %>
-                                               <li><%= k %> => <%= v %></li>
-                                            <% end %>
-                                            <li>---</li>
-                                          </ol>
-                                        <% end %>
-                                    </l1>
-                                    <% else %>
-                                <li><%= item %> => <%= value %></li>
-                                    <% end %>
-                            <% end -%>
-                        <% end %>
-                    </ol>
-                </div>
             <% else %>
                 <p>No Authorized User</p>
             <% end %>
 
-            <div class="well-lg">
+            <div class="well">
                 <h3>Current Session Values</h3>
                 <ol>
                     <% session.keys.each do |k| -%>
@@ -230,14 +308,14 @@
                 </ol>
             </div>
 
-            <div class="well-lg">
+            <div class="well">
                 <h3>Cookies on Current Request</h3>
                 <ol>
                     <% cookies.each do |item| -%>
                         <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
                     <% end -%>
                 </ol>
-           </div>
+            </div>
             </div>
         </div>
     </div>

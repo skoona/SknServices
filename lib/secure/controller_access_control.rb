@@ -25,7 +25,7 @@
 # Date: 3.13.2013
 
 module Secure
-  module ControllerAccessProfile
+  module ControllerAccessControl
     extend ActiveSupport::Concern
 
     included do

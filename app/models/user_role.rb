@@ -14,4 +14,9 @@ class UserRole < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
+  def self.select_options
+    self.all().map do |r|
+      [r.name, r.id, {data_description: r.description}]
+    end
+  end
 end

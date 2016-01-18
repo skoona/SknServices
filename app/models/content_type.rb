@@ -18,7 +18,7 @@ class ContentType < ActiveRecord::Base
 
   validates_presence_of :name, :description
 
-  def self.ct_options_selects
+  def self.options_selects
     self.all.map do |cts|
       [cts.name, cts.id, {data_description: cts.description}]
     end

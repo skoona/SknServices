@@ -32,7 +32,7 @@ function profileTablesRequester(ev) {
         method: "GET",
         dataType: "json",
         contentType: 'json',
-        url: accessibleUrl,
+        url: $("#accessible-table tbody").data().accessibleUrl, // accessibleUrl,
         data: dataPackage,
         accepts: 'json'
     }).done(function(data,textStatus) {
@@ -54,14 +54,14 @@ function profileTablesRequester(ev) {
  */
 function replaceContentTableRows(dataPackage) {
     var tTitle = $('#content-title'),
-            vList = dataPackage.package.content_profile.entries,
+            vList = dataPackage.package[1].content_profile.entries,
             newRow = [],
             counter = 0,
             trNode,
             trRow;
 
-    tTitle.html(dataPackage.package.message);
-    if (dataPackage.package.success) {
+    tTitle.html(dataPackage.package[1].message);
+    if (dataPackage.package[1].success) {
 
         contentTable.rows().remove().draw();
 
@@ -94,14 +94,14 @@ function replaceContentTableRows(dataPackage) {
  */
 function replaceAccessTableRows(dataPackage) {
     var tTitle = $('#access-title'),
-            vList = dataPackage.package.access_profile.entries,
+            vList = dataPackage.package[0].access_profile.entries,
             newRow = [],
             counter = 0,
             trNode,
             trRow;
 
-    tTitle.html(dataPackage.package.message);
-    if (dataPackage.package.success) {
+    tTitle.html(dataPackage.package[0].message);
+    if (dataPackage.package[0].success) {
         accessTable.clear().draw();
 
         $.each(vList, function(index, row) {
@@ -209,8 +209,8 @@ function handleDemoPages() {
     var userRows = $('#users-table tbody tr');
 
     userRows.on('click', function (event) {
-        var dataPackage = $(event.currentTarget).data().package,
-            contentType = dataPackage.package.hasOwnProperty('access_profile');
+        var dataPackage = $(event.currentTarget).data().package;
+//            contentType = dataPackage.package.hasOwnProperty('access_profile');
 
         /* save url to fetch accessible files from */
         accessibleUrl = $("#accessible-table tbody").data().accessibleUrl;
@@ -229,11 +229,8 @@ function handleDemoPages() {
         $(event.currentTarget).addClass('success');
 
         /* Determine which page we are on and use that table loader */
-        if (contentType) {
-            replaceAccessTableRows(dataPackage);
-        } else {
-            replaceContentTableRows(dataPackage);
-        }
+        replaceAccessTableRows(dataPackage);
+        replaceContentTableRows(dataPackage);
 
         consoleLog(dataPackage.username + " Selected." + JSON.stringify(dataPackage));
     });
@@ -255,27 +252,29 @@ $(function() {
         /*
          * Initial Establish the dataTables
          */
-
-        $.extend( $.fn.dataTable.defaults, {
-            dom: "fti",
-            colReorder: false,
-            fixedColumns: false,
-            fixedHeader: false,
-            autoWidth: true,
-            paging: false,
-            searching: true,
-            scrollY: "420px",
-            scrollCollapse: true,
-            scroller: true,
-            responsive: true,
-            select: {
-                selector: "tr",
-                style: "single",
-                items: "row",
-                info: true
-            }
-        });
-
+        try {
+            $.extend($.fn.dataTable.defaults, {
+                dom: "fti",
+                colReorder: false,
+                fixedColumns: false,
+                fixedHeader: false,
+                autoWidth: true,
+                paging: false,
+                searching: true,
+                scrollY: "420px",
+                scrollCollapse: true,
+                scroller: true,
+                responsive: true,
+                select: {
+                    selector: "tr",
+                    style: "single",
+                    items: "row",
+                    info: true
+                }
+            });
+        } catch(e) {
+            consoleLog("Defaults Failed " + e);
+        }
         handleDemoPages();
     }
 

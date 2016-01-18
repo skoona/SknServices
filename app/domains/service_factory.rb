@@ -35,6 +35,11 @@ class ServiceFactory < ::Factory::ServicesBase
     yield @ct_content_profile_service if block_given?
     @ct_content_profile_service
   end
+  def profile_builder
+    @bld_profile_builder ||= Builder::ProfileBuilder.new({factory: self})
+    yield @bld_profile_builder if block_given?
+    @bld_profile_builder
+  end
 
 
   ##
@@ -72,6 +77,7 @@ class ServiceFactory < ::Factory::ServicesBase
 
   # Easier to code than delegation, or forwarder
   def method_missing(method, *args, &block)
+    Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() Called #{method}")
     if @factory.respond_to?(method)
       block_given? ? @factory.send(method, *args, block) :
           (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))

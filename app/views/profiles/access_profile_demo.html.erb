@@ -11,7 +11,8 @@
             a positive outcome.
         </p>
         <p>
-            <a class="btn btn-primary btn-lg" href="<%= details_access_pages_path %>" role="button">Learn more</a>
+            <a class="btn btn-primary btn-lg" href="<%= details_content_pages_path %>" role="button">More about ContentProfile</a>
+            <a class="btn btn-primary btn-lg" href="<%= details_access_pages_path %>" role="button">More about AccessProfile</a>
         </p>
     </div>
 
@@ -49,12 +50,34 @@
                         </div>
                         <!-- Table -->
                         <table id="access-table" class="table table-hover table-striped profile display responsive no-wrap" cellspacing="0" width="100%">
+                            <caption><h4>Source: AccessProfile</h4></caption>
                             <thead>
                                 <th>Entry Description</th>
                                 <th>Content</th>
                                 <th>Topic</th>
                                 <th>Topic Value</th>
                                 <th>Content Value</th>
+                            </thead>
+                            <tbody class="">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel panel-info ">
+                        <div class="panel-heading">
+                            <h2 id="content-title" class="panel-title">ContentProfile Entries: <span class="label-info">select a user profile</span></h2>
+                        </div>
+                        <!-- Table -->
+                        <table id="content-table" class="table table-hover table-striped profile display responsive no-wrap" cellspacing="0" width="100%">
+                            <caption><h4>Source: ContentProfile</h4></caption>
+                            <thead>
+                            <th>Entry Description</th>
+                            <th>Content</th>
+                            <th>Content Description</th>
+                            <th>Topic</th>
+                            <th>Topic Value</th>
+                            <th>Content Value</th>
                             </thead>
                             <tbody class="">
                             </tbody>
@@ -74,7 +97,7 @@
                                 <th>Created</th>
                                 <th>Size</th>
                             </thead>
-                            <tbody class="" data-accessible-url="<%= @page_controls.page_users.first.package.accessible_content_url %>">
+                            <tbody class="" data-accessible-url="<%= @page_controls.page_users.first.package.first.accessible_content_url %>">
                             </tbody>
                         </table>
                     </div>

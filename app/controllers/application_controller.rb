@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Secure::ControllerAccessProfile
+  include Secure::ControllerAccessControl
   include ApplicationHelper
 
   # Prevent CSRF attacks by raising an exception.
@@ -11,9 +11,10 @@ class ApplicationController < ActionController::Base
   after_action  :manage_domain_services
 
 
-  delegate :password_service, :access_profile_service, :content_profile_service,
+  delegate :password_service, :access_profile_service, :content_profile_service, :profile_builder,
            to: :service_factory
 
+  helper_method :service_factory, :profile_builder, :json_request?
 
   # New Services extension
   def service_factory

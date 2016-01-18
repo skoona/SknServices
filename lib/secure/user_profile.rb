@@ -7,13 +7,12 @@
 module Secure
   class UserProfile < Factory::ServicesBase
 
-    include Secure::UserAccessProfile
-    include Secure::UserContentProfile
+    include Secure::UserAccessControl
 
     attr_accessor :id, :person_authenticated_key, :last_access
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
-      singleton_class.send :delegate, :find_by, :find_each, :where, :remember_token, :username, :to => ::User
+    singleton_class.send :delegate, :find_by, :find_each, :where, :remember_token, :username, :to => ::User
 
     ##
     # Initialize with a user_object only
@@ -23,6 +22,7 @@ module Secure
       @person_authenticated_key = user[:person_authenticated_key]
       @id = @user_object.id
       @last_access = Time.now
+      setup_combined_user_roles()
     end
 
 
@@ -46,11 +46,10 @@ module Secure
 
     # Warden will call this methods
     def disable_authentication_controls(prepare_only=false)
-      self.last_access = Time.now
-      proxy_u.save
-      remove_from_store unless prepare_only
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
+      self.last_access = Time.now
+      remove_from_store
       true
     end
 
@@ -59,12 +58,33 @@ module Secure
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.last_access = Time.now
-      self.setup_access_profile
-      self.setup_content_profile
-
-      add_to_store unless prepare_only
-      return self if prepare_only
+      add_to_store
       true
+    end
+
+    # Unpack Groups and Combine with assigned, into roles
+    # Called during Initialization
+    def setup_combined_user_roles
+      Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{@combined_user_roles.present? ? 'True' : 'False'})")
+      return @combined_user_roles if @combined_user_roles.present?
+      rc = false
+      role = []
+      role = proxy_u[:assigned_groups].map do |rg|
+        UserGroupRole.list_user_roles(rg)
+      end
+      if role.present?
+        role += proxy_u[:assigned_roles]
+        role += proxy_u[:assigned_groups]
+        @combined_user_roles = proxy_u[:roles] = role.flatten.uniq
+        rc = proxy_u.save
+      end
+      Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{@combined_user_roles.present? ? 'True' : 'False'}) Persisted=#{rc} #{}Roles=#{@combined_user_roles.length}")
+      rc
+    end
+
+    # Return all Roles
+    def combined_access_roles()
+      @combined_user_roles ||= (proxy_u.roles || [])
     end
 
 

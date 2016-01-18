@@ -1,26 +1,19 @@
-# lib/Secure/user_access_profile.rb
+# lib/Secure/user_access_control.rb
 #
 
 module Secure
-  module UserAccessProfile
+  module UserAccessControl
     extend ActiveSupport::Concern
 
     ADMIN_ROLE = Settings.security.admin_role
 
-    included do
-
-      # raise Utility::Errors::SecurityImplementionError,
-      #   "You are missing a critical security var: :person_authenticated_key; Please implement!" unless
-      #     self.attribute_names.include?("person_authenticated_key")
-    end
-
     module ClassMethods   # mostly called by Warden
 
       # AccessProfile will call this
-      def page_users(context='access', state=true)
+      def page_users(context='access')
         usrs = []
         self.where(active: true).find_each do |u|
-          usrs << Secure::UserProfile.new(u).enable_authentication_controls(state)
+          usrs << Secure::UserProfile.new(u)
         end
         usrs
       rescue Exception => e
@@ -28,12 +21,11 @@ module Secure
         []
       end
 
-      # AccessProfile will call this
-      def page_user(uname, context='access', enable=true)
+      # ContentProfile will call this
+      def page_user(uname, context='access')
         upp = nil
         value = self.find_by(username: uname)
         upp = self.new(value) if value.present?
-        upp.enable_authentication_controls(true) if upp and enable
         upp = nil unless upp && value
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
         upp
@@ -85,7 +77,7 @@ module Secure
 
       def last_login_time_expired?(person)
         a = (Time.now.to_i - person.last_access.to_i)
-        b = Settings.security.verify_login_after_msecs.to_i / 1000
+        b = Settings.security.verify_login_after_seconds.to_i
         rc = (person &&  (a > b ))
         person.last_access = Time.now
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username if person}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
@@ -96,82 +88,35 @@ module Secure
     #
     # Instance Methods
     #
-    def access_profile
-      Utility::ContentProfileBean.new({
-                                          entries: get_resource_content_entries() || [],
-                                          pak: person_authenticated_key,
-                                          profile_type: "",
-                                          profile_type_description: "",
-                                          provider: "UserProfile",
-                                          username: username,
-                                          display_name: display_name,
-                                          email: email
-                                      })
-    rescue Exception => e
-      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      {}
-    end
-
-    # Unpack Groups and Combine with assigned, into roles
-    # Called by Warden when user is authenticated
-    def setup_access_profile
-      rc = false
-      role = proxy_u[:assigned_groups].map do |rg|
-        UserGroupRole.list_user_roles(rg)
-      end
-      if role.present?
-        role += proxy_u[:assigned_roles]
-        role += proxy_u[:assigned_groups]
-        proxy_u[:roles] = role.flatten.uniq
-        rc = proxy_u.save
-      end
-      rc
-    end
-
-    # Return all Roles
-    def access_roles_all()
-      proxy_u.roles || []
-    end
 
     def is_admin?
-      access_roles_all.include? ADMIN_ROLE
+      combined_access_roles.include? ADMIN_ROLE
     end
 
     def has_access? (resource_uri, options=nil)
-      rc = Secure::AccessRegistry.check_access_permissions?( access_roles_all, resource_uri, options)
+      rc = Secure::AccessRegistry.check_access_permissions?( combined_access_roles, resource_uri, options)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
       rc
     end
-
     def has_create? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "CREATE", options)
+      rc = Secure::AccessRegistry.check_role_permissions?( combined_access_roles, resource_uri, "CREATE", options)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      rc
     end
-
     def has_read? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "READ", options)
+      rc = Secure::AccessRegistry.check_role_permissions?( combined_access_roles, resource_uri, "READ", options)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      rc
     end
-
     def has_update? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "UPDATE", options)
+      rc = Secure::AccessRegistry.check_role_permissions?( combined_access_roles, resource_uri, "UPDATE", options)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      rc
     end
-
     def has_delete? (resource_uri, options=nil)
-      Secure::AccessRegistry.check_role_permissions?( access_roles_all, resource_uri, "DELETE", options)
-    end
-
-    def get_resource_description(resource_uri)
-      Secure::AccessRegistry.get_resource_description(resource_uri)
-    end
-    def get_resource_userdata(resource_uri)
-      Secure::AccessRegistry.get_resource_userdata(resource_uri)
-    end
-    def get_resource_content_entries(opt=nil)
-      opts = opt || self[:user_options] || nil
-      Secure::AccessRegistry.get_resource_content_entries(self[:roles], opts)
-    end
-    def get_resource_content_entry(resource_uri, opt=nil)
-      opts = opt || self[:user_options] || nil
-      Secure::AccessRegistry.get_resource_content_entry(self[:roles], resource_uri,  opts)
+      rc = Secure::AccessRegistry.check_role_permissions?( combined_access_roles, resource_uri, "DELETE", options)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      rc
     end
 
   end # end AccessControl

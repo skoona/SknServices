@@ -17,10 +17,13 @@ class UserGroupRole < ActiveRecord::Base
 
   def self.list_user_roles(group_role_name, wdesc=false)
     rec = find_by(name: group_role_name)
-    rec.nil?  ? [] : wdesc ? rec.role_descriptions(group_role_name) : rec.user_role_names
-  rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    raise e
+    rec.nil?  ? [] : rec.user_role_names
+  end
+
+  def self.select_options
+    self.all().map do |r|
+      [r.name, r.id, {data_description: r.description}]
+    end
   end
 
   def user_role_names
@@ -33,4 +36,5 @@ class UserGroupRole < ActiveRecord::Base
     end
     results
   end
+
 end

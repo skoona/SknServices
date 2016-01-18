@@ -13,4 +13,11 @@ class TopicTypeOpt < ActiveRecord::Base
   has_and_belongs_to_many :topic_types, :join_table => :topic_options, reject_if: lambda {|attributes| attributes['value'].blank?}
 
   validates_presence_of :value, :description
+
+  def self.options_selects
+    self.all.map do |r|
+      [r.value, r.id, {data_description: r.description}]
+    end
+  end
+
 end

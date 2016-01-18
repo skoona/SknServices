@@ -17,6 +17,12 @@ module TestUsers
   def user_astester
     Secure::UserProfile.find_and_authenticate_user("astester", "nobugs")
   end
+  def user_vptester
+    Secure::UserProfile.find_and_authenticate_user("vptester", "nobugs")
+  end
+  def user_vstester
+    Secure::UserProfile.find_and_authenticate_user("vstester", "nobugs")
+  end
 
   ##
   # Valid DB User without cached enablement
@@ -34,5 +40,11 @@ module TestUsers
   end
   def page_user_astester
     Secure::UserProfile.page_user("astester")
+  end
+  def user_vptester
+    Secure::UserProfile.page_user("vptester")
+  end
+  def user_vstester
+    Secure::UserProfile.page_user("vstester")
   end
 end

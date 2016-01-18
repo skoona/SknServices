@@ -2,7 +2,7 @@
 # app/services/content_profile_service.rb
 #
 # Manages Secure::AccessRegistry interactions for Users
-# - Requires User#access_roles_all
+# - Requires User#combined_access_roles
 
 class AccessProfileService < ::ProfilesDomain
 

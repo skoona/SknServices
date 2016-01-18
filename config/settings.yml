@@ -30,7 +30,7 @@ security:
   extra_digest_strength: 3
   session_expires: <%= -> { 4.hours.from_now } %>
   remembered_for:  <%= -> { 12.hours.from_now } %>
-  verify_login_after_msecs: 28800000   # 8 hours
+  verify_login_after_seconds: 28800   # 8 hours
   ! public_pages: # no easily stored in the xml, because of leading slash
    - /assets
 

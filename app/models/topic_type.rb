@@ -18,7 +18,7 @@ class TopicType < ActiveRecord::Base
 
   validates_presence_of :name, :description
 
-  def self.tt_options_selects
+  def self.options_selects
     self.all.map do |tts|
       [tts.name, tts.id, {data_description: tts.description}]
     end
