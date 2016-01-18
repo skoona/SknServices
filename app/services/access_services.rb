@@ -1,9 +1,9 @@
 ##
-# app/services/access_profile_service.rb
+# app/services/access_services.rb
 #
 # Manages Access  interactions for Users
 
-class AccessProfileService < ::ProfilesDomain
+class AccessServices < ::ProfilesDomain
 
 # attr_accessor :factory, :current_user, :page_user  -- initialize by DomainService
 

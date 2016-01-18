@@ -33,6 +33,7 @@ module Builder
 
     # Retrieves users content profile in ResultBean
     def build_db_content_profile_bean(user_profile)
+      raise Utility::Errors::NotFound, "Invalid User Object!" unless user_profile.present?
       m_prefix = 'content'
       return  factory.get_existing_object(m_prefix + user_profile.person_authenticated_key) if factory.existing_object_stored?(m_prefix + user_profile.person_authenticated_key)
       results = {}
@@ -65,11 +66,11 @@ module Builder
       results
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      factory.remove_existing_object(m_prefix + user_profile.person_authenticated_key)
+      factory.remove_existing_object(m_prefix + user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
-          message: "No content profile data available for #{user_profile.display_name}",
-          username: user_profile.username,
+          message: e.message,
+          username: "unknown",
           entries:[]
       }
     end
@@ -91,6 +92,7 @@ module Builder
     # AccessProfile
     ##
     def build_ar_content_profile_bean(user_profile)
+      raise Utility::Errors::NotFound, "Invalid User Object!" unless user_profile.present?
       m_prefix = 'access'
       return  factory.get_existing_object(m_prefix + user_profile.person_authenticated_key) if factory.existing_object_stored?(m_prefix + user_profile.person_authenticated_key)
       results = {
@@ -119,11 +121,11 @@ module Builder
       results
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      factory.remove_existing_object(m_prefix + user_profile.person_authenticated_key)
+      factory.remove_existing_object(m_prefix + user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
-          message: "No content profile data available for #{user_profile.display_name}",
-          username: user_profile.username,
+          message: e.message,
+          username: "unknown",
           entries:[]
       }
     end

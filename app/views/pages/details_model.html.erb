@@ -141,7 +141,7 @@
                             </dl>
                         </dd>
                     </dl>
-                    <p>All Services, like ContentProfileBuilder, AccessProfileServices or ContentProfileService, should be instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
+                    <p>All Services, like ContentProfileBuilder, AccessServicess or ContentProfileService, should be instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
                 </div>
             </div>
             <p>Container, and Provider of Business Object Services!</p>
@@ -150,14 +150,14 @@
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#AccessProfileService" aria-expanded="true" aria-controls="collapseOne">
-                        AccessProfileService
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#AccessServices" aria-expanded="true" aria-controls="collapseOne">
+                        AccessServices
                     </a>
                 </h4>
             </div>
-            <div id="AccessProfileService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="AccessServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
-                    <h5>AccessProfileService</h5>
+                    <h5>AccessServices</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
@@ -165,11 +165,11 @@
                             <p>The intended use of this services object methods is to handle all access related operations for other services. It does not interact directly with ApplicationController entry points.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>AccessProfileService, inherits io routines and common business logic from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
+                        <dd><p>AccessServices, inherits io routines and common business logic from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
                             which yields common initialization services, like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
                             object storage services and session storage services through its inheritance chain.</p></dd>
                         <dt>Provides</dt>
-                        <dd><p>AccessProfileService provides customized business logic and standard information packaging for the application internal processes needing access verification.</p>
+                        <dd><p>AccessServices provides customized business logic and standard information packaging for the application internal processes needing access verification.</p>
                         </dd>
                     </dl>
                 </div>
@@ -288,7 +288,7 @@
                 </div>
                 <p>The Business Process Interface is here.</p>
             </div>
-            <p>Inherited by: <code>ContentProfileService, AccessProfileService, ...</code></p>
+            <p>Inherited by: <code>ContentProfileService, AccessServices, ...</code></p>
         </div>
 
         <div class="panel panel-info">

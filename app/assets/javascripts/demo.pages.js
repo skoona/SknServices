@@ -55,6 +55,45 @@ function profileTablesRequester(ev) {
 
 
 /**
+ * Reloads the access-table with supplied rows from a accessProfile package
+ * @param dataPackage {accessProfile}
+ */
+function replaceAccessTableRows(dataPackage) {
+    var tTitle = $('#access-title'),
+        vList = dataPackage.package[0].access_profile.entries,
+        newRow = [],
+        counter = 0,
+        trNode,
+        trRow;
+
+    tTitle.html(dataPackage.package[0].message);
+    if (dataPackage.package[0].success) {
+        accessTable.clear().draw();
+
+        $.each(vList, function(index, row) {
+            newRow = [];
+            newRow.push('<td>' + row.description  + '</td>');
+            newRow.push('<td>' + row.content_type  + '</td>');
+            newRow.push('<td>' + row.content_type_description  + '</td>');
+            newRow.push('<td>' + row.topic_type  + '</td>');
+            newRow.push('<td>' + JSON.stringify(row.topic_value)  + '</td>');
+            newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+            trRow = $('<tr>').append(newRow.join());
+
+            trNode = accessTable.row.add(trRow).draw().node();
+            $(trNode).data('package', row).on( "click", profileTablesRequester);
+            counter = index + 1;
+        });
+    } else {
+        accessTable.clear().draw();
+        accessibleTable.clear().draw();
+    }
+
+    consoleLog('replaceAccessTableRows(rowsAdded=' + counter + ')');
+    return false;
+}
+
+/**
  * Reloads the content-table with supplied rows from a contentProfile package
  * @param dataPackage {contentProfile}
  */
@@ -77,7 +116,7 @@ function replaceContentTableRows(dataPackage) {
             newRow.push('<td>' + row.content_type  + '</td>');
             newRow.push('<td>' + row.content_type_description  + '</td>');
             newRow.push('<td>' + row.topic_type  + '</td>');
-            newRow.push('<td>' + row.topic_value  + '</td>');
+            newRow.push('<td>' + JSON.stringify(row.topic_value)  + '</td>');
             newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
             trRow = $('<tr>').append(newRow.join());
 
@@ -91,45 +130,6 @@ function replaceContentTableRows(dataPackage) {
     }
 
     consoleLog('replaceContentTableRows(rowsAdded=' + counter + ')');
-    return false;
-}
-
-/**
- * Reloads the access-table with supplied rows from a accessProfile package
- * @param dataPackage {accessProfile}
- */
-function replaceAccessTableRows(dataPackage) {
-    var tTitle = $('#access-title'),
-            vList = dataPackage.package[0].access_profile.entries,
-            newRow = [],
-            counter = 0,
-            trNode,
-            trRow;
-
-    tTitle.html(dataPackage.package[0].message);
-    if (dataPackage.package[0].success) {
-        accessTable.clear().draw();
-
-        $.each(vList, function(index, row) {
-            newRow = [];
-            newRow.push('<td>' + row.description  + '</td>');
-            newRow.push('<td>' + row.content_type  + '</td>');
-            newRow.push('<td>' + row.content_type_description  + '</td>');
-            newRow.push('<td>' + row.topic_type  + '</td>');
-            newRow.push('<td>' + row.topic_value  + '</td>');
-            newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
-            trRow = $('<tr>').append(newRow.join());
-
-            trNode = accessTable.row.add(trRow).draw().node();
-            $(trNode).data('package', row).on( "click", profileTablesRequester);
-            counter = index + 1;
-        });
-    } else {
-        accessTable.clear().draw();
-        accessibleTable.clear().draw();
-    }
-
-    consoleLog('replaceAccessTableRows(rowsAdded=' + counter + ')');
     return false;
 }
 

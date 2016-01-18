@@ -17,8 +17,9 @@ RSpec.feature "Profile Demo Process.", {js: true} do
       visit content_profile_demo_profiles_url
       expect(current_path).to eq content_profile_demo_profiles_path
 
+      # find('#users-table tbody tr').first.click
       expect(page).to have_css('#content-table tbody')
-      # find('#access-table tbody tr').click
+      # find('#content-table tbody tr').first.click
       # expect(page).to have_css('table.profile tbody tr.success')
 
       click_link "Sign out"

@@ -35,7 +35,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @page_controls = access_profile_service.get_user_form_options
+    @page_controls = access_services.get_user_form_options
   end
 
   def create
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @page_controls = access_profile_service.get_user_form_options
+    @page_controls = access_services.get_user_form_options
   end
 
   def update

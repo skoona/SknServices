@@ -1,6 +1,6 @@
 ##
 #
-# Inherited by: ContentProfileService, AccessProfileService
+# Inherited by: ContentProfileService, AccessServices
 #
 #
 
@@ -148,7 +148,7 @@ class ProfilesDomain < ::Factory::DomainsBase
   end
 
   def user_accessible_content(user_profile, context="access", profile=nil)
-    result = factory.access_profile_service.user_accessible_content(user_profile, context, profile)
+    result = factory.access_services.user_accessible_content(user_profile, context, profile)
     result
   end
 

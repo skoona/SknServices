@@ -35,7 +35,7 @@ if "true".eql?ENV["COVERAGE"] and "test".eql?ENV["RAILS_ENV"]
         src_file.filename.include? 'lib/secure'
     end
     add_group 'Models' do |src_file|
-      ['app/models', 'app/beans'].any? do |item|
+      ['app/models', 'app/beans','lib/builder'].any? do |item|
         src_file.filename.include? item
       end
     end
