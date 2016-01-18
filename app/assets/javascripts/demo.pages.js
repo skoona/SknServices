@@ -23,6 +23,12 @@ function profileTablesRequester(ev) {
         contentType = dataPackage.hasOwnProperty('resource_options'), // then AccessProfile
         dataResponse;
 
+    if (contentType) {
+        accessibleUrl = $("#access-table tbody").data().accessibleUrl;
+    } else {
+        accessibleUrl = $("#content-table tbody").data().accessibleUrl;
+    }
+
     /* flag selected in content table */
     $("table.profile tbody tr").removeClass('success');
     $(ev.currentTarget).addClass('success');
@@ -32,16 +38,16 @@ function profileTablesRequester(ev) {
         method: "GET",
         dataType: "json",
         contentType: 'json',
-        url: $("#accessible-table tbody").data().accessibleUrl, // accessibleUrl,
+        url: accessibleUrl,
         data: dataPackage,
         accepts: 'json'
     }).done(function(data,textStatus) {
             dataResponse = data.package;
             replaceAccessibleTableRows(dataResponse);
-            console.log( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
+            consoleLog( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
       }).fail(function(jqXHR, textStatus, errorThrown) {
             accessibleTable.clear().draw();
-            console.log( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
+            consoleLog( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
       });
 
     return false;
@@ -177,6 +183,8 @@ function replaceAccessibleTableRows(dataPackage) {
  */
 function handleDemoPages() {
 
+    accessibleUrl = $("#accessible-table tbody").data().accessibleUrl;
+
     accessTable = $('#access-table').DataTable({
         language: {
             emptyTable: "Please make a choice from the Users table on the left."
@@ -208,12 +216,9 @@ function handleDemoPages() {
      */
     var userRows = $('#users-table tbody tr');
 
+
     userRows.on('click', function (event) {
         var dataPackage = $(event.currentTarget).data().package;
-//            contentType = dataPackage.package.hasOwnProperty('access_profile');
-
-        /* save url to fetch accessible files from */
-        accessibleUrl = $("#accessible-table tbody").data().accessibleUrl;
 
         /*
          Initialize Title on Accessible Content Table
