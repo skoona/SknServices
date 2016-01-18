@@ -83,7 +83,7 @@ module Secure
     end
 
     # Return all Roles
-    def combined_access_roles()
+    def combined_access_roles
       @combined_user_roles ||= (proxy_u.roles || [])
     end
 

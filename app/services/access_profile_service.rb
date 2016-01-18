@@ -1,32 +1,34 @@
 ##
-# app/services/content_profile_service.rb
+# app/services/access_profile_service.rb
 #
-# Manages Secure::AccessRegistry interactions for Users
-# - Requires User#combined_access_roles
+# Manages Access  interactions for Users
 
 class AccessProfileService < ::ProfilesDomain
 
-  # attr_accessor :factory, :user, :current_user, :page_user  -- initialize by DomainService
+# attr_accessor :factory, :current_user, :page_user  -- initialize by DomainService
 
   PROFILE_CONTEXT='access'
 
-  def handle_demo_page(params={})
-    SknUtils::PageControls.new({
-       success: true,
-       message: "",
-       page_users: get_page_users(PROFILE_CONTEXT)
-    })
-  rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
-        success: false,
-        message: e.message,
-        page_users: []
-    })
+
+  def user_accessible_content(user_profile, context=PROFILE_CONTEXT, profile=nil)
+    [
+        {source: "datafiles", filename: "someFile.dat", created: user_profile.last_access, size: "0"},
+        {source: "images",    filename: "somePic.png",  created: user_profile.last_access, size: "0"},
+        {source: "pdfs",      filename: "someFile.pdf", created: user_profile.last_access, size: "0"}
+    ]
   end
 
-  def accessible_content(params)
-    api_accessible_content(params)
+  def get_user_form_options
+    SknUtils::PageControls.new({
+                                   groups: group_select_options,
+                                   roles: role_select_options
+                               })
+  end
+  def group_select_options
+    UserGroupRole.select_options
+  end
+  def role_select_options
+    UserRole.select_options
   end
 
 end

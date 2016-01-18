@@ -4,25 +4,6 @@
 RSpec.feature "Profile Demo Process.", {js: true} do
   given(:user) { user_eptester }
 
-  context "AccessProfile Demo. " do
-    background do
-      login_as user
-    end
-
-    scenario "Clicking profile loads Accessible table" do
-      # save_screenshot('AccessProfileDemoPageRSpec.png', :full => true)
-
-      visit access_profile_demo_profiles_url
-      expect(current_path).to eq access_profile_demo_profiles_path
-
-      expect(page).to have_css('#access-table tbody')
-      # find('#access-table tbody tr').click
-      # expect(page).to have_css('table.profile tbody tr.success')
-
-    end
-
-  end
-
   context "ContentProfile Demo. " do
 
     scenario "Clicking profile loads Accessible table" do
@@ -40,8 +21,8 @@ RSpec.feature "Profile Demo Process.", {js: true} do
       # find('#access-table tbody tr').click
       # expect(page).to have_css('table.profile tbody tr.success')
 
-      # click_signout_link
-      # expect(current_path).to eq home_pages_path
+      click_link "Sign out"
+      expect(current_path).to eq home_pages_path
     end
   end
 

@@ -60,7 +60,6 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
     it "#get_page_user(username) returns a UserProfile object as expected." do
       result = @service.get_page_user(@user.username, "access")
       expect(result).to be_a(Secure::UserProfile)
-      expect(@service.page_user.username).to eq( @user.username )
     end
     it "#get_page_access_profile() returns a array of hashes as expected." do
       expect( @service.get_page_user(@user.username, "access") ).to be_a(Secure::UserProfile)

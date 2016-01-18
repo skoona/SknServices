@@ -90,3 +90,4 @@ Gemfile.lock
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
+rspec_results.html

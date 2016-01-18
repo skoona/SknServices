@@ -27,12 +27,12 @@ Rails.application.routes.draw do
     collection do
       get :accessible_content
       get :content_profile_demo
-      get :access_profile_demo
     end
   end
 
 
   delete '/signout',     to: 'sessions#destroy'
+  get    '/signout',     to: 'sessions#destroy'
   get    '/signin',      to: 'sessions#new'
 
   root  to: 'pages#home'

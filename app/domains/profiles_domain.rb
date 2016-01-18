@@ -20,9 +20,6 @@ class ProfilesDomain < ::Factory::DomainsBase
                display_name: u.display_name,
                user_options: u.user_options,
                package: [ access_profile_package(u), content_profile_package(u) ]
-      # package: (context.eql?("access") ?
-      #     access_profile_package(u) :
-      #     content_profile_package(u) )
       }
     end
     usrs
@@ -151,19 +148,10 @@ class ProfilesDomain < ::Factory::DomainsBase
   end
 
   def user_accessible_content(user_profile, context="access", profile=nil)
-    [
-      {source: "datafiles", filename: "someFile.dat", created: user_profile.last_access, size: "0"},
-      {source: "images",    filename: "somePic.png",  created: user_profile.last_access, size: "0"},
-      {source: "pdfs",      filename: "someFile.pdf", created: user_profile.last_access, size: "0"}
-    ]
+    result = factory.access_profile_service.user_accessible_content(user_profile, context, profile)
+    result
   end
 
-  def get_user_form_options
-    SknUtils::PageControls.new({
-         groups: group_select_options,
-         roles: role_select_options
-     })
-  end
 
   def get_page_user(uname, context=PROFILE_CONTEXT)
     page_user = Secure::UserProfile.page_user(uname, context)
@@ -179,11 +167,5 @@ class ProfilesDomain < ::Factory::DomainsBase
     result
   end
 
-  def group_select_options
-    UserGroupRole.select_options
-  end
-  def role_select_options
-    UserRole.select_options
-  end
 
 end

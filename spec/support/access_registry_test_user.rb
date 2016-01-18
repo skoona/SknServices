@@ -27,6 +27,10 @@ class AccessRegistryTestUser
   end
   include Secure::UserAccessControl
 
+  def combined_access_roles
+    @roles || []
+  end
+
   def key
     unique_id
   end

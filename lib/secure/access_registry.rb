@@ -227,6 +227,55 @@ module Secure
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     end
 
+    ##
+    #
+    # XML Adaptation of ContentProfile
+    #
+    ##
+    def self.get_resource_content_entries(user_roles, options=nil)
+      results = []
+      @@ar_permissions.each_pair do |uri, bundle|
+        next unless bundle[:content]
+        result = get_resource_content_entry(user_roles, uri, options)
+        results << result unless result.empty?
+      end
+      Rails.logger.info("#{self.class.name}.#{__method__}() opts=#{options}, #{results}") if Rails.logger.present?
+      results
+    end
+    def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
+      bundle = @@ar_permissions[resource_uri]
+      results = {}
+      if check_access_permissions?(user_roles, resource_uri, options) and bundle.present? and bundle[:content]
+        content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
+
+        opts = {}
+        user_roles.map do |user_role|
+          CRUD_MODES.map do |crud_mode|
+            next unless bundle.key?(crud_mode)
+            opts.merge!({uri: resource_uri, role: user_role, role_opts: bundle[crud_mode][user_role]}) if has_options_ary?(user_role,resource_uri,crud_mode)
+          end
+        end
+
+        results = {
+            uri: resource_uri.to_s,
+            resource_options: opts,
+            content_type: content_type,
+            content_value: [bundle[:userdata]],
+            topic_type: topic_type,
+            topic_value: [topic_opts],
+            description: bundle[:description],
+            topic_type_description: bundle[:description],
+            content_type_description: bundle[:description]
+            # Todo: role options may be needed too, content_profile_entry#entry_info
+        }
+      else
+        results = {}
+      end
+      Rails.logger.info("#{self.class.name}.#{__method__}() #{resource_uri} opts=#{options}, #{results} ++ bundle=#{bundle}") if Rails.logger.present?
+      results
+    end
+
+
     protected
 
     def self.has_options_ary?(role_name, resource_uri, crud_mode="READ")
