@@ -8,10 +8,16 @@
 module Builder
   class ProfileBuilder < ::Factory::DomainsBase
 
+    PREFIX_CONTENT = 'content'
+    PREFIX_ACCESS = 'access'
+
     def initialize(params={})
       super(params)
     end
 
+    ##
+    # Generators of Profile
+    ##
     def combined_profiles(usr_profile, beaned=false)
       c_hsh = content_profile(usr_profile, beaned)
       a_hsh = access_profile(usr_profile, beaned)
@@ -26,6 +32,15 @@ module Builder
       beaned ? Utility::ContentProfileBean.new(hsh) : hsh
     end
 
+    def get_existing_content_profile(usr_prf)
+      raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
+      get_prebuilt_profile(usr_prf.person_authenticated_key, PREFIX_CONTENT)
+    end
+    def get_existing_access_profile(usr_prf)
+      raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
+      get_prebuilt_profile(usr_prf.person_authenticated_key, PREFIX_ACCESS)
+    end
+
   protected
     ##
     # ContentProfile
@@ -34,8 +49,9 @@ module Builder
     # Retrieves users content profile in ResultBean
     def build_db_content_profile_bean(user_profile)
       raise Utility::Errors::NotFound, "Invalid User Object!" unless user_profile.present?
-      m_prefix = 'content'
-      return  factory.get_existing_object(m_prefix + user_profile.person_authenticated_key) if factory.existing_object_stored?(m_prefix + user_profile.person_authenticated_key)
+      cpobj = get_existing_content_profile(user_profile)
+      return  cpobj if cpobj
+
       results = {}
       ctxp = ContentProfile.find_by_person_authentication_key(user_profile.person_authenticated_key)
       unless ctxp.nil? or ctxp.content_profile_entries.size == 0
@@ -61,12 +77,12 @@ module Builder
       unless results[:entries].empty?
         results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      factory.set_existing_object(m_prefix + user_profile.person_authenticated_key, results)
+      factory.set_existing_object(PREFIX_CONTENT + user_profile.person_authenticated_key, results)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      factory.remove_existing_object(m_prefix + user_profile.person_authenticated_key) unless user_profile.nil?
+      factory.remove_existing_object(PREFIX_CONTENT + user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
           message: e.message,
@@ -93,8 +109,9 @@ module Builder
     ##
     def build_ar_content_profile_bean(user_profile)
       raise Utility::Errors::NotFound, "Invalid User Object!" unless user_profile.present?
-      m_prefix = 'access'
-      return  factory.get_existing_object(m_prefix + user_profile.person_authenticated_key) if factory.existing_object_stored?(m_prefix + user_profile.person_authenticated_key)
+      arobj = get_existing_access_profile(user_profile)
+      return  arobj if arobj
+
       results = {
           entries: build_ar_context_profile_entry(user_profile) || [],
           pak: user_profile.person_authenticated_key,
@@ -116,12 +133,12 @@ module Builder
       unless results[:entries].empty?
         results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      factory.set_existing_object(m_prefix + user_profile.person_authenticated_key, results)
+      factory.set_existing_object(PREFIX_ACCESS + user_profile.person_authenticated_key, results)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      factory.remove_existing_object(m_prefix + user_profile.person_authenticated_key) unless user_profile.nil?
+      factory.remove_existing_object(PREFIX_ACCESS + user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
           message: e.message,
@@ -132,6 +149,15 @@ module Builder
     def build_ar_context_profile_entry(usrp)
       Secure::AccessRegistry.get_resource_content_entries(usrp.roles, usrp.user_options)
     end
+
+  private
+    def get_prebuilt_profile(pak, context)
+      key = context + pak
+      profile = nil
+      profile = factory.get_existing_object(key) if factory.existing_object_stored?(key)
+      profile
+    end
+
 
   end
 end

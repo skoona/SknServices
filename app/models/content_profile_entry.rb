@@ -46,4 +46,17 @@ class ContentProfileEntry < ActiveRecord::Base
     topic_types.first.try(:name) || "not assigned"
   end
 
+  def entry_info
+    ctv = content_types.map {|r| r.content_type_opts.map(&:value) }.flatten
+    ttv = topic_types.map {|r| r.topic_type_opts.map(&:value) }.flatten
+    {
+      content_value: ctv,
+      content_type: content_type_name,
+      content_type_description: content_types.first.try(:description) || "not assigned",
+      topic_value: ttv,
+      topic_type: topic_type_name,
+      topic_type_description: topic_types.first.try(:description) || "not assigned",
+      description: description
+    }
+  end
 end

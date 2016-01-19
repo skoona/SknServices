@@ -51,6 +51,11 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
 
   context "Core routines deliver as designed" do
 
+    before :each do
+      @auth = AccessRegistryTestUser.new(["Test.Action.Read"])
+      @service.factory.class.purge_older_than_two_days(1)
+    end
+
     it "#combined_profiles returns hash" do
       expect( @service.combined_profiles(@user) ).to be_a Array
       expect( @service.combined_profiles(@user)[0] ).to be_a Hash
@@ -73,11 +78,26 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
     it "#access_profile returns bean" do
       expect( @service.access_profile(@user,true) ).to be_a Utility::ContentProfileBean
     end
+    it "#get_existing_content_profile returns nil" do
+      expect( @service.get_existing_content_profile(@auth) ).to be_nil
+    end
+    it "#get_existing_content_profile returns found object" do
+      expect( @service.content_profile(@user,true) ).to be_a Utility::ContentProfileBean
+      expect( @service.get_existing_content_profile(@user) ).to be_a Hash
+    end
+    it "#get_existing_access_profile returns nil" do
+      expect( @service.get_existing_access_profile(@auth) ).to be_nil
+    end
+    it "#get_existing_access_profile returns found object" do
+      expect( @service.access_profile(@user,true) ).to be_a Utility::ContentProfileBean
+      expect( @service.get_existing_access_profile(@user) ).to be_a Hash
+    end
   end
 
   context "Core routines handle not found errors properly. " do
-     before() do
+     before :each do
        @auth = AccessRegistryTestUser.new(["Test.Action.Read"])
+       @service.factory.class.purge_older_than_two_days(1)
      end
 
      it "#content_profile should handle user with no permissions" do
@@ -97,6 +117,12 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
      end
      it "#access_profile should handle user with no permissions" do
        expect( @service.access_profile(@auth,true).success ).to be false
+     end
+     it "#get_existing_access_profile should handle nil user." do
+       expect{ @service.get_existing_access_profile(nil) }.to raise_error(Utility::Errors::NotFound)
+     end
+     it "#get_existing_content_profile should handle nil user." do
+       expect{ @service.get_existing_content_profile(nil) }.to raise_error(Utility::Errors::NotFound)
      end
   end
 

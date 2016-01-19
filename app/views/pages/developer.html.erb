@@ -80,12 +80,17 @@
                 </div>
             </div>
         </div>
+
+        <% ar_resource_type = ar_data_type = 0 -%>
+        <% Secure::AccessRegistry.get_ar_resource_keys.each do |ar| %>
+            <% Secure::AccessRegistry.get_resource_type(ar) ? (ar_data_type += 1) : (ar_resource_type += 1) -%>
+        <% end %>
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
                         AccessRegistry AccessXML
-                        <span class="badge"><%= Secure::AccessRegistry.get_ar_resource_keys.length %></span>
+                        <span class="badge"><%= ar_resource_type %></span>
                     </a>
                 </h4>
             </div>
@@ -121,7 +126,7 @@
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
                         AccessRegistry ContentXML
-                        <span class="badge"><%= Secure::AccessRegistry.get_ar_resource_keys.length %></span>
+                        <span class="badge"><%= ar_data_type %></span>
                     </a>
                 </h4>
             </div>

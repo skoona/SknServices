@@ -37,7 +37,6 @@ group :development do
   gem 'better_errors'
   gem 'quiet_assets'
   # gem 'binding_of_caller'
-  gem 'web-console', '~> 3.0'
 end
 group :test do
   gem 'launchy'
@@ -54,7 +53,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
   gem 'faker'
-  gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'poltergeist'
 end
