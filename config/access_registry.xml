@@ -308,19 +308,6 @@
     </resource>
 
     <resource secured="true">
-        <uri>profiles/access_profile_demo</uri>
-        <description>AccessProfile In Action</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
-                <authorizedRole>Services.Action.Use.UserAuthorizationGroups</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true">
         <uri>profiles/content_profile_demo</uri>
         <description>ContentProfile In Action</description>
         <permission type="READ">
@@ -375,8 +362,8 @@
         <description>About Authorized Services</description>
     </resource>
     <resource secured="false">
-        <uri>pages/details_model</uri>
-        <description>Application Architectural Details</description>
+        <uri>pages/details_architecture</uri>
+        <description>Architectural Details</description>
     </resource>
     <resource secured="false">
         <uri>pages/learn_more</uri>
@@ -394,7 +381,6 @@
         <uri>pages/details_auth</uri>
         <description>Authentication Details</description>
     </resource>
-
 
     <!--============== PasswordResets Process  ========== -->
     <resource secured="false">

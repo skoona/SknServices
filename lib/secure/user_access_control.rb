@@ -23,6 +23,7 @@ module Secure
 
       # ContentProfile will call this
       def page_user(uname, context='access')
+        raise ArgumentError, "Invalid Credentials!" unless uname.present?
         upp = nil
         value = self.find_by(username: uname)
         upp = self.new(value) if value.present?
@@ -37,6 +38,7 @@ module Secure
 
       # Warden calls this
       def find_and_authenticate_user(uname, upass)
+        raise ArgumentError, "Invalid Credentials!" unless uname.present? and upass.present?
         upp = nil
         value = self.find_by(username: uname).authenticate(upass)
         upp = self.new(value) if value.present?
@@ -49,6 +51,7 @@ module Secure
       end
       # Warden calls this
       def fetch_remembered_user (token=nil)
+        raise ArgumentError, "Invalid Credentials!" unless token.present?
         upp = nil
         value = self.find_by(remember_token: token)
         upp = self.new(value) if value.present?
@@ -61,7 +64,8 @@ module Secure
         nil
       end
       # Warden calls this
-      def fetch_cached_user (token)
+      def fetch_cached_user(token)
+        raise ArgumentError, "Invalid Credentials!" unless token.present?
         value = retrieve_storage_key(token)
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
         value
@@ -71,11 +75,13 @@ module Secure
       end
       # Warden calls this or any service
       def logout(token)
+        return nil unless token.present?
         u_object = retrieve_storage_key(token.to_sym)
         u_object.disable_authentication_controls if u_object.present?
       end
 
       def last_login_time_expired?(person)
+        return true unless person.present?
         a = (Time.now.to_i - person.last_access.to_i)
         b = Settings.security.verify_login_after_seconds.to_i
         rc = (person &&  (a > b ))
@@ -94,28 +100,33 @@ module Secure
     end
 
     def has_access? (resource_uri, options=nil)
-      rc = Secure::AccessRegistry.check_access_permissions?( self.combined_access_roles, resource_uri, options)
-      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      opts = (options ? options : proxy_u.user_options)
+      rc = Secure::AccessRegistry.check_access_permissions?( self.combined_access_roles, resource_uri, opts)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_create? (resource_uri, options=nil)
-      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "CREATE", options)
-      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      opts = (options ? options : proxy_u.user_options)
+      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "CREATE", opts)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_read? (resource_uri, options=nil)
-      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "READ", options)
-      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      opts = (options ? options : proxy_u.user_options)
+      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "READ", opts)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_update? (resource_uri, options=nil)
-      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "UPDATE", options)
-      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      opts = (options ? options : proxy_u.user_options)
+      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "UPDATE", opts)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_delete? (resource_uri, options=nil)
-      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "DELETE", options)
-      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{options}")
+      opts = (options ? options : proxy_u.user_options)
+      rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "DELETE", opts)
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
 

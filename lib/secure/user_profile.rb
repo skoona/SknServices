@@ -76,7 +76,7 @@ module Secure
         role += proxy_u[:assigned_roles]
         role += proxy_u[:assigned_groups]
         @combined_user_roles = proxy_u[:roles] = role.flatten.uniq
-        rc = proxy_u.save
+        rc = true
       end
       Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{@combined_user_roles.present? ? 'True' : 'False'}) Persisted=#{rc} #{}Roles=#{@combined_user_roles.length}")
       rc

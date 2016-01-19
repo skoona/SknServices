@@ -14,7 +14,7 @@ class PagesController < ApplicationController
   end
   def details_auth
   end
-  def details_model
+  def details_architecture
   end
 
   def about

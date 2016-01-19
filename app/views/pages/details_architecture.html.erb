@@ -41,14 +41,68 @@
                         <dt>Instantiate</dt>
                             <dd>
                                 <p>By Warden at user login, via methods on Class.</p>
+                                <p>Requires a User object to instantiate itself, and that object must have a unique Id.</p>
+                                <p>During initialization the user's roles are rendered from those assigned via group roles.</p>
                             </dd>
                         <dt>Inheritance</dt>
-                            <dd><p>UserProfile, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
+                            <dd><p>Secure::UserProfile, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
                                 object across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
                                 retention until there usage is complete.</p>
                         <dt>Provides</dt>
                             <dd>
-                                <p>UserProfile provides the User Context for all application processes</p>
+                                <p>Secure::UserProfile provides the User Context for all application processes.</p>
+                                <p>Isolates external authentication sources and methods from our internal details. External systems need only
+                                    authenticate a user and pass along a persistent and unique id.  User permission or roles can be included in
+                                    this external bundle, or we can do an internal mapping of that external user.  This system has its own internal
+                                    User table which contains the persistent Id, individual and group roles.</p>
+                                <p>Static class methods are provided to allow Warden to:<br/>
+                                    <dl>
+                                        <dt><code>:find_and_authenticate_user(uname, upass)</code></dt>
+                                            <dd>Locate a user with these credentials in whatever user store is available</dd>
+                                        <dt><code>:fetch_remembered_user(token)</code></dt>
+                                            <dd>Locate a user using their remember token</dd>
+                                        <dt><code>:fetch_cached_user(token)</code></dt>
+                                            <dd>Locate an existing user exclusively from the inMemory storage facility.</dd>
+                                        <dt><code>:logout(token)</code></dt>
+                                            <dd>Log out the user and remove them from the inMemory storage, clear their remember_token and session.</dd>
+                                        <dt><code>:last_login_time_expired?(user_object)</code></dt>
+                                            <dd>Update the last time user access the system and if expired, revalidate their credentials.</dd>
+                                        <dt><code>:authenticate?(unencrypted_password)</code></dt>
+                                            <dd>Bcryts Authenticate returns self, we need to override that return value to return us instead</dd>
+                                        <dt><code>:enable_authentication_controls</code></dt>
+                                            <dd>After successful login, this methods save the user object into our inMemory storage for later session level retrieval. Also update :last_access.</dd>
+                                        <dt><code>:disable_authentication_controls</code></dt>
+                                            <dd>Remove the user object reference from inMemory storage, updates :last_access.</dd>
+                                    </dl>
+                                </p>
+                                <p>Static class methods are provided to facilitate content profile, and testing service to:<br/>
+                                    <dl>
+                                        <dt><code>:page_users(context)</code></dt>
+                                            <dd>Retrieve the list of all users without logging them in.  For use with offline operations.</dd>
+                                        <dt><code>:page_user(uname, context)</code></dt>
+                                            <dd>Retrieves a single user object without logging it in, for offline use.</dd>
+                                    </dl>
+                                </p>
+                                <p>Instance methods are provided to allow AccessRegistry access control application wide:<br/>
+                                <ul class="">
+                                    <li><code>:has_access?(resource_uri,options)</code></li>
+                                    <li><code>:has_create?(resource_uri,options)</code></li>
+                                    <li><code>:has_read?(resource_uri,options)</code></li>
+                                    <li><code>:has_update?(resource_uri,options)</code></li>
+                                    <li><code>:has_delete?(resource_uri,options)</code></li>
+                                </ul>
+                                </p>
+                                <p>Instance methods support ApplicationHelper methods for use in view and controller actions:<br/>
+                                <ul class="">
+                                    <li><code>:current_user_has_access?(uri, options)</code></li>
+                                    <li><code>:current_user_has_read?(uri, options)</code></li>
+                                    <li><code>:current_user_has_create?(uri, options)</code></li>
+                                    <li><code>:current_user_has_update?(uri, options)</code></li>
+                                    <li><code>:current_user_has_delete?(uri, options)</code></li>
+                                </ul>
+                                </p>
+                                <p>Designed to be the User's proxy to the whole system.  Working in concert with Authentication and
+                                    Authorization components it enables delivery of secure content with the availability of different authentication schemes.</p>
                             </dd>
                     </dl>
                 </div>

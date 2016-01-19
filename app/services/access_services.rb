@@ -24,9 +24,9 @@ class AccessServices < ::ProfilesDomain
 
   def get_user_form_options
     SknUtils::PageControls.new({
-                                   groups: group_select_options,
-                                   roles: role_select_options
-                               })
+       groups: group_select_options,
+       roles: role_select_options
+    })
   end
   def group_select_options
     UserGroupRole.select_options

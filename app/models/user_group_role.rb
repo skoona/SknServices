@@ -15,6 +15,8 @@ class UserGroupRole < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
+  accepts_nested_attributes_for :user_roles, allow_destroy: true, reject_if: lambda {|attributes| attributes['name'].blank?}
+
   def self.list_user_roles(group_role_name, wdesc=false)
     rec = find_by(name: group_role_name)
     rec.nil?  ? [] : rec.user_role_names
@@ -26,15 +28,9 @@ class UserGroupRole < ActiveRecord::Base
     end
   end
 
+  # used by UserProfile to render roles for user setup.
   def user_role_names
     self.user_roles.map(&:name)
-  end
-  def role_descriptions(gname)
-    results = []
-    self.user_roles.map do |ur|
-      results << {name: ur.name, description: ur.description, type: gname}
-    end
-    results
   end
 
 end

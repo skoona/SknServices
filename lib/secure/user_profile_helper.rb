@@ -12,10 +12,6 @@ module Secure
             self.attribute_names.include?("roles")
     end
 
-    module ClassMethods
-
-    end
-
     #
     # Instance Methods
     #

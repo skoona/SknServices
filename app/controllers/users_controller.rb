@@ -51,6 +51,18 @@ class UsersController < ApplicationController
     @page_controls = access_services.get_user_form_options
   end
 
+  # Parameters: { "user"=>{"name"=>"Agency Primary User",
+  #                        "username"=>"aptester",
+  #                        "email"=>"appdev2@brotherhoodmutual.com",
+  #                        "password"=>"[FILTERED]",
+  #                        "password_confirmation"=>"[FILTERED]",
+  #                        "user_options"=>["VendorPrimary", "AgencyPrimary", "0034", "0037", "0040", ""],
+  #                        "assigned_groups"=>["3", ""],
+  #                        "assigned_roles"=>["4", "6", "7", ""],
+  #                        "active"=>"1"
+  #             },
+  #               "commit"=>"Update User",
+  #               "id"=>"4"}
   def update
     if @user.update(permitted)
       redirect_to @user, notice: "Updated user"

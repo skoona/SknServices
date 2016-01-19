@@ -11,12 +11,12 @@
     <%= f.input :password, label: 'Password'  %>
     <%= f.input :password_confirmation, label: 'Confirmation'  %>
 </fieldset>
-<% if logged_in? && current_user.is_admin? %>
+<% if authenticated? && current_user.is_admin? %>
     <fieldset>
     <legend>Access Details</legend>
       <%= f.input :user_options, collection:  Settings.security.user_options, as: :check_boxes, include_blank: false, label: "Security Options" %>
-      <%= f.input :assigned_groups, collection: @page_controls.groups.map(&:last), as: :check_boxes, include_blank: false, label: "Groups" %>
-      <%= f.input :assigned_roles, collection: @page_controls.roles.map(&:last), as: :check_boxes, include_blank: false, label: "Roles" %>
+      <%= f.input :assigned_groups, collection: @page_controls.groups, checked: @user.assigned_groups.map {|ag| UserGroupRole.find_by_name(ag).try(:id)}.flatten, as: :check_boxes, include_blank: false, label: "Groups" %>
+      <%= f.input :assigned_roles, collection: @page_controls.roles, checked: @user.assigned_roles.map {|ar| UserRole.find_by_name(ar).try(:id)}.flatten, as: :check_boxes, include_blank: false, label: "Roles" %>
       <%= f.input :active, inline_label: "Active", label: "Account status" %>
     </fieldset>
 <% end %>

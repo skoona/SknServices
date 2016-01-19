@@ -9,12 +9,12 @@
         </p>
         <p>Content and Access profiles for the current user are also displayed below.</p>
         <p>
-            <a class="btn btn-primary btn-lg" href="<%= details_model_pages_path %>" role="button">Learn more</a>
+            <a class="btn btn-primary btn-lg" href="<%= details_architecture_pages_path %>" role="button">Learn more</a>
         </p>
     </div>
 
 
-    <% if logged_in? %>
+    <% if authenticated? %>
         <h3 class="text-center">Welcome <%= current_user.name %><br/><small>AuthService home#developer</small></h3>
     <% end %>
 
@@ -325,8 +325,10 @@
         </div>
     </div>
 
-    <div class="well">
-        <%= link_to "Reload AccessRegistry",  developer_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
-    </div>
+    <% if authenticated? and current_user_has_access?('#Management') %>
+        <div class="well">
+            <%= link_to "Reload AccessRegistry",  developer_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
+        </div>
+    <% end %>
 
 </article>

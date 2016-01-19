@@ -22,15 +22,18 @@ class UserGroupRolesController < ApplicationController
   # GET /user_group_roles/1
   # GET /user_group_roles/1.json
   def show
+    @page_controls = access_services.role_select_options
   end
 
   # GET /user_group_roles/new
   def new
     @user_group_role = UserGroupRole.new
+    @page_controls = access_services.role_select_options
   end
 
   # GET /user_group_roles/1/edit
   def edit
+    @page_controls = access_services.role_select_options
   end
 
   # POST /user_group_roles
@@ -51,6 +54,14 @@ class UserGroupRolesController < ApplicationController
 
   # PATCH/PUT /user_group_roles/1
   # PATCH/PUT /user_group_roles/1.json
+  # Parameters: { "user_group_role"=>{ "name"=>"AgencyPrimary",
+  #                                    "description"=>"BMI Limited: Agency Admin User",
+  #                                    "group_type"=>"Agency Admin",
+  #                                    "user_roles"=>["7", "9", "10", "12", ""]
+  #                                  },
+  #               "commit"=>"Update User group role",
+  #               "id"=>"3"
+  #             }
   def update
     respond_to do |format|
       if @user_group_role.update(user_group_role_params)

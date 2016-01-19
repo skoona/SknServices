@@ -6,5 +6,14 @@
 
 <section>
     <%= render @user_group_role %>
+
+    <% if action_name.eql?('show') %>
+        <section>
+            <% @user_group_role.user_roles.each do |usrr| %>
+                <%= render 'user_role', entry: usrr  %>
+            <% end %>
+        </section>
+    <% end %>
+
 </section>
 

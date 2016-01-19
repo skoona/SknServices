@@ -19,4 +19,8 @@ class UserRole < ActiveRecord::Base
       [r.name, r.id, {data_description: r.description}]
     end
   end
+
+  def role_info
+    [name, id, {data_description: description}]
+  end
 end

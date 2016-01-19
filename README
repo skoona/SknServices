@@ -75,6 +75,19 @@ bundle exec annotate
 
     my_hash.try(:[], 'key1').try(:[], 'key2').try(:[], 'key3')
 
+###UserProfile Required User Object Attributes
+
+            :person_authenticated_key => String Secure Key 32chars
+            :assigned_groups => Array
+            :assigned_roles => Array
+            :user_options => Array
+            :roles => Array
+            :username => String
+            :display_name|:name => String
+            :remember_token => String Secure Key 32chars
+            :password => String
+            :email => String
+
 
 ## Ajax Transaction
 
@@ -171,7 +184,7 @@ RESPONSE: {
              learn_more_pages GET    /pages/learn_more(.:format)              pages#learn_more
                   about_pages GET    /pages/about(.:format)                   pages#about
               developer_pages GET    /pages/developer(.:format)               pages#developer
-          details_model_pages GET    /pages/details_model(.:format)           pages#details_model
+          details_architecture_pages GET    /pages/details_architecture(.:format)           pages#details_architecture
         details_content_pages GET    /pages/details_content(.:format)         pages#details_content
          details_access_pages GET    /pages/details_access(.:format)          pages#details_access
            details_auth_pages GET    /pages/details_auth(.:format)            pages#details_auth

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       get :learn_more
       get :about
       get :developer
-      get :details_model
+      get :details_architecture
       get :details_content
       get :details_access
       get :details_auth

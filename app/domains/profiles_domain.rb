@@ -39,7 +39,12 @@ class ProfilesDomain < ::Factory::DomainsBase
            page_user: user_profile.username,
            access_profile: get_page_access_profile(user_profile)
     }
-    res[:message] = "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}"
+    res[:success] = res[:access_profile][:entries].empty? ? false : true
+    unless res[:success]
+      res[:message] = res[:access_profile][:message]
+    else
+      res[:message] = "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}"
+    end
     res
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
@@ -71,7 +76,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     unless res[:success]
       res[:message] = res[:content_profile][:message]
     else
-      res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}"
+      res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}, Options=#{user_profile.user_options.join(',')}"
     end
     res
   rescue Exception => e

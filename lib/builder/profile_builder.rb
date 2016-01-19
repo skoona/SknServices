@@ -125,7 +125,7 @@ module Builder
       if results[:entries].empty?
         results = {
             success: false,
-            message: "No content profile data available for #{user_profile.display_name}",
+            message: "No access profile data available for #{user_profile.display_name}",
             username: user_profile.username,
             entries:[]
         }
