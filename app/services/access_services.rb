@@ -2,6 +2,10 @@
 # app/services/access_services.rb
 #
 # Manages Access  interactions for Users
+# This is an internal service object and should not be exposed to a controller directly.
+# It can do the heavy lifting for access related actions, like render content based on a profile
+#
+
 
 class AccessServices < ::ProfilesDomain
 

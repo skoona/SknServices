@@ -222,9 +222,11 @@ module Secure
       content_registry = Secure::AccessRegistryUtility.new(Settings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml()
       @@ar_permissions = access_registry.merge(content_registry)
       Rails.logger.info("#{self.name}.#{__method__}() Configuration file reloaded!") if Rails.logger.present?
+      true
     rescue Exception => e
       @@ar_permissions = access_registry
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      false
     end
 
     ##

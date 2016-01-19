@@ -272,7 +272,8 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
     end
   end
 
-  context "ContentControl provides useable content protections. " do
+  context "ContentControl provides usable content protections. " do
+
     context "ContentControl succeeds as designed, given all params" do
       it "#get_resource_content_entries returns all authorized content entries. " do
         expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, in_agency_option)).to be_a(Array)
@@ -310,6 +311,23 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
         expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Agency/CSV' ,in_agency_option).empty?).to be true
         expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Agency/PDF', in_agency_option).empty?).to be true
       end
+    end
+  end
+
+  context "XML Management features are functional" do
+    it "#ar_reload_configuration_file reload the two configuration files safely." do
+      count = Secure::AccessRegistry.get_ar_resource_keys.length
+      expect( Secure::AccessRegistry.ar_reload_configuration_file ).to be true
+      expect( Secure::AccessRegistry.get_ar_resource_keys.length ).to be count
+    end
+    it "#get_crud_modes returns access keywords." do
+      expect( Secure::AccessRegistry.get_crud_modes ).to be_a Array
+    end
+    it "#get_resource_type returns false for regular resource entries. " do
+      expect( Secure::AccessRegistry.get_resource_type(resource_options) ).to be false
+    end
+    it "#get_ar_permissions_hash returns master access hash. " do
+      expect( Secure::AccessRegistry.get_ar_permissions_hash ).to be_a Hash
     end
   end
 
