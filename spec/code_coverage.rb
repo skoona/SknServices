@@ -5,29 +5,29 @@ if "true".eql?ENV["COVERAGE"] and "test".eql?ENV["RAILS_ENV"]
     merge_timeout 1500
     minimum_coverage 60
 
-    add_filter '/spec/'
-    add_filter '/config/'
+    add_filter '/bin/'
     add_filter '/classes/'
+    add_filter '/config/'
+    add_filter '/coverage/'
+    add_filter '/controlled/'
+    add_filter '/db/'
+    add_filter '/doc/'
     add_filter '/lib/tasks/'
     add_filter '/lib/assets/'
     add_filter '/lib/templates/'
-    add_filter '/vendor/'
-    add_filter '/features/'
-    add_filter '/script/'
-    add_filter '/doc/'
-    add_filter '/public/'
-    add_filter '/bin/'
-    add_filter '/coverage/'
     add_filter '/log/'
-    add_filter '/db/'
     add_filter '/META-INF/'
-    add_filter '/controlled/'
+    add_filter '/public/'
+    add_filter '/spec/'
+    add_filter '/vendor/'
 
     add_group 'Utilities' do |src_file|
         src_file.filename.include? 'lib/utility'
     end
     add_group 'DomainServices' do |src_file|
-      ['app/domains','app/services','lib/factory'].any? do |item|
+      ['app/domains','app/services',
+       'lib/factory','lib/builder',
+       'app/beans'].any? do |item|
         src_file.filename.include? item
       end
     end
@@ -35,7 +35,7 @@ if "true".eql?ENV["COVERAGE"] and "test".eql?ENV["RAILS_ENV"]
         src_file.filename.include? 'lib/secure'
     end
     add_group 'Models' do |src_file|
-      ['app/models', 'app/beans','lib/builder'].any? do |item|
+      ['app/models'].any? do |item|
         src_file.filename.include? item
       end
     end
