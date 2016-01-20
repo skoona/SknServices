@@ -1,90 +1,113 @@
 <%#  view/shared/page_actions.html.erb
 
-    # link_to macro takes three params(hashes), path, text, options_hash
-    # link_to(text, path, html_options, &block)
+    # link_to macro takes three params(hashes), path, text, html_options_hash
+    # link_to(text, path, html_options_hash, &block)
+    #         p1,   p2,   p3
     ### usage
     # page_actions = []
     # page_actions << {
-    #   path:"#policy-cancel-modal",
-    #       text: "Cancel Policy",
-    #       data: {
-    #       toggle: "modal"
-    #   }
+    # a0      icon_klass: 'desired-glyphicon-class',
+    # a1      menu_level: 'header|indent|indent_pre|indent_aft'
+    #
+    # p1      text: "text on button",
+    # p2      path: :see page_action_paths helper,
+    #
+    # p3      id: 'id-string',
+    # p3      klass: 'desired-bootstrap-class',
+    # p3      method: 'html-method',
+    # p3      data: { myKey: value, 'my-keys' => values, toggle: "modal" },
     # }
  %>
 
 <%# link_to macro takes three params(hashes), path, text, options_hash %>
 <%# link_to(text, path, html_options, &block)  %>
 
-<div role="page-actions" class="container">
-    <div class="dropdown pull-right" role="group">
-        <% expand_all = false %>
-        <% if page_actions.length == 1 and not expand_all %>
+<div class="dropdown pull-right" role="group">
+    <% expand_all = false %>
+    <% if page_actions.one? %>
 
-            <% action = page_actions.first %>
+        <% action = page_actions.first %>
 
-            <% html_options = {} %>
-            <% html_options[:id] = action.id if action.id? %>
-            <% html_options[:data] = action.data.to_hash if action.data? %>
-            <% html_options[:class] = "btn #{action.klass? ? action.klass : 'btn-default'}" %>
-            <% html_options[:method] = action.method if action.method? %>
+        <% html_options = {} %>
+        <% html_options[:id]     = action.id if action.id? %>
+        <% html_options[:data]   = action.data.to_hash if action.data? %>
+        <% html_options[:class]  = "btn #{action.klass? ? action.klass : 'btn-primary'}" %>
+        <% html_options[:method] = action.method if action.method? %>
 
-            <%= link_to page_action_paths(action.path), html_options do %>
-                <% if action.icon_klass? %>
-                    <span class="glyphicon <%= action.icon_klass %>"></span>
-                <% end %>
-                <span><%= action.text %></span>
+        <%= link_to page_action_paths(action.path), html_options do %>
+            <% if action.icon_klass? %>
+                <span class="glyphicon <%= action.icon_klass %>"></span>
             <% end %>
+            <span><%= action.text %></span>
+        <% end %>
 
-        <% elsif page_actions.any? %>
+    <% elsif page_actions.any? %>
 
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span>Actions</span>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-                <% page_actions.each do |action| %>
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>Actions</span>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+            <% page_actions.each do |action| %>
 
-                    <% html_options = {} %>
-                    <% html_options[:id] = action.id if action.id? %>
-                    <% html_options[:data] = action.data.to_hash if action.data? %>
-                    <% html_options[:method] = action.method if action.method? %>
-                    <% html_options[:class] = "btn #{action.klass? ? action.klass : 'btn-default'}" %>
+                <% html_options = {} %>
+                <% html_options[:id]     = action.id if action.id? %>
+                <% html_options[:data]   = action.data.to_hash if action.data? %>
+                <% html_options[:method] = action.method if action.method? %>
+                <% html_options[:class]  = action.klass? ? "btn #{action.klass}" : "btn" %>
 
-                    <% if action.level? %>
-                        <% if action.level.eql?('prime') %>
+                <% if action.menu_level? %>
+                    <% if action.menu_level.eql?('header') %>
+                        <li class="dropdown-header">
                             <% if action.icon_klass? %>
-                                <span class="glyphicon <%= action.icon_klass %>"></span>
+                                <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
                             <% end %>
                             <span><%= action.text %></span>
-                        <% else %>
-                            <li>
-                                <%= link_to page_action_paths(action.path), html_options do %>
-                                    <% if action.icon_klass? %>
-                                        <span class="glyphicon <%= action.icon_klass %>"></span>
-                                    <% end %>
-                                    <span><%= action.text %></span>
-                                <% end %>
-                            </li>
-                            <% if action.level.eql?('second_end') %>
-                                <li class="divider" ></li>
-                            <% end %>
+                        </li>
+                        <li class="divider" ></li>
+                    <% elsif ['indent', 'indent_pre', 'indent_aft'].include?(action.menu_level) %>
+                        <% if action.menu_level.eql?('indent_pre') %>
+                            <li class="divider" ></li>
                         <% end %>
-
+                        <li>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <%= link_to page_action_paths(action.path), html_options do %>
+                                        <% if action.icon_klass? %>
+                                            <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
+                                        <% end %>
+                                        <span><%= action.text %></span>
+                                    <% end %>
+                                </li>
+                            </ul>
+                        </li>
+                        <% if action.menu_level.eql?('indent_aft') %>
+                            <li class="divider" ></li>
+                        <% end %>
                     <% else %>
                         <li>
                             <%= link_to page_action_paths(action.path), html_options do %>
                                 <% if action.icon_klass? %>
-                                    <span class="glyphicon <%= action.icon_klass %>"></span>
+                                    <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
                                 <% end %>
-                                &nbsp;<span><%= action.text %></span>
+                                <span><%= action.text %></span>
                             <% end %>
                         </li>
                     <% end %>
 
+                <% else %>
+                    <li>
+                        <%= link_to page_action_paths(action.path), html_options do %>
+                            <% if action.icon_klass? %>
+                                <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
+                            <% end %>
+                            <span><%= action.text %></span>
+                        <% end %>
+                    </li>
                 <% end %>
-            </ul>
-        <% end %>
 
-    </div>
+            <% end %>
+        </ul>
+    <% end %>
+
 </div>

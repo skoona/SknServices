@@ -24,6 +24,33 @@ class ProfilesDomain < ::Factory::DomainsBase
     end
     usrs
   end
+  def managable_page_users(context=PROFILE_CONTEXT)
+    usrs = []
+    Secure::UserProfile.page_users(context).each do |u|
+      entries = []
+
+      content_profile = ContentProfile.find_by_person_authentication_key( u.person_authenticated_key)
+      unless content_profile.nil? or content_profile.content_profile_entries.empty?
+
+        entries = content_profile.content_profile_entries.map() do |cpe|
+          entry = cpe.entry_info
+          entry.merge!(content_selects: cpe.content_types.options_selects)
+          entry.merge!(type_selects: cpe.topic_types.options_selects)
+        end
+      end
+      usrs << {username: u.username,
+               display_name: u.display_name,
+               email: u.email,
+               pak: u.person_authenticated_key,
+               authentication_provider: 'AuthService::Bcrypt',
+               assigned_group: u.assigned_groups,
+               user_options: u.user_options,
+               profile_exist: !content_profile.nil?,
+               profile_entries: entries
+      }
+    end
+    usrs
+  end
 
   ##
   # Builds display package for a single username
@@ -35,7 +62,7 @@ class ProfilesDomain < ::Factory::DomainsBase
            success: true,
            message: "",
            user_options: user_profile.user_options,
-           accessible_content_url: factory.page_action_paths([:accessible_content_profiles_path, {id: 'access', format: :json}]),
+           accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'access', format: :json}]),
            page_user: user_profile.username,
            access_profile: get_page_access_profile(user_profile)
     }
@@ -68,7 +95,7 @@ class ProfilesDomain < ::Factory::DomainsBase
        success: true,
        message: "",
        user_options: user_profile.user_options,
-       accessible_content_url: factory.page_action_paths([:accessible_content_profiles_path, {id: 'content', format: :json}]),
+       accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
        page_user: user_profile.username,
        content_profile: get_page_content_profile(user_profile)
     }
@@ -161,18 +188,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     {
         success: false,
         message: 'Page Not Implemented!',
-        page_actions: [{
-            id: "test-action",
-            path: :manage_content_profiles_profiles_path,
-            text: "Test Action",
-            data: {
-                samples: 'test data'
-            }
-        },{
-            id: "test-action2",
-            path: :manage_content_profiles_profiles_path,
-            text: "Test Action2",
-        }],
+        user_package: managable_page_users,
         package: []
     }
   rescue Exception => e

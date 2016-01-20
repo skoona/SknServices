@@ -11,7 +11,9 @@ var accessibleUrl,
     userTable,
     accessTable,
     contentTable,
-    accessibleTable;
+    accessibleTable,
+    mcUserTable,
+    mcEntriesTable;
 
 /**
  * Content/Access Profile Table Selection
@@ -210,6 +212,13 @@ function handleDemoPages() {
         }
     });
 
+    cmUserTable = $('#cp-users-table').DataTable({
+        scrollY: "620px",
+        language: {
+            emptyTable: "No User Available!"
+        }
+    });
+
 
     /**
      *  Activate the UI, Track clicks from UsersTable to control both pages
@@ -246,6 +255,105 @@ function handleDemoPages() {
     return true;
 } // end function
 
+/**
+ * Reloads the mc-entries-table with supplied rows from a
+ * @param dataPackage
+ */
+function replaceEntriesTableRows(dataPackage) {
+    var vList = dataPackage.profile_entries,
+        newRow = [],
+        counter = 0,
+        trNode,
+        trRow;
+
+    if (dataPackage.profile_exist) {
+        mcEntriesTable.clear().draw();
+
+        $.each(vList, function(index, row) {
+            newRow = [];
+            newRow.push('<td>' + row.description  + '</td>');
+            newRow.push('<td>' + row.content_type  + '</td>');
+            newRow.push('<td>' + row.content_type_description  + '</td>');
+            newRow.push('<td>' + row.topic_type  + '</td>');
+            newRow.push('<td>' + row.topic_type_description  + '</td>');
+            newRow.push('<td>' + row.topic_value.join(',')  + '</td>');
+            newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+            trRow = $('<tr>').append(newRow.join());
+
+            trNode = mcEntriesTable.row.add(trRow).draw().node();
+            $(trNode).data('package', row); // .on( "click", profileTablesRequester);
+            counter = index + 1;
+        });
+        mcEntriesTable.draw();
+    } else {
+        mcEntriesTable.clear().draw();
+    }
+
+    consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ')');
+    return true;
+}
+
+/**
+ * Initialization Routine for ContentProfile Management Pages
+ * @returns {boolean}
+ */
+function handleManagementPages() {
+
+    mcUserTable = $('#mc-users-table').DataTable({
+        scrollY: "620px",
+        language: {
+            emptyTable: "No User Available!"
+        }
+    });
+
+    mcEntriesTable = $('#mc-entries-table').DataTable({
+        scrollY: "620px",
+        language: {
+            emptyTable: "No User Available!"
+        }
+    });
+
+    $('#mc-entries-table').on( 'column-visibility.dt', function ( e, settings, column, state ) {
+        console.log(
+                'Column '+ column +' has changed to '+ (state ? 'visible' : 'hidden')
+        );
+    } );
+
+    /**
+     *  Activate the UI, Track clicks from UsersTable to control both pages
+     */
+    var userRows = $('#mc-users-table tbody tr');
+
+
+    userRows.on('click', function (event) {
+        var dataPackage = $(event.currentTarget).data().package;
+
+        /*
+         Initialize Titles on ContentProfile Tab
+         */
+        $('#username').html(dataPackage.username);
+        $('#display_name').html(dataPackage.display_name);
+        $('#assigned_group').html(dataPackage.assigned_group);
+        $('#email').html(dataPackage.email);
+        $('#authentication_provider').html(dataPackage.authentication_provider);
+        $('#pak').html(dataPackage.pak);
+        $('#profile_entries').html(dataPackage.profile_entries.length);
+
+        /* maintain selected item on users table */
+        userRows.removeClass('success');
+        $(event.currentTarget).addClass('success');
+
+        replaceEntriesTableRows(dataPackage);
+
+        consoleLog(dataPackage.username + " Selected." + JSON.stringify(dataPackage));
+    });
+
+    /* choose first one to start things off */
+    userRows.first().click();
+
+    return true;
+} // end function
+
 /* ********************************************************
  * JQuery Enabled Processing
  * ********************************************************
@@ -254,6 +362,7 @@ $(function() {
 
     /* Only for the proper page */
     if ( controllerName.startsWith('profile') ) {
+        logEnabled = true;
         /*
          * Initial Establish the dataTables
          */
@@ -280,7 +389,12 @@ $(function() {
         } catch(e) {
             consoleLog("Defaults Failed " + e);
         }
-        handleDemoPages();
+
+        if (controllerAction.startsWith('manage')) {
+            handleManagementPages();
+        } else {
+            handleDemoPages();
+        }
     }
 
 });

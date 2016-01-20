@@ -86,4 +86,49 @@
         </permission>
     </resource>
 
+    <resource secured="true" content="true">
+        <uri>FileDownload/Developers/Pdf</uri>
+        <description>Permission to Download PDF Files</description>
+        <userdata>"directory_control:download/pdf/dev*.pdf"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Primary</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole options="EmployeeSecondary,EmployeePrimary">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
+                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>FileDownload/Developers/Datafile</uri>
+        <description>Permission to Download Data Files</description>
+        <userdata>"directory_control:download/datafiles/dev*.dat|directory_control:download/datafiles/dev*.csv"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Primary</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole options="EmployeeSecondary,EmployeePrimary">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
+                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>FileDownload/Developers/Image</uri>
+        <description>Permission to Download Image Files</description>
+        <userdata>"directory_control:download/images/dev*.png|directory_control:download/images/dev*.jpg"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Primary</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole options="EmployeeSecondary,EmployeePrimary">Services.Action.Admin.FileDownload.Image</authorizedRole>
+                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Image</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
 </contentRegistry>

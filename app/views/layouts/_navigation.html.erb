@@ -39,6 +39,9 @@
                                 <% if current_user_has_access?('content_profiles/index') %>
                                     <%= nav_link_icon("glyphicon-inbox", "Manage ContentProfiles", content_profiles_path) %>
                                 <% end %>
+                                <% if current_user_has_access?('profiles/manage_content_profiles') %>
+                                    <%= nav_link_icon("glyphicon-cog", "Build Content Profiles", manage_content_profiles_profiles_path) %>
+                                <% end %>
                             <% end %>
 
                             <% if current_user_has_access?('#SystemInformation') %>
