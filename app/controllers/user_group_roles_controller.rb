@@ -54,14 +54,16 @@ class UserGroupRolesController < ApplicationController
 
   # PATCH/PUT /user_group_roles/1
   # PATCH/PUT /user_group_roles/1.json
-  # Parameters: { "user_group_role"=>{ "name"=>"AgencyPrimary",
-  #                                    "description"=>"BMI Limited: Agency Admin User",
-  #                                    "group_type"=>"Agency Admin",
-  #                                    "user_roles"=>["7", "9", "10", "12", ""]
-  #                                  },
-  #               "commit"=>"Update User group role",
-  #               "id"=>"3"
-  #             }
+  # Parameters: {
+  #   "user_group_role"=>{
+  #       "name"=>"EmployeePrimary",
+  #       "description"=>"BMI Admin User",
+  #       "group_type"=>"BMI Admin",
+  #       "user_role_ids"=>["1", "2", "3", "4", "5", "6", "7", "8", "10", "12", ""]
+  #   },
+  #   "commit"=>"Update User group role",
+  #   "id"=>"1"
+  # }
   def update
     respond_to do |format|
       if @user_group_role.update(user_group_role_params)
@@ -94,6 +96,7 @@ class UserGroupRolesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_group_role_params
-      params.require(:user_group_role).permit(:name, :description, :group_type)
+      params[:user_group_role][:user_role_ids].delete("")
+      params.require(:user_group_role).permit(:name, :description, :group_type, user_role_ids: [])
     end
 end

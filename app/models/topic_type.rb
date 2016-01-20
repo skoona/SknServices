@@ -20,14 +20,14 @@ class TopicType < ActiveRecord::Base
 
   def self.options_selects
     self.all.map do |tts|
-      [tts.name, tts.id, {data_description: tts.description}]
+      [tts.name, tts.id, {'data-description'.to_sym => tts.description}]
     end
   end
 
   # options_for_select(tt_instance.options_selects, selected)  -- single selection
   def options_selects
     topic_type_opts.map do |opts|
-      [opts.value, opts.id, {data_description: opts.description}]
+      [opts.value, opts.id, {'data-description'.to_sym => opts.description}]
     end
   end
 

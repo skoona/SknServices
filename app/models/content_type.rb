@@ -20,14 +20,14 @@ class ContentType < ActiveRecord::Base
 
   def self.options_selects
     self.all.map do |cts|
-      [cts.name, cts.id, {data_description: cts.description}]
+      [cts.name, cts.id, {'data-description'.to_sym => cts.description}]
     end
   end
 
   # options_for_select(ct_instance.options_selects, selected)   -- multi selections
   def options_selects
     content_type_opts.map do |opts|
-      [opts.value, opts.id, {data_description: opts.description}]
+      [opts.value, opts.id, {'data-description'.to_sym => opts.description}]
     end
   end
 

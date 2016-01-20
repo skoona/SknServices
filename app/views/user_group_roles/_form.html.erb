@@ -6,7 +6,7 @@
             <%= f.input :name %>
             <%= f.input :description %>
             <%= f.input :group_type %>
-            <%= f.input :user_roles, collection: @page_controls, checked: @user_group_role.user_roles.map(&:id), as: :check_boxes, include_blank: false, label: "Roles" %>
+            <%= f.association :user_roles, as: :check_boxes, include_blank: false, label: "Roles" %>
         </div>
 
         <div class="form-actions">

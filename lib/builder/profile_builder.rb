@@ -56,6 +56,7 @@ module Builder
       ctxp = ContentProfile.find_by_person_authentication_key(user_profile.person_authenticated_key)
       unless ctxp.nil? or ctxp.content_profile_entries.size == 0
         results =  {
+            success: true,
             entries: (ctxp.content_profile_entries.map() {|cpe| build_db_context_profile_entry(cpe)}) || [],
             pak: ctxp.person_authentication_key,
             profile_type: ctxp.profile_type.name,
@@ -113,6 +114,7 @@ module Builder
       return  arobj if arobj
 
       results = {
+          success: true,
           entries: build_ar_context_profile_entry(user_profile) || [],
           pak: user_profile.person_authenticated_key,
           profile_type: user_profile.assigned_groups.first || "not assigned",

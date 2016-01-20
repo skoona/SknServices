@@ -16,11 +16,11 @@ class UserRole < ActiveRecord::Base
 
   def self.select_options
     self.all().map do |r|
-      [r.name, r.id, {data_description: r.description}]
+      [r.name, r.id, {'data-description'.to_sym => r.description}]
     end
   end
 
   def role_info
-    [name, id, {data_description: description}]
+    [name, id, {'data-description'.to_sym => description}]
   end
 end

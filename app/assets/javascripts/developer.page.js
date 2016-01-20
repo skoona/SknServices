@@ -45,7 +45,7 @@ function handleRailsInfo(ev) {
 $(function() {
 
     /* Only for the proper page */
-    if ( controllerAction.startsWith('developer') ) {
+    if ( controllerAction.startsWith('details_sysinfo') ) {
         /*
          * Initial Establish sections
          * id="about" -  <a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">

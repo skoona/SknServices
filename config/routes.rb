@@ -15,18 +15,20 @@ Rails.application.routes.draw do
       get :home
       get :learn_more
       get :about
-      get :developer
-      get :details_architecture
-      get :details_content
       get :details_access
+      get :details_architecture
       get :details_auth
+      get :details_content
+      get :details_sysinfo
     end
   end
 
   resources :profiles, only: :none do
     collection do
-      get :accessible_content
       get :content_profile_demo
+      get :api_accessible_content
+      get :manage_content_profiles
+      get :api_content_profiles
     end
   end
 

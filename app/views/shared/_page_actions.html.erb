@@ -1,0 +1,90 @@
+<%#  view/shared/page_actions.html.erb
+
+    # link_to macro takes three params(hashes), path, text, options_hash
+    # link_to(text, path, html_options, &block)
+    ### usage
+    # page_actions = []
+    # page_actions << {
+    #   path:"#policy-cancel-modal",
+    #       text: "Cancel Policy",
+    #       data: {
+    #       toggle: "modal"
+    #   }
+    # }
+ %>
+
+<%# link_to macro takes three params(hashes), path, text, options_hash %>
+<%# link_to(text, path, html_options, &block)  %>
+
+<div role="page-actions" class="container">
+    <div class="dropdown pull-right" role="group">
+        <% expand_all = false %>
+        <% if page_actions.length == 1 and not expand_all %>
+
+            <% action = page_actions.first %>
+
+            <% html_options = {} %>
+            <% html_options[:id] = action.id if action.id? %>
+            <% html_options[:data] = action.data.to_hash if action.data? %>
+            <% html_options[:class] = "btn #{action.klass? ? action.klass : 'btn-default'}" %>
+            <% html_options[:method] = action.method if action.method? %>
+
+            <%= link_to page_action_paths(action.path), html_options do %>
+                <% if action.icon_klass? %>
+                    <span class="glyphicon <%= action.icon_klass %>"></span>
+                <% end %>
+                <span><%= action.text %></span>
+            <% end %>
+
+        <% elsif page_actions.any? %>
+
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span>Actions</span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right">
+                <% page_actions.each do |action| %>
+
+                    <% html_options = {} %>
+                    <% html_options[:id] = action.id if action.id? %>
+                    <% html_options[:data] = action.data.to_hash if action.data? %>
+                    <% html_options[:method] = action.method if action.method? %>
+                    <% html_options[:class] = "btn #{action.klass? ? action.klass : 'btn-default'}" %>
+
+                    <% if action.level? %>
+                        <% if action.level.eql?('prime') %>
+                            <% if action.icon_klass? %>
+                                <span class="glyphicon <%= action.icon_klass %>"></span>
+                            <% end %>
+                            <span><%= action.text %></span>
+                        <% else %>
+                            <li>
+                                <%= link_to page_action_paths(action.path), html_options do %>
+                                    <% if action.icon_klass? %>
+                                        <span class="glyphicon <%= action.icon_klass %>"></span>
+                                    <% end %>
+                                    <span><%= action.text %></span>
+                                <% end %>
+                            </li>
+                            <% if action.level.eql?('second_end') %>
+                                <li class="divider" ></li>
+                            <% end %>
+                        <% end %>
+
+                    <% else %>
+                        <li>
+                            <%= link_to page_action_paths(action.path), html_options do %>
+                                <% if action.icon_klass? %>
+                                    <span class="glyphicon <%= action.icon_klass %>"></span>
+                                <% end %>
+                                &nbsp;<span><%= action.text %></span>
+                            <% end %>
+                        </li>
+                    <% end %>
+
+                <% end %>
+            </ul>
+        <% end %>
+
+    </div>
+</div>

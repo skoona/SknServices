@@ -43,7 +43,7 @@
 
                             <% if current_user_has_access?('#SystemInformation') %>
                                 <% if current_user_has_access?('content_profiles/index') %>
-                                    <%= nav_link_icon("glyphicon-cog", "System Information", developer_pages_path) %>
+                                    <%= nav_link_icon("glyphicon-cog", "System Information", details_sysinfo_pages_path) %>
                                 <% end %>
                             <% end %>
                         </ul>

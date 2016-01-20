@@ -16,7 +16,7 @@ class ProfileType < ActiveRecord::Base
 
   def self.pt_options_selects
     self.all.map do |pts|
-      [pts.name, pts.id, {data_description: pts.description}]
+      [pts.name, pts.id, {'data-description'.to_sym => pts.description}]
     end
   end
 

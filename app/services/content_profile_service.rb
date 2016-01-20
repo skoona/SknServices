@@ -25,8 +25,44 @@ class ContentProfileService < ::ProfilesDomain
     })
   end
 
-  def accessible_content(params)
-    api_accessible_content(params)
+  def api_accessible_content(params)
+    handle_accessible_content_api(params)
+  end
+
+  def manage_content_profiles(params)
+    res = SknUtils::PageControls.new({
+       success: true,
+       message: "",
+       package: handle_profiles_management(params)
+    })
+    res.success = res.package.success
+    res.message = res.package.message
+    res
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+       success: false,
+       message: e.message,
+       package: []
+    })
+  end
+
+  def api_content_profiles(params)
+    res = SknUtils::PageControls.new({
+       success: true,
+       message: "",
+       package: handle_content_profiles_api(params)
+    })
+    res.success = res.package.success
+    res.message = res.package.message
+    res
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+       success: false,
+       message: e.message,
+       package: []
+    })
   end
 
 end

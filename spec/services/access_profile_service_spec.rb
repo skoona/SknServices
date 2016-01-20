@@ -53,15 +53,15 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
 
     it "#get_user_form_options returns array of options with descriptions. " do
       expect( @service.get_user_form_options ).to be_a SknUtils::PageControls
-      expect( @service.get_user_form_options.groups.first.last[:data_description] ).to be_a String
+      expect( @service.get_user_form_options.groups.first.last['data-description'.to_sym] ).to be_a String
     end
     it "#group_select_options returns array of options with descriptions. " do
       expect( @service.group_select_options ).to be_a Array
-      expect( @service.group_select_options.first.last[:data_description] ).to be
+      expect( @service.group_select_options.first.last['data-description'.to_sym] ).to be
     end
     it "#role_select_options returns array of options with descriptions. " do
       expect( @service.role_select_options ).to be_a Array
-      expect( @service.role_select_options.first.last[:data_description] ).to be
+      expect( @service.role_select_options.first.last['data-description'.to_sym] ).to be
     end
 
 

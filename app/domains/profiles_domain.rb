@@ -119,7 +119,7 @@ class ProfilesDomain < ::Factory::DomainsBase
   #     "uri":"Commission/Agency/PDF",
   #     "username":"developer"
   # }
-  def api_accessible_content(params) # :access, :username, :profile
+  def handle_accessible_content_api(params) # :access, :username, :profile
     @accessible_type = params[:id] || params[:access] # [:access, :content]
     @profile = params[:profile] # [:access=role, :content=content]
     pg_u = get_page_user(params[:username], @accessible_type)
@@ -155,6 +155,48 @@ class ProfilesDomain < ::Factory::DomainsBase
   def user_accessible_content(user_profile, context="access", profile=nil)
     result = factory.access_services.user_accessible_content(user_profile, context, profile)
     result
+  end
+
+  def handle_profiles_management(params)
+    {
+        success: false,
+        message: 'Page Not Implemented!',
+        page_actions: [{
+            id: "test-action",
+            path: :manage_content_profiles_profiles_path,
+            text: "Test Action",
+            data: {
+                samples: 'test data'
+            }
+        },{
+            id: "test-action2",
+            path: :manage_content_profiles_profiles_path,
+            text: "Test Action2",
+        }],
+        package: []
+    }
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    {
+        success: false,
+        message: e.message,
+        package: []
+    }
+  end
+
+  def handle_content_profiles_api(params)
+    {
+        success: false,
+        message: 'Api Not Implemented!',
+        package: []
+    }
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    {
+       success: false,
+       message: e.message,
+       package: []
+    }
   end
 
 

@@ -24,7 +24,7 @@ class UserGroupRole < ActiveRecord::Base
 
   def self.select_options
     self.all().map do |r|
-      [r.name, r.id, {data_description: r.description}]
+      [r.name, r.id, {'data-description'.to_sym => r.description}]
     end
   end
 

@@ -16,7 +16,7 @@ class ContentTypeOpt < ActiveRecord::Base
 
   def self.options_selects
     self.all.map do |r|
-      [r.value, r.id, {data_description: r.description}]
+      [r.value, r.id, {'data-description'.to_sym => r.description}]
     end
   end
 

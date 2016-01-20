@@ -20,7 +20,7 @@ class PagesController < ApplicationController
   def about
   end
 
-  def developer
+  def details_sysinfo
     Secure::AccessRegistry.ar_reload_configuration_file() if 'xml'.eql?( params[:id] )
   end
 

@@ -87,22 +87,22 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
       end
     context "For user aptester, that has content and access profiles available. " do
       it "#api_accessible_content(access) return a PageControls object. " do
-        expect(@service.api_accessible_content({username: 'aptester', access: 'access'})).to be_a(SknUtils::PageControls)
-        expect(@service.api_accessible_content({username: 'aptester', access: 'access'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'access'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'access'}).package.success).to be true
       end
       it "#api_accessible_content(content) return a PageControls object. " do
-        expect(@service.api_accessible_content({username: 'aptester', access: 'content'})).to be_a(SknUtils::PageControls)
-        expect(@service.api_accessible_content({username: 'aptester', access: 'content'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'content'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'content'}).package.success).to be true
       end
     end
     context "For user estester, that has access but no content profile available. " do
       it "#api_accessible_content(access) return a PageControls object. " do
-        expect(@service.api_accessible_content({username: 'estester', access: 'access'})).to be_a(SknUtils::PageControls)
-        expect(@service.api_accessible_content({username: 'estester', access: 'access'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'estester', access: 'access'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'estester', access: 'access'}).package.success).to be true
       end
       it "#api_accessible_content(content) return a PageControls object. " do
-        expect(@service.api_accessible_content({username: 'estester', access: 'content'})).to be_a(SknUtils::PageControls)
-        expect(@content.accessible_content({username: 'estester', access: 'content'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'estester', access: 'content'})).to be_a(SknUtils::PageControls)
+        expect(@content.api_accessible_content({username: 'estester', access: 'content'}).package.success).to be true
       end
     end
 

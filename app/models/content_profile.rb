@@ -37,7 +37,7 @@ class ContentProfile < ActiveRecord::Base
   # options_for_select(tt_instance.options_selects, selected)  -- single selection
   def cpe_options_selects
     content_profile_entries.map do |cpe|
-      [cpe.description, cpe.id, {data_description: "#{cpe.content_type.name}:#{cpe.topic_type.name}"} ]
+      [cpe.description, cpe.id, {'data-description'.to_sym => "#{cpe.content_type.name}:#{cpe.topic_type.name}"} ]
     end
   end
 

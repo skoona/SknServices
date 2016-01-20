@@ -297,7 +297,7 @@
 
     <!--============== Profiles Pages  ========== --> profiles/accessible_content
     <resource secured="true">
-        <uri>profiles/accessible_content</uri>
+        <uri>profiles/api_accessible_content</uri>
         <description>AccessibleContent API.JSON</description>
         <permission type="READ">
             <authorizedRoles>
@@ -316,6 +316,30 @@
                 <authorizedRole>Services.Action.Developer</authorizedRole>
                 <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
                 <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true">
+        <uri>profiles/api_content_profiles</uri>
+        <description>Profile Manipulation Services API.JSON</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true">
+        <uri>profiles/manage_content_profiles</uri>
+        <description>Manage Content Profiles</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -667,8 +691,8 @@
 
     <!--=========================  DEVELOPMENT RESOURCES  ============================ -->
   <resource secured="false">
-      <uri>pages/developer</uri>
-      <description>System Status</description>
+      <uri>pages/details_sysinfo</uri>
+      <description>System Information</description>
       <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
       <permission type="READ">
           <authorizedRoles>

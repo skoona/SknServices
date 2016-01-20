@@ -15,7 +15,9 @@
 
 
     <% if authenticated? %>
-        <h3 class="text-center">Welcome <%= current_user.name %><br/><small>AuthService home#developer</small></h3>
+        <h3 class="text-center">Welcome <%= current_user.name %><br/><small>AuthService home#details_sysinfo</small></h3>
+    <% else %>
+        <h3 class="text-center">Welcome<br/><small>AuthService home#details_sysinfo</small></h3>
     <% end %>
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -172,11 +174,11 @@
 
             <% if authenticated? %>
                     <% res = profile_builder.access_profile(current_user, true) %>
-                    <% if res.present? and res.username? %>
+                    <% if res.present? and res.success %>
                     <h3>Access Profile</h3>
                         <div class="table-responsive">
                             <table id="access-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                <caption><h4><%= res.display_name %> at <%= res.email %></h4></caption>
+                                <caption><h4><%= res.display_name if res.display_name? %> at <%= res.email if res.email? %></h4></caption>
                                 <thead class="bg-primary">
                                     <th>Profile Type</th>
                                     <th>Description</th>
@@ -220,10 +222,12 @@
                                 </tbody>
                             </table>
                         </div>
+                    <% else %>
+                        <div class="alert alert-warning" role="alert"><%= res.message if res.message? %></div>
                     <% end %>
 
                     <% res = profile_builder.content_profile(current_user, true) %>
-                    <% if res.present? and res.username? %>
+                    <% if res.present? and res.success %>
                         <h3>Content Profile</h3>
                         <div class="table-responsive">
                             <table id="content-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
@@ -271,6 +275,8 @@
                                 </tbody>
                             </table>
                         </div>
+                    <% else %>
+                        <div class="alert alert-warning" role="alert"><%= res.message if res.message? %></div>
                     <% end %>
 
                 <div class="well">
@@ -301,7 +307,7 @@
                 </div>
 
             <% else %>
-                <p>No Authorized User</p>
+                    <div class="alert alert-warning" role="alert">No Authorized User</div>
             <% end %>
 
             <div class="well">
@@ -327,7 +333,7 @@
 
     <% if authenticated? and current_user_has_access?('#Management') %>
         <div class="well">
-            <%= link_to "Reload AccessRegistry",  developer_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
+            <%= link_to "Reload AccessRegistry",  details_sysinfo_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
         </div>
     <% end %>
 
