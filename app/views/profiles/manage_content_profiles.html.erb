@@ -4,16 +4,14 @@
     <h1 class="text-center"><%= accessed_page_name %></h1>
 </header>
 <div class="container">
-    <% if @page_controls.package? and @page_controls.package.page_actions? #.success %>
-        <%= render :partial => "shared/page_actions", :locals  => { :page_actions => @page_controls.package.page_actions } %>
-    <% end %>
+    <%= do_page_actions %>
 
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#home">Users</a></li>
-        <li><a data-toggle="tab" href="#menu1">Profile</a></li>
-        <li><a data-toggle="tab" href="#menu2">Entries</a></li>
-        <li><a data-toggle="tab" href="#menu3">Topics</a></li>
-        <li><a data-toggle="tab" href="#menu4">Contents</a></li>
+        <li class="active"><a data-toggle="tab" href="#home" data-dttable="#mc-users-table">Users</a></li>
+        <li><a data-toggle="tab" href="#menu1" data-dttable="no">Profile</a></li>
+        <li><a data-toggle="tab" href="#menu2" data-dttable="#mc-entries-table">Entries</a></li>
+        <li><a data-toggle="tab" href="#menu3" data-dttable="#mc-topic-table">Topics</a></li>
+        <li><a data-toggle="tab" href="#menu4" data-dttable="#mc-content-table">Contents</a></li>
     </ul>
 
     <div class="tab-content" data-user-package="<%= @page_controls.package.user_package.map(&:to_hash).to_json %>">

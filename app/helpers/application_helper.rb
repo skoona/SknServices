@@ -68,6 +68,14 @@ module ApplicationHelper
     end
   end
 
+  def do_page_actions
+    if @page_controls and @page_controls.package? and @page_controls.package.page_actions?
+      render :partial => "shared/page_actions", :locals  => { :page_actions => @page_controls.package.page_actions }
+    elsif @page_controls and @page_controls.page_actions?
+      render :partial => "shared/page_actions", :locals  => { :page_actions => @page_controls.page_actions }
+    end
+  end
+
   ### Converts named routes to string
   #  Basic '/some/hardcoded/string/path'
   #        '[:named_route_path]'

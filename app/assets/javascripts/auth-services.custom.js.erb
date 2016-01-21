@@ -397,13 +397,52 @@ function replaceEntriesTableRows(dataPackage) {
             });
             counter = index + 1;
         });
-        mcEntriesTable.draw();
+
     } else {
         mcEntriesTable.clear().draw();
     }
 
     consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ')');
     return false;
+}
+
+/*
+ * Updates the ContentProfile Tab
+*/
+function replaceProfileTabInfo(event) {
+    var dataPackage = $(event.currentTarget).data().package;
+
+    /* Initialize Titles on ContentProfile Tab */
+    try {
+        $('#username').html(dataPackage.username);
+        $('#display_name').html(dataPackage.display_name);
+        $('#assigned_group').html(dataPackage.assigned_group);
+        $('#email').html(dataPackage.email);
+        $('#authentication_provider').html(dataPackage.authentication_provider);
+        $('#pak').html(dataPackage.pak);
+        if (dataPackage.profile_exist) {
+            $('#profile_entries').html(dataPackage.profile_entries.length);
+        } else {
+            $('#profile_entries').html('0');
+        }
+    } catch(e) {
+        consoleLog("replaceProfileTabInfo()" + e);
+        consoleLog("dataPackage=" + JSON.stringify(dataPackage));
+    }
+
+    /* maintain selected item on users table */
+    $('#mc-users-table tbody tr').removeClass('success');
+    $(event.currentTarget).addClass('success');
+
+    /* reset content/topic table views */
+    mcContentTable.clear().draw();
+    mcTopicTable.clear().draw();
+
+    /* update content profile entries table */
+    replaceEntriesTableRows(dataPackage);
+
+    consoleLog(dataPackage.username + " Selected."); // + JSON.stringify(dataPackage));
+    return true;
 }
 
 /**
@@ -440,43 +479,27 @@ function handleManagementPages() {
         }
     });
 
-    // looking for a way to redraw tables that were hidden
-    $('#mc-entries-table').on( 'column-visibility.dt', function ( e, settings, column, state ) {
-        consoleLog('Column '+ column +' has changed to '+ (state ? 'visible' : 'hidden'));
-    });
-
     /**
      *  Activate the UI, Track clicks from UsersTable to control both pages
      */
-    var userRows = $('#mc-users-table tbody tr');
-
-
-    userRows.on('click', function (event) {
-        var dataPackage = $(event.currentTarget).data().package;
-
-        /*
-         Initialize Titles on ContentProfile Tab
-         */
-        $('#username').html(dataPackage.username);
-        $('#display_name').html(dataPackage.display_name);
-        $('#assigned_group').html(dataPackage.assigned_group);
-        $('#email').html(dataPackage.email);
-        $('#authentication_provider').html(dataPackage.authentication_provider);
-        $('#pak').html(dataPackage.pak);
-        $('#profile_entries').html(dataPackage.profile_entries.length);
-
-        /* maintain selected item on users table */
-        userRows.removeClass('success');
-        $(event.currentTarget).addClass('success');
-
-        replaceEntriesTableRows(dataPackage);
-
-        consoleLog(dataPackage.username + " Selected."); // + JSON.stringify(dataPackage));
-    });
+    $('#mc-users-table tbody tr').on('click', replaceProfileTabInfo);
 
     /*
      * choose first one to start things off */
-    userRows.first().click();
+    $('#mc-users-table tbody tr').first().click();
+
+
+    /* Watch the Tabs change, dataTable header don't align when invisible
+     * then try to update the DataTable on that page.
+     * events = 'show|shown.bs.tab'   shown works */
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).data().dttable; // activated tab
+        if (target != 'no') {
+            $(target).dataTable().api().draw();
+        }
+        return true;
+    });
+
 
     return true;
 } // end function

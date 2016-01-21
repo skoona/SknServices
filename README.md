@@ -370,6 +370,13 @@ RESPONSE: {
 10. Upgrade to Rails 5.0
 11. Implement Warble War for Tomcat Execution
 12. Consider a Rack UnAuthenticated Application for repeated violations.
-        
+13. Build a Registration Feature to enroll user locally.
+    * Presume user does not exist
+    * Capture or generate a PAK
+    * Assign default Public Groups
+    * Assign default ContentProfile
+    * Create Local User record
+    * Email user a ChangePassword to complete registration
+    
         
     
