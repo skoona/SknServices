@@ -7,13 +7,73 @@
  */
 
 
-var accessibleUrl,
+var logEnabled = <%= Rails.env.development? %>,
+    csrfToken,
+    controllerAction,
+    controllerName,
+    accessibleUrl,
     userTable,
     accessTable,
     contentTable,
     accessibleTable,
     mcUserTable,
-    mcEntriesTable;
+    mcEntriesTable,
+    mcTopicTable,
+    mcContentTable;
+
+
+/**
+ * Prevents debuging messages from going to console none development mode
+ * @param message {string}  to log on console
+ */
+function consoleLog(message) {
+    if (logEnabled) {
+        console.log(message);
+    }
+}
+
+
+/* ********************************************************
+ * System Info Page: :details_sysinfo
+ * ********************************************************
+ */
+
+/**
+ * Collect portion of RouteInfo
+ */
+function handleRailsInfo(ev) {
+    var pkg = $(ev.currentTarget).data(),
+            dataResponse;
+
+    console.log( "handleRailsInfo() init: " + JSON.stringify(pkg));
+
+    $.ajax({
+        headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+        method: "GET",
+        url: '/' + pkg.url
+    }).done(function(data,textStatus, jqXHR) {
+        dataResponse = $(jqXHR.responseText); //.find('body').contents();
+        if (pkg.header.startsWith('#about')) {
+            $(pkg.header).empty().append('<h2>Properties</h2>').addClass('show');
+        } else {
+            $(pkg.header).remove();
+        }
+        $(pkg.place).html( dataResponse ).fadeIn().addClass('show');
+
+        console.log( "handleRailsInfo() success: " + textStatus + ", Response=" + dataResponse);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.log( "handleRailsInfo() error: " + textStatus + ', thrown=' + errorThrown + ', Parms=' + JSON.stringify(pkg));
+        $(pkg.place).addClass('hidden');
+    });
+
+    return false; // to stop future processing of this event
+}
+
+/* ********************************************************
+ * ContentProfileDemo Page: :content_profile_demo
+ * ********************************************************
+ */
+
 
 /**
  * Content/Access Profile Table Selection
@@ -22,16 +82,20 @@ var accessibleUrl,
  */
 function profileTablesRequester(ev) {
     var dataPackage = $(ev.currentTarget).data().package,
-        contentType = dataPackage.hasOwnProperty('resource_options'), // then AccessProfile
-        dataResponse;
+            contentType = dataPackage.hasOwnProperty('resource_options'), // then AccessProfile
+            dataResponse,
+            profileType;
 
     if (contentType) {
         accessibleUrl = $("#access-table tbody").data().accessibleUrl;
+        profileType = "AccessProfile";
     } else {
         accessibleUrl = $("#content-table tbody").data().accessibleUrl;
+        profileType = "ContentProfile";
     }
 
-    /* flag selected in content table */
+    /*
+     * flag selected in related table */
     $("table.profile tbody tr").removeClass('success');
     $(ev.currentTarget).addClass('success');
 
@@ -43,18 +107,19 @@ function profileTablesRequester(ev) {
         url: accessibleUrl,
         data: dataPackage,
         accepts: 'json'
-    }).done(function(data,textStatus) {
-            dataResponse = data.package;
-            replaceAccessibleTableRows(dataResponse);
-            consoleLog( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
-      }).fail(function(jqXHR, textStatus, errorThrown) {
-            accessibleTable.clear().draw();
-            consoleLog( "profileTablesRequester("+ contentType ? 'AccessProfile': 'ContentProfile' + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
-      });
+    })
+    .done(function(data,textStatus) {
+        dataResponse = data.package;
+        replaceAccessibleTableRows(dataResponse);
+        consoleLog( "profileTablesRequester("+ profileType + ") success: " + textStatus + ", Response=" + JSON.stringify(dataResponse));
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        accessibleTable.clear().draw();
+        consoleLog( "profileTablesRequester("+ profileType + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
+    });
 
     return false;
 }
-
 
 /**
  * Reloads the access-table with supplied rows from a accessProfile package
@@ -62,14 +127,14 @@ function profileTablesRequester(ev) {
  */
 function replaceAccessTableRows(dataPackage) {
     var tTitle = $('#access-title'),
-        vList = dataPackage.package[0].access_profile.entries,
-        newRow = [],
-        counter = 0,
-        trNode,
-        trRow;
+            vList = dataPackage.access_profile.entries,
+            newRow = [],
+            counter = 0,
+            trNode,
+            trRow;
 
-    tTitle.html(dataPackage.package[0].message);
-    if (dataPackage.package[0].success) {
+    tTitle.html(dataPackage.message);
+    if (dataPackage.success) {
         accessTable.clear().draw();
 
         $.each(vList, function(index, row) {
@@ -101,14 +166,14 @@ function replaceAccessTableRows(dataPackage) {
  */
 function replaceContentTableRows(dataPackage) {
     var tTitle = $('#content-title'),
-            vList = dataPackage.package[1].content_profile.entries,
+            vList = dataPackage.content_profile.entries,
             newRow = [],
             counter = 0,
             trNode,
             trRow;
 
-    tTitle.html(dataPackage.package[1].message);
-    if (dataPackage.package[1].success) {
+    tTitle.html(dataPackage.message);
+    if (dataPackage.success) {
 
         contentTable.rows().remove().draw();
 
@@ -159,16 +224,16 @@ function replaceAccessibleTableRows(dataPackage) {
     if (dataPackage.success) {
         accessibleTable.clear().draw();
         $.each(vList, function(index, row) {
-                    newRow = [];
-                    newRow.push('<td>' + row.filename  + '</td>');
-                    newRow.push('<td>' + row.source  + '</td>');
-                    newRow.push('<td>' + row.created  + '</td>');
-                    newRow.push('<td>' + row.size  + '</td>');
-                    trRow = $('<tr>').append(newRow.join());
+            newRow = [];
+            newRow.push('<td>' + row.filename  + '</td>');
+            newRow.push('<td>' + row.source  + '</td>');
+            newRow.push('<td>' + row.created  + '</td>');
+            newRow.push('<td>' + row.size  + '</td>');
+            trRow = $('<tr>').append(newRow.join());
 
-                    trNode = accessibleTable.row.add(trRow).draw().node();
-                    $(trNode).data('package', row); // .on( "click", profileTablesRequester);
-                    counter = index + 1;
+            trNode = accessibleTable.row.add(trRow).draw().node();
+            $(trNode).data('package', row); // .on( "click", profileTablesRequester);
+            counter = index + 1;
         });
     } else {
         accessibleTable.clear().draw();
@@ -212,13 +277,6 @@ function handleDemoPages() {
         }
     });
 
-    cmUserTable = $('#cp-users-table').DataTable({
-        scrollY: "620px",
-        language: {
-            emptyTable: "No User Available!"
-        }
-    });
-
 
     /**
      *  Activate the UI, Track clicks from UsersTable to control both pages
@@ -233,7 +291,10 @@ function handleDemoPages() {
          Initialize Title on Accessible Content Table
          */
         $('#accessible-title').
-                html('Accessible Content for ' + dataPackage.username + ":" + dataPackage.display_name);
+                html('Accessible Content for ' +
+                      dataPackage.username + ":" +
+                      dataPackage.display_name
+                    );
 
         /* maintain accessibleTable's state */
         accessibleTable.clear().draw();
@@ -242,11 +303,12 @@ function handleDemoPages() {
         userRows.removeClass('success');
         $(event.currentTarget).addClass('success');
 
-        /* Determine which page we are on and use that table loader */
-        replaceAccessTableRows(dataPackage);
-        replaceContentTableRows(dataPackage);
+        /*
+         * Table loaders */
+        replaceAccessTableRows(dataPackage.package[0]);
+        replaceContentTableRows(dataPackage.package[1]);
 
-        consoleLog(dataPackage.username + " Selected." + JSON.stringify(dataPackage));
+        consoleLog(dataPackage.username + " Selected. "); // + JSON.stringify(dataPackage));
     });
 
     /* choose first one to start things off */
@@ -255,16 +317,57 @@ function handleDemoPages() {
     return true;
 } // end function
 
+
+/* ********************************************************
+ * ManageContentProfiles Page: :manage_content_profiles
+ * ********************************************************
+ */
+/**
+ * Reloads the table with supplied rows from a
+ * @param dataPackage ["LicensedStates",3,{"data-description":"Agent Actions"}]
+ */
+function replaceTypesTableRows(dtTable, dataPackage) {
+    var vList = dataPackage,
+            newRow = [],
+            counter = 0,
+            trNode,
+            trRow;
+
+
+    try {
+        dtTable.clear().draw();
+        $.each(vList, function (index, row) {
+            newRow = [];
+            newRow.push('<td>' + row[0] + '</td>');
+            newRow.push('<td>' + row[2]['data-description'] + '</td>');
+            trRow = $('<tr>').append(newRow.join());
+
+            trNode = dtTable.row.add(trRow).draw().node();
+            $(trNode).data('package', row); // .on( "click", profileTablesRequester);
+            counter = index + 1;
+        });
+        dtTable.draw();
+    } catch(e) {
+        consoleLog("replaceTypesTableRows()" + e);
+        consoleLog("dataPackage=" + JSON.stringify(dataPackage));
+        dtTable.clear().draw();
+    }
+
+
+    consoleLog('replaceTypesTableRows(rowsAdded=' + counter + ')');
+    return false;
+}
+
 /**
  * Reloads the mc-entries-table with supplied rows from a
  * @param dataPackage
  */
 function replaceEntriesTableRows(dataPackage) {
     var vList = dataPackage.profile_entries,
-        newRow = [],
-        counter = 0,
-        trNode,
-        trRow;
+            newRow = [],
+            counter = 0,
+            trNode,
+            trRow;
 
     if (dataPackage.profile_exist) {
         mcEntriesTable.clear().draw();
@@ -281,7 +384,17 @@ function replaceEntriesTableRows(dataPackage) {
             trRow = $('<tr>').append(newRow.join());
 
             trNode = mcEntriesTable.row.add(trRow).draw().node();
-            $(trNode).data('package', row); // .on( "click", profileTablesRequester);
+            $(trNode).data('package', row).on( "click", function(ev) {
+                var pkg = $(ev.currentTarget).data().package;
+
+                replaceTypesTableRows(mcContentTable, pkg.content_selects);
+                replaceTypesTableRows(mcTopicTable, pkg.topic_selects);
+                /*
+                 * flag selected in related table */
+                $("#mc-entries-table tbody tr").removeClass('success');
+                $(ev.currentTarget).addClass('success');
+
+            });
             counter = index + 1;
         });
         mcEntriesTable.draw();
@@ -290,7 +403,7 @@ function replaceEntriesTableRows(dataPackage) {
     }
 
     consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ')');
-    return true;
+    return false;
 }
 
 /**
@@ -313,11 +426,24 @@ function handleManagementPages() {
         }
     });
 
+    mcTopicTable = $('#mc-topic-table').DataTable({
+        scrollY: "620px",
+        language: {
+            emptyTable: "No User Available!"
+        }
+    });
+
+    mcContentTable = $('#mc-content-table').DataTable({
+        scrollY: "620px",
+        language: {
+            emptyTable: "No User Available!"
+        }
+    });
+
+    // looking for a way to redraw tables that were hidden
     $('#mc-entries-table').on( 'column-visibility.dt', function ( e, settings, column, state ) {
-        console.log(
-                'Column '+ column +' has changed to '+ (state ? 'visible' : 'hidden')
-        );
-    } );
+        consoleLog('Column '+ column +' has changed to '+ (state ? 'visible' : 'hidden'));
+    });
 
     /**
      *  Activate the UI, Track clicks from UsersTable to control both pages
@@ -345,14 +471,16 @@ function handleManagementPages() {
 
         replaceEntriesTableRows(dataPackage);
 
-        consoleLog(dataPackage.username + " Selected." + JSON.stringify(dataPackage));
+        consoleLog(dataPackage.username + " Selected."); // + JSON.stringify(dataPackage));
     });
 
-    /* choose first one to start things off */
+    /*
+     * choose first one to start things off */
     userRows.first().click();
 
     return true;
 } // end function
+
 
 /* ********************************************************
  * JQuery Enabled Processing
@@ -360,12 +488,16 @@ function handleManagementPages() {
  */
 $(function() {
 
-    /* Only for the proper page */
-    if ( controllerName.startsWith('profile') ) {
-        logEnabled = true;
+    controllerAction = $('body').data().controllerAction;
+    controllerName = $('body').data().controllerName;
+    /* Save this token for the Ajax calls */
+    csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    /*
+     * Only for the ProfilesController based pages */
+    if ( controllerName.startsWith('profiles') ) {
         /*
-         * Initial Establish the dataTables
-         */
+         * Initial Establish the dataTables */
         try {
             $.extend($.fn.dataTable.defaults, {
                 dom: "fti",
@@ -386,16 +518,32 @@ $(function() {
                     info: true
                 }
             });
-        } catch(e) {
-            consoleLog("Defaults Failed " + e);
-        }
-
-        if (controllerAction.startsWith('manage')) {
-            handleManagementPages();
-        } else {
-            handleDemoPages();
+        } catch (e) {
+            consoleLog("DataTables Defaults Failed " + e);
         }
     }
+
+    switch (controllerAction) {
+        case 'details_sysinfo':
+            /*
+             * Initial Establish sections
+             * id="about" -  <a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">
+             *     target: <div id="about-content" style="display: none"></div>
+             * id="routes" - <a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false;">
+             *     target: <div id="route-content" style="display: none"></div>
+             */
+            $('h2 > a.btn-lg').on('click', handleRailsInfo);
+            break;
+        case 'manage_content_profiles':
+            handleManagementPages();
+            break;
+        case 'content_profile_demo':
+            handleDemoPages();
+            break;
+        default:
+            consoleLog("Current Page (" + controllerAction + ") has no custom Javascripts enabled.");
+    }
+    consoleLog("Initialization Complete for: " + controllerName + "/" + controllerAction + ".");
 
 });
 

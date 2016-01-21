@@ -197,6 +197,229 @@ content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) pr
 [jscott@iMac AuthService]$
 
 
+==Multilevel :page_actions Prefferred
+<div class="container">
+    <div class="row">
+        <h2>Multi level dropdown menu in Bootstrap 3 with Hover</h2>
+        <hr>
+        <div class="dropdown">
+            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html">
+                Dropdown <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                <li><a href="#">Some action</a></li>
+                <li><a href="#">Some other action</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-submenu">
+                    <a tabindex="-1" href="#">Hover me for more options</a>
+                    <ul class="dropdown-menu">
+                        <li><a tabindex="-1" href="#">Second level</a></li>
+                        <li class="dropdown-submenu">
+                            <a href="#">Even More..</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">3rd level</a></li>
+                                <li><a href="#">3rd level</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Second level</a></li>
+                        <li><a href="#">Second level</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="dropdown">
+    <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html">
+        Dropdown <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+        <li><a href="#">Some action</a></li>
+        <li><a href="#">Some other action</a></li>
+        <li class="divider"></li>
+
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Hover me for more options</a>
+            <ul class="dropdown-menu">
+                <li><a tabindex="-1" href="#">Second level</a></li>
+                <li class="dropdown-submenu">
+                    <a href="#">Even More..</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">3rd level</a></li>
+                        <li><a href="#">3rd level</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Second level</a></li>
+                <li><a href="#">Second level</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+
+---
+
+<div class="container">
+	<div class="row">
+        <h2>Multi level dropdown menu in Bootstrap 3</h2>
+        <hr>
+        <div class="dropdown">
+            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="#">
+                Dropdown <span class="caret"></span>
+            </a>
+    		<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+              <li><a href="#">Some action</a></li>
+              <li><a href="#">Some other action</a></li>
+              <li class="divider"></li>
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Hover me for more options</a>
+                <ul class="dropdown-menu">
+                  <li><a tabindex="-1" href="#">Second level</a></li>
+                  <li class="dropdown-submenu">
+                    <a href="#">Even More..</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">3rd level</a></li>
+                    	<li><a href="#">3rd level</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#">Second level</a></li>
+                  <li><a href="#">Second level</a></li>
+                </ul>
+              </li>
+            </ul>
+        </div>
+	</div>
+</div>
+
+<div class="dropdown">
+    <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="#">
+        Dropdown <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+      <li><a href="#">Some action</a></li>
+      <li><a href="#">Some other action</a></li>
+      <li class="divider"></li>
+      <li class="dropdown-submenu">
+        <a tabindex="-1" href="#">Hover me for more options</a>
+        <ul class="dropdown-menu">
+          <li><a tabindex="-1" href="#">Second level</a></li>
+          <li class="dropdown-submenu">
+            <a href="#">Even More..</a>
+            <ul class="dropdown-menu">
+                <li><a href="#">3rd level</a></li>
+                <li><a href="#">3rd level</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Second level</a></li>
+          <li><a href="#">Second level</a></li>
+        </ul>
+      </li>
+    </ul>
+</div>
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+---
+
 Every User produces the following json object.
 {
   "user_options":["Manager","0034","0037","0040"],
@@ -312,3 +535,89 @@ AccessprofileEntry
      :content_type_description=>"Agency Commission CSV Datafiles"
   }
  ]
+
+
+PAYLOAD From Demo Page : UsersTable EntryData to Content/Access Table Rows
+aptester Selected.
+{"username":"aptester","user_options":["AgencyPrimary","0034","0037","0040"],"display_name":"Agency Primary User",
+ "package":[
+            {"success":true,"accessible_content_url":"/profiles/api_accessible_content.json?id=access",
+             "access_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"","provider":"UserProfile","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"AgencyPrimary","display_name":"Agency Primary User",
+                               "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Agency Commission Statements","user_options":["AgencyPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Agency.Commission.Statement.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Commission/Agency/PDF"},"topic_value":["PDF"],"description":"Agency Commission Statements","content_value":[{"doctype":"954"}],"content_type_description":"Agency Commission Statements","uri":"Commission/Agency/PDF","topic_type":"Agency"},
+                                          {"username":"aptester","content_type":"Experience","topic_type_description":"Agency Experience Statements","user_options":["AgencyPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Agency.Commission.Experience.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Experience/Agency/PDF"},"topic_value":["PDF"],"description":"Agency Experience Statements","content_value":[{"doctype":"956"}],"content_type_description":"Agency Experience Statements","uri":"Experience/Agency/PDF","topic_type":"Agency"}
+                                         ]
+                              },
+             "user_options":["AgencyPrimary","0034","0037","0040"],
+             "page_user":"aptester",
+             "message":"AccessProfile Entries for aptester:Agency Primary User Options=AgencyPrimary,0034,0037,0040"
+            },
+            {"success":true,
+             "content_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"Agency Super User","provider":"AuthService::Bcrypt","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"AgencyPrimary","display_name":"Agency Primary User",
+                                "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Agency Actions for a specific agency","user_options":["AgencyPrimary","0034","0037","0040"],"topic_value":["0038"],"description":"Determine which agency documents can be seen","content_value":["68613"],"content_type_description":"Monthly Commission Reports and Files","topic_type":"Agency"},
+                                           {"username":"aptester","content_type":"Notification","topic_type_description":"Account Action again for a specific set of account","user_options":["AgencyPrimary","0034","0037","0040"],"topic_value":["Agent"],"description":"Determine which accounts will have notification sent","content_value":["AdvCancel"],"content_type_description":"Email Notification of Related Events","topic_type":"Account"}
+                                          ]
+                               },
+             "accessible_content_url":"/profiles/api_accessible_content.json?id=content",
+             "user_options":["AgencyPrimary","0034","0037","0040"],
+             "page_user":"aptester",
+             "message":"ContentProfile Entry for aptester, AgencyPrimary:Agency Super User, Options=AgencyPrimary,0034,0037,0040"
+            }
+          ]
+}
+
+PAYLOAD FROM BUILD PAGE: From Users to ContentProfile
+eptester Selected.
+{
+ "pak":"2b546fa972156bf72bef3c70d78e9faf",
+ "username":"eptester",
+ "user_options":["Manager","0034","0037","0040"],
+ "assigned_group":["EmployeePrimary"],
+ "email":"appdev@brotherhoodmutual.com",
+ "authentication_provider":"AuthService::Bcrypt",
+ "display_name":"Employee Primary User",
+ "profile_exist":true,
+ "profile_entries":[
+        {"type_selects":[
+            ["Agency",1,{"data-description":"Agency Actions for a specific agency"}]
+         ],
+         "content_type":"Commission",
+         "topic_type_description":"Agency Actions for a specific agency",
+         "topic_value":["0034"],
+         "description":"Determine which agency documents can be seen",
+         "content_value":["68601","68602","68603"],
+         "content_type_description":"Monthly Commission Reports and Files",
+         "topic_type":"Agency",
+         "content_selects":[
+             ["Commission",1,{"data-description":"Monthly Commission Reports and Files"}]
+         ]
+        },
+        {"type_selects":[
+             ["Account",2,{"data-description":"Account Action again for a specific set of account"}]
+         ],
+         "content_type":"Notification",
+         "topic_type_description":"Account Action again for a specific set of account",
+         "topic_value":["Agency"],
+         "description":"Determine which accounts will have notification sent",
+         "content_value":["AdvCancel","FutCancel","Cancel"],
+         "content_type_description":"Email Notification of Related Events",
+         "topic_type":"Account",
+         "content_selects":[
+             ["Notification",2,{"data-description":"Email Notification of Related Events"}]
+         ]
+        },
+        {"type_selects":[
+             ["LicensedStates",3,{"data-description":"Agent Actions"}]
+         ],
+         "content_type":"Operations",
+         "topic_type_description":"Agent Actions",
+         "topic_value":["USA"],
+         "description":"Determine which States agent may operate in.",
+         "content_value":["21","9","23"],
+         "content_type_description":"Business Operational Metric",
+         "topic_type":"LicensedStates",
+         "content_selects":[
+             ["Operations",3,{"data-description":"Business Operational Metric"}]
+         ]
+        }
+ ]
+}

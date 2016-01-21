@@ -16,7 +16,5 @@
 //= require bootstrap-sprockets
 //= require dataTables.bootstrap
 //= require jquery.dataTables
-//= require dsvc.common.js
-//= require content.profile.pages.js
-//= require details_sysinfo.page.js
+//= require auth-services.custom.js.erb
 //= require_tree .

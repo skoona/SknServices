@@ -24,18 +24,19 @@ class ProfilesDomain < ::Factory::DomainsBase
     end
     usrs
   end
+
   def managable_page_users(context=PROFILE_CONTEXT)
     usrs = []
     Secure::UserProfile.page_users(context).each do |u|
-      entries = []
+      entries = {none: true}
 
       content_profile = ContentProfile.find_by_person_authentication_key( u.person_authenticated_key)
       unless content_profile.nil? or content_profile.content_profile_entries.empty?
 
         entries = content_profile.content_profile_entries.map() do |cpe|
           entry = cpe.entry_info
-          entry.merge!(content_selects: cpe.content_types.options_selects)
-          entry.merge!(type_selects: cpe.topic_types.options_selects)
+          entry.merge!(content_selects: cpe.content_types.map {|r| r.content_type_opts.options_selects}.flatten(1))
+          entry.merge!(topic_selects: cpe.topic_types.map {|r| r.topic_type_opts.options_selects }.flatten(1))
         end
       end
       usrs << {username: u.username,
@@ -189,6 +190,15 @@ class ProfilesDomain < ::Factory::DomainsBase
         success: false,
         message: 'Page Not Implemented!',
         user_package: managable_page_users,
+        page_actions: [{
+                           id: "test-action",
+                           path: :manage_content_profiles_profiles_path,
+                           text: "Refresh",
+                           icon_klass: 'glyphicon-refresh',
+                           data: {
+                               samples: 'test data'
+                           }
+                       }],
         package: []
     }
   rescue Exception => e

@@ -3,17 +3,22 @@
     # link_to macro takes three params(hashes), path, text, html_options_hash
     # link_to(text, path, html_options_hash, &block)
     #         p1,   p2,   p3
+    #
+
+    # [{},{}]    = Two Items
+    # [{},{},[{},{}]]
+
     ### usage
     # page_actions = []
     # page_actions << {
     # a0      icon_klass: 'desired-glyphicon-class',
-    # a1      menu_level: 'header|indent|indent_pre|indent_aft'
+    # a1      item_type: ':header|:divider'                :submenu, :submenu_hdr coming later
     #
     # p1      text: "text on button",
     # p2      path: :see page_action_paths helper,
     #
     # p3      id: 'id-string',
-    # p3      klass: 'desired-bootstrap-class',
+    # p3      klass: 'desired-bootstrap-class',             btn-default, btn-info, btn-lg
     # p3      method: 'html-method',
     # p3      data: { myKey: value, 'my-keys' => values, toggle: "modal" },
     # }
@@ -22,68 +27,56 @@
 <%# link_to macro takes three params(hashes), path, text, options_hash %>
 <%# link_to(text, path, html_options, &block)  %>
 
-<div class="dropdown pull-right" role="group">
-    <% expand_all = false %>
-    <% if page_actions.one? %>
+<div class="pull-right">
+    <div class="dropdown" role="group">
+        <% if page_actions.one? %>
 
-        <% action = page_actions.first %>
+            <% action = page_actions.first %>
 
-        <% html_options = {} %>
-        <% html_options[:id]     = action.id if action.id? %>
-        <% html_options[:data]   = action.data.to_hash if action.data? %>
-        <% html_options[:class]  = "btn #{action.klass? ? action.klass : 'btn-primary'}" %>
-        <% html_options[:method] = action.method if action.method? %>
+            <% html_options = {} %>
+            <% html_options[:id]     = action.id if action.id? %>
+            <% html_options[:data]   = action.data.to_hash if action.data? %>
+            <% html_options[:class]  = "btn #{action.klass? ? action.klass : 'btn-primary'}" %>
+            <% html_options[:method] = action.method if action.method? %>
 
-        <%= link_to page_action_paths(action.path), html_options do %>
-            <% if action.icon_klass? %>
-                <span class="glyphicon <%= action.icon_klass %>"></span>
+            <%= link_to page_action_paths(action.path), html_options do %>
+                <% if action.icon_klass? %>
+                    <span class="glyphicon <%= action.icon_klass %>"></span>
+                <% end %>
+                <span><%= action.text %></span>
             <% end %>
-            <span><%= action.text %></span>
-        <% end %>
 
-    <% elsif page_actions.any? %>
+        <% elsif page_actions.any? %>
 
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span>Actions</span>
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right">
-            <% page_actions.each do |action| %>
+            <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="#">
+                Actions <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu  multi-level" role="menu" aria-labelledby="dropdownMenu">
+                <% page_actions.each do |action| %>
 
-                <% html_options = {} %>
-                <% html_options[:id]     = action.id if action.id? %>
-                <% html_options[:data]   = action.data.to_hash if action.data? %>
-                <% html_options[:method] = action.method if action.method? %>
-                <% html_options[:class]  = action.klass? ? "btn #{action.klass}" : "btn" %>
+                    <% html_options = {} %>
+                    <% html_options[:id]     = action.id if action.id? %>
+                    <% html_options[:data]   = action.data.to_hash if action.data? %>
+                    <% html_options[:method] = action.method if action.method? %>
+                    <% html_options[:class]  = action.klass? ? "btn #{action.klass}" : "btn" %>
 
-                <% if action.menu_level? %>
-                    <% if action.menu_level.eql?('header') %>
-                        <li class="dropdown-header">
-                            <% if action.icon_klass? %>
-                                <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
-                            <% end %>
-                            <span><%= action.text %></span>
-                        </li>
-                        <li class="divider" ></li>
-                    <% elsif ['indent', 'indent_pre', 'indent_aft'].include?(action.menu_level) %>
-                        <% if action.menu_level.eql?('indent_pre') %>
+                    <% if action.item_type? %>
+                        <% if action.item_type.eql?(:divider) %>
                             <li class="divider" ></li>
-                        <% end %>
-                        <li>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <%= link_to page_action_paths(action.path), html_options do %>
-                                        <% if action.icon_klass? %>
-                                            <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
-                                        <% end %>
-                                        <span><%= action.text %></span>
-                                    <% end %>
-                                </li>
-                            </ul>
-                        </li>
-                        <% if action.menu_level.eql?('indent_aft') %>
+                        <% elsif action.item_type.eql?(:header) %>
+                            <li class="dropdown-header">
+                                <% if action.icon_klass? %>
+                                    <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
+                                <% end %>
+                                <span><%= action.text %></span>
+                            </li>
                             <li class="divider" ></li>
+                        <% else %><!-- UnSupported Item: Submenus not supported yet -->
+                            <li>
+                                 <span>UnSupported :item_type=<%= action.item_type.to_s %>, remove!</span>
+                            </li>
                         <% end %>
+
                     <% else %>
                         <li>
                             <%= link_to page_action_paths(action.path), html_options do %>
@@ -95,19 +88,8 @@
                         </li>
                     <% end %>
 
-                <% else %>
-                    <li>
-                        <%= link_to page_action_paths(action.path), html_options do %>
-                            <% if action.icon_klass? %>
-                                <span class="glyphicon <%= action.icon_klass %>"></span>&nbsp;
-                            <% end %>
-                            <span><%= action.text %></span>
-                        <% end %>
-                    </li>
                 <% end %>
-
-            <% end %>
-        </ul>
-    <% end %>
-
+            </ul>
+        <% end %>
+    </div>
 </div>

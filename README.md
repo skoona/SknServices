@@ -345,3 +345,31 @@ RESPONSE: {
 
 ```
 
+##Todos
+---
+
+1. Create a Authorizing Menu Manager View Class
+    * Should Authorize a full menu, removing non-authorized items at Warden's :after_authentication callback
+    * Cache itself to Session or ObjectStore via Controller before_action/After_action
+    * Have a flexible initialization Hash, that specifies all levels including submenus
+2. Create a PageAction Class View Class
+    * Should generate on-demand based on presence of :page_actions key's presence in @page_controls
+    * Should handle sub-menus, headers, icons, and dividers.
+    * Should resolve router path and url symbols, with all options (:id, :text:, and :html_options)
+    * Sub-menus should be hover sensitive
+3. Create ContentProfile Creation Screen
+    * Allow creation of full profiles, or components as needed.
+4. Refactor Rails Controllers into Domain/Service model for Users, UserGroups, and UserRoles
+    * Simular to ContentProfile tables
+5. Write AccessRegistry XML Class to CRUD xml entries
+6. Write ContentProfile Executor
+    * to render results from 'controlled' directory to demo assessable table
+7. Review and update text top level pages, also improve their structure
+8. Complete design guidance page
+9. Roll application into a Rails Engine for delivery
+10. Upgrade to Rails 5.0
+11. Implement Warble War for Tomcat Execution
+12. Consider a Rack UnAuthenticated Application for repeated violations.
+        
+        
+    
