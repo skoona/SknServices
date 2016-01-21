@@ -89,6 +89,67 @@ bundle exec annotate
             :email => String
 
 
+##Page Actions
+---
+
+Needs to be re-written
+
+```ruby
+
+    #  view/shared/page_actions.html.erb
+
+        # link_to macro takes three params(hashes), path, text, html_options_hash
+        # link_to(text, path, html_options_hash, &block)
+        #         p1,   p2,   p3
+        #
+
+        # [{},{}]    = Two Items
+        # [{},{},[{},{}]]
+
+        ### usage
+        # page_actions = [.]                    Single Button -- i.e. only one entry in array
+        # page_actions = [...]                  Single Level menu(1) -- i.e. more than one entry in array
+        # page_actions = [...,[...]]            Single Level Menu(1), With SubMenu(2)
+        # page_actions = [...,[...,[...]]]      Single Level Menu(1), with SubMenu(2), with SubMenu(3)
+        # page_actions << {
+        # a0      icon_klass: 'desired-glyphicon-class',
+        # a1      item_type: ':divider_pre|:divider_post'
+        # a2      item_hdr: 'header text'
+        #
+        # p1      text: "text on button",
+        # p2      path: :see page_action_paths helper,
+        #
+        # p3      id: 'id-string',
+        # p3      klass: 'desired-bootstrap-class',             btn-default, btn-info, btn-lg
+        # p3      method: 'html-method',
+        # p3      data: { myKey: value, 'my-keys' => values, toggle: "modal" },
+        # }
+
+
+    page_actions: [
+        {
+           id: "test-action",
+           path: :manage_content_profiles_profiles_path,
+           text: "Refresh",
+           icon_klass: 'glyphicon-refresh',
+           data: {
+               samples: 'test data'
+           }
+        },
+        {
+           id: "test-action",
+           path: :manage_content_profiles_profiles_path,
+           text: "Refresh",
+           icon_klass: 'glyphicon-refresh',
+           data: {
+               samples: 'test data'
+           }
+        }
+    ]
+
+```
+
+
 ## Ajax Transaction
 
 ```
