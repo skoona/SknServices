@@ -45,6 +45,8 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
                   }]
   }
 
+  let(:nested) { basic << basic }
+
   it "Can be initialized properly" do
     expect( PageActionsBuilder.new(single, view, true )).to be
   end
@@ -69,4 +71,13 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
       expect(str).to include 'Refresh 4'
     end
   end
+
+  context "Builds multi level menu" do
+    it "#to_s generates string output with normal specification." do
+      str =  PageActionsBuilder.new(nested, view, true ).to_s
+      expect(str).to include 'Refresh 4'
+    end
+  end
+
+
 end

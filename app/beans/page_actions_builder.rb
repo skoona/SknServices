@@ -133,6 +133,23 @@ class PageActionsBuilder
   def build_submenu(params=[])
     ""
     # frame sub-menu, then loop to items
+    # <li class="dropdown-submenu">
+    content_tag(:li, class: "dropdown-menu") do
+      content_tag(:a, '#', {tabindex: "-1"}) do
+        content_tag(:ul, {class: 'dropdown-menu', role: 'menu'}) do
+          results = ""
+          params.each do |item|
+            item.is_a?(Array) ?
+                results.concat( build_submenu(item) ) :
+                results.concat( build_menu_item(item) )
+          end
+          results
+        end
+      end
+    end
+    #           <a tabindex="-1" href="#">Header for 2nd Level</a>
+    #                 <ul class="dropdown-menu">
+
   end
 
   def build_menu(params=[])
@@ -149,7 +166,7 @@ class PageActionsBuilder
               results = ""
               params.each do |item|
                 item.is_a?(Array) ?
-                    results.concat( build_sub_menu(item) ) :
+                    results.concat( build_submenu(item) ) :
                       results.concat( build_menu_item(item) )
               end
               results
