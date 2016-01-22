@@ -149,7 +149,7 @@ module Builder
       }
     end
     def build_ar_context_profile_entry(usrp)
-      Secure::AccessRegistry.get_resource_content_entries(usrp.roles, usrp.user_options)
+      Secure::AccessRegistry.get_resource_content_entries(usrp.combined_access_roles, usrp.user_options)
     end
 
   private

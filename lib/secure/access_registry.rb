@@ -85,19 +85,7 @@
 #      "secured" => true,
 #      "content" => true,
 #      "description" => "some description",
-#      "CREATE" => {
-#        "role name" => ["options","options",...],        
-#        "role n" => []
-#      },
 #      "READ" => {
-#        "role name" => ["options","options",...],        
-#        "role n" => []
-#      },
-#      "UPDATE" => {
-#        "role name" => ["options","options",...],        
-#        "role n" => []
-#      },
-#      "DELETE" => {
 #        "role name" => ["options","options",...],        
 #        "role n" => []
 #      }
@@ -198,7 +186,7 @@ module Secure
          end # end catch
        else
          # TODO: Enable logging of all unregistered
-         Rails.logger.info("#{self.class.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
+         Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
 
          result = false
        end
@@ -225,14 +213,14 @@ module Secure
       true
     rescue Exception => e
       @@ar_permissions = access_registry
-      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      Rails.logger.error "#{self.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       false
     end
 
     ##
     #
     # XML Adaptation of ContentProfile
-    #
+    # :READ is only permission we support for TopicOptionValues
     ##
     def self.get_resource_content_entries(user_roles, options=nil)
       results = []
@@ -241,7 +229,7 @@ module Secure
         result = get_resource_content_entry(user_roles, uri, options)
         results << result unless result.empty?
       end
-      Rails.logger.info("#{self.class.name}.#{__method__}() opts=#{options}, #{results}") if Rails.logger.present?
+      Rails.logger.info("#{self.name}.#{__method__}() opts=#{options}") if Rails.logger.present?
       results
     end
     def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
@@ -264,16 +252,17 @@ module Secure
             content_type: content_type,
             content_value: [bundle[:userdata]],
             topic_type: topic_type,
-            topic_value: [topic_opts],
+            topic_value: opts.fetch(:role_opts,[]),   # role_opts are now required for use as Topic Options Values -- [topic_opts],
             description: bundle[:description],
             topic_type_description: bundle[:description],
             content_type_description: bundle[:description]
-            # Todo: role options may be needed too, content_profile_entry#entry_info
+            # Todo: role options are considered Topic Option Values
+            # Todo: If user matches multiple CRUDs, then last set of role_option will be used
         }
       else
         results = {}
       end
-      Rails.logger.info("#{self.class.name}.#{__method__}() #{resource_uri} opts=#{options}, #{results} ++ bundle=#{bundle}") if Rails.logger.present?
+      Rails.logger.info("#{self.name}.#{__method__}() #{resource_uri} opts=#{options}") if Rails.logger.present?
       results
     end
 

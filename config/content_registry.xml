@@ -4,29 +4,18 @@
    config/content_registry.xml
 
 
-   * FULL RESOURCE SYNTAX **********************************************
-    
+   * REQUIRED RESOURCE SYNTAX **********************************************
+                              ** Note: :options are now required for TopicOpts values
+
     <resource secured="true|false" content="true|false">
         <uri>anyString</uri>
         <description></description>
         <userdata></userdata>
-        <permission type="CREATE|READ|UPDATE|DELETE">
+        <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="anyOptionOrCommaSepValue">security-role-name</authorizedRole>
-                <authorizedRole>security-user-group-name</authorizedRole>
-                <authorizedRole>All Authorized Users</authorizedRole>
+                <authorizedRole options="RequiredCommaSepTopicValues">security-role-name</authorizedRole>
             </authorizedRoles>
         </permission>
-    </resource>
-    
-    
-    
-   * PARTIAL RESOURCE SYNTAX *******************************************
-    
-    <resource secured="false"> 
-        <uri>anyString</uri>
-        <description>Any String can be a URI.</description>
-        <userdata>"foldertype:27637844|doctype:955"</userdata>
     </resource>
 
     UserData Required format/syntax is:
@@ -81,36 +70,28 @@
         <userdata>"doctype:956"</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="">Test.Agency.Commission.Agency.PDF.Access</authorizedRole>
+                <authorizedRole options="0099">Test.Agency.Commission.Agency.PDF.Access</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
 
     <resource secured="true" content="true">
-        <uri>FileDownload/Developers/Pdf</uri>
+        <uri>FileDownload/UserGroups/Pdf</uri>
         <description>Permission to Download PDF Files</description>
         <userdata>"directory_control:download/pdf/dev*.pdf"</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Primary</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole options="EmployeeSecondary,EmployeePrimary">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
 
     <resource secured="true" content="true">
-        <uri>FileDownload/Developers/Datafile</uri>
+        <uri>FileDownload/UserGroups/Datafile</uri>
         <description>Permission to Download Data Files</description>
         <userdata>"directory_control:download/datafiles/dev*.dat|directory_control:download/datafiles/dev*.csv"</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Primary</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole options="EmployeeSecondary,EmployeePrimary">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -122,10 +103,6 @@
         <userdata>"directory_control:download/images/dev*.png|directory_control:download/images/dev*.jpg"</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Primary</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole options="EmployeeSecondary,EmployeePrimary">Services.Action.Admin.FileDownload.Image</authorizedRole>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Image</authorizedRole>
             </authorizedRoles>
         </permission>

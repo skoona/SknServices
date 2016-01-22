@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="contentRegistry">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="resource" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation><![CDATA[config/content_registry.xml
+
+               * REQUIRED RESOURCE SYNTAX **********************************************
+                                  ** Note: :options are now required for TopicOpts values
+
+                <resource secured="true|false" content="true|false">
+                    <uri>anyString</uri>
+                    <description></description>
+                    <userdata></userdata>
+                    <permission type="READ">
+                        <authorizedRoles>
+                            <authorizedRole options="RequiredCommaSepTopicValues">security-role-name</authorizedRole>
+                        </authorizedRoles>
+                    </permission>
+                </resource>
+
+                UserData Required format/syntax is:
+                   returns Array if value|value,...
+                   returns Hash  if key:value|key:value|...
+                   returns String if no reserve chars present
+                   Reserved chars: |:  # vertical-bar and semi-colon
+
+
+               ============== Content Access Adaptation  ==========]]>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="userdata">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="authorizedRoles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="authorizedRole"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="resource">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="uri"/>
+        <xs:element ref="description"/>
+        <xs:element ref="userdata"/>
+        <xs:element ref="permission"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="secured" use="required"/>
+      <xs:attribute type="xs:string" name="content" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="authorizedRole">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="options" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="permission">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="authorizedRoles"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="type" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="uri">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="*/*/*"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+</xs:schema>

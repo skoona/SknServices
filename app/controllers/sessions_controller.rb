@@ -9,12 +9,14 @@ class SessionsController < ActionController::Base
   def new
   end
 
-  # POST From New page
+  # POST From New page then commit=page     -- redirect as normal
+  # POST From Modal then commit=modal       -- leave on current page
   def create
     #warden.reset_session!
     authenticate!(scope: :access_profile, message: "Signed in successfully.  SessionsController#create")
     flash_message(:notice, warden.message)
-    redirect_to_target_or_default home_pages_url # "Signed in successfully."
+    redirect_to( params[:commit], notice: "Signed in successfully.") and return unless params[:commit].eql?('page')
+    redirect_to_target_or_default home_pages_url  # "Signed in successfully."
   end
 
   # DELETE Logout

@@ -77,7 +77,7 @@ class ServiceFactory < ::Factory::ServicesBase
 
   # Easier to code than delegation, or forwarder
   def method_missing(method, *args, &block)
-    Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() Called #{method}")
+    Rails.logger.debug("ServiceFactory#method_missing() looking for: #{method}")
     if @factory.respond_to?(method)
       block_given? ? @factory.send(method, *args, block) :
           (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="accessRegistry">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element ref="resource" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation><![CDATA[config/access_registry.xml
+
+   Along with class Secure::AccessRegistry and module AccessControl, this file describes those
+   application resources that should be both secured and un-secured. This file is pre-processed
+   by the class AccessRegistryUtility to enable the Access Authorization capability: which converts
+   it into a Hash object.
+
+   There are two general sets of entries or URIs.
+        Page Entries
+            Composed of URI: <controller_name>/<action_action>, example: "pages/home"
+        Resource Entries
+            Composed of URI: <any.string> you choose to represent a general permission.
+            Typically you would makeup a URI and use that uri exclusively for an 'Add' button,
+            or other click-able resource in your application.
+
+   Page Entries are automatically validated by a security filter/callback plugged into the app's base controller,
+   as a part of the ControllerAccessProfile::login_required() functionality.  If the user does not have
+   a matching role for the current controller/action then they are redirected to the home page and given
+   a 'not authorized' warning; otherwise they pass through to the desired page.
+
+   Resource Entries are coded/implemented by you.  You decide on an URI syntax to composed a uri and then you
+   use that name to verify access to a particular clickable before making it visible or allowing the user
+   to take that action.  The User model includes a method called 'has_access?(uri, options)' which returns
+   true if the user's permissions/roles are included in the URI's access list; otherwise false is returned. An
+   example syntax might be "<Context>.<PageName>.<ActionName>" or "<Context>.<ProcessName>.<ActionName>"; where
+   an example uri from the latter would be "User.PasswordReset.RequestReset", or "Client.FileUpload.Upload".
+   Basically, your trying to authorize that a user "Can do a thing or action, and must give that action a uri!"
+
+   Authorization is accomplished by first declaring URIs for all Pages, then all Resources that need to be secured.
+   URI's are plain text strings which contain the label of the thing to be secured.  On the surrounding <resource>
+   statement is a 'secured' attribute which indicates if this resource record is secure or not.  If its not, the
+   record is considered documentation and will always return true to the #has_access?() api.
+
+   Should a #has_access? request be made with a uri not recorded in the access registry, the default return is TRUE.
+   Effectively granting access to any undocumented resource.
+
+   Second, each entry is evaluated using the semantics of CRUD.  CREATE, READ, UPDATE, DELETE permissions
+   each contain a list of authorized roles which a user MUST match one in order to be considered as having
+   permission.  The user object is expected to have an array list of authorization 'roles' which was granted
+   them by some administrator.  Permission entries are considered and created at application design time
+   and represent the application's clickable capabilities, or pages and task links.
+
+   Each authorized role in a permission statement may have one additional attribute named options.  An options
+   attribute is composed of a string with one or more comma separated values; ex. options="OWNER,SCHEDULER,MANAGER".
+   These entries if present must be matched by user's provided option value and the correct role, for the users
+   authorization request to be granted.  Having the correct authorized role and the wrong or missing option, will
+   cause the request to be denied.  If an authorized role is defined with options present, it must be matched.
+   The possibility of a authorization request occurring against a authorized role that was not defined with the
+   optional options attribute will simply be ignored; i.e. no attempt will be made to evaluate an options attribute
+   that does not exist.
+
+   In summary, if every application page and clickable action is predefined in this registry and the
+   #has_[access|create|read|update|delete]? api's are used to check access; the application can secure and
+   easily administer its core capabilities.
+
+   "Services.Action.Developer" has been implemented to bypass every defined resource.  Please be careful who
+   you assign it too.
+
+
+					    -*-*-*-   Table of Contents  -*-*-*-
+	 
+	 * Menu Page Registry			    All pages accessable from a menu
+	 * GLOBAL System Resources			Unsecured (login, logout, etc.)
+	 
+	 * GLOBAL User Pages 		        Unsecured (home )
+	 * PROTECTED Task Links  			Secured Navigation Links.  (Create Account, Admin, etc.)
+
+	 * Development Resources            Secured pages which show system activity or state
+
+
+   * FULL RESOURCE SYNTAX **********************************************
+    
+    <resource secured="true|false" content="true|false">
+        <uri>anyString</uri>
+        <description></description>
+        <userdata></userdata>
+        <permission type="CREATE|READ|UPDATE|DELETE">
+            <authorizedRoles>
+                <authorizedRole options="anyOptionOrCommaSepValue">security-role-name</authorizedRole>
+                <authorizedRole>security-user-group-name</authorizedRole>
+                <authorizedRole>All Authorized Users</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    
+    
+    
+   * PARTIAL RESOURCE SYNTAX *******************************************
+    
+    <resource secured="false"> 
+        <uri>anyString</uri>
+        <description>Any String can be a URI.</description>
+        <userdata>"foldertype:27637844|doctype:955"</userdata>
+    </resource>
+
+    UserData Required format/syntax is:
+       returns Array if value|value,...
+       returns Hash  if key:value|key:value|...
+       returns String if no reserve chars present
+       Reserved chars: |:  # vertical-bar and semi-colon
+
+
+============== RSpec Test Data  ========== ============================================================================= ========================= RESOURCE REGISTRY  ================================ ============================================================================= ============== System Menu  ========== ============== Profiles Pages  ========== ============== Public Pages  ========== ============== PasswordResets Process  ========== ============== Users Pages  ========== =========================  Content Profile Process  ============================ =========================  Access Profile  ============================ =========================  DEVELOPMENT RESOURCES  ============================]]></xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="userdata" type="xs:string"/>
+  <xs:element name="authorizedRoles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="authorizedRole" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="resource">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="uri"/>
+        <xs:element ref="description"/>
+        <xs:element ref="userdata" minOccurs="0"/>
+        <xs:element ref="permission" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="secured" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="authorizedRole">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute type="xs:string" name="options" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="permission">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="authorizedRoles"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="type" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="uri" type="xs:string"/>
+</xs:schema>

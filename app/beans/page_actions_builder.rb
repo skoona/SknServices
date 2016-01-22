@@ -67,17 +67,6 @@
 ## usage
 # page_actions = []
 # page_actions << {
-# a0      icon_klass: 'desired-glyphicon-class',
-# a0      icon_post_klass: 'desired-glyphicon-class',
-# a1      item_type: ':header|:divider'                :submenu, :submenu_hdr coming later
-#
-# p1      text: "text on button",
-# p2      path: :see page_action_paths helper,
-#
-# p3      id: 'id-string',
-# p3      klass: 'desired-bootstrap-class',             btn-default, btn-info, btn-lg
-# p3      method: 'html-method',
-# p3      data: { myKey: value, 'my-keys' => values, toggle: "modal" },
 # }
 ########
 #
@@ -85,76 +74,120 @@
 
 class PageActionsBuilder
 
+  attr_accessor :view, :bundle, :left_align
+  
   # take what should be an Array, and the Controller or view instance
-  def initialize(bundle, templater)
+  def initialize(bundle, templater, left_align=false)
     @bundle = bundle
-    @service = templater
+    @view = templater
+    @left_align = left_align
   end
 
-  delegate :content_tag, :tag, :action_name, :h, to: :view
+  delegate(:content_tag, :tag, :action_name, :h, :link_to, to: :view)
 
 
   def to_s
-    @service.raw generate
+    results = generate
+    Rails.logger.debug "#{self.class.name}.#{__method__}() Results: #{results}"
+    view.raw results
   end
 
-  def generate
-
-    return @service.raw(build_single(@bundle)) if bundle.one?
-
-    html = @bundle.each_with_object('') do |item, results|
-      case item
-        when Hash
-          results.concat( build_single(item) )
-        when Array
-          results.concat( build_menu(item) )
-        else
-          ""
-      end
-    end
-    # prepare_options
-    #   call build_single
-    #   call build_menu (if item == Array call build_submenu)
-    #   call build_submenu (if item == Array call build_submenu/re-entrant)
-    @service.raw( html.join() )
-  end
   def prepare_options(params={})
     # fixup named routes
     params[:path] = page_action_paths(params[:path]) if params[:path]
-    {
-        html_options: params.delete(:html_options),
-        control:  params   # should|could include [:header, :divider, :id, :path, :text, :icon ]
-    }
+    results = {
+        html_options: params.delete(:html_options)
+    }.merge(params)    # should|could include [:header, :divider, :id, :path, :text, :icon ])
+    Rails.logger.debug "#{self.class.name}.#{__method__}() Results: #{results}"
+    results
   end
 
+
+  def generate
+    view.raw( @bundle.length != 1 ? build_menu(@bundle) : build_single(@bundle) )
+  end
+
+
+  #   <div class="dropdown" role="group">
+  #       <a id="dLabel" role="button" class="btn btn-primary" href="/pages/home">
+  #           <span class="glyphicon glyphicon-home"></span>
+  #           <span>Actions</span>
+  #           <span class="glyphicon glyphicon-cog"></span>
+  #       </a>
+  #   </div>
   def build_single(params=[])
-    opts = prepare_options(item)
-    build_menu_html(opts)
-  end
-  def build_menu(params=[])
-  end
-  def build_submenu(params=[])
+    opts = prepare_options(params.first)
+    content_tag(:div, class: left_align ? "pull-left" : "pull-right" ) do
+      content_tag(:div, {class: 'dropdown', role: 'group'}) do
+        link_to(opts[:path], opts[:html_options] ) do
+          stuffs = ""
+          stuffs += tag(:span,class:"glyphicon #{opts[:icon]}" ) if opts.key?(:icon)
+          stuffs += content_tag(:span, opts[:text])
+          stuffs.html_safe
+        end
+      end
+    end
   end
 
-  def build_menu_html(params)
+
+  def build_submenu(params=[])
+    ""
+    # frame sub-menu, then loop to items
+  end
+
+  def build_menu(params=[])
+    content_tag(:div, class: left_align ? "pull-left" : "pull-right" ) do
+      content_tag(:div, {class: 'dropdown', role: 'group'}) do
+        html = link_to("#", {id: 'dLabel', role: 'button',
+                                     data: {toggle: 'dropdown', target: '#'},
+                                     class: 'btn btn-primary'}) do
+              stuffs = content_tag(:span, 'Actions')
+              stuffs += tag(:span, class: 'caret')
+              stuffs
+        end
+        html += content_tag(:ul, {class: 'dropdown-menu multi-level', role: 'menu'}) do
+              results = ""
+              params.each do |item|
+                item.is_a?(Array) ?
+                    results.concat( build_sub_menu(item) ) :
+                      results.concat( build_menu_item(item) )
+              end
+              results
+        end
+        html
+      end
+    end.html_safe
+  end
+
+  def build_menu_item(params)
+    html = ""
     opts = prepare_options(params)
     type = nil
-    type = :li_header if opts[:control][:header]
-    type = :li_divider if type.nil? or opts[:control][:li_divider]
+    type = :li_header if opts.key?(:header)
+    type = :li_divider if type.nil? and opts.key?(:divider) and opts[:html_options].nil?
+
+    puts "HELPS BUILD ITEM ============= #{opts}"
 
     case type
       when :li_header
-        opts[:html_options][:class] = opts[:html_options][:class] + " dropdown-header"
-        content_tag(:li, content_tag(:span, opts[:control][:text]), opts[:html_options])
-        #
+        content_tag(:li, class: 'dropdown-header') do
+          content_tag(:span, opts[:text], opts[:html_options])
+        end
       when :li_divider
-        opts[:html_options][:class] = opts[:html_options][:class] + " divider"
-        content_tag(:li,nil,opts[:html_options])
-        #
+        content_tag(:li,nil, class: "divider")
       else
-        content_tag(:li, content_tag(:span, text, html_options))
-        #
-    end
+        html = content_tag(:li ) do
+          link_to(opts[:path], opts[:html_options] ) do
+            stuffs = ""
+            stuffs += tag(:span,class:"glyphicon #{opts[:icon]}" ) if opts.key?(:icon)
+            stuffs += content_tag(:span, opts[:text])
+            stuffs.html_safe
+          end
+        end
+        html += tag(:li,class: "divider") if opts.key?(:divider)
+        html
+    end.html_safe
+
   end
 
   ### Converts named routes to string
@@ -170,16 +203,16 @@ class PageActionsBuilder
       when Array
         case paths.size
           when 1
-            send( paths[0] )
+            view.send( paths[0] )
           when 2
-            send( paths[0], paths[1] )
+            view.send( paths[0], paths[1] )
           when 3
-            rstr = send( paths[0], paths[1] )
+            rstr = view.send( paths[0], paths[1] )
             rstr + paths[2]
         end
 
       when Hash
-        rstr = send(paths[:engine]).send(paths[:path], paths.fetch(:options,{}) )
+        rstr = view.send(paths[:engine]).send(paths[:path], paths.fetch(:options,{}) )
         rstr + paths.fetch(:query, '')
 
       when String
