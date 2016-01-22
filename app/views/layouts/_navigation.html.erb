@@ -57,6 +57,13 @@
                         <% end %>
                     <% end %>
                 <% end %>
+                <% unless authenticated? %>
+                    <li class="pull-right">
+                    <a rel="nofollow" data-toggle="modal" data-target="#signin-modal">
+                        <span><i class="glyphicon glyphicon-log-in"></i>&nbsp;Login modal&nbsp;&nbsp;</span>
+                    </a>
+                    </li>
+                <% end %>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>

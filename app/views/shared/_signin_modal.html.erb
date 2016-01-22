@@ -1,108 +1,57 @@
-<div class="row">
 
-    <header class="page-header">
-        <h1 class="text-center">Please Sign In</h1>
-    </header>
 
-    <section class="container">
-        <form class="form" action="/sessions" accept-charset="UTF-8" method="post">
-            <input name="utf8" type="hidden" value="✓">
-            <input type="hidden" name="authenticity_token" value="Vhq1QKNC3jbYHmzUeT3hzKmn/HNl7cFvA0E7fTzbhUZpPO0yVRZjJSwIMLruHmtuLcff99/WiFrQrq5hBZ0tWA==">
+<div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-            <label for="session_username" class="sr-only">Username</label>
-            <input autofocus="autofocus" placeholder="Your Username" type="text" name="session[username]" id="session_username" class="form-control" required="">
-
-            <label for="session_password" class="sr-only">Password</label>
-            <input type="password" class="form-control" name="session[password]" id="session_password" placeholder="Your Password" reaquired="">
-
-            <div class="form-control-static">
-                <a href="/password_resets/new">forgotten password?</a>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h2 class="modal-title" id="myModalLabel">Please Sign In</h2>
             </div>
 
-            <div class="checkbox">
-                <label>
-                    <input value="0" type="checkbox" name="session[remember_me_token]">
-                    <input value="1" type="checkbox" checked="checked" name="session[remember_me_token]" id="session_remember_me_token">
-                    <span class="add-on"> Remember me until logout; on this computer.</span>
-                </label>
-            </div>
-            <button type="submit" name="commit" class="submit btn-default btn-block">Sign in</button>
-        </form></section>
 
-</div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="well">
+                            <%= form_tag( url_for(sessions_path),  class: 'modal-form', :authenticity_token => true  ) do |f| %>
+
+                                <div class="form-group has-feedback">
+                                    <label for="session_username" class="sr-only">Username</label>
+                                    <input autofocus="autofocus" placeholder="Your Username" type="text" name="session[username]" id="session_username" class="form-control" required>
+                                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                                </div>
 
 
-<div class="row">
-    <a data-toggle="modal" data-target="#login">
-        Login
-    </a>
+                                <div class="form-group has-feedback">
+                                    <label for="session_password" class="sr-only">Password</label>
+                                    <input type="password" class="form-control" name="session[password]" id="session_password" placeholder="Your Password" required>
+                                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                                </div>
 
-    <!-- Modal Login -->
-    <form id="logingform" action="/" method="post">
-        <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Login</h4>
-                    </div>
 
-                    <div class="modal-body">
-                        <div class="form-group has-feedback">
-                            <label class="control-label">Email Address</label>
-                            <input type="email" class="form-control" id="inputSuccess2" aria-describedby="inputSuccess2Status" placeholder="Email">
-                            <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                                <div class="form-control-static">
+                                    <a href="/password_resets/new">forgotten password?</a>
+                                </div>
+
+                                <div class="checkbox">
+                                    <label>
+                                        <input value="0" type="checkbox" name="session[remember_me_token]">
+                                        <input value="1" type="checkbox" checked="checked" name="session[remember_me_token]" id="session_remember_me_token">
+                                        <span class="add-on"> Remember me.</span>
+                                    </label>
+                                </div>
+
+                                <button type="submit" name="commit" class="submit btn-default btn-block">Sign in</button>
+
+                            <% end %>
                         </div>
-
-                        <div class="form-group has-feedback">
-                            <label class="control-label">Password</label>
-                            <input type="password" class="form-control" id="inputSuccess2" aria-describedby="inputSuccess2Status" placeholder="Password">
-                            <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-                        </div>
-
-                        <button type="button" class="btn btn-primary">Login</button>
-                        <input type="checkbox" value="rememberme" id="rememberme">Remember me <br/><br/>
-
-                        <a href="#">Forgot your password?</a>
-
                     </div>
-
-                    <div class="modal-footer">
-                        <h4 class="modal-title" id="myModalLabel">Register</h4>
-                        If you are not an existing member of this site you can <a data-toggle="modal" data-target="#becomeamember" data-dismiss="modal"> register here</a>
-                        <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>-->
-                    </div>
-
                 </div>
             </div>
-        </div><!-- end become a member modal -->
-    </form> <!-- end login form -->
 
+        </div>
+
+    </div>
 </div>
 
-
-<!-- A Model with form inside -->
-<%# Rating DNB Modal %>
-<div id="rating-modal-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="rating-modal-label" aria-hidden="true">
-    <%= form_tag comm_auto.page_service_autos_path(), :id => "rating-modal-form", :class => "modal-form form-horizontal novalidate", :novalidate => true, :remote => false, :method => :post, :multipart => :true do %>
-        <div class="modal-header">
-            <h2 id="rating-modal-label" class="text-left">Do Not Bind Status Triggers</h2>
-            <input class="hidden" name="submitted_by" type="hidden" value="rating_modal"/>
-            <input class="hidden" name="selected_value" type="hidden" value="none"/>
-            <input class="hidden" id="policy-id" name="policy_id" type="hidden" value="<%= policy_id %>"/>
-            <input class="hidden" id="message-id" name="message" type="hidden" value="<%= message %>"/>
-        </div>
-        <div id="rating-modal-body" class="modal-body">
-            <fieldset id="rating-modal-message">
-                <div class="alert text-center" style="width: 100%;"><strong><%= message %></strong></div>
-            </fieldset>
-            <fieldset>
-                <%= render(:partial => "do_not_bind_modal_element") %>
-            </fieldset>
-        </div>
-        <div id="rating-error-message" class="modal-footer">
-            <%= button_tag "Acknowledge & Close", type: :submit, value: "rating-modal", class: "btn btn-primary", id: "rating-ack-button" %>
-        </div>
-    <% end %>
-</div>

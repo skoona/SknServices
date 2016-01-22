@@ -47,6 +47,7 @@ module Secure
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
+        # puts e.backtrace
         nil
       end
       # Warden calls this
@@ -100,31 +101,31 @@ module Secure
     end
 
     def has_access? (resource_uri, options=nil)
-      opts = (options ? options : proxy_u.user_options)
+      opts = (options ? options : user_options)
       rc = Secure::AccessRegistry.check_access_permissions?( self.combined_access_roles, resource_uri, opts)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_create? (resource_uri, options=nil)
-      opts = (options ? options : proxy_u.user_options)
+      opts = (options ? options : user_options)
       rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "CREATE", opts)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_read? (resource_uri, options=nil)
-      opts = (options ? options : proxy_u.user_options)
+      opts = (options ? options : user_options)
       rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "READ", opts)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_update? (resource_uri, options=nil)
-      opts = (options ? options : proxy_u.user_options)
+      opts = (options ? options : user_options)
       rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "UPDATE", opts)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc
     end
     def has_delete? (resource_uri, options=nil)
-      opts = (options ? options : proxy_u.user_options)
+      opts = (options ? options : user_options)
       rc = Secure::AccessRegistry.check_role_permissions?( self.combined_access_roles, resource_uri, "DELETE", opts)
       Rails.logger.debug("#{self.class.name}.#{__method__}(#{rc ? 'True':'False'}) #{resource_uri} #{opts}")
       rc

@@ -258,7 +258,7 @@ content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) pr
 [jscott@iMac AuthService]$
 
 
-==Multilevel :page_actions Prefferred
+==Multilevel :page_actions Preferred
 <div class="container">
     <div class="row">
         <h2>Multi level dropdown menu in Bootstrap 3 with Hover</h2>
@@ -315,6 +315,7 @@ content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) pr
                 <li><a href="#">Second level</a></li>
             </ul>
         </li>
+
     </ul>
 </div>
 

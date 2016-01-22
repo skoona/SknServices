@@ -9,19 +9,27 @@ module Secure
 
     include Secure::UserAccessControl
 
-    attr_accessor :id, :person_authenticated_key, :last_access
+    attr_accessor :id, :person_authenticated_key, :last_access, :name, :user_options, :assigned_groups, :assigned_roles, :username, :email, :roles
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
-    singleton_class.send :delegate, :find_by, :find_each, :where, :remember_token, :username, :to => ::User
+    singleton_class.send :delegate, :find_by, :find_each, :where, :to => ::User
 
     ##
     # Initialize with a user_object only
     def initialize(user)
         raise(Utility::Errors::NotFound, "UserProfile Requires a instance from the Users model.") if user.nil?
       @user_object = user
-      @person_authenticated_key = user[:person_authenticated_key]
-      @id = @user_object.id
       @last_access = Time.now
+
+      # @id = user.id
+
+      [:@id, :@person_authenticated_key, :@assigned_roles,
+       :@name, :@user_options, :@assigned_groups, :@username,
+       :@email, :@roles].each do |k|
+        instance_variable_set(k, nil)
+        instance_variable_set(k, user.send(k.to_s[1..-1].to_sym) )
+      end
+
       setup_combined_user_roles()
     end
 
@@ -35,6 +43,10 @@ module Secure
     end
     def proxy_c
       @user_object.class
+    end
+
+    def display_name
+      @name
     end
 
     # Authenticate returns self, we need to override that return value to return us instead
@@ -69,13 +81,13 @@ module Secure
       return @combined_user_roles if @combined_user_roles.present?
       rc = false
       role = []
-      role = proxy_u[:assigned_groups].map do |rg|
+      role = assigned_groups.map do |rg|
         UserGroupRole.list_user_roles(rg)
       end
       if role.present?
-        role += proxy_u[:assigned_roles]
-        role += proxy_u[:assigned_groups]
-        @combined_user_roles = proxy_u[:roles] = role.flatten.uniq
+        role += assigned_roles
+        role += assigned_groups
+        @combined_user_roles = roles = role.flatten.uniq
         rc = true
       end
       Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{@combined_user_roles.present? ? 'True' : 'False'}) Persisted=#{rc} #{}Roles=#{@combined_user_roles.length}")
@@ -84,7 +96,7 @@ module Secure
 
     # Return all Roles
     def combined_access_roles
-      @combined_user_roles ||= (proxy_u.roles || [])
+      @combined_user_roles ||= (roles || [])
     end
 
 
@@ -99,6 +111,10 @@ module Secure
 
     # Easier to code than delegation, or forwarder
     def method_missing(method, *args, &block)
+      Rails.logger.debug("Secure::UserProfile#method_missing() looking for: #{method.to_s}")
+      # puts("  #{self.name.to_s}.#{__method__} looking for: #{method.to_s}")   # ToDo: No internal methods (__method__) in method missing
+      # puts("  UserProfile#method_missing() looking for: #{method.to_s}")
+
       if @user_object.respond_to?(method)
         block_given? ? @user_object.send(method, *args, block) :
             (args.size == 0 ?  @user_object.send(method) : @user_object.send(method, *args))
@@ -140,4 +156,4 @@ end # end Secure
 #  "person_authenticated_key",
 #  "assigned_roles",
 #  "remember_token_digest",
-#  "last_login"]
+# ]

@@ -11,6 +11,59 @@
 # [{},{}]    = Two Items
 # [{},{},[{},{}]]
 #
+# Parm List
+# [
+#     { // Header Only
+#         header: any_true_value,                    # Exclusive: :id, :divider, & :text allowed
+#         divider: any_true_value,                   # optional
+#         id: "test-action",                         # optional
+#         text: "I am a Header"                      # optional
+#     },
+#     { // Divider Only
+#         divider: true,                             # Required
+#         id: "test-action"                          # optional
+#     },
+#     { // Regular Dropdown Entry
+#         id: "test-action",
+#         path: :home_pages_path,
+#         text: "Refresh",
+#     },
+#     { // Fully Dressed Entry
+#         divider: any_true_value,
+#         id: "test-action",
+#         path: :home_pages_path,
+#         text: "Refresh",
+#         icon: 'glyphicon-refresh',
+#         html_options: {
+#             class: 'something',
+#             method: 'get',
+#             data: {
+#                 target: '#',
+#                 package: []
+#             }
+#         }
+#     },...
+
+# Full Syntax
+# [
+#     {
+#         header: any_true_value,                    # Exclusive: :id, :divider, & :text allowed
+#         divider: any_true_value,                   # includes with :header, or others
+#         id: "test-action",
+#         path: :home_pages_path,                    # see page_action_paths for full parm-list
+#         text: "Refresh",
+#         icon: 'glyphicon-refresh',
+#         html_options: {
+#             class: 'something',
+#             method: 'get',
+#             data: {
+#                 target: '#',
+#                 package: []
+#             }
+#         }
+#     },...
+# ]
+
 ## usage
 # page_actions = []
 # page_actions << {
@@ -47,37 +100,93 @@ class PageActionsBuilder
 
   def generate
 
+    return @service.raw(build_single(@bundle)) if bundle.one?
+
+    html = @bundle.each_with_object('') do |item, results|
+      case item
+        when Hash
+          results.concat( build_single(item) )
+        when Array
+          results.concat( build_menu(item) )
+        else
+          ""
+      end
+    end
+    # prepare_options
+    #   call build_single
+    #   call build_menu (if item == Array call build_submenu)
+    #   call build_submenu (if item == Array call build_submenu/re-entrant)
+    @service.raw( html.join() )
+  end
+  def prepare_options(params={})
+    # fixup named routes
+    params[:path] = page_action_paths(params[:path]) if params[:path]
+    {
+        html_options: params.delete(:html_options),
+        control:  params   # should|could include [:header, :divider, :id, :path, :text, :icon ]
+    }
   end
 
+  def build_single(params=[])
+    opts = prepare_options(item)
+    build_menu_html(opts)
+  end
+  def build_menu(params=[])
+  end
+  def build_submenu(params=[])
+  end
 
-  def build_menu_html(control, text, path, html_options)
-    case control
+  def build_menu_html(params)
+    opts = prepare_options(params)
+    type = nil
+    type = :li_header if opts[:control][:header]
+    type = :li_divider if type.nil? or opts[:control][:li_divider]
+
+    case type
       when :li_header
-        content_tag(:li, content_tag(:span, text), html_options)
+        opts[:html_options][:class] = opts[:html_options][:class] + " dropdown-header"
+        content_tag(:li, content_tag(:span, opts[:control][:text]), opts[:html_options])
         #
       when :li_divider
-        content_tag(:li,nil,class: "divider")
-        #
-      when :li_icon
-        content_tag(:li) do
-          content_tag(:span, class: "glyphicon") +
-            content_tag(:a, text, html_options )
-        end
-        #
-      when :li_icon_post
-        content_tag(:li) do
-          content_tag(:a, text, html_options ) +
-            content_tag(:span, class: "glyphicon")
-        end
-        #
-      when :li_text_only
-        content_tag(:li, content_tag(:span, text, html_options))
-        #
-      when :li_submenu
+        opts[:html_options][:class] = opts[:html_options][:class] + " divider"
+        content_tag(:li,nil,opts[:html_options])
         #
       else
-        # no-op
+        content_tag(:li, content_tag(:span, text, html_options))
+        #
     end
+  end
+
+  ### Converts named routes to string
+  #  Basic '/some/hardcoded/string/path'
+  #        '[:named_route_path]'
+  #        '[:named_route_path, {options}]'
+  #        '[:named_route_path, {options}, '?query_string']'
+  #
+  # Advanced ==> {engine: :demo, path: :demo_profiles_path, options: {id: 111304}, query: '?query_string'}
+  #              {engine: , path: , options: {}, query: ''}
+  def page_action_paths(paths)
+    case paths
+      when Array
+        case paths.size
+          when 1
+            send( paths[0] )
+          when 2
+            send( paths[0], paths[1] )
+          when 3
+            rstr = send( paths[0], paths[1] )
+            rstr + paths[2]
+        end
+
+      when Hash
+        rstr = send(paths[:engine]).send(paths[:path], paths.fetch(:options,{}) )
+        rstr + paths.fetch(:query, '')
+
+      when String
+        paths
+    end
+  rescue
+    '#page_action_error'
   end
 
 end
