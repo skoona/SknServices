@@ -352,7 +352,7 @@ RESPONSE: {
     * Should Authorize a full menu, removing non-authorized items at Warden's :after_authentication callback
     * Cache itself to Session or ObjectStore via Controller before_action/After_action
     * Have a flexible initialization Hash, that specifies all levels including submenus
-2. Create a PageAction Class View Class
+2. Create a PageAction Class View Class: DONE 1/20/2016
     * Should generate on-demand based on presence of :page_actions key's presence in @page_controls
     * Should handle sub-menus, headers, icons, and dividers.
     * Should resolve router path and url symbols, with all options (:id, :text:, and :html_options)

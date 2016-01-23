@@ -43,6 +43,7 @@
 #             }
 #         }
 #     },...
+# ]
 
 # Full Syntax
 # [
@@ -88,7 +89,7 @@ class PageActionsBuilder
     @left_align = left_align
   end
 
-  delegate(:content_tag, :tag, :action_name, :h, :link_to, to: :view)
+  delegate(:content_tag, :tag, :h, :link_to, to: :view)
 
 
   def to_s
@@ -138,8 +139,8 @@ class PageActionsBuilder
 
 
   def build_submenu(params=[])
-    content_tag(:li, class: "dropdown-submenu") do
-      html = content_tag(:a, '#', {tabindex: "-1"}) do
+    content_tag(:li, class: "dropdown-submenu", role: 'menu') do
+      html = content_tag(:a, '#', {href: "#", class: "btn", role: "button", data: {toggle: 'dropdown', target: '#'}}) do
         text = (params.first.key?(:header) ? params.first[:header] : "More ")
         params.first.delete(:header) unless !text.eql?("More")
         content_tag(:span, text)
@@ -167,7 +168,7 @@ class PageActionsBuilder
               stuffs += tag(:span, class: 'caret')
               stuffs.html_safe
         end
-        html += content_tag(:ul, {class: 'dropdown-menu multi-level', role: 'menu'}) do
+        html += content_tag(:ul, {class: 'dropdown-menu', role: 'menu'}) do
               results = ""
               params.each do |item|
                 item.is_a?(Array) ?
@@ -271,7 +272,7 @@ end
 #       <span>Actions</span>
 #       <span class="caret" />
 #     </a>
-#     <ul class="dropdown-menu multi-level" role="menu">
+#     <ul class="dropdown-menu" role="menu">
 #       <li>
 #         <a data-samples="test data" href="/profiles/manage_content_profiles">
 #           <span class="glyphicon glyphicon-refresh"></span>&nbsp;
@@ -301,50 +302,28 @@ end
 #   </div>
 # </div>
 #
+
 #
 # Multi-Level Dropdown (Nested)
 #
-# <div class="pull-left">
+# <div class="pull-right">
 #   <div class="dropdown" role="group">
 #     <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" class="btn btn-primary" href="#">
 #       <span>Actions</span>
 #       <span class="caret" />
 #     </a>
-#     <ul class="dropdown-menu multi-level" role="menu">
-#       <li>
-#         <a data-samples="test data" href="/profiles/manage_content_profiles">
-#           <span class="glyphicon glyphicon-refresh"></span>&nbsp;
-#           <span>Refresh</span>
-#         </a>
-#       </li>
+#     <ul class="dropdown-menu" role="menu">
+#       <li class="dropdown-header"><span>I am a Header</span></li>
 #       <li class="divider"></li>
-#       <li class="dropdown-header">
-#         <span>Header Test</span>
-#       </li>
-#       <li>
-#         <a href="/profiles/manage_content_profiles">
-#           <span>Refresh 2</span>
+#       <li><a href="/profiles/manage_content_profiles"><span>Refresh</span></a></li>
+#       <li><a class="something" data-target="#" data-package="[&quot;someData&quot;]" data-method="get" href="/profiles/manage_content_profiles"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></a></li>
+#       <li class="divider" />
+#       <li class="dropdown-submenu" role="menu">
+#         <a href="#" class="btn" role="button" data-toggle="dropdown" data-target="#">
+#           <span>Rspec Testing</span>
 #         </a>
-#       </li>
-#       <li>
-#         <a href="/profiles/manage_content_profiles">
-#           <span>Refresh 3</span>
-#         </a>
-#       </li>
-#       <li>
-#         <a href="/profiles/manage_content_profiles">
-#           <span>Refresh 4</span>
-#         </a>
-#       </li>
-#       <li class="dropdown-submenu">
-#         <a tabindex="-1"><span>More</span></a>
 #         <ul class="dropdown-menu" role="menu">
-#           <li>
-#             <a data-samples="test data" href="/profiles/manage_content_profiles">
-#               <span class="glyphicon glyphicon-refresh"></span>&nbsp;
-#               <span>Refresh</span>
-#             </a>
-#           </li>
+#           <li><a data-samples="test data" href="/profiles/manage_content_profiles"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></a></li>
 #         </ul>
 #       </li>
 #     </ul>

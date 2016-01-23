@@ -46,9 +46,43 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
                   }]
   }
 
+  let(:full) {[
+                { # Header Only
+                    header: true,        # Exclusive: :id, :divider, & :text allowed
+                    divider: true,       # optional
+                    id: "test-action1",            # optional
+                    text: "I am a Header"          # optional
+                },
+                { # Divider Only
+                    divider: true,                 # Required
+                    id: "test-action2"             # optional
+                },
+                { # Regular Dropdown Entry
+                    id: "test-action3",
+                    path: [:manage_content_profiles_profiles_path],
+                    text: "Refresh",
+                },
+                { # Fully Dressed Entry
+                    divider: true,       # appears after :li entry
+                    id: "test-action4",
+                    path: [:manage_content_profiles_profiles_path],
+                    text: "Refresh",
+                    icon: 'glyphicon-refresh',     # icons appear before text with seperating space
+                    html_options: {                # applied to :link_to
+                        class: 'something',
+                        method: 'get',
+                        data: {
+                            target: '#',
+                            package: ['someData']
+                        }
+                    }
+                }]
+  }
+
+
   let(:nested) {
 
-    base = [{
+    full << [{
          header: "Rspec Testing",
          id: "test-action",
          path: [:manage_content_profiles_profiles_path],
@@ -60,7 +94,6 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
              }
          }
      }]
-    basic << base
   }
 
   it "Can be initialized properly" do

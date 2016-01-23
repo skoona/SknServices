@@ -684,3 +684,52 @@ eptester Selected.
  ]
 }
 
+
+<div class="pull-left">
+    <div class="dropdown" role="group">
+        <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" class="btn btn-primary" href="#">
+            <span>Actions</span><span class="caret" />
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a data-samples="test data" href="/profiles/manage_content_profiles">
+                    <span class="glyphicon glyphicon-refresh"></span>&nbsp;
+                    <span>Refresh</span>
+                </a>
+            </li>
+            <li class="divider"></li>
+            <li class="dropdown-header">
+                <span>Header Test</span>
+            </li>
+            <li>
+                <a href="/profiles/manage_content_profiles">
+                    <span>Refresh 2</span>
+                </a>
+            </li>
+            <li>
+                <a href="/profiles/manage_content_profiles">
+                    <span>Refresh 3</span>
+                </a>
+            </li>
+            <li>
+                <a href="/profiles/manage_content_profiles">
+                    <span>Refresh 4</span>
+                </a>
+            </li>
+            <li class="dropdown-submenu" role="menu">
+                <a data-toggle="dropdown" data-target="#">
+                    <span>Rspec Testing</span>
+                    <span class="caret" />
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a data-samples="test data" href="/profiles/manage_content_profiles">
+                            <span class="glyphicon glyphicon-refresh"></span>&nbsp;
+                            <span>Refresh</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

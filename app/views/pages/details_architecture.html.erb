@@ -543,16 +543,30 @@
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#RailsViews" aria-expanded="false" aria-controls="collapseTwo">
-                        Rails Views
+                        Rails View Helpers
                     </a>
                 </h4>
             </div>
             <div id="RailsViews" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
-                    Rails Views: BootStrap, JQuery DataTables, and SimpleForms are our choice for classic erb page composition and rendering.
+                    <p>Rails Views: BootStrap, JQuery DataTables, and SimpleForms are our choice for classic erb page composition and rendering.</p>
+                    <h4>View Helpers/Builders</h4>
+                    <dl class="dl-horizontal">
+                        <dt>PageActionsBuilder</dt>
+                        <dd>
+                            <p>A Class designed to build page action dropdown menus from an array of hashes contain with keys describing each menu item.</p>
+                            <p>It is initiated by an <code>ApplicationHelper#do_page_actions</code> and assumes it input array is in either <code>@page_controls.page_actions or .package.page_actions</code>.</p>
+                            <p>In your services routine response you can add a <code>:page_actions</code> array of params, and this helper will create the classic pulldown or action button for you.</p>
+                        </dd>
+                        <dt>#page_action_paths</dt>
+                        <dd>
+                            <p>Located in <code>ApplicationHelper#page_action_paths</code>, this methods resolves named routes into strings.  You
+                            would use this method to resolve named paths for inclusion in json responses, or anywhere else you might need it.</p>
+                        </dd>
+                    </dl>
                 </div>
             </div>
-            <p>More Stuff like tables</p>
+            <p>Describes helpers we created for views.</p>
         </div>
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
