@@ -8,20 +8,20 @@
 # link_to(text, path, html_options_hash, &block)
 #         p1,   p2,   p3
 #
-# [{},{}]    = Two Items
-# [{},{},[{},{}]]
+# [{},{}]          #=> Two Items in dropdown
+# [{},{},[{},{}]]  #=> Two items in dropdown, two in second level dropdown
 #
-# Parm List
+# Params List
 # [
 #     { // Header Only
-#         header: any_true_value,                    # Exclusive: :id, :divider, & :text allowed
-#         divider: any_true_value,                   # optional
-#         id: "test-action",                         # optional
-#         text: "I am a Header"                      # optional
+#         header: any_true_value,        # Exclusive: :id, :divider, & :text allowed
+#         divider: any_true_value,       # optional
+#         id: "test-action",             # optional
+#         text: "I am a Header"          # optional
 #     },
 #     { // Divider Only
-#         divider: true,                             # Required
-#         id: "test-action"                          # optional
+#         divider: true,                 # Required
+#         id: "test-action"              # optional
 #     },
 #     { // Regular Dropdown Entry
 #         id: "test-action",
@@ -29,12 +29,12 @@
 #         text: "Refresh",
 #     },
 #     { // Fully Dressed Entry
-#         divider: any_true_value,
+#         divider: any_true_value,       # appears after :li entry
 #         id: "test-action",
 #         path: :home_pages_path,
 #         text: "Refresh",
-#         icon: 'glyphicon-refresh',
-#         html_options: {
+#         icon: 'glyphicon-refresh',     # icons appear before text with seperating space
+#         html_options: {                # applied to :link_to
 #             class: 'something',
 #             method: 'get',
 #             data: {
@@ -47,10 +47,10 @@
 # Full Syntax
 # [
 #     {
-#         header: any_true_value,                    # Exclusive: :id, :divider, & :text allowed
-#         divider: any_true_value,                   # includes with :header, or others
+#         header: any_true_value,        # Exclusive: :id, :divider, & :text allowed
+#         divider: any_true_value,       # includes with :header, or others
 #         id: "test-action",
-#         path: :home_pages_path,                    # see page_action_paths for full parm-list
+#         path: :home_pages_path,        # see page_action_paths for full parm-list
 #         text: "Refresh",
 #         icon: 'glyphicon-refresh',
 #         html_options: {
@@ -70,6 +70,11 @@
 # }
 ########
 #
+# def do_page_actions(page_controls)
+#   PageActionsBuilder.new(@page_controls..to_hash()[:page_actions], self, false).to_s
+# end
+# ####
+# See doc at bottom of this file
 ##
 
 class PageActionsBuilder
@@ -94,11 +99,12 @@ class PageActionsBuilder
 
   def prepare_options(params={})
     # fixup named routes
-    params[:path] = page_action_paths(params[:path]) if params[:path]
+    params[:path] = page_action_paths(params[:path]) if params.key?(:path)
     results = {
         html_options: params.delete(:html_options)
     }.merge(params)    # should|could include [:header, :divider, :id, :path, :text, :icon ])
     Rails.logger.debug "#{self.class.name}.#{__method__}() Results: #{results}"
+    results.delete(:html_options) if results[:html_options].nil?
     results
   end
 
@@ -117,11 +123,12 @@ class PageActionsBuilder
   #   </div>
   def build_single(params=[])
     opts = prepare_options(params.first)
+    html_options = (opts[:html_options].nil? ? {class: "btn btn-primary"} : opts[:html_options].merge(class: "btn #{opts[:html_options][:class]}") )
     content_tag(:div, class: left_align ? "pull-left" : "pull-right" ) do
       content_tag(:div, {class: 'dropdown', role: 'group'}) do
-        link_to(opts[:path], opts[:html_options] ) do
+        link_to( opts[:path], html_options )  do
           stuffs = ""
-          stuffs += tag(:span,class:"glyphicon #{opts[:icon]}" ) if opts.key?(:icon)
+          stuffs += (tag(:span,class:"glyphicon #{opts[:icon]}" ) + "&nbsp;".html_safe) if opts.key?(:icon)
           stuffs += content_tag(:span, opts[:text])
           stuffs.html_safe
         end
@@ -131,25 +138,23 @@ class PageActionsBuilder
 
 
   def build_submenu(params=[])
-    ""
-    # frame sub-menu, then loop to items
-    # <li class="dropdown-submenu">
-    content_tag(:li, class: "dropdown-menu") do
-      content_tag(:a, '#', {tabindex: "-1"}) do
-        content_tag(:ul, {class: 'dropdown-menu', role: 'menu'}) do
-          results = ""
-          params.each do |item|
-            item.is_a?(Array) ?
-                results.concat( build_submenu(item) ) :
-                results.concat( build_menu_item(item) )
-          end
-          results
-        end
+    content_tag(:li, class: "dropdown-submenu") do
+      html = content_tag(:a, '#', {tabindex: "-1"}) do
+        text = (params.first.key?(:header) ? params.first[:header] : "More ")
+        params.first.delete(:header) unless !text.eql?("More")
+        content_tag(:span, text)
       end
-    end
-    #           <a tabindex="-1" href="#">Header for 2nd Level</a>
-    #                 <ul class="dropdown-menu">
-
+      html += content_tag(:ul, {class: 'dropdown-menu', role: 'menu'}) do
+        results = ""
+        params.each do |item|
+          item.is_a?(Array) ?
+              results.concat( build_submenu(item) ) :
+                results.concat( build_menu_item(item) )
+        end
+        results.html_safe
+      end
+      html.html_safe
+    end.html_safe
   end
 
   def build_menu(params=[])
@@ -160,7 +165,7 @@ class PageActionsBuilder
                                      class: 'btn btn-primary'}) do
               stuffs = content_tag(:span, 'Actions')
               stuffs += tag(:span, class: 'caret')
-              stuffs
+              stuffs.html_safe
         end
         html += content_tag(:ul, {class: 'dropdown-menu multi-level', role: 'menu'}) do
               results = ""
@@ -169,9 +174,9 @@ class PageActionsBuilder
                     results.concat( build_submenu(item) ) :
                       results.concat( build_menu_item(item) )
               end
-              results
+              results.html_safe
         end
-        html
+        html.html_safe
       end
     end.html_safe
   end
@@ -180,10 +185,8 @@ class PageActionsBuilder
     html = ""
     opts = prepare_options(params)
     type = nil
-    type = :li_header if opts.key?(:header)
+    type = :li_header if opts.key?(:header) and opts[:html_options].nil?
     type = :li_divider if type.nil? and opts.key?(:divider) and opts[:html_options].nil?
-
-    puts "HELPS BUILD ITEM ============= #{opts}"
 
     case type
       when :li_header
@@ -196,7 +199,7 @@ class PageActionsBuilder
         html = content_tag(:li ) do
           link_to(opts[:path], opts[:html_options] ) do
             stuffs = ""
-            stuffs += tag(:span,class:"glyphicon #{opts[:icon]}" ) if opts.key?(:icon)
+            stuffs += (content_tag(:span, nil, class:"glyphicon #{opts[:icon]}" ) + "&nbsp;".html_safe) if opts.key?(:icon)
             stuffs += content_tag(:span, opts[:text])
             stuffs.html_safe
           end
@@ -204,7 +207,6 @@ class PageActionsBuilder
         html += tag(:li,class: "divider") if opts.key?(:divider)
         html
     end.html_safe
-
   end
 
   ### Converts named routes to string
@@ -213,8 +215,12 @@ class PageActionsBuilder
   #        '[:named_route_path, {options}]'
   #        '[:named_route_path, {options}, '?query_string']'
   #
-  # Advanced ==> {engine: :demo, path: :demo_profiles_path, options: {id: 111304}, query: '?query_string'}
-  #              {engine: , path: , options: {}, query: ''}
+  # Advanced ==> {engine: :demo,
+  #               path: :demo_profiles_path,
+  #               options: {id: 111304},
+  #               query: '?query_string'
+  #              }
+  #              {engine: :sym, path: :sym , options: {}, query: ''}
   def page_action_paths(paths)
     case paths
       when Array
@@ -241,126 +247,106 @@ class PageActionsBuilder
 
 end
 
-# StandAlone Button
-
-#<div class="pull-right">
+###########################################################################
+#  Generated by rspec test $ rpsec spec/views/page_action_builder_spec.rb
+# #########################################################################
+#
+# No Dropdown, just one action button
+#
+#<div class="pull-left">
 #   <div class="dropdown" role="group">
-#       <a id="dLabel" role="button" class="btn btn-primary" href="/pages/home">
-#           <span class="glyphicon glyphicon-home"></span>
-#           <span>Actions</span>
-#           <span class="glyphicon glyphicon-cog"></span>
-#       </a>
+#     <a data-samples="test data" class="btn btn-primary " href="/profiles/manage_content_profiles">
+#       <span class="glyphicon glyphicon-refresh" />&nbsp;
+#       <span>Refresh</span>
+#     </a>
 #   </div>
-#</div>
-
-
-# Regular Dropdown Menu
-
-#<div class="dropdown">
-#   <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="#">
+# </div>
+#
+#
+# Single Level Dropdown (Single)
+#
+#<div class="pull-left">
+#   <div class="dropdown" role="group">
+#     <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" class="btn btn-primary" href="#">
 #       <span>Actions</span>
-#       <span class="caret"></span>
-#   </a>
-#   <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+#       <span class="caret" />
+#     </a>
+#     <ul class="dropdown-menu multi-level" role="menu">
 #       <li>
-#           <a href="#">First level</a>
-#       </li>
-#       <li>
-#           <a href="#">First Level</a>
+#         <a data-samples="test data" href="/profiles/manage_content_profiles">
+#           <span class="glyphicon glyphicon-refresh"></span>&nbsp;
+#           <span>Refresh</span>
+#         </a>
 #       </li>
 #       <li class="divider"></li>
 #       <li class="dropdown-header">
-#           <span>TEXT</span>
+#         <span>Header Test</span>
 #       </li>
 #       <li>
-#           <a href="#">First Level</a>
-#       </li>
-#   </ul>
-#</div>
-
-
-# Multi Level Dropdown Menu
-
-#<div class="dropdown">
-#   <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="#">
-#       Actions
-#       <span class="caret"></span>
-#   </a>
-#   <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-#       <li>
-#           <a href="#">First level</a>
+#         <a href="/profiles/manage_content_profiles">
+#           <span>Refresh 2</span>
+#         </a>
 #       </li>
 #       <li>
-#           <a href="#">First Level</a>
+#         <a href="/profiles/manage_content_profiles">
+#           <span>Refresh 3</span>
+#         </a>
+#       </li>
+#       <li>
+#         <a href="/profiles/manage_content_profiles">
+#           <span>Refresh 4</span>
+#         </a>
+#       </li>
+#     </ul>
+#   </div>
+# </div>
+#
+#
+# Multi-Level Dropdown (Nested)
+#
+# <div class="pull-left">
+#   <div class="dropdown" role="group">
+#     <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" class="btn btn-primary" href="#">
+#       <span>Actions</span>
+#       <span class="caret" />
+#     </a>
+#     <ul class="dropdown-menu multi-level" role="menu">
+#       <li>
+#         <a data-samples="test data" href="/profiles/manage_content_profiles">
+#           <span class="glyphicon glyphicon-refresh"></span>&nbsp;
+#           <span>Refresh</span>
+#         </a>
 #       </li>
 #       <li class="divider"></li>
 #       <li class="dropdown-header">
-#           <a href="#">First Level</a>
+#         <span>Header Test</span>
 #       </li>
-#       <li class="dropdown-header">
-#           TEXT
+#       <li>
+#         <a href="/profiles/manage_content_profiles">
+#           <span>Refresh 2</span>
+#         </a>
 #       </li>
-
+#       <li>
+#         <a href="/profiles/manage_content_profiles">
+#           <span>Refresh 3</span>
+#         </a>
+#       </li>
+#       <li>
+#         <a href="/profiles/manage_content_profiles">
+#           <span>Refresh 4</span>
+#         </a>
+#       </li>
 #       <li class="dropdown-submenu">
-#           <a tabindex="-1" href="#">Header for 2nd Level</a>
-
-#           <ul class="dropdown-menu">
-#               <li>
-#                   <a tabindex="-1" href="#">2 level</a>
-#               </li>
-
-#               <li class="dropdown-submenu">
-#                   <a href="#">Header to 3rd Level</a>
-#                   <ul class="dropdown-menu">
-#                       <li><a href="#">3rd level</a></li>
-#                       <li><a href="#">3rd level</a></li>
-#                   </ul>
-#               </li>
-
-#               <li><a href="#">2nd level</a></li>
-#               <li><a href="#">2nd level</a></li>
-#           </ul>
+#         <a tabindex="-1"><span>More</span></a>
+#         <ul class="dropdown-menu" role="menu">
+#           <li>
+#             <a data-samples="test data" href="/profiles/manage_content_profiles">
+#               <span class="glyphicon glyphicon-refresh"></span>&nbsp;
+#               <span>Refresh</span>
+#             </a>
+#           </li>
+#         </ul>
 #       </li>
-#   </ul>
-#</div>
-
-
-#<div class="dropdown">
-#   <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="#">
-#       Actions
-#       <span class="caret"></span>
-#   </a>
-#   <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-#       <li><a href="#">First level</a></li>
-#       <li><a href="#">First Level</a></li>
-#       <li class="divider"></li>
-#       <li class="dropdown-header">
-#           <a href="#">First Level</a>
-#       </li>
-#       <li class="dropdown-header">
-#           TEXT
-#       </li>
-
-#       <li class="dropdown-submenu">
-#           <a tabindex="-1" href="#">Header for 2nd Level</a>
-
-#           <ul class="dropdown-menu">
-#               <li>
-#                   <a tabindex="-1" href="#">2 level</a>
-#               </li>
-
-#               <li class="dropdown-submenu">
-#                   <a href="#">Header to 3rd Level</a>
-#                   <ul class="dropdown-menu">
-#                       <li><a href="#">3rd level</a></li>
-#                       <li><a href="#">3rd level</a></li>
-#                   </ul>
-#               </li>
-
-#               <li><a href="#">2nd level</a></li>
-#               <li><a href="#">2nd level</a></li>
-#           </ul>
-#       </li>
-#   </ul>
-#</div>
-
+#     </ul>
+#   </div>
+# </div>

@@ -29,7 +29,9 @@ module Secure
 
     def remove_from_store(key, context=CDEFAULT)
       store_key = "#{context}.#{key.to_s}".to_sym
-      @objects_storage_container.key?(store_key) ? @objects_storage_container.delete(store_key).first : nil
+      rc = @objects_storage_container.key?(store_key) ? @objects_storage_container.delete(store_key).first : nil
+      Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
+      rc
     end
 
     # Remove all entries more than two days old
@@ -45,18 +47,22 @@ module Secure
           false
         end
       end
+      Rails.logger.debug "#{self.class.name}.#{__method__}() Count=#{counter}"
       counter
     end
 
     def add_to_store(key, object, context=CDEFAULT)
       store_key = "#{context}.#{key.to_s}".to_sym
       @objects_storage_container.update({store_key => [object, Time.now.to_i]})
+      Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
       true # prevent return of full hash
     end
 
     def get_stored_object(key, context=CDEFAULT)
       store_key = "#{context}.#{key.to_s}".to_sym
-      @objects_storage_container.key?(store_key) ? @objects_storage_container[store_key].first : nil
+      rc = @objects_storage_container.key?(store_key) ? @objects_storage_container[store_key].first : nil
+      Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
+      rc
     end
 
     def has_storage_key?(key, context=CDEFAULT)
@@ -89,6 +95,7 @@ module Secure
           results << {parts[1].to_sym => v.first.username}
         end
       end
+      Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Results=#{results}"
       results
     end
 

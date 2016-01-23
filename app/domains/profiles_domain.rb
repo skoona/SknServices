@@ -191,14 +191,11 @@ class ProfilesDomain < ::Factory::DomainsBase
         message: 'Page Not Implemented!',
         user_package: managable_page_users,
         page_actions: [{
-                           id: "test-action",
-                           path: :manage_content_profiles_profiles_path,
-                           text: "Refresh",
-                           icon_klass: 'glyphicon-refresh',
-                           data: {
-                               samples: 'test data'
-                           }
-                       }],
+           id: "test-action",
+           path: :manage_content_profiles_profiles_path,
+           text: "Refresh",
+           icon: 'glyphicon-refresh',
+        }],
         package: []
     }
   rescue Exception => e

@@ -70,9 +70,9 @@ module ApplicationHelper
 
   def do_page_actions
     if @page_controls and @page_controls.package? and @page_controls.package.page_actions?
-      render :partial => "shared/page_actions", :locals  => { :page_actions => @page_controls.package.page_actions }
+      PageActionsBuilder.new(@page_controls.package.to_hash()[:page_actions], self, false).to_s
     elsif @page_controls and @page_controls.page_actions?
-      render :partial => "shared/page_actions", :locals  => { :page_actions => @page_controls.page_actions }
+      PageActionsBuilder.new(@page_controls.to_hash()[:page_actions], self, false).to_s
     end
   end
 

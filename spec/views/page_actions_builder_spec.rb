@@ -32,7 +32,8 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
                   },{
                        divider: true
                   },{
-                       header: true
+                       header: true,
+                       text: "Header Test"
                   },{
                        path: [:manage_content_profiles_profiles_path],
                        text: "Refresh 2",
@@ -45,7 +46,22 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
                   }]
   }
 
-  let(:nested) { basic << basic }
+  let(:nested) {
+
+    base = [{
+         header: "Rspec Testing",
+         id: "test-action",
+         path: [:manage_content_profiles_profiles_path],
+         text: "Refresh",
+         icon: 'glyphicon-refresh',
+         html_options: {
+             data: {
+                 samples: 'test data'
+             }
+         }
+     }]
+    basic << base
+  }
 
   it "Can be initialized properly" do
     expect( PageActionsBuilder.new(single, view, true )).to be
@@ -75,7 +91,7 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
   context "Builds multi level menu" do
     it "#to_s generates string output with normal specification." do
       str =  PageActionsBuilder.new(nested, view, true ).to_s
-      expect(str).to include 'Refresh 4'
+      expect(str).to include 'test data'
     end
   end
 
