@@ -60,7 +60,7 @@ The system shall offer methods to resolve:
     * by using the permission roles assigned to each authenticated user and the Secure::AccessRegistry access class.
 3. Ensure user is constrained to interact with processess or view information they were specifically authorized for!
     * by identifying the person(s) identifier, and applying their Secure::ContentProfile collection of permissions to control access to both processes and information.
-4. Have no hard Rails dependencies, and serve as a technology model building secure web applications.
+4. Have no hard Rails dependencies, and serve as a technology model for building secure web applications.
     * Outside of keeping its private tables in AR, it supplies its services independent of Rails.
     * It is assumed that user records and most displayable information is not solely housed locally in Rails; but sourced from external systems or computed.
 
@@ -71,24 +71,24 @@ The current implementation of AccessProfile contains an XML Secure::AccessRegist
 the ContentProfile.  It would do this by creating an entry for each content type uri; like:
 
 * Description => 'URI'
-*    Document Access => 'Commission/Agency/0034'
+*    Document Access => 'Commission/Agency/0024'
 * Process Constraint => 'Quoting/LicensedStates/USA'
 *         Operations => 'Notifications/Account/1003'
     
 The URI syntax thinking is A/B/C.  Where A is the content(What), B is the entity type(Who), and C is the entity identifier(Who's ID). A <userdata> field contains
-the identifiers for A content(What's IDs).  Example: Commission documents for Agency 34, where the list of document type ids is contained in userdata.  
+the identifiers for A content(What's IDs).  Example: Commission documents for Agency 24, where the list of document type ids is contained in userdata.  
 
 This translates to AccessRegistry XML like the following:
 
 ```Xml
 
 <resource secured="true" content="true">
-    <uri>Commission/Agency/0034</uri>
-    <description>Agency 34 Commision Reports in Imaging System Storage</description>
+    <uri>Commission/Agency/0024</uri>
+    <description>Agency 24 Commision Reports in Imaging System Storage</description>
     <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:[955,956,957]"</userdata>
     <permission type="READ">
         <authorizedRoles>
-            <authorizedRole options="0034">ContentProfile.Access.Agency.Commission</authorizedRole>
+            <authorizedRole options="0024">ContentProfile.Access.Agency.Commission</authorizedRole>
         </authorizedRoles>
     </permission>
 </resource>
@@ -119,7 +119,7 @@ This translates to AccessRegistry XML like the following:
 
 
 Each role would be assigned to one or more individuals via the normal assignment method.  With the
- role assigned to a user, and that user having agency '0034' in their 
+ role assigned to a user, and that user having agency '0024' in their 
 user profile options, they would be allowed to view/download commission reports for that agency, and all agency in their user profile.  
 
 Implementations of AccessProfile would evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
@@ -172,7 +172,7 @@ end
 
     AccessControl API Examples: 
       hash_result = get_resource_content_entries(user_object.agencies)
-      hash_result = get_resource_content_entry("Commission/Agency/0034", user_object.agencies)
+      hash_result = get_resource_content_entry("Commission/Agency/0024", user_object.agencies)
       
       hash_result has been standardized to be same as alternate method being proposed.
 
@@ -204,18 +204,18 @@ This is where we begin.
 ```json 
 
 {
-  "user_options":["Manager","0034","0037","0040"],
+  "user_options":["Manager","0024","0037","0040"],
   "username":"developer",
   "display_name":"Employee Primary User: Developer",
   "package":{
     "success":true,
-    "message":"AccessProfile Entries for developer:Employee Primary User: Developer Options=Manager,0034,0037,0040",
-    "user_options":["Manager","0034","0037","0040"],
+    "message":"AccessProfile Entries for developer:Employee Primary User: Developer Options=Manager,0024,0037,0040",
+    "user_options":["Manager","0024","0037","0040"],
     "accessible_content_url":"/profiles/accessible_content.json?id=access",
     "page_user":"developer",
     "access_profile":{
         "username":"developer","entries":[
-           {"user_options":["Manager","0034","0037","0040"],
+           {"user_options":["Manager","0024","0037","0040"],
             "topic_value":"PDF",
             "content_value":{"doctype":"954"},
             "content_type":"Commission",
@@ -226,8 +226,8 @@ This is where we begin.
             "username":"developer",
             "uri":"Commission/Agency/PDF"
            },
-           {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"developer","uri":"Commission/Agency/CSV"},
-           {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"developer","uri":"Experience/Agency/PDF"}
+           {"user_options":["Manager","0024","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"developer","uri":"Commission/Agency/CSV"},
+           {"user_options":["Manager","0024","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"developer","uri":"Experience/Agency/PDF"}
                                      ],
         "pak":null,
         "profile_type":"",
@@ -246,7 +246,7 @@ This is where we begin.
 ```json
 
 REQUEST:  { AccessProfile
-    "user_options":["Manager","0034","0037","0040"],
+    "user_options":["Manager","0024","0037","0040"],
     "topic_value":"PDF",
     "content_value":{"doctype":"954"},
     "content_type":"Commission",
@@ -278,7 +278,7 @@ RESPONSE: {
 ```json
 
 REQUEST: { 
-    "user_options":["Manager","0034","0037","0040"],
+    "user_options":["Manager","0024","0037","0040"],
     "topic_value":"Agency",
     "content_value":["68601","68602","68603"],
     "content_type":"Commission",
