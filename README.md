@@ -52,14 +52,17 @@ engineering challenge when it comes to handling the dynamics of Electronic Deliv
 ##Objective
 ---
 
-The system shall contribute to resolving these initial use cases:
+The system shall offer methods to resolve:
 
 1. Clearly indicate an employee, vendor, manager, customer service representative, or any business ACTORs role!
     * by identifying the person(s) using a permanent and persistent identifier from a trusted authentication source.
-2. Ensure user is authentication and that user has specific access to the requested page, api, and click-ables on that page; unless the target page is public.
+2. Ensure user is authenticated and that user has specific access to the requested page, api, and click-ables on that page; unless the target page is public.
     * by using the permission roles assigned to each authenticated user and the Secure::AccessRegistry access class.
 3. Ensure user is constrained to interact with processess or view information they were specifically authorized for!
     * by identifying the person(s) identifier, and applying their Secure::ContentProfile collection of permissions to control access to both processes and information.
+4. Have no hard Rails dependencies, and serve as a technology model building secure web applications.
+    * Outside of keeping its private tables in AR, it supplies its services independent of Rails.
+    * It is assumed that user records and most displayable information is not solely housed locally in Rails; but sourced from external systems or computed.
 
 
 ##AccessProfile i.e (Secure::AccessRegistry)
@@ -72,8 +75,8 @@ the ContentProfile.  It would do this by creating an entry for each content type
 * Process Constraint => 'Quoting/LicensedStates/USA'
 *         Operations => 'Notifications/Account/1003'
     
-The syntax thinking is A/B/C.  Where A is the content, B is the entity type, and C is the entity identifier. A <userdata> field contains
-the identifiers for A content.  Example: Commission documents for Agency 34, where the list of document type ids is contained in userdata.  
+The URI syntax thinking is A/B/C.  Where A is the content(What), B is the entity type(Who), and C is the entity identifier(Who's ID). A <userdata> field contains
+the identifiers for A content(What's IDs).  Example: Commission documents for Agency 34, where the list of document type ids is contained in userdata.  
 
 This translates to AccessRegistry XML like the following:
 
