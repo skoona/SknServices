@@ -62,8 +62,8 @@
             <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
                     <h2 id="about"><a href="#" class="btn btn-lg btn-primary" data-header="#about" data-url="rails/info/properties" data-place="#about-content">Click to Load.</a></h2>
-                    <div id="about-content" class=""></div>
                 </div>
+                <div id="about-content" class=""></div>
             </div>
         </div>
 
@@ -78,8 +78,8 @@
             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
                     <h2 id="route"><a href="#" class="btn btn-lg btn-primary" data-header="#route" data-url="rails/info/routes" data-place="#route-content">Click to Load.</a></h2>
-                    <div id="route-content" class=""></div>
                 </div>
+                <div id="route-content" class=""></div>
             </div>
         </div>
 
@@ -99,28 +99,27 @@
             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
                     <h2 id="access">Summary Listing </h2>
-                    <table class="table table-striped table-hover">
-                        <thead>
-                        <th>Index</th>
-                        <th>URI</th>
-                        <th>Description</th>
-                        <th>UserData</th>
-                        </thead>
-                        <tbody>
-
-                        <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
-                            <% next if Secure::AccessRegistry.get_resource_type(ar) %>
-                            <tr>
-                                <td><%= '%05d' % index %></td>
-                                <td><%= ar.to_s %></td>
-                                <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
-                                <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
-                            </tr>
-                        <% end %>
-                        </tbody>
-                    </table>
-
                 </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <th>Index</th>
+                    <th>URI</th>
+                    <th>Description</th>
+                    <th>UserData</th>
+                    </thead>
+                    <tbody>
+
+                    <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
+                        <% next if Secure::AccessRegistry.get_resource_type(ar) %>
+                        <tr>
+                            <td><%= '%05d' % index %></td>
+                            <td><%= ar.to_s %></td>
+                            <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
+                            <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="panel panel-default">
@@ -135,28 +134,27 @@
             <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
                     <h2 id="access">Summary Listing </h2>
-                    <table class="table table-striped table-hover">
-                        <thead>
-                        <th>Index</th>
-                        <th>URI</th>
-                        <th>Description</th>
-                        <th>UserData</th>
-                        </thead>
-                        <tbody>
-
-                        <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
-                            <% next unless Secure::AccessRegistry.get_resource_type(ar) %>
-                            <tr>
-                                <td><%= '%05d' % index %></td>
-                                <td><%= ar.to_s %></td>
-                                <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
-                                <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
-                            </tr>
-                        <% end %>
-                        </tbody>
-                    </table>
-
                 </div>
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <th>Index</th>
+                    <th>URI</th>
+                    <th>Description</th>
+                    <th>UserData</th>
+                    </thead>
+                    <tbody>
+
+                    <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
+                        <% next unless Secure::AccessRegistry.get_resource_type(ar) %>
+                        <tr>
+                            <td><%= '%05d' % index %></td>
+                            <td><%= ar.to_s %></td>
+                            <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
+                            <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
+                        </tr>
+                    <% end %>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
