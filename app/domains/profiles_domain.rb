@@ -43,7 +43,7 @@ class ProfilesDomain < ::Factory::DomainsBase
                display_name: u.display_name,
                email: u.email,
                pak: u.person_authenticated_key,
-               authentication_provider: 'AuthService::Bcrypt',
+               authentication_provider: 'SknService::Bcrypt',
                assigned_group: u.assigned_groups,
                user_options: u.user_options,
                profile_exist: !content_profile.nil?,

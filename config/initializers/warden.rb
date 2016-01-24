@@ -329,7 +329,7 @@ end
 Warden::Manager.before_logout do |user,auth,opts|
   # puts "===============[DEBUG]:bl #{self.class}\##{__method__}"
   user.disable_authentication_controls unless user.nil?
-  auth.cookies.delete '_AuthServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
+  auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
   auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   auth.reset_session!
   auth.request.flash[:notice] = opts[:message] if opts[:message]

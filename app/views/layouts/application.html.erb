@@ -4,14 +4,14 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= content_for?(:title) ? yield(:title) : "Authorized Services" %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'Authorized Services Authentication and Authorization demo using rails 4.2' %>" />
+    <title><%= content_for?(:title) ? yield(:title) : "SknServices" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'SknServices Authentication and Authorization demo using rails 4.2' %>" />
     <meta name="author" content="systems@skoona.net"/>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => false %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => false %>
 
-    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon', href: image_path('favicon.ico') %>
+    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon', :href => image_path('favicon.ico') %>
 
     <%= yield(:head) %>
 

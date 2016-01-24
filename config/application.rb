@@ -8,7 +8,7 @@ Bundler.require(*Rails.groups)
 
 require 'java'
 
-module AuthService
+module SknService
   class Application < Rails::Application
 
     Config::Integration::Rails::Railtie.preload
@@ -33,7 +33,7 @@ module AuthService
     config.active_record.schema_format = :ruby
 
     # config.log_formatter = ActiveSupport::TaggedLogging::Formatter
-    config.log_tags = [Proc.new {Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')}, Proc.new {AuthService::Application.config.log_level.upcase}]
+    config.log_tags = [Proc.new {Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')}, Proc.new {SknService::Application.config.log_level.upcase}]
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new("#{Rails.root}/log/#{Rails.env}.log", 'daily'))
   end
 end

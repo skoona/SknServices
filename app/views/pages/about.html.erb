@@ -4,14 +4,13 @@
 <article>
     <div class="jumbotron">
         <h2 class="page-header"><%= accessed_page_name %></h2>
-        <%# <%= image_tag("AccessProfile-AccessRegistry.png", alt: "Main Path", class: "huge-image") %>
-        <%= image_tag("AuthService-PageMap.png", alt: "Main Path", class: "") %>
+        <%= image_tag("SknService-PageMap.png", alt: "Main Path", class: "") %>
     </div>
 
     <section>
         <p class="lead">
-            The Authorized Services project exists to explore Authentication and Authorization services.
-            With additional focus on content-based authorization using expanded UserProfile Permission properties.
+            The SknServices project exists to explore Authentication and Authorization services.
+            With special focus on content-based authorization using expanded UserProfile Permission properties.
         </p>
         <h4>Users must first logon before accessing a secured resource.</h4>
         <p>
@@ -46,31 +45,48 @@
             Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization outcomes.
             It first identifies access authorization to a specific business entity. Then specific access, by type, to secure objects related to that entity.
         </p>
-        <div class="panel panel-info">
-            <div class="panel-body">
-                <h5>Content-based Authorization Specification</h5>
-                <dl class="dl-horizontal">
-                    <dt>Key/Value tuple where:</dt>
-                    <dd>key is a single record for each user labeled ContentProfile.</dd>
-                    <dd>value is collection of associated ContentProfileEntry(s).</dd>
-                    <dd>Content Profiles are indentified by an unique token assigned by the authentication service.</dd>
-                    <dt>Profile: One</dt>
-                    <dd>key is an unique combination of: &lt;UUID&gt;/&lt;ProfileType&gt;</dd>
-                    <dd>value is collection of &lt;ProfileEntry&gt; the user shall access.</dd>
-                    <dd>Each User has only one of these.</dd>
-                    <dt>Profile Entry: Many</dt>
-                    <dd>key is unique combination of: &lt;ContentType&gt;/&lt;EntityType&gt;/&lt;EntityTypeOpts&gt;</dd>
-                    <dd>value is collection of &lt;ContentTypeOpts&gt; the user shall access.</dd>
-                    <dd>Each User can have many of these.</dd>
-                </dl>
-            </div>
+        <div>
+            <h4>Content-based Authorization Specification</h4>
+            <dl class="dl-horizontal">
+                <dt>Identify Person</dt>
+                <dd>
+                    <p>The authentication system will provide an active user object with a persistent UUID, which we use to relate the user to our facility.
+                    We also use the persistent ID to determine the user's title or role in our facility, where customer service rep, primary
+                    agent, or administrator could be the discovery.</p>
+                </dd>
+
+                <dt>ContentProfile</dt>
+                <dd>
+                    <p>The ContentProfile class is identified by the combination of a users persistent ID and their authentication provider.
+                    The provider is used as part of the access key because we anticipate more than one provider.  In fact today we have Domino, ActiveDirectory,
+                    and we are expecting more.</p>
+                    <p>ContentProfiles contain a collection of the users permissions in our system, called ContentProfileEntry.  Entries have three parts:</p>
+                    <ol>
+                        <li>
+                            Description of the intent.
+                        </li>
+                        <li>
+                            (Topic) Specific Business Entity related to the content. example: Account 1261, or All My Accounts
+                        </li>
+                        <li>
+                            (Content) Specific Content to be accessed, or answer to be given.  example: Commission => [1243, 1244, 1255], or LicensedStates => [Mi,In,Oh]
+                        </li>
+                    </ol>
+                </dd>
+                <dt>ContentProfile Entries</dt>
+                <dd>
+                    <p>Entries can be shared among many different users, as their focus is on the assets being protected and not the users directly. To avoid freehand text
+                    input of the content/topic values, option tables exists for both topics and content.  These option tables have been preloaded with all the relevant values, making
+                    the creation of new Content and Topic entries a simple matter of selection, while keeping the integrity and cleanliness of our information intact.</p>
+                </dd>
+            </dl>
         </div>
-        <p>
-            Secure::AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
+        <p>Secure::AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
             application to access role strings; which could be externally administered via LDAP or SQL.  The
-            Secure::AccessRegistry uses the UserProfile permissions tuples to enable Content-based authorizations; which
-            also could be administered via LDAP or SQL.
-        </p>
+            Secure::AccessRegistry is an important component of this authorization system.</p>
+        <p>The Secure::UserProfile
+            coordinates the services of the Secure::AccessRegistry and the Secure::ContentProfile to meets the needs of
+            controlled and consistent access to business information and policies.</p>
     </section>
 
 </article>

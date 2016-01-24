@@ -16,5 +16,5 @@
 //= require bootstrap-sprockets
 //= require dataTables.bootstrap
 //= require jquery.dataTables
-//= require auth-services.custom.js.erb
+//= require skn-services.custom.js.erb
 //= require_tree .

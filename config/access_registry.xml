@@ -379,11 +379,11 @@
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
-        <description>Welcome to Authorized Services</description>
+        <description>Welcome to SknServices</description>
     </resource>
     <resource secured="false">
         <uri>pages/about</uri>
-        <description>About Authorized Services</description>
+        <description>About SknServices</description>
     </resource>
     <resource secured="false">
         <uri>pages/details_architecture</uri>

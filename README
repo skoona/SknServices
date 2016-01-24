@@ -1,4 +1,4 @@
-===AuthService
+===SknService
 ---
 
 Author: James Scott <jscott@brotherhoodmutual.com>
@@ -206,7 +206,7 @@ RESPONSE: {
     }
 ```
 
-[jscott@iMac AuthService]$ rake routes
+[jscott@iMac SknService]$ rake routes
                        Prefix Verb   URI Pattern                              Controller#Action
                         users GET    /users(.:format)                         users#index
                               POST   /users(.:format)                         users#create
@@ -255,7 +255,7 @@ content_profile_demo_profiles GET    /profiles/content_profile_demo(.:format) pr
                       signout DELETE /signout(.:format)                       sessions#destroy
                        signin GET    /signin(.:format)                        sessions#new
                          root GET    /                                        pages#home
-[jscott@iMac AuthService]$
+[jscott@iMac SknService]$
 
 
 ==Multilevel :page_actions Preferred
@@ -614,7 +614,7 @@ aptester Selected.
              "message":"AccessProfile Entries for aptester:Agency Primary User Options=AgencyPrimary,0034,0037,0040"
             },
             {"success":true,
-             "content_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"Agency Super User","provider":"AuthService::Bcrypt","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"AgencyPrimary","display_name":"Agency Primary User",
+             "content_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"Agency Super User","provider":"SknService::Bcrypt","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"AgencyPrimary","display_name":"Agency Primary User",
                                 "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Agency Actions for a specific agency","user_options":["AgencyPrimary","0034","0037","0040"],"topic_value":["0038"],"description":"Determine which agency documents can be seen","content_value":["68613"],"content_type_description":"Monthly Commission Reports and Files","topic_type":"Agency"},
                                            {"username":"aptester","content_type":"Notification","topic_type_description":"Account Action again for a specific set of account","user_options":["AgencyPrimary","0034","0037","0040"],"topic_value":["Agent"],"description":"Determine which accounts will have notification sent","content_value":["AdvCancel"],"content_type_description":"Email Notification of Related Events","topic_type":"Account"}
                                           ]
@@ -635,7 +635,7 @@ eptester Selected.
  "user_options":["Manager","0034","0037","0040"],
  "assigned_group":["EmployeePrimary"],
  "email":"appdev@brotherhoodmutual.com",
- "authentication_provider":"AuthService::Bcrypt",
+ "authentication_provider":"SknService::Bcrypt",
  "display_name":"Employee Primary User",
  "profile_exist":true,
  "profile_entries":[

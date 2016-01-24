@@ -1,4 +1,4 @@
-#AuthService
+#SknService
 ---
 
 Author: James Scott <jscott@brotherhoodmutual.com>
@@ -233,7 +233,7 @@ This is where we begin.
 ## Full Application Data Model
 ---
 
-![App Data Model](app/assets/images/AuthService-DataModel.png "Application Data Model")
+![App Data Model](app/assets/images/SknService-DataModel.png "Application Data Model")
 
 
 ## ContentProfile Data Model Resulting Transactions

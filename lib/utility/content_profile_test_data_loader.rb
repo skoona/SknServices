@@ -434,7 +434,7 @@ module Utility
         next if 'VendorSecondary'.eql?( u.assigned_groups.first )
         rec = ContentProfile.new
         rec.person_authentication_key = u.person_authenticated_key
-        rec.authentication_provider = 'AuthService::Bcrypt'
+        rec.authentication_provider = 'SknService::Bcrypt'
         rec.username = u.username
         rec.display_name = u.display_name
         rec.email = u.email

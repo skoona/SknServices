@@ -19,15 +19,15 @@ defaults: &defaults
   host: <%= Settings.PostgreSQL.host %>
 
 development:
-  database: AuthServices_development
+  database: SknServices_development
   <<: *defaults
 
 test: &test
-  database: AuthServices_test
+  database: SknServices_test
   <<: *defaults
 
 production:
-  database: AuthServices_production
+  database: SknServices_production
   <<: *defaults
 
 
