@@ -180,7 +180,7 @@ end
 ##ContentProfile (i.e. The preferred Approach )
 ---
 
-![ContentProfile](app/assets/images/AccessProfile-AccessRegistry.png "ContentProfile")
+![ContentProfile](app/assets/images/SknService-ContentModelOnly.png "ContentProfile")
 
 An alternate approach would be to use a specifically implemented ContentProfile. Capable of encoding
 a persons privileges across a reasonable spectrum of content types.  This can be accomplished with
