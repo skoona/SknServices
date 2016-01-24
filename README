@@ -153,17 +153,17 @@ Needs to be re-written
 ## Ajax Transaction
 
 ```
-Parameters: {"id"=>"content", "user_options"=>["AgencyPrimary", "0034", "0037", "0040"], "topic_value"=>"Agency", "content_value"=>["68601", "68602", "68603"], "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files", "topic_type"=>"Agency", "topic_type_description"=>"Agency Actions", "description"=>"Determine which agency documents can be seen", "username"=>"aptester"}
+Parameters: {"id"=>"content", "user_options"=>["BranchPrimary", "0034", "0037", "0040"], "topic_value"=>"Branch", "content_value"=>["68601", "68602", "68603"], "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files", "topic_type"=>"Branch", "topic_type_description"=>"Branch Actions", "description"=>"Determine which branch documents can be seen", "username"=>"aptester"}
 
 REQUEST: { ContentProfile
     "user_options":["Manager","0034","0037","0040"],
-    "topic_value":"Agency",
+    "topic_value":"Branch",
     "content_value":["68601","68602","68603"],
     "content_type":"Commission",
     "content_type_description":"Monthly Commission Reports and Files",
-    "topic_type":"Agency",
-    "topic_type_description":"Agency Actions",
-    "description":"Determine which agency documents can be seen",
+    "topic_type":"Branch",
+    "topic_type_description":"Branch Actions",
+    "description":"Determine which branch documents can be seen",
     "username":"developer"
     }
 RESPONSE: {
@@ -179,17 +179,17 @@ RESPONSE: {
               ]
     }
 
-Parameters: {"id"=>"access", "user_options"=>["AgencyPrimary", "0034", "0037", "0040"], "topic_value"=>"PDF", "content_value"=>{"doctype"=>"954"}, "content_type"=>"Commission", "content_type_description"=>"Agency Commission Statements", "topic_type"=>"Agency", "topic_type_description"=>"Agency Commission Statements", "description"=>"Agency Commission Statements", "uri"=>"Commission/Agency/PDF", "username"=>"aptester"}
+Parameters: {"id"=>"access", "user_options"=>["BranchPrimary", "0034", "0037", "0040"], "topic_value"=>"PDF", "content_value"=>{"doctype"=>"954"}, "content_type"=>"Commission", "content_type_description"=>"Branch Commission Statements", "topic_type"=>"Branch", "topic_type_description"=>"Branch Commission Statements", "description"=>"Branch Commission Statements", "uri"=>"Commission/Branch/PDF", "username"=>"aptester"}
 REQUEST:  { AccessProfile
     "user_options":["Manager","0034","0037","0040"],
     "topic_value":"PDF",
     "content_value":{"doctype":"954"},
     "content_type":"Commission",
-    "content_type_description":"Agency Commission Statements",
-    "topic_type":"Agency",
-    "topic_type_description":"Agency Commission Statements",
-    "description":"Agency Commission Statements",
-    "uri":"Commission/Agency/PDF",
+    "content_type_description":"Branch Commission Statements",
+    "topic_type":"Branch",
+    "topic_type_description":"Branch Commission Statements",
+    "description":"Branch Commission Statements",
+    "uri":"Commission/Branch/PDF",
     "username":"developer"
     }
 RESPONSE: {
@@ -499,15 +499,15 @@ Every User produces the following json object.
             "topic_value":"PDF",
             "content_value":{"doctype":"954"},
             "content_type":"Commission",
-            "content_type_description":"Agency Commission Statements",
-            "topic_type":"Agency",
-            "topic_type_description":"Agency Commission Statements",
-            "description":"Agency Commission Statements",
+            "content_type_description":"Branch Commission Statements",
+            "topic_type":"Branch",
+            "topic_type_description":"Branch Commission Statements",
+            "description":"Branch Commission Statements",
             "username":"developer",
-            "uri":"Commission/Agency/PDF"
+            "uri":"Commission/Branch/PDF"
            },
-           {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"developer","uri":"Commission/Agency/CSV"},
-           {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"developer","uri":"Experience/Agency/PDF"}
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Branch Commission CSV Datafiles","topic_type":"Branch","topic_type_description":"Branch Commission CSV Datafiles","description":"Branch Commission CSV Datafiles","username":"developer","uri":"Commission/Branch/CSV"},
+           {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Branch Experience Statements","topic_type":"Branch","topic_type_description":"Branch Experience Statements","description":"Branch Experience Statements","username":"developer","uri":"Experience/Branch/PDF"}
                                      ],
         "pak":null,
         "profile_type":"",
@@ -579,50 +579,50 @@ ContentProfile's implementation encdoes the requirements by:
 
 
 AccessprofileEntry
-["AgencySecondary", "0037"],
+["BranchSecondary", "0037"],
 [
   {
-     :uri=>"Commission/Agency/CSV",
+     :uri=>"Commission/Branch/CSV",
      :resource_options=>{
-            :uri=>"Commission/Agency/CSV",
-            :role=>"Test.Agency.Commission.Statement.CSV.Access",
+            :uri=>"Commission/Branch/CSV",
+            :role=>"Test.Branch.Commission.Statement.CSV.Access",
             :role_opts=>["0034", "0037", "0040"]
      },
      :content_type=>"Commission",
      :content_value=>{"doctype"=>"955"},
-     :topic_type=>"Agency",
+     :topic_type=>"Branch",
      :topic_value=>"CSV",
-     :description=>"Agency Commission CSV Datafiles",
-     :topic_type_description=>"Agency Commission CSV Datafiles",
-     :content_type_description=>"Agency Commission CSV Datafiles"
+     :description=>"Branch Commission CSV Datafiles",
+     :topic_type_description=>"Branch Commission CSV Datafiles",
+     :content_type_description=>"Branch Commission CSV Datafiles"
   }
  ]
 
 
 PAYLOAD From Demo Page : UsersTable EntryData to Content/Access Table Rows
 aptester Selected.
-{"username":"aptester","user_options":["AgencyPrimary","0034","0037","0040"],"display_name":"Agency Primary User",
+{"username":"aptester","user_options":["BranchPrimary","0034","0037","0040"],"display_name":"Branch Primary User",
  "package":[
             {"success":true,"accessible_content_url":"/profiles/api_accessible_content.json?id=access",
-             "access_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"","provider":"UserProfile","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"AgencyPrimary","display_name":"Agency Primary User",
-                               "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Agency Commission Statements","user_options":["AgencyPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Agency.Commission.Statement.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Commission/Agency/PDF"},"topic_value":["PDF"],"description":"Agency Commission Statements","content_value":[{"doctype":"954"}],"content_type_description":"Agency Commission Statements","uri":"Commission/Agency/PDF","topic_type":"Agency"},
-                                          {"username":"aptester","content_type":"Experience","topic_type_description":"Agency Experience Statements","user_options":["AgencyPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Agency.Commission.Experience.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Experience/Agency/PDF"},"topic_value":["PDF"],"description":"Agency Experience Statements","content_value":[{"doctype":"956"}],"content_type_description":"Agency Experience Statements","uri":"Experience/Agency/PDF","topic_type":"Agency"}
+             "access_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"","provider":"UserProfile","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"BranchPrimary","display_name":"Branch Primary User",
+                               "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Branch Commission Statements","user_options":["BranchPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Branch.Commission.Statement.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Commission/Branch/PDF"},"topic_value":["PDF"],"description":"Branch Commission Statements","content_value":[{"doctype":"954"}],"content_type_description":"Branch Commission Statements","uri":"Commission/Branch/PDF","topic_type":"Branch"},
+                                          {"username":"aptester","content_type":"Experience","topic_type_description":"Branch Experience Statements","user_options":["BranchPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Branch.Commission.Experience.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Experience/Branch/PDF"},"topic_value":["PDF"],"description":"Branch Experience Statements","content_value":[{"doctype":"956"}],"content_type_description":"Branch Experience Statements","uri":"Experience/Branch/PDF","topic_type":"Branch"}
                                          ]
                               },
-             "user_options":["AgencyPrimary","0034","0037","0040"],
+             "user_options":["BranchPrimary","0034","0037","0040"],
              "page_user":"aptester",
-             "message":"AccessProfile Entries for aptester:Agency Primary User Options=AgencyPrimary,0034,0037,0040"
+             "message":"AccessProfile Entries for aptester:Branch Primary User Options=BranchPrimary,0034,0037,0040"
             },
             {"success":true,
-             "content_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"Agency Super User","provider":"SknService::Bcrypt","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"AgencyPrimary","display_name":"Agency Primary User",
-                                "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Agency Actions for a specific agency","user_options":["AgencyPrimary","0034","0037","0040"],"topic_value":["0038"],"description":"Determine which agency documents can be seen","content_value":["68613"],"content_type_description":"Monthly Commission Reports and Files","topic_type":"Agency"},
-                                           {"username":"aptester","content_type":"Notification","topic_type_description":"Account Action again for a specific set of account","user_options":["AgencyPrimary","0034","0037","0040"],"topic_value":["Agent"],"description":"Determine which accounts will have notification sent","content_value":["AdvCancel"],"content_type_description":"Email Notification of Related Events","topic_type":"Account"}
+             "content_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"Branch Super User","provider":"SknService::Bcrypt","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"BranchPrimary","display_name":"Branch Primary User",
+                                "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Branch Actions for a specific branch","user_options":["BranchPrimary","0034","0037","0040"],"topic_value":["0038"],"description":"Determine which branch documents can be seen","content_value":["68613"],"content_type_description":"Monthly Commission Reports and Files","topic_type":"Branch"},
+                                           {"username":"aptester","content_type":"Notification","topic_type_description":"Account Action again for a specific set of account","user_options":["BranchPrimary","0034","0037","0040"],"topic_value":["Producer"],"description":"Determine which accounts will have notification sent","content_value":["AdvCancel"],"content_type_description":"Email Notification of Related Events","topic_type":"Account"}
                                           ]
                                },
              "accessible_content_url":"/profiles/api_accessible_content.json?id=content",
-             "user_options":["AgencyPrimary","0034","0037","0040"],
+             "user_options":["BranchPrimary","0034","0037","0040"],
              "page_user":"aptester",
-             "message":"ContentProfile Entry for aptester, AgencyPrimary:Agency Super User, Options=AgencyPrimary,0034,0037,0040"
+             "message":"ContentProfile Entry for aptester, BranchPrimary:Branch Super User, Options=BranchPrimary,0034,0037,0040"
             }
           ]
 }
@@ -640,15 +640,15 @@ eptester Selected.
  "profile_exist":true,
  "profile_entries":[
         {"type_selects":[
-            ["Agency",1,{"data-description":"Agency Actions for a specific agency"}]
+            ["Branch",1,{"data-description":"Branch Actions for a specific branch"}]
          ],
          "content_type":"Commission",
-         "topic_type_description":"Agency Actions for a specific agency",
+         "topic_type_description":"Branch Actions for a specific branch",
          "topic_value":["0034"],
-         "description":"Determine which agency documents can be seen",
+         "description":"Determine which branch documents can be seen",
          "content_value":["68601","68602","68603"],
          "content_type_description":"Monthly Commission Reports and Files",
-         "topic_type":"Agency",
+         "topic_type":"Branch",
          "content_selects":[
              ["Commission",1,{"data-description":"Monthly Commission Reports and Files"}]
          ]
@@ -658,7 +658,7 @@ eptester Selected.
          ],
          "content_type":"Notification",
          "topic_type_description":"Account Action again for a specific set of account",
-         "topic_value":["Agency"],
+         "topic_value":["Branch"],
          "description":"Determine which accounts will have notification sent",
          "content_value":["AdvCancel","FutCancel","Cancel"],
          "content_type_description":"Email Notification of Related Events",
@@ -668,12 +668,12 @@ eptester Selected.
          ]
         },
         {"type_selects":[
-             ["LicensedStates",3,{"data-description":"Agent Actions"}]
+             ["LicensedStates",3,{"data-description":"Producer Actions"}]
          ],
          "content_type":"Operations",
-         "topic_type_description":"Agent Actions",
+         "topic_type_description":"Producer Actions",
          "topic_value":["USA"],
-         "description":"Determine which States agent may operate in.",
+         "description":"Determine which States producer may operate in.",
          "content_value":["21","9","23"],
          "content_type_description":"Business Operational Metric",
          "topic_type":"LicensedStates",

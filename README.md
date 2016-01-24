@@ -24,6 +24,8 @@ Then execute;
  
 ```Bash
 
+$ mkdir tmp
+$ mkdir log
 $ bin/setup
 $ rspec
 
@@ -88,24 +90,24 @@ The current implementation of AccessProfile contains an XML Secure::AccessRegist
 the ContentProfile.  It would do this by creating an entry for each content type uri; like:
 
 * Description => 'URI'
-*    Document Access => 'Commission/Agency/0024'
+*    Document Access => 'Commission/Branch/0024'
 * Process Constraint => 'Quoting/LicensedStates/USA'
 *         Operations => 'Notifications/Account/1003'
     
 The URI syntax thinking is A/B/C.  Where A is the content(What), B is the entity type(Who), and C is the entity identifier(Who's ID). A <userdata> field contains
-the identifiers for A content(What's IDs).  Example: Commission documents for Agency 24, where the list of document type ids is contained in userdata.  
+the identifiers for A content(What's IDs).  Example: Commission documents for Branch 24, where the list of document type ids is contained in userdata.  
 
 This translates to AccessRegistry XML like the following:
 
 ```Xml
 
 <resource secured="true" content="true">
-    <uri>Commission/Agency/0024</uri>
-    <description>Agency 24 Commision Reports in Imaging System Storage</description>
+    <uri>Commission/Branch/0024</uri>
+    <description>Branch 24 Commision Reports in Imaging System Storage</description>
     <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:[955,956,957]"</userdata>
     <permission type="READ">
         <authorizedRoles>
-            <authorizedRole options="0024">ContentProfile.Access.Agency.Commission</authorizedRole>
+            <authorizedRole options="0024">ContentProfile.Access.Branch.Commission</authorizedRole>
         </authorizedRoles>
     </permission>
 </resource>
@@ -116,7 +118,7 @@ This translates to AccessRegistry XML like the following:
     <userdata>"MI,IN,OH,IL"</userdata>
     <permission type="READ">
         <authorizedRoles>
-            <authorizedRole options="AGENT,CSR">ContentProfile.Operational.Process.Quoting</authorizedRole>
+            <authorizedRole options="PRODUCER,CSR">ContentProfile.Operational.Process.Quoting</authorizedRole>
         </authorizedRoles>
     </permission>
 </resource>
@@ -136,8 +138,8 @@ This translates to AccessRegistry XML like the following:
 
 
 Each role would be assigned to one or more individuals via the normal assignment method.  With the
- role assigned to a user, and that user having agency '0024' in their 
-user profile options, they would be allowed to view/download commission reports for that agency, and all agency in their user profile.  
+ role assigned to a user, and that user having branch '0024' in their 
+user profile options, they would be allowed to view/download commission reports for that branch, and all branch in their user profile.  
 
 Implementations of AccessProfile would evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
 to include a user's list of assigned agencies (options), and assigned roles for validation of their access privileges. 
@@ -189,7 +191,7 @@ end
 
     AccessControl API Examples: 
       hash_result = get_resource_content_entries(user_object.agencies)
-      hash_result = get_resource_content_entry("Commission/Agency/0024", user_object.agencies)
+      hash_result = get_resource_content_entry("Commission/Branch/0024", user_object.agencies)
       
       hash_result has been standardized to be same as alternate method being proposed.
 
@@ -238,15 +240,15 @@ This is where we begin.
             "topic_value":"PDF",
             "content_value":{"doctype":"954"},
             "content_type":"Commission",
-            "content_type_description":"Agency Commission Statements",
-            "topic_type":"Agency",
-            "topic_type_description":"Agency Commission Statements",
-            "description":"Agency Commission Statements",
+            "content_type_description":"Branch Commission Statements",
+            "topic_type":"Branch",
+            "topic_type_description":"Branch Commission Statements",
+            "description":"Branch Commission Statements",
             "username":"developer",
-            "uri":"Commission/Agency/PDF"
+            "uri":"Commission/Branch/PDF"
            },
-           {"user_options":["Manager","0024","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Agency Commission CSV Datafiles","topic_type":"Agency","topic_type_description":"Agency Commission CSV Datafiles","description":"Agency Commission CSV Datafiles","username":"developer","uri":"Commission/Agency/CSV"},
-           {"user_options":["Manager","0024","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Agency Experience Statements","topic_type":"Agency","topic_type_description":"Agency Experience Statements","description":"Agency Experience Statements","username":"developer","uri":"Experience/Agency/PDF"}
+           {"user_options":["Manager","0024","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Branch Commission CSV Datafiles","topic_type":"Branch","topic_type_description":"Branch Commission CSV Datafiles","description":"Branch Commission CSV Datafiles","username":"developer","uri":"Commission/Branch/CSV"},
+           {"user_options":["Manager","0024","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Branch Experience Statements","topic_type":"Branch","topic_type_description":"Branch Experience Statements","description":"Branch Experience Statements","username":"developer","uri":"Experience/Branch/PDF"}
                                      ],
         "pak":null,
         "profile_type":"",
@@ -269,11 +271,11 @@ REQUEST:  { AccessProfile
     "topic_value":"PDF",
     "content_value":{"doctype":"954"},
     "content_type":"Commission",
-    "content_type_description":"Agency Commission Statements",
-    "topic_type":"Agency",
-    "topic_type_description":"Agency Commission Statements",
-    "description":"Agency Commission Statements",
-    "uri":"Commission/Agency/PDF",
+    "content_type_description":"Branch Commission Statements",
+    "topic_type":"Branch",
+    "topic_type_description":"Branch Commission Statements",
+    "description":"Branch Commission Statements",
+    "uri":"Commission/Branch/PDF",
     "username":"developer"
     }
     
@@ -298,13 +300,13 @@ RESPONSE: {
 
 REQUEST: { 
     "user_options":["Manager","0024","0037","0040"],
-    "topic_value":"Agency",
+    "topic_value":"Branch",
     "content_value":["68601","68602","68603"],
     "content_type":"Commission",
     "content_type_description":"Monthly Commission Reports and Files",
-    "topic_type":"Agency",
-    "topic_type_description":"Agency Actions",
-    "description":"Determine which agency documents can be seen",
+    "topic_type":"Branch",
+    "topic_type_description":"Branch Actions",
+    "description":"Determine which branch documents can be seen",
     "username":"developer"
     }
     

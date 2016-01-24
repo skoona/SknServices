@@ -53,14 +53,14 @@ class UsersController < ApplicationController
 
   # Parameters: {
   #   "user"=>{
-  #       "name"=>"Agency Secondary User",
+  #       "name"=>"Branch Secondary User",
   #       "username"=>"astester",
   #       "email"=>"appdev3@brotherhoodmutual.com",
   #       "password"=>"[FILTERED]",
   #       "password_confirmation"=>"[FILTERED]",
-  #       "user_options"=>["AgencySecondary", "0037", ""],
-  #       "assigned_groups"=>["AgencySecondary", ""],
-  #       "assigned_roles"=>["Test.Agency.Commission.Statement.CSV.Access", "Test.Agency.Commission.Experience.PDF.Access", "Services.Action.ResetPassword", ""],
+  #       "user_options"=>["BranchSecondary", "0037", ""],
+  #       "assigned_groups"=>["BranchSecondary", ""],
+  #       "assigned_roles"=>["Test.Branch.Commission.Statement.CSV.Access", "Test.Branch.Commission.Experience.PDF.Access", "Services.Action.ResetPassword", ""],
   #       "active"=>"1"
   #   },
   #   "commit"=>"Update User",

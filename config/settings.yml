@@ -42,8 +42,8 @@ security:
    - EmployeeSecondary
    - VendorPrimary
    - VendorSecondary
-   - AgencyPrimary
-   - AgencySecondary
+   - BranchPrimary
+   - BranchSecondary
    - '0034'
    - '0037'
    - '0040'

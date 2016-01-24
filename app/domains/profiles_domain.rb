@@ -125,13 +125,13 @@ class ProfilesDomain < ::Factory::DomainsBase
   ##
   # REQUEST: { ContentProfile
   #     "user_options":["Manager","0034","0037","0040"],
-  #     "topic_value":"Agency",
+  #     "topic_value":"Branch",
   #     "content_value":["68601","68602","68603"],
   #     "content_type":"Commission",
   #     "content_type_description":"Monthly Commission Reports and Files",
-  #     "topic_type":"Agency",
-  #     "topic_type_description":"Agency Actions",
-  #     "description":"Determine which agency documents can be seen",
+  #     "topic_type":"Branch",
+  #     "topic_type_description":"Branch Actions",
+  #     "description":"Determine which branch documents can be seen",
   #     "username":"developer"
   # }
   ##
@@ -140,11 +140,11 @@ class ProfilesDomain < ::Factory::DomainsBase
   #     "topic_value":"PDF",
   #     "content_value":{"doctype":"954"},
   #     "content_type":"Commission",
-  #     "content_type_description":"Agency Commission Statements",
-  #     "topic_type":"Agency",
-  #     "topic_type_description":"Agency Commission Statements",
-  #     "description":"Agency Commission Statements",
-  #     "uri":"Commission/Agency/PDF",
+  #     "content_type_description":"Branch Commission Statements",
+  #     "topic_type":"Branch",
+  #     "topic_type_description":"Branch Commission Statements",
+  #     "description":"Branch Commission Statements",
+  #     "uri":"Commission/Branch/PDF",
   #     "username":"developer"
   # }
   def handle_accessible_content_api(params) # :access, :username, :profile

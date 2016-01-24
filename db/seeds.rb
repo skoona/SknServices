@@ -35,33 +35,33 @@ begin
       user_options:            ["EmployeeSecondary", "0037"],
       assigned_groups:             ["EmployeeSecondary"],
       assigned_roles:          ["Services.Action.Admin",
-                                "Test.Agency.Commission.Experience.PDF.Access",
-                                "Test.Agency.Commission.Statement.PDF.Access",
-                                "Test.Agency.Commission.Statement.CSV.Access"]
+                                "Test.Branch.Commission.Experience.PDF.Access",
+                                "Test.Branch.Commission.Statement.PDF.Access",
+                                "Test.Branch.Commission.Statement.CSV.Access"]
 
   },
   {
       username:              "aptester",
-      name:                  "Agency Primary User",
+      name:                  "Branch Primary User",
       email:                 "appdev2@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["AgencyPrimary", "0034", "0037", "0040"],
-      assigned_groups:             ["AgencyPrimary"],
+      user_options:            ["BranchPrimary", "0034", "0037", "0040"],
+      assigned_groups:             ["BranchPrimary"],
       assigned_roles:          ["Services.Action.ResetPassword",
-                                "Test.Agency.Commission.Experience.PDF.Access",
-                                "Test.Agency.Commission.Statement.PDF.Access"]
+                                "Test.Branch.Commission.Experience.PDF.Access",
+                                "Test.Branch.Commission.Statement.PDF.Access"]
   },
   {
       username:              "astester",
-      name:                  "Agency Secondary User",
+      name:                  "Branch Secondary User",
       email:                 "appdev3@brotherhoodmutual.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["AgencySecondary", "0037"],
-      assigned_groups:             ["AgencySecondary"],
+      user_options:            ["BranchSecondary", "0037"],
+      assigned_groups:             ["BranchSecondary"],
       assigned_roles:          ["Services.Action.ResetPassword",
-                                "Test.Agency.Commission.Statement.CSV.Access"]
+                                "Test.Branch.Commission.Statement.CSV.Access"]
   },
   {
       username:              "vptester",
@@ -99,8 +99,8 @@ begin
   ##
   Rails.logger.info "Reloading ContentProfile process tables"
 
-  # {UUID/AgencyOwner} => [
-  #     PAK/ProfileType    {Commission/Agency/0034 => "CommRptID,CommCsvID,ExperRptID"},
+  # {UUID/BranchOwner} => [
+  #     PAK/ProfileType    {Commission/Branch/0034 => "CommRptID,CommCsvID,ExperRptID"},
   #                        {Notification/Account/99 => "AdvCancel,Cancel"},
   #                        {Operations/LicensedStates/USA => "21,30,34,45"}
   # ]                      ContentType/TopicType/TopicTypeOpts => ContentTypeOpts
@@ -121,9 +121,9 @@ begin
       {name: "Services.Action.Admin", description: "Super User"},
       {name: "Services.Action.Primary", description: "Super User"},
       {name: "Services.Action.Developer", description: "Developer"},
-      {name: "Test.Agency.Commission.Statement.PDF.Access", description: "Developer"},
-      {name: "Test.Agency.Commission.Statement.CSV.Access", description: "Developer"},
-      {name: "Test.Agency.Commission.Experience.PDF.Access", description: "Developer"}]
+      {name: "Test.Branch.Commission.Statement.PDF.Access", description: "Developer"},
+      {name: "Test.Branch.Commission.Statement.CSV.Access", description: "Developer"},
+      {name: "Test.Branch.Commission.Experience.PDF.Access", description: "Developer"}]
 
   all_users =
       {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}
@@ -167,8 +167,8 @@ begin
   all_groups = [
       {name: "EmployeePrimary",   group_type: "BMI Admin",    description: "BMI Admin User"},
       {name: "EmployeeSecondary", group_type: "BMI Limited",  description: "BMI Limited User"},
-      {name: "AgencyPrimary",     group_type: "Agency Admin", description: "BMI Limited: Agency Admin User"},
-      {name: "AgencySecondary",   group_type: "BMI Public",   description: "BMI Public: Agency Limited User"},
+      {name: "BranchPrimary",     group_type: "Branch Admin", description: "BMI Limited: Branch Admin User"},
+      {name: "BranchSecondary",   group_type: "BMI Public",   description: "BMI Public: Branch Limited User"},
       {name: "VendorPrimary",     group_type: "BMI Limited",  description: "BMI Limited: Long Term"},
       {name: "VendorSecondary",   group_type: "BMI Public",   description: "BMI Public: Short Term"}
   ]
@@ -182,7 +182,7 @@ begin
       file_manage_p
   ].flatten.uniq
 
-  agency_admin_collection = [
+  branch_admin_collection = [
       all_users ,
       user_manage_p ,
       group_manage_p ,
@@ -207,7 +207,7 @@ begin
        "BMI Admin"   => admin_collection,
        "BMI Limited" => limited_collection,
        "BMI Public"  => public_collection,
-      "Agency Admin" => agency_admin_collection
+      "Branch Admin" => branch_admin_collection
   }
 
   # Remove Current Stuf

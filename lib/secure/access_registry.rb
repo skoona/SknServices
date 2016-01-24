@@ -28,34 +28,34 @@
 #
 # A possible Content Access scheme could be:
 #     <resource secured="true" content="true">
-#       <uri>Commission/Agency/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
-#       <description>Agency Commission Statements</description>
+#       <uri>Commission/Branch/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <description>Branch Commission Statements</description>
 #       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
 #       <permission type="READ">'
 #         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
-#           <authorizedRole options="0034,0037,0040">Agency.Commission.Access</authorizedRole>
+#           <authorizedRole options="0034,0037,0040">Branch.Commission.Access</authorizedRole>
 #         </authorizedRoles>
 #       </permission>'
 #     </resource>
 #
 #     <resource secured="true" content="true">
-#       <uri>Commission/Agency/CSV</uri>'                     Todo: ContentType/TopicType/AssetType
-#       <description>Agency Commission CSV Datafiles</description>
+#       <uri>Commission/Branch/CSV</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <description>Branch Commission CSV Datafiles</description>
 #       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
 #       <permission type="READ">'
 #         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
-#           <authorizedRole options="0034,0037,0040">Agency.Commission.Access</authorizedRole>
+#           <authorizedRole options="0034,0037,0040">Branch.Commission.Access</authorizedRole>
 #         </authorizedRoles>
 #       </permission>'
 #     </resource>
 #
 #     <resource secured="true" content="true">
-#       <uri>Experience/Agency/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
-#       <description>Agency Experience Statements</description>
+#       <uri>Experience/Branch/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <description>Branch Experience Statements</description>
 #       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
 #       <permission type="READ">'
 #         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
-#           <authorizedRole options="0034,0037,0040">Agency.Commission.Access</authorizedRole>
+#           <authorizedRole options="0034,0037,0040">Branch.Commission.Access</authorizedRole>
 #         </authorizedRoles>
 #       </permission>'
 #     </resource>

@@ -11,8 +11,8 @@
 ##
 # Outcomes
 #
-# {UUID/AgencyOwner} => [
-#     PAK/ProfileType    {Commission/Agency/0034 => "CommRptID,CommCsvID,ExperRptID"},
+# {UUID/BranchOwner} => [
+#     PAK/ProfileType    {Commission/Branch/0034 => "CommRptID,CommCsvID,ExperRptID"},
 #                        {Notification/Account/99 => "AdvCancel,Cancel"},
 #                        {Operations/LicensedStates/USA => "21,30,34,45"}
 # ]                      ContentType/TopicType/TopicTypeOpts => ContentTypeOpts
@@ -171,8 +171,8 @@ module Utility
       ## Begin Good Work
 
       pt = [
-          {name: "AgencyPrimary",   description: "Agency Super User"},
-          {name: "AgencySecondary", description: "Limited User"},
+          {name: "BranchPrimary",   description: "Branch Super User"},
+          {name: "BranchSecondary", description: "Limited User"},
           {name: "EmployeePrimary",   description: "BMI Admin User"},
           {name: "EmployeeSecondary", description: "BMI Limited User"},
           {name: "VendorPrimary",   description: "External Vendor Long Term Role"},
@@ -200,9 +200,9 @@ module Utility
       ct  = [
           {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-              "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
-              "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
-              "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID" }}
+              "0" => {value: "68601", description: "Document store Commision Document Type ID" },
+              "1" => {value: "68602", description: "Document store Commision CSV Document Type ID" },
+              "2" => {value: "68603", description: "Document store Branch Experience Document Type ID" }}
           },
           {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
             content_type_opts_attributes: {
@@ -237,19 +237,19 @@ module Utility
       ## Begin Good Work
 
       tt  = [
-          {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+          {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-              "0" => {value: "0034", description: "Some Agency Number"},
-              "1" => {value: "1001", description: "Another Agency Number"},
+              "0" => {value: "0034", description: "Some Branch Number"},
+              "1" => {value: "1001", description: "Another Branch Number"},
               "2" => {value: "0037", description: "More Agencies"} }
           },
           {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-              "0" => {value: "Agency", description: "All Agency Accounts"},
-              "1" => {value: "Agent",  description: "All Agent Accounts"},
-              "2" => {value: "None",   description: "No Agency Agent Options"}}
+              "0" => {value: "Branch", description: "All Branch Accounts"},
+              "1" => {value: "Producer",  description: "All Producer Accounts"},
+              "2" => {value: "None",   description: "No Branch Producer Options"}}
           },
-          {name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
+          {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
             topic_type_opts_attributes: {
               "0" => {value: "USA", description: "United States of America"},
               "1" => {value: "CAN", description: "Canada"}}
@@ -277,19 +277,19 @@ module Utility
       ## Begin Good Work
 
       cpe = [
-        {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
+        {topic_value: [],     content_value: [], description: 'Determine which branch documents can be seen',
               content_types_attributes: {
                 "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
                 content_type_opts_attributes: {
-                  "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
-                  "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
-                  "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }}
+                  "0" => {value: "68601", description: "Document store Commision Document Type ID" },
+                  "1" => {value: "68602", description: "Document store Commision CSV Document Type ID" },
+                  "2" => {value: "68603", description: "Document store Branch Experience Document Type ID"} }}
             },
               topic_types_attributes: {
-                "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+                "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
                 topic_type_opts_attributes: {
-                  "0" => {value: "0034", description: "Some Agency Number"},
-                  "1" => {value: "1001", description: "Another Agency Number"},
+                  "0" => {value: "0034", description: "Some Branch Number"},
+                  "1" => {value: "1001", description: "Another Branch Number"},
                   "2" => {value: "0037", description: "More Agencies"} }}}
         },
         {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
@@ -303,11 +303,11 @@ module Utility
               topic_types_attributes: {
                 "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
                 topic_type_opts_attributes: {
-                  "0" => {value: "Agency", description: "All Agency Accounts"},
-                  "1" => {value: "Agent",  description: "All Agent Accounts"},
-                  "2" => {value: "None",   description: "No Agency Agent Options"} }}}
+                  "0" => {value: "Branch", description: "All Branch Accounts"},
+                  "1" => {value: "Producer",  description: "All Producer Accounts"},
+                  "2" => {value: "None",   description: "No Branch Producer Options"} }}}
         },
-        {topic_value: [], content_value: [], description: 'Determine which States agent may operate in.',
+        {topic_value: [], content_value: [], description: 'Determine which States producer may operate in.',
               content_types_attributes: {
                 "0" => {name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
                 content_type_opts_attributes: {
@@ -316,7 +316,7 @@ module Utility
                   "2" => {value: "23", description: "Illinois"} }}
             },
               topic_types_attributes: {
-                "0" => {name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
+                "0" => {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
                 topic_type_opts_attributes: {
                   "0" => {value: "USA", description: "United States of America"},
                   "1" => {value: "CAN", description: "Canada"} }}}
@@ -345,18 +345,18 @@ module Utility
       ## Begin Good Work
 
       cpep = [
-        {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
+        {topic_value: [],     content_value: [], description: 'Determine which branch documents can be seen',
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "68601", description: "Imageright Commision Document Type ID" },
-            "1" => {value: "68602", description: "Imageright Commision CSV Document Type ID" },
-            "2" => {value: "68603", description: "Imageright Agency Experience Document Type ID"} }}
+            "0" => {value: "68601", description: "Document store Commision Document Type ID" },
+            "1" => {value: "68602", description: "Document store Commision CSV Document Type ID" },
+            "2" => {value: "68603", description: "Document store Branch Experience Document Type ID"} }}
           },
             topic_types_attributes: {
-            "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+            "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0034", description: "Some Agency Number"} }}}
+            "0" => {value: "0034", description: "Some Branch Number"} }}}
         },
         {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
             content_types_attributes: {
@@ -369,9 +369,9 @@ module Utility
             topic_types_attributes: {
             "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "0" => {value: "Agency", description: "All Agency Accounts"} }}}
+            "0" => {value: "Branch", description: "All Branch Accounts"} }}}
         },
-        {topic_value: [], content_value: [], description: 'Determine which States agent may operate in.',
+        {topic_value: [], content_value: [], description: 'Determine which States producer may operate in.',
             content_types_attributes: {
             "0" => {name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
             content_type_opts_attributes: {
@@ -380,23 +380,23 @@ module Utility
             "2" => {value: "23", description: "Illinois"} }}
           },
             topic_types_attributes: {
-            "0" => {name: "LicensedStates", description: "Agent Actions", value_based_y_n: "Y",
+            "0" => {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
             topic_type_opts_attributes: {
             "0" => {value: "USA", description: "United States of America"} }}}
         }
       ]
 
       cpes = [
-        {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
+        {topic_value: [],     content_value: [], description: 'Determine which branch documents can be seen',
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "68613", description: "Imageright Agency Experience Document Type ID"} }}
+            "0" => {value: "68613", description: "Document store Branch Experience Document Type ID"} }}
           },
             topic_types_attributes: {
-            "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+            "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0038", description: "Some Agency Number"}}}}
+            "0" => {value: "0038", description: "Some Branch Number"}}}}
         },
         {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
             content_types_attributes: {
@@ -407,21 +407,21 @@ module Utility
             topic_types_attributes: {
             "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "1" => {value: "Agent",  description: "All Agent Accounts"} }}}
+            "1" => {value: "Producer",  description: "All Producer Accounts"} }}}
         }
       ]
 
       cpev = [
-        {topic_value: [],     content_value: [], description: 'Determine which agency documents can be seen',
+        {topic_value: [],     content_value: [], description: 'Determine which branch documents can be seen',
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "68701", description: "Imageright Project Status Report Document Type ID"} }}
+            "0" => {value: "68701", description: "Document store Project Status Report Document Type ID"} }}
           },
             topic_types_attributes: {
-            "0" => {name: "Agency",  description: "Agency Actions for a specific agency",  value_based_y_n: "Y",
+            "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "9999", description: "Some Agency Number"}}}}
+            "0" => {value: "9999", description: "Some Branch Number"}}}}
         }
       ]
 
@@ -446,7 +446,7 @@ module Utility
                                           cpep_recs
                                         when 'EmployeeSecondary'
                                           cpes_recs
-                                        when 'AgencyPrimary'
+                                        when 'BranchPrimary'
                                           cpes_recs
                                         else
                                           cpev_recs
