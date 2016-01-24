@@ -198,10 +198,10 @@ This is where we begin.
 ![App Data Model](app/assets/images/SknService-DataModel.png "Application Data Model")
 
 
-## ContentProfile Data Model Resulting Transactions
+###ContentProfile Data Model Resulting Transactions ( WIP )
 ---
 
-###Final Access Package listing: One for each user is available in the API
+####Access Package listing: One for each user is available in the API
 
 ```json 
 
