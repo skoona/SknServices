@@ -29,6 +29,8 @@ $ rspec
 
 ```
 
+###Note: Ruby 2.2.+ is also supported with database adapter change. JRuby 9.0.40.+ is the default 
+
 
 ##Overview
 ---
@@ -52,14 +54,12 @@ engineering challenge when it comes to handling the dynamics of Electronic Deliv
 
 The system shall contribute to resolving these initial use cases:
 
-1. Clearly indicate an employee, agent, agency owner, CSR, or any business ACTOR role!
-    * by identifying the person(s) using a permanent and persistent identifier from an authenticated source.
-2. When an Insured enrolls in 'DirectPay' what additional documents have they chosen to have delivered electronically to them?
-    * by identifying the person(s), and encoding which person is authorized to view specific electronic documents.
-3. Who has an AgencyOwner authorized to receive and/or view their monthly Commission Statement, Commission CSV File, and Agency Experience Report?
-    * by identifying the person(s), and encoding which person is authorized to view specific electronic documents.
-4. When a Policy changes its LifeCycle Status, who receives notification; and how should that notification be sent?
-    * by identifying the person(s), and encoding which person is authorized to receive notifications by type, where type includes the delivery method.
+1. Clearly indicate an employee, vendor, manager, customer service representative, or any business ACTORs role!
+    * by identifying the person(s) using a permanent and persistent identifier from a trusted authentication source.
+2. Ensure user is authentication and that user has specific access to the requested page, api, and click-ables on that page; unless the target page is public.
+    * by using the permission roles assigned to each authenticated user and the Secure::AccessRegistry access class.
+3. Ensure user is constrained to interact with processess or view information they were specifically authorized for!
+    * by identifying the person(s) identifier, and applying their Secure::ContentProfile collection of permissions to control access to both processes and information.
 
 
 ##AccessProfile i.e (Secure::AccessRegistry)
@@ -67,49 +67,47 @@ The system shall contribute to resolving these initial use cases:
 The current implementation of AccessProfile contains an XML Secure::AccessRegistry file which could embody the specific requirements of
 the ContentProfile.  It would do this by creating an entry for each content type uri; like:
 
-* 'Agency/Commission-STMT/0034'
-* 'Agency/Commission-CSV/0034'
-* 'Agency/Experience-STMT/0034'
-* 'Agency/Commission-STMT/1003'
-* 'Agency/Commission-CSV/1003'
-* 'Agency/Experience-STMT/1003'
+* Description => 'URI'
+*    Document Access => 'Commission/Agency/0034'
+* Process Constraint => 'Quoting/LicensedStates/USA'
+*         Operations => 'Notifications/Account/1003'
     
-The syntax thinking is A/B/C.  Where A is the topic, B is the action, and C is the topic identifier. A <userdata> contains
-the identifiers for B action.  The would need to be coded and repeated for each agency, and content type. Security roles for administrating
-who has access to each URI will need to be created.  Something like:
+The syntax thinking is A/B/C.  Where A is the content, B is the entity type, and C is the entity identifier. A <userdata> field contains
+the identifiers for A content.  Example: Commission documents for Agency 34, where the list of document type ids is contained in userdata.  
 
+This translates to AccessRegistry XML like the following:
 
 ```Xml
 
-<resource secured="true">
-    <uri>Agency/Commission-STMT/0034</uri>
-    <description>Agency Commision Report in ImageRight</description>
-    <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+<resource secured="true" content="true">
+    <uri>Commission/Agency/0034</uri>
+    <description>Agency 34 Commision Reports in Imaging System Storage</description>
+    <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:[955,956,957]"</userdata>
     <permission type="READ">
         <authorizedRoles>
-            <authorizedRole options="0034">ContentProfile.Access.Agency.Commission-STMT</authorizedRole>
+            <authorizedRole options="0034">ContentProfile.Access.Agency.Commission</authorizedRole>
         </authorizedRoles>
     </permission>
 </resource>
 
-<resource secured="true">
-    <uri>Agency/Commission-CSV/0034</uri>
-    <description>Agency Commision Report in csv format from ImageRight</description>
-    <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+<resource secured="true" content="true">
+    <uri>Quoting/LicensedStates/USA</uri>
+    <description>Licensed to produce Quote in Michigan, Indiana, Ohio, and Illinois</description>
+    <userdata>"MI,IN,OH,IL"</userdata>
     <permission type="READ">
         <authorizedRoles>
-            <authorizedRole options="0034">ContentProfile.Access.Agency.Commission-CSV</authorizedRole>
+            <authorizedRole options="AGENT,CSR">ContentProfile.Operational.Process.Quoting</authorizedRole>
         </authorizedRoles>
     </permission>
 </resource>
 
-<resource secured="true">
-    <uri>Agency/Experience-STMT/0034</uri>
-    <description>Agency Experience Report in ImageRight</description>
-    <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+<resource secured="true" content="true">
+    <uri>Notifications/Account/1003</uri>
+    <description>Change Notification for Account 1003</description>
+    <userdata>"Payments|Invoices|Cancels|Claims|Approvals"</userdata>
     <permission type="READ">
         <authorizedRoles>
-            <authorizedRole options="0034">ContentProfile.Access.Agency.Experience-STMT</authorizedRole>
+            <authorizedRole options="1003">ContentProfile.Operations.Notifications</authorizedRole>
         </authorizedRoles>
     </permission>
 </resource>
@@ -117,59 +115,18 @@ who has access to each URI will need to be created.  Something like:
 ```
 
 
-###With a minor modification, listing all agencies in the Options, we can reduce the total number of records.
-
-
-```Xml
-
-<!--============== Content Access Adaptation  ========== -->
-
-<resource secured="true" content="true">
-    <uri>Commission/Agency/PDF</uri>
-    <description>Agency Commission Statements</description>
-    <userdata>"doctype:954"</userdata>
-    <permission type="READ">
-        <authorizedRoles>
-            <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.PDF.Access</authorizedRole>
-        </authorizedRoles>
-    </permission>
-</resource>
-
-<resource secured="true" content="true">
-    <uri>Commission/Agency/CSV</uri>
-    <description>Agency Commission CSV Datafiles</description>
-    <userdata>"doctype:955"</userdata>
-    <permission type="READ">
-        <authorizedRoles>
-            <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Statement.CSV.Access</authorizedRole>
-        </authorizedRoles>
-    </permission>
-</resource>
-
-<resource secured="true" content="true">
-    <uri>Experience/Agency/PDF</uri>
-    <description>Agency Experience Statements</description>
-    <userdata>"doctype:956"</userdata>
-    <permission type="READ">
-        <authorizedRoles>
-            <authorizedRole options="0034,0037,0040">Test.Agency.Commission.Experience.PDF.Access</authorizedRole>
-        </authorizedRoles>
-    </permission>
-</resource>
-
-```
-
-
-Each role would be assigned to one or more individuals via the normal assignment method, Domino in our case.  With the
+Each role would be assigned to one or more individuals via the normal assignment method.  With the
  role assigned to a user, and that user having agency '0034' in their 
 user profile options, they would be allowed to view/download commission reports for that agency, and all agency in their user profile.  
 
-Implementations of AccessProfile would be extended to 
-evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
-to include a user's list of assigned agencies (options) for validation of their access privileges. 
+Implementations of AccessProfile would evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
+to include a user's list of assigned agencies (options), and assigned roles for validation of their access privileges. 
 
 
-###If the permission has options, at least one user options must match!
+###If the permission has options, at least one user options must match! 
+
+This allows for the options attribute to override the one value specified in the URI.  When XML options attribute list all agencies for with this 
+service enabled, the user will be required to have at least one option in their profile and the specific authorizedRole.
 
 
 ```Ruby
@@ -212,7 +169,7 @@ end
 
     AccessControl API Examples: 
       hash_result = get_resource_content_entries(user_object.agencies)
-      hash_result = get_resource_content_entry("Agency/Commission-STMT/0034", user_object.agencies)
+      hash_result = get_resource_content_entry("Commission/Agency/0034", user_object.agencies)
       
       hash_result has been standardized to be same as alternate method being proposed.
 
@@ -377,11 +334,15 @@ RESPONSE: {
     * Assign default ContentProfile
     * Create Local User record
     * Email user a ChangePassword to complete registration
+
     
-== License
+    
+##License
+---
+
 The MIT License (MIT)
 
-Copyright (c) 2016 James Scott, Jr. <skoona@gmail.com>
+Copyright (c) 2016 James Scott, Jr.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
