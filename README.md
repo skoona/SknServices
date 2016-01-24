@@ -1,7 +1,7 @@
 #SknService
 ---
 
-Author: James Scott <jscott@brotherhoodmutual.com>
+Author: James Scott
 Date: Dec 2015
 
 
