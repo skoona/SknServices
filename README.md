@@ -29,7 +29,7 @@ $ rspec
 
 ```
 
-###Note: Ruby 2.2.+ is also supported with database adapter change. JRuby 9.0.40.+ is the default 
+    Note: Ruby 2.2.+ is also supported with database adapter change. JRuby 9.0.40.+ is the default 
 
 
 ##Overview
