@@ -51,6 +51,21 @@ ContentProfiles are the main focus of exploration in this app, which has proven 
 engineering challenge when it comes to handling the dynamics of Electronic Delivery.  
 
 
+###ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.</p>
+
+##Core Idea
+
+In general anything that can be accessed is considered a CONTENT TYPE.  The specific entity that content is related to is considered a
+TOPIC TYPE.  Both types must be fully qualified with their respective Identifiers. Once qualified the two are combined into a holding object 
+called a Content Profile Entry, and given a descriptive title.
+
+One Content Profile Entry describes one permission, through the combination of a fully qualified content type and topic type.  It is expected that a
+user's collection would have many of these specialized entries, and that some entries may be shareable (reducing redundancy) with other users.  Entries
+are themselves assigned to a wrapper object called a Content Profile which maintains the collection.
+
+Content Profiles are the anchor back to the User Profile, via the person authentication key(PAK) or UUID they rely on as THE primary identifier.
+
+
 ##Objective
 ---
 
