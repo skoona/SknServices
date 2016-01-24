@@ -51,7 +51,7 @@ ContentProfiles are the main focus of exploration in this app, which has proven 
 engineering challenge when it comes to handling the dynamics of Electronic Delivery.  
 
 
-###ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.</p>
+###ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.
 
 ##Core Idea
 
