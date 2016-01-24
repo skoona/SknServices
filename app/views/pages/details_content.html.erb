@@ -9,15 +9,37 @@
 
     <section>
         <p class="lead">
-            ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
-            engineering challenge to handle the dynamics of Electronic Delivery.  ContentProfiles deal with
-            specific content access privileges; which document, file, report, etc.
-        </p>
+            ContentProfile and AccessProfile are
+            implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.</p>
 
-        <p>
-            UserProfiles and AccessProfiles have many different implementations available, and are well handled processes.  However,
-            ContentProfiles are the main focus of exploration in this app, which has proven to be a significant
-            engineering challenge to handle the dynamics of Electronic Delivery.
-        </p>
+        <div class="well">
+            <h3>Core Idea</h3>
+
+            <p>In general anything that can be accessed is considered a <strong>content type</strong>.  The specific entity that content is related to is considered a
+                <strong>topic type</strong>.  Both types <em>must be fully qualified with their respective <strong>Identifiers</strong></em>.
+                Once qualified the two are combined into a holding object called a Content Profile Entry, and given a descriptive title.</p>
+            <p>One Content Profile Entry describes one permission, through the combination of a fully qualified content type and topic type.  It is expected that a
+                user's collection would have many of these specialized entries, and that some entries may be shareable (reducing redundancy) with other users.  Entries
+               are themselves assigned to a wrapper object called a Content Profile which maintains the collection.</p>
+            <p>Content Profiles are the anchor back to the User Profile, via the person authentication key(PAK) or UUID they rely on as <strong>the</strong> primary identifier.</p>
+        </div>
+
+        <div>
+            <h3>Objective</h3>
+
+            <h4>The system shall offer methods to:</h4>
+            <ol>
+                <li>Clearly indicate an employee, vendor, manager, customer service representative, or any business ACTORs role!<br/><p>
+                    * by identifying the person(s) using a permanent and persistent identifier from a trusted authentication source.</p>
+                <li>Ensure user is authenticated and that user has specific access to the requested page, api, and click-ables on that page; unless the target page is public.<br/><p>
+                    * by using the permission roles assigned to each authenticated user and the <code>Secure::AccessProfile</code> access class.</p>
+                <li>Ensure user is constrained to interact with processess or view information they were specifically authorized for!<br/><p>
+                    * by identifying the person(s) identifier, and applying their <code>Secure::ContentProfile</code> collection of permissions to control access to both processes and information.</p>
+                <li>Have no hard Rails dependencies, and serve as a technology platform for building secure web applications.<br/><p>
+                    * Outside of keeping its private tables in AR, it supplies its services independent of Rails.<br/>
+                    * It is assumed that user records and most displayable information is not solely housed locally in Rails; but sourced from external systems or computed.</p>
+            </ol>
+        </div>
+
     </section>
 </article>

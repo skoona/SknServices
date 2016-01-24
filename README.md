@@ -182,7 +182,7 @@ end
 ##ContentProfile (i.e. The preferred Approach )
 ---
 
-Preferred in reference to getting the job done.  We could implement both the xml and the db strategies.  XML version for program assets, DB for business information and processes.  But I need to be clear we can use either strategy.
+Preferred as in reference to getting the job done.  We could implement both the xml and the db strategies.  XML version for program assets, DB for business information and processes.  But I need to be clear we can use either strategy.
 
 ![ContentProfile](app/assets/images/SknService-CoreComponents.jpg "ContentProfile")
 
