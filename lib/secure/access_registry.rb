@@ -155,7 +155,7 @@ module Secure
       else
         # TODO: Enable logging of all unregistered
         Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
-        result = false
+        result = @@ar_strict_mode
       end
 
       result
@@ -188,7 +188,7 @@ module Secure
          # TODO: Enable logging of all unregistered
          Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
 
-         result = false
+         result = @@ar_strict_mode
        end
 
       result
