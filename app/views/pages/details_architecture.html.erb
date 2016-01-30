@@ -10,7 +10,7 @@
     <section>
         <h3>Design Guidance</h3>
         <p class="lead">
-            This application is a Rails 4.2.5+ app.  However, WE DO NOT FOLLOW THE RAILS WAY.</p>
+            This application is a Rails 4.2.5+ &amp; JRuby-9.0.4.0 app.  However, WE DO NOT FOLLOW THE CLASSIC RAILS WAY.</p>
         <p>Doing it our way, is going to become more difficult
             as Rails continues to mature in the wrong direction; Rails 5 may be the last platform we engage.  Rails has not yet provided a container or
             methodology to include business logic safely or in a scalable way.  Our Way, has adopted a strategy to co-exist with Rails as the Web Interface.
@@ -19,11 +19,69 @@
         </p>
         <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our code from it.  Calling on Rails only when we absolutely needed to exchange
             results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
-        <p>The persistence assumptions, by Rails Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
+        <p>The persistant assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
             technologies; is very dangerous and Microsoft-ish.  For examples of the wrong direction read the Rails Release notes starting a 4.0, up to verison 5.
             Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
         <p>This application source, and implementation, serve as a model for how successful web application can be engineered without dumbing down or wasting time.</p>
-    </section>
+        <hr/>
+		<div class="panel panel-info">
+	        <div class="panel-heading" role="tab" id="headingOurWay">
+	            <h4 class="panel-title">
+	                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ourWay" aria-expanded="false" aria-controls="headingOurWay">
+	    				Our (A) Way
+	                </a>
+	            </h4>
+	        </div>
+	        <div id="ourWay" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOurWay">
+	            <div class="panel-body">                   
+			        <h5>Our (A) Way</h5>
+			        <p class="lead">We do not add code to Models, controllers, or views; except for what is essential.</p>
+			        <p>We consider controller methods as the entry points into our business logic and those entry points are coded with  one-liners <code>:service_name.entry_method_name(params)</code>.  
+			        	Where <code>:service_name</code> is the name of a logical business logic service associated with that page.
+			          This serivce's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values which can easily be converted into JSON,
+			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values bean. For apps that have some sort of menu-bar or top of page information
+			          section.  We up the instance variable count to two, by allowing a <code>@page_info</code> values bean, which would contain al the values needed to populate the page informaitn section of 
+			          that page thru the page partials prepared for it.  In cases where the return code the controller method is negative, we maintain the <code>:success, :message</code> keys in the
+			          values bean (i.e. ResultsBean) to carry this failure state.  This allows the controller to redirect to the logical next page based on error, or continue to regular destination 
+			          on success; message is used for the Flash message when needed.</p>
+			          <pre class="pre-scrollable">
+<strong>class ProfilesController < ApplicationController</strong>
+
+  def content_profile_demo
+    @page_controls = <strong>content_profile_service.handle_demo_page(params)</strong>
+    if <strong>@page_controls.success</strong>
+      if json_request?
+        results = <strong>@page_controls.to_hash</strong>
+        render json: results, status: :accepted, layout: false, content_type: :json and return
+      end
+    else
+      if json_request?
+        results = @page_controls.to_hash
+        render json: results, status: :conflict, layout: false, content_type: :json and return
+      end
+    end
+  end
+  ...
+end
+          			</pre>
+          			<p class="lead">For models we have a simular approach.  Only add what is pertinate and required to effectively use or protect the data record.</p>
+          			<pre class="pre-scrollable">
+<strong>ProfileType < ActiveRecord::Base</strong>
+  has_one :content_profile
+  validates_presence_of :name, :description
+
+  <strong>def self.pt_options_selects</strong>
+    self.all.map do |pts|
+      [pts.name, pts.id, {'data-description'.to_sym => pts.description}]
+    end
+  end
+end          				
+          			</pre>
+          		</div>
+       		</div>
+       		<p>Getting Started</p>
+     	</div>
+  	</section>
 
     <section>
         <div class="panel panel-info">
