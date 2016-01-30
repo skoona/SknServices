@@ -516,6 +516,8 @@ $(function() {
     /* Save this token for the Ajax calls */
     csrfToken = $('meta[name="csrf-token"]').attr('content');
 
+    prettyPrint();
+
     /*
      * Only for the ProfilesController based pages */
     if ( controllerName.startsWith('profiles') ) {

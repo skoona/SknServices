@@ -17,4 +17,5 @@
 //= require dataTables.bootstrap
 //= require jquery.dataTables
 //= require skn-services.custom.js.erb
+//= require prettify
 //= require_tree .

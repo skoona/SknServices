@@ -8,86 +8,160 @@
     </header>
 
     <section>
-        <h3>Design Guidance</h3>
-        <p class="lead">
-            This application is a Rails 4.2.5+ &amp; JRuby-9.0.4.0 app.  However, WE DO NOT FOLLOW THE CLASSIC RAILS WAY.</p>
-        <p>Doing it our way, is going to become more difficult
-            as Rails continues to mature in the wrong direction; Rails 5 may be the last platform we engage.  Rails has not yet provided a container or
-            methodology to include business logic safely or in a scalable way.  Our Way, has adopted a strategy to co-exist with Rails as the Web Interface.
-            ActiveSupport::Concerns, among other features, is now challenging our strategy for co-existence.  When Rails impacts Core Ruby principals, like <code>Module#included</code>,
-            we have to pay attention and make an informed and educated choice; make your voice heard!.
-        </p>
-        <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our code from it.  Calling on Rails only when we absolutely needed to exchange
-            results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
-        <p>The persistant assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
-            technologies; is very dangerous and Microsoft-ish.  For examples of the wrong direction read the Rails Release notes starting a 4.0, up to verison 5.
-            Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
-        <p>This application source, and implementation, serve as a model for how successful web application can be engineered without dumbing down or wasting time.</p>
-        <hr/>
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="headingGuidance">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#guidance" aria-expanded="false" aria-controls="headingGuidance">
+                        Design Guidance: Commentary
+                    </a>
+                </h4>
+            </div>
+            <div id="guidance" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGuidance">
+                <div class="panel-body">
+                    <p class="lead">This application is a Rails 4.2.5+ &amp; JRuby-9.0.4.0 app.  However, WE DO NOT FOLLOW THE CLASSIC RAILS WAY.</p>
+                    <p>Doing it our way, is going to become more difficult
+                        as Rails continues to mature in the wrong direction; Rails 5 may be the last platform we engage.  Rails has not yet provided a container or
+                        methodology to include business logic safely or in a scalable way.  Our Way, has adopted a strategy to co-exist with Rails as the Web Interface.
+                        ActiveSupport::Concerns, among other features, is now challenging our strategy for co-existence.  When Rails impacts Core Ruby principals, like <code>Module#included</code>,
+                        we have to pay attention and make an informed and educated choice; make your voice heard!.
+                    </p>
+                    <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our application or business logic from it.  Calling on Rails only when absolutely needed to exchange
+                        results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
+                    <p>The persistent assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
+                        technologies; is very dangerous and Microsoft-ish.  For examples of the wrong direction read the Rails Release notes starting a 4.0, up to version 5.
+                        Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
+                    <p>This application source, and implementation, serve as a model for how successful web application can be engineered without dumbing down or wasting time.</p>
+                </div>
+            </div>
+            <p>Rails is a Great Web Framework.  Your application can derive great benefit from Rails when engineered (Desgined) for use with Rails.</p>
+        </div>
 		<div class="panel panel-info">
 	        <div class="panel-heading" role="tab" id="headingOurWay">
 	            <h4 class="panel-title">
-	                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ourWay" aria-expanded="false" aria-controls="headingOurWay">
-	    				Our (A) Way
+	                <a class="collapsed" role="button" data-toggle="collapse" href="#ourWay" aria-expanded="false" aria-controls="headingOurWay">
+                        Design Guidance: Our (A) Way
 	                </a>
 	            </h4>
 	        </div>
-	        <div id="ourWay" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOurWay">
+	        <div id="ourWay" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOurWay">
 	            <div class="panel-body">                   
-			        <h5>Our (A) Way</h5>
-			        <p class="lead">We do not add code to Models, controllers, or views; except for what is essential.</p>
-			        <p>We consider controller methods as the entry points into our business logic and those entry points are coded with  one-liners <code>:service_name.entry_method_name(params)</code>.  
+			        <p class="lead">We do not add business process logic to Models, controllers, or views!</p>
+			        <p>We consider controller methods as the entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code>:service_name.entry_method_name(params)</code>.
 			        	Where <code>:service_name</code> is the name of a logical business logic service associated with that page.
-			          This serivce's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values which can easily be converted into JSON,
+			          This service's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values which can easily be converted into JSON,
 			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values bean. For apps that have some sort of menu-bar or top of page information
 			          section.  We up the instance variable count to two, by allowing a <code>@page_info</code> values bean, which would contain al the values needed to populate the page informaitn section of 
 			          that page thru the page partials prepared for it.  In cases where the return code the controller method is negative, we maintain the <code>:success, :message</code> keys in the
 			          values bean (i.e. ResultsBean) to carry this failure state.  This allows the controller to redirect to the logical next page based on error, or continue to regular destination 
 			          on success; message is used for the Flash message when needed.</p>
-			          <pre class="pre-scrollable">
-<strong>class ProfilesController < ApplicationController</strong>
 
+			          <pre class="pre-scrollable prettyprint lang-rb">
+class ProfilesController < ApplicationController
+
+  # HTML only response
   def content_profile_demo
-    @page_controls = <strong>content_profile_service.handle_demo_page(params)</strong>
-    if <strong>@page_controls.success</strong>
-      if json_request?
-        results = <strong>@page_controls.to_hash</strong>
-        render json: results, status: :accepted, layout: false, content_type: :json and return
-      end
-    else
-      if json_request?
-        results = @page_controls.to_hash
-        render json: results, status: :conflict, layout: false, content_type: :json and return
-      end
-    end
+    @page_controls = content_profile_service.handle_demo_page(params)
+    flash.notice.now = @page_controls.message if @page_controls.message.present?
   end
+
+  # JSON only response
+  def content_profile_api
+    @page_controls = content_profile_service.handle_content_api(params)
+    render json: @page_controls.to_hash, status: @page_controls.success ? :accepted : :not_found, layout: false, content_type: :json and return
+  end
+
   ...
 end
           			</pre>
-          			<p class="lead">For models we have a simular approach.  Only add what is pertinate and required to effectively use or protect the data record.</p>
-          			<pre class="pre-scrollable">
-<strong>ProfileType < ActiveRecord::Base</strong>
+
+          			<p class="lead">For models we have a similar approach.  Only add what is relevant and required to effectively use or protect the data record.</p>
+          			<pre class="prettyprint lang-rb pre-scrollable">
+ProfileType < ActiveRecord::Base
   has_one :content_profile
   validates_presence_of :name, :description
 
-  <strong>def self.pt_options_selects</strong>
+  def self.pt_options_selects
     self.all.map do |pts|
       [pts.name, pts.id, {'data-description'.to_sym => pts.description}]
     end
   end
 end          				
           			</pre>
+                    <p>In the case of models this mean only short methods to help with form option lists, and the model's own validation methods. Nothing more!</p>
           		</div>
        		</div>
-       		<p>Getting Started</p>
+       		<p>If we don't add business logic to the controllers or the models, where does it go?  Answer, in the Services objects which inherit from domain objects.</p>
      	</div>
-  	</section>
 
-    <section>
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="headingdomains">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#domains" aria-expanded="false" aria-controls="headingdomains">
+                        Design Guidance: Domain and Services Model
+                    </a>
+                </h4>
+            </div>
+            <div id="domains" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingdomains">
+                <div class="panel-body">
+                    <p class="lead">Using object-oriented design methodologies, we develop a domain model for our application, and encapsulate those objectives in a Domain class.</p>
+                    <p>To delivery the value contained in a <strong>Domain class</strong> we wrap them in a <strong>Services class</strong>.  Which acts as an adapter to bring that value to the user.  This typically means
+                       developing an html page with views and controllers to present the informational results to the user.  However, since we only delivery a package of data values to the controller interface
+                       method, it is possible to serve those data values as JSON to a browser based application, like BackBone, or to a wide range of endpoints; even a PDF generator.</p>
+                    <p>The core of our Application is defined in an object-oriented fashion and protected or isolated from the delivery frameworks(s) used to delivery its value to the user.
+                       When changes and enhancements to the business logic is needed, we can make those changes without great concern or contraints being imposed by the delivery mechanism.  This also faciliates
+                       making changes or upgrades to the delivery frameworks.</p>
+                    <p>Services inherit directly from Domains to further shield our application from the external frameworks; this is easy to see when considering the controller.  Models on the other hand
+                       need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  Using a Repository strategy could be considered to add more isolation.  Ideally we
+                       should be able to write RSpec tests for the service/domain classes without invoking the Rails environment.</p>
+                    <p>If service objects are focused on transforming domain results to external interfaces, and domains themselves are focused on the core business logic of a single process.  Then yes, there will
+                       be many domains classes, one to support each business process or business entity.  However, a domain class need not do all the heavy lifting, its single-responsibility is producing a contextually valid result
+                       from the triggering event or input.</p>
+                    <p>Domains produce those results best by invoking secondary task oriented objects to complete elements of the overall process, positioning domains to be the orchestrator or main-line
+                       for the business entity/process they are assigned.  Task oriented objects must adhere to the single-responsibility guideline to maintain their value to the overall system's design.  Again enhancing
+                       our ability to test off-line from Rails, and making the code more portable with greater reuse opportunities.  A task object would completely handle a task step of the logicall process flow a
+                       domain object is responsible for.  <em>use the force!</em></p>
+                </div>
+            </div>
+            <p>Admittedly, this demonstration app has not reached that level of <em>Nirvana</em> yet, but it is the design objective! Now for the deep details.</p>
+        </div>
+
+        <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingintents">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" href="#intents" aria-expanded="false" aria-controls="headingintents">
+                    Design Guidance: This Application's Value Domain and Intent
+                </a>
+            </h4>
+            </div>
+            <div id="intents" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingintents">
+                <div class="panel-body">
+                    <p class="lead">The primary intent is to be a feasible example demonstrating Authentication, Authorization, and Content Access Control.  The Domain model composed to
+                    facilitate this demonstration is as follows.</p>
+                    <dl class="dl-horizontal">
+                        <dt>Administer Profiles</dt>
+                            <dd>
+                                <p>Represent what content access we desire for each user in a standardized way, via the ContentProfile.
+                                   Provide ancillary and administrative processes to register and maintain users for the application.</p>
+                            </dd>
+                        <dt>Execute AccessProfile</dt>
+                            <dd>
+                                <p>Apply AccessProfile's control to all navigation and clickable actions of the application.</p>
+                            </dd>
+                        <dt>Execute ContentProfile</dt>
+                            <dd>
+                                <p>Apply the pre-defined profile controls against down-loadable assets.
+                                   Apply the pre-defined profile controls when handling an upload request from a user.</p>
+                            </dd>
+                    </dl>
+                </div>
+            </div>
+            <p>Now for the architectural component details. i.e how to build or apply these design principals.</p>
+        </div>
+
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingUp">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#UserProfileService" aria-expanded="false" aria-controls="headingUp">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#UserProfileService" aria-expanded="false" aria-controls="headingUp">
                         UserProfile Service
                     </a>
                 </h4>
@@ -171,7 +245,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ServiceFactory" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#ServiceFactory" aria-expanded="false" aria-controls="collapseTwo">
                         ServiceFactory
                     </a>
                 </h4>
@@ -262,7 +336,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#AccessServices" aria-expanded="true" aria-controls="collapseOne">
+                    <a role="button" data-toggle="collapse" href="#AccessServices" aria-expanded="true" aria-controls="collapseOne">
                         AccessServices
                     </a>
                 </h4>
@@ -292,7 +366,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ContentProfileService" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#ContentProfileService" aria-expanded="false" aria-controls="collapseTwo">
                         ContentProfileService
                     </a>
                 </h4>
@@ -326,7 +400,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ProfileBuilder" aria-expanded="false" aria-controls="collapseThree">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#ProfileBuilder" aria-expanded="false" aria-controls="collapseThree">
                         [Business Process] ProfileBuilder
                     </a>
                 </h4>
@@ -366,7 +440,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#DomainServices" aria-expanded="false" aria-controls="collapseThree">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#DomainServices" aria-expanded="false" aria-controls="collapseThree">
                         [Business Process] DomainServices
                     </a>
                 </h4>
@@ -406,7 +480,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#SknUtils" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#SknUtils" aria-expanded="false" aria-controls="collapseTwo">
                         ResultBean Value Containers
                     </a>
                 </h4>
@@ -440,14 +514,14 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#JSONApis" aria-expanded="false" aria-controls="collapseThree">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#JSONApis" aria-expanded="false" aria-controls="collapseThree">
                         JSON APIs
                     </a>
                 </h4>
             </div>
             <div id="JSONApis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                 <div class="panel-body">
-                      <pre class="pre-scrollable">
+                      <pre class="pre-scrollable prettyprint">
                                         Final Access Package listing: One for each user is available in the API
                                         GET: /profiles/content_profile_demo.json
                                         GET: /profiles/access_profile_demo.json
@@ -555,7 +629,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ProcessController" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#ProcessController" aria-expanded="false" aria-controls="collapseTwo">
                         [Process] Controller
                     </a>
                 </h4>
@@ -570,7 +644,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#Configuration" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#Configuration" aria-expanded="false" aria-controls="collapseTwo">
                         Configuration
                     </a>
                 </h4>
@@ -585,7 +659,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#RailsModel" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#RailsModel" aria-expanded="false" aria-controls="collapseTwo">
                         Rails Model
                     </a>
                 </h4>
@@ -600,7 +674,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#RailsViews" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#RailsViews" aria-expanded="false" aria-controls="collapseTwo">
                         Rails View Helpers
                     </a>
                 </h4>
@@ -629,7 +703,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#RailsApplicationControllers" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#RailsApplicationControllers" aria-expanded="false" aria-controls="collapseTwo">
                         Rails Application Controllers
                     </a>
                 </h4>
@@ -644,7 +718,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#RSpecTesting" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#RSpecTesting" aria-expanded="false" aria-controls="collapseTwo">
                         RSpec Testing
                     </a>
                 </h4>
@@ -659,7 +733,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#AuthorizationDataModel" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#AuthorizationDataModel" aria-expanded="false" aria-controls="collapseTwo">
                         Authorization Data Models
                     </a>
                 </h4>
@@ -675,7 +749,7 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#ApplicationDataModel" aria-expanded="false" aria-controls="collapseTwo">
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#ApplicationDataModel" aria-expanded="false" aria-controls="collapseTwo">
                         Application Data Model
                     </a>
                 </h4>
