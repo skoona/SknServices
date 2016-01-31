@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 gem 'rails', '~> 4.0'
 gem 'config'
 
-gem 'activerecord-jdbcpostgresql-adapter'
+gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
+gem 'pg', platform: :ruby
 
 gem "rails_warden"
 
