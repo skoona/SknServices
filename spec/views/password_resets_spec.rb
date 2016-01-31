@@ -5,8 +5,9 @@
 
 RSpec.describe "Password Resets View Collection " do
   let(:user_object) { FactoryGirl.create(:user) }
-
+  
   before :each do
+    controller.singleton_class.send :include, Secure::ControllerAccessControl
     login_as(user_object, scope: :access_profile)
   end
 

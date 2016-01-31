@@ -70,10 +70,6 @@ RSpec.configure do |config|
   config.include FeatureHelpers #, type: :feature       # logged_as(user) session injection for cucumber/capybara
 
 
-  # Turn on FactoryGirl
-  # ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md
-  config.include FactoryGirl::Syntax::Methods
-
   config.before(:each) do
     Capybara.use_default_driver       # switch back to default driver
     # Capybara.default_host = 'http://test.host'
