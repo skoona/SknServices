@@ -158,7 +158,7 @@
   <xs:element name="uri">
     <xs:simpleType>
       <xs:restriction base="xs:string">
-        <xs:pattern value="[:alnum:]+/[:alnum:]+" />
+        <xs:pattern value=".+/[:alnum:]+" />
       </xs:restriction>
     </xs:simpleType>
   </xs:element>
