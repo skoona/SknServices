@@ -13,6 +13,7 @@ class PasswordService < ::Factory::DomainsBase
 		end			 
 		bean = {
 			success: true,
+			user: user,
 			message: "Password has been reset please sign in"
 		}
 		SknUtils::ResultBean.new(bean)
@@ -35,9 +36,10 @@ class PasswordService < ::Factory::DomainsBase
 	def reset_requested(params)
 		user = User.find_by(username: params[:user][:username])
     raise Utility::Errors::InvalidCredentialError, "Sorry, your username cannot be found." if user.nil?
-		send_password_reset(user) if user
+		send_password_reset(user)
 		bean = {
 			success: true,
+			user: user,
 			message: "Email sent with password reset instructions"
 		}
 		SknUtils::ResultBean.new(bean)
@@ -45,7 +47,7 @@ class PasswordService < ::Factory::DomainsBase
     Rails.logger.error "#{self.class.name}.#{__method__}(#{user.username if user.present?}) Klass: #{e.class.name}, Cause: #{e.message}"
 		bean = {
 			success: false,
-			message: "Email sent with password reset instructions"
+			message: e.message
 		}
 		SknUtils::ResultBean.new(bean)
 	end

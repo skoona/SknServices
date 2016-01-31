@@ -6,17 +6,7 @@ class ProfilesController < ApplicationController
 
   def content_profile_demo
     @page_controls = content_profile_service.handle_demo_page(params)
-    if @page_controls.success
-      if json_request?
-        results = @page_controls.to_hash
-        render json: results, status: :accepted, layout: false, content_type: :json and return
-      end
-    else
-      if json_request?
-        results = @page_controls.to_hash
-        render json: results, status: :conflict, layout: false, content_type: :json and return
-      end
-    end
+    flash.notice.now = @page_controls.message if @page_controls.message.present?
   end
 
   # json api, requires :username and access: [:access, :content]
@@ -32,7 +22,7 @@ class ProfilesController < ApplicationController
     if @page_controls.package.success
       render json: results, status: :accepted, layout: false, content_type: :json and return
     else
-      render json: results, status: :conflict, layout: false, content_type: :json and return
+      render json: results, status: :not_found, layout: false, content_type: :json and return
     end
   end
 
@@ -49,7 +39,7 @@ class ProfilesController < ApplicationController
     if @page_controls.success
       render json: results, status: :accepted, layout: false, content_type: :json and return
     else
-      render json: results, status: :conflict, layout: false, content_type: :json and return
+      render json: results, status: :not_found, layout: false, content_type: :json and return
     end
   end
 

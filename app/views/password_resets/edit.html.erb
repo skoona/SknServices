@@ -1,8 +1,10 @@
 <% provide(:title, 'Reset Password') %>
 
-<%= simple_form_for(@user, :url => password_reset_path(@user), :html => { :class => 'form form-horizontal' }) do |f| %>
+<header class="page-header">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+</header>
 
-      <h3>Enter new password</h3>
+<%= simple_form_for(@user, :url => password_reset_path(@user), :html => { :class => 'form form-horizontal' }) do |f| %>
 
 	  	<%= f.input :password, autofocus: true %>
 	  	<%= f.input :password_confirmation, label: 'Confirmation' %>

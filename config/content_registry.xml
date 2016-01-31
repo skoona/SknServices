@@ -1,31 +1,9 @@
-﻿<?xml version="1.0"?>
-<contentRegistry>
-<!--
-   config/content_registry.xml
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<contentRegistry xnlns="http://skoona.net/SknServices/ContentRegistry" 
+                schemaLocation="http://skoona.net/SknServices/ContentRegistry content_registry.xsd">
 
+<!-- see: config/content_registry.xsd -->
 
-   * REQUIRED RESOURCE SYNTAX **********************************************
-                              ** Note: :options are now required for TopicOpts values
-
-    <resource secured="true|false" content="true|false">
-        <uri>anyString</uri>
-        <description></description>
-        <userdata></userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="RequiredCommaSepTopicValues">security-role-name</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    UserData Required format/syntax is:
-       returns Array if value|value,...
-       returns Hash  if key:value|key:value|...
-       returns String if no reserve chars present
-       Reserved chars: |:  # vertical-bar and semi-colon
-
-
--->
     <!--============================================================================= -->
     <!--================== Content RESOURCE REGISTRY  =============================== -->
     <!--============================================================================= -->
