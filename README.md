@@ -20,6 +20,17 @@ It might be helpful to set these environment parms too:
     export JRUBY='--server --debug'
     export BUNDLE_PATH='vendor/bundle'
     
+    
+The default Ruby for this package is JRuby-9.0.4.0.  If you want to use a different version of ruby; Edit
+
+```Bash
+
+$ vim .ruby-version             # change to 'ruby-2.2.3'
+
+```
+
+    
+    
 Then execute;
  
 ```Bash
