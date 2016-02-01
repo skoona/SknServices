@@ -68,7 +68,7 @@
 # :na Strategy :not_authorized
 #
 # :or Callback :on_request                 Nothing
-# :aa Callback :after_authentication       Establishs UserProfile caches, resolve roles, clear session-menu, checks last login, causes user.save
+# :aa Callback :after_authentication       Establishes UserProfile caches, resolve roles, clear session-menu, checks last login, causes user.save
 # :aff Callback :after_failed_fetch        if path.secure then DROPS both cookies, clears flash, issue "Please login..."
 # :bf Callback :before_failure             DROPS remember_token, set REDIRECT :unauthenticated
 # :bl Callback :before_logout              UserProfile cleanup, drops token and session, resets session
@@ -94,6 +94,9 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
 end
 
+RailsWarden.default_user_class = Secure::UserProfile
+RailsWarden.unauthenticated_action = "unauthenticated"
+    
 # RackSessionAccess config
 if Rails.env.test?
   Rails.application.config.middleware.insert_before RailsWarden::Manager, RackSessionAccess::Middleware
