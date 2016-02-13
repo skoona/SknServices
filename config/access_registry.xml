@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<accessRegistry xnlns="http://skoona.net/SknServices/AccessRegistry" 
-                schemaLocation="http://skoona.net/SknServices/AccessRegistry access_registry.xsd">
+<accessRegistry xnlns="http://skoona.net/SknServices/AccessRegistry"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                xsi:schemaLocation="http://skoona.net/SknServices/AccessRegistry access_registry.xsd">
 <!--
    see: config/access_registry.xsd
 

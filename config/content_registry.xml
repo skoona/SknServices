@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<contentRegistry xnlns="http://skoona.net/SknServices/ContentRegistry" 
-                schemaLocation="http://skoona.net/SknServices/ContentRegistry content_registry.xsd">
+<contentRegistry xnlns="http://skoona.net/SknServices/ContentRegistry"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                xsi:schemaLocation="http://skoona.net/SknServices/ContentRegistry content_registry.xsd">
 
 <!-- see: config/content_registry.xsd -->
 
