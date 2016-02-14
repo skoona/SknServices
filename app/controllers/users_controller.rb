@@ -55,7 +55,7 @@ class UsersController < ApplicationController
   #   "user"=>{
   #       "name"=>"Branch Secondary User",
   #       "username"=>"astester",
-  #       "email"=>"appdev3@brotherhoodmutual.com",
+  #       "email"=>"appdev3@localhost.com",
   #       "password"=>"[FILTERED]",
   #       "password_confirmation"=>"[FILTERED]",
   #       "user_options"=>["BranchSecondary", "0037", ""],

@@ -1,7 +1,7 @@
 ===SknService
 ---
 
-Author: James Scott <jscott@brotherhoodmutual.com>
+Author: James Scott <jscott@localhost.com>
 Date: Dec 2015
 
 This file contains a collection of notes and data used during development
@@ -604,7 +604,7 @@ aptester Selected.
 {"username":"aptester","user_options":["BranchPrimary","0034","0037","0040"],"display_name":"Branch Primary User",
  "package":[
             {"success":true,"accessible_content_url":"/profiles/api_accessible_content.json?id=access",
-             "access_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"","provider":"UserProfile","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"BranchPrimary","display_name":"Branch Primary User",
+             "access_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"","provider":"UserProfile","username":"aptester","email":"appdev2@localhost.com","profile_type":"BranchPrimary","display_name":"Branch Primary User",
                                "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Branch Commission Statements","user_options":["BranchPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Branch.Commission.Statement.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Commission/Branch/PDF"},"topic_value":["PDF"],"description":"Branch Commission Statements","content_value":[{"doctype":"954"}],"content_type_description":"Branch Commission Statements","uri":"Commission/Branch/PDF","topic_type":"Branch"},
                                           {"username":"aptester","content_type":"Experience","topic_type_description":"Branch Experience Statements","user_options":["BranchPrimary","0034","0037","0040"],"resource_options":{"role":"Test.Branch.Commission.Experience.PDF.Access","role_opts":["0034","0037","0040"],"uri":"Experience/Branch/PDF"},"topic_value":["PDF"],"description":"Branch Experience Statements","content_value":[{"doctype":"956"}],"content_type_description":"Branch Experience Statements","uri":"Experience/Branch/PDF","topic_type":"Branch"}
                                          ]
@@ -614,7 +614,7 @@ aptester Selected.
              "message":"AccessProfile Entries for aptester:Branch Primary User Options=BranchPrimary,0034,0037,0040"
             },
             {"success":true,
-             "content_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"Branch Super User","provider":"SknService::Bcrypt","username":"aptester","email":"appdev2@brotherhoodmutual.com","profile_type":"BranchPrimary","display_name":"Branch Primary User",
+             "content_profile":{"success":true,"pak":"589481242bc592029428433bf75024b1","profile_type_description":"Branch Super User","provider":"SknService::Bcrypt","username":"aptester","email":"appdev2@localhost.com","profile_type":"BranchPrimary","display_name":"Branch Primary User",
                                 "entries":[{"username":"aptester","content_type":"Commission","topic_type_description":"Branch Actions for a specific branch","user_options":["BranchPrimary","0034","0037","0040"],"topic_value":["0038"],"description":"Determine which branch documents can be seen","content_value":["68613"],"content_type_description":"Monthly Commission Reports and Files","topic_type":"Branch"},
                                            {"username":"aptester","content_type":"Notification","topic_type_description":"Account Action again for a specific set of account","user_options":["BranchPrimary","0034","0037","0040"],"topic_value":["Producer"],"description":"Determine which accounts will have notification sent","content_value":["AdvCancel"],"content_type_description":"Email Notification of Related Events","topic_type":"Account"}
                                           ]
@@ -634,7 +634,7 @@ eptester Selected.
  "username":"eptester",
  "user_options":["Manager","0034","0037","0040"],
  "assigned_group":["EmployeePrimary"],
- "email":"appdev@brotherhoodmutual.com",
+ "email":"appdev@localhost.com",
  "authentication_provider":"SknService::Bcrypt",
  "display_name":"Employee Primary User",
  "profile_exist":true,

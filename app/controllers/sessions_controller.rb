@@ -29,6 +29,9 @@ class SessionsController < ActionController::Base
   def unauthenticated
   end
 
+  def not_authorized
+  end
+
   private
 
   def do_flashes

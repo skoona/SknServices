@@ -15,7 +15,7 @@ ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) unless Rails
 
 #
 # ActionMailer::Base.smtp_settings = {
-#     address:              'smtp01.brotherhoodmutual.com',
+#     address:              'smtp01.localhost.com',
 #     enable_starttls_auto: true
 # }
 #

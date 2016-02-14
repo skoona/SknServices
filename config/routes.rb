@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :sessions, only:  [:new, :create, :destroy] do
     collection do
       get :unauthenticated
+      get :not_authorized
     end
   end
 

@@ -19,7 +19,7 @@ begin
   {
       username:              "eptester",
       name:                  "Employee Primary User",
-      email:                 "appdev@brotherhoodmutual.com",
+      email:                 "appdev@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["Manager", "0034", "0037", "0040"],
@@ -29,7 +29,7 @@ begin
   {
       username:              "estester",
       name:                  "Employee Secondary User",
-      email:                 "appdev1@brotherhoodmutual.com",
+      email:                 "appdev1@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["EmployeeSecondary", "0037"],
@@ -43,7 +43,7 @@ begin
   {
       username:              "aptester",
       name:                  "Branch Primary User",
-      email:                 "appdev2@brotherhoodmutual.com",
+      email:                 "appdev2@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["BranchPrimary", "0034", "0037", "0040"],
@@ -55,7 +55,7 @@ begin
   {
       username:              "astester",
       name:                  "Branch Secondary User",
-      email:                 "appdev3@brotherhoodmutual.com",
+      email:                 "appdev3@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["BranchSecondary", "0037"],
@@ -66,7 +66,7 @@ begin
   {
       username:              "vptester",
       name:                  "Vendor Long Term User",
-      email:                 "appdev4@brotherhoodmutual.com",
+      email:                 "appdev4@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["VendorPrimary"],
@@ -76,7 +76,7 @@ begin
   {
       username:              "vstester",
       name:                  "Vendor Short Term User",
-      email:                 "appdev5@brotherhoodmutual.com",
+      email:                 "appdev5@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["VendorSecondary"],

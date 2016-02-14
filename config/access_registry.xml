@@ -287,7 +287,11 @@
     </resource>
     <resource secured="false">
         <uri>sessions/unauthenticated</uri>
-        <description>Your request has not been authorized!</description>
+        <description>Your request requires Authentication!</description>
+    </resource>
+    <resource secured="false">
+        <uri>sessions/not_authorized</uri>
+        <description>Your request requires Authorization!</description>
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
