@@ -9,6 +9,12 @@ class ProfilesController < ApplicationController
     flash.notice.now = @page_controls.message if @page_controls.message.present?
   end
 
+  # GET
+  def manage_content_profiles
+    @page_controls = content_profile_service.manage_content_profiles(params)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+  end
+
   # json api, requires :username and access: [:access, :content]
   # - returns Accessible Content
   # GET
@@ -18,29 +24,13 @@ class ProfilesController < ApplicationController
   #             }
   def api_accessible_content
     @page_controls = content_profile_service.api_accessible_content(params)
-    results = @page_controls.to_hash
-    if @page_controls.package.success
-      render json: results, status: :accepted, layout: false, content_type: :json and return
-    else
-      render json: results, status: :not_found, layout: false, content_type: :json and return
-    end
-  end
-
-  # GET
-  def manage_content_profiles
-    @page_controls = content_profile_service.manage_content_profiles(params)
-    flash[:notice] = @page_controls.message if @page_controls.message?
+    render(json: @page_controls.to_hash, status: (@page_controls.package.success ? :accepted : :not_found), layout: false, content_type: :json) and return
   end
 
   # POST
   def api_content_profiles
     @page_controls = content_profile_service.api_content_profiles(params)
-    results = @page_controls.to_hash
-    if @page_controls.success
-      render json: results, status: :accepted, layout: false, content_type: :json and return
-    else
-      render json: results, status: :not_found, layout: false, content_type: :json and return
-    end
+    render(json: @page_controls.to_hash, status: (@page_controls.success ? :accepted : :not_found), layout: false, content_type: :json) and return
   end
 
 end

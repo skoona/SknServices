@@ -10,6 +10,7 @@ class ContentProfileService < ::ProfilesDomain
 
   PROFILE_CONTEXT='content'
 
+  # Controller Entry Point
   def handle_demo_page(params={})
     SknUtils::PageControls.new({
        success: true,
@@ -25,6 +26,7 @@ class ContentProfileService < ::ProfilesDomain
     })
   end
 
+  # Controller Entry Point
   def api_accessible_content(params)
     handle_accessible_content_api(params)
   end
@@ -48,6 +50,7 @@ class ContentProfileService < ::ProfilesDomain
     })
   end
 
+  # Controller Entry Point
   def api_content_profiles(params)
     res = SknUtils::PageControls.new({
        success: true,

@@ -14,12 +14,8 @@ class AccessServices < ::ProfilesDomain
   PROFILE_CONTEXT='access'
 
 
-  def user_accessible_content(user_profile, context=PROFILE_CONTEXT, profile=nil)
-    [
-        {source: "datafiles", filename: "someFile.dat", created: user_profile.last_access, size: "0"},
-        {source: "images",    filename: "somePic.png",  created: user_profile.last_access, size: "0"},
-        {source: "pdfs",      filename: "someFile.pdf", created: user_profile.last_access, size: "0"}
-    ]
+  def user_accessible_content(topic, content)
+    factory.filelist_builder.request_content_filelist({topic: topic, content: content})
   end
 
   def get_user_form_options

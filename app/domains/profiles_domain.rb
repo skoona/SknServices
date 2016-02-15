@@ -25,7 +25,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     usrs
   end
 
-  def managable_page_users(context=PROFILE_CONTEXT)
+  def manageable_page_users(context=PROFILE_CONTEXT)
     usrs = []
     Secure::UserProfile.page_users(context).each do |u|
       entries = {none: true}
@@ -157,11 +157,11 @@ class ProfilesDomain < ::Factory::DomainsBase
                 when 'access'
                   {package: {success: true, message: params[:content_type_description], content: 'access',
                    username: pg_u.username, display_name: pg_u.display_name ,
-                  package: user_accessible_content(pg_u, "access", @profile)}}
+                  package: get_user_accessible_content(pg_u, "access", @profile)}}
                 when 'content'
                   {package: {success: true, message: params[:content_type_description], content: 'content',
                    username: pg_u.username, display_name: pg_u.display_name ,
-                   package: user_accessible_content(pg_u, "content", @profile)}}
+                   package: get_user_accessible_content(pg_u, "content", @profile)}}
                 else
                   {package: {success: false, message: "not found", content: 'error',
                    username: pg_u.username, display_name: pg_u.display_name ,
@@ -180,8 +180,10 @@ class ProfilesDomain < ::Factory::DomainsBase
                              }})
   end
 
-  def user_accessible_content(user_profile, context="access", profile=nil)
-    result = factory.access_services.user_accessible_content(user_profile, context, profile)
+  def get_user_accessible_content(user_profile, context="access", profile=nil)
+    topic = :images
+    content = '*'
+    result = factory.access_services.user_accessible_content(topic, content)
     result
   end
 
@@ -189,7 +191,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     {
         success: false,
         message: 'Page Not Implemented!',
-        user_package: managable_page_users,
+        user_package: manageable_page_users,
         page_actions: [{
            id: "test-action",
            path: :manage_content_profiles_profiles_path,

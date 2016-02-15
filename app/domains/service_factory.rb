@@ -40,6 +40,11 @@ class ServiceFactory < ::Factory::ServicesBase
     yield @bld_profile_builder if block_given?
     @bld_profile_builder
   end
+  def filelist_builder
+    @bld_filelist_builder ||= Builder::FilelistBuilder.new({factory: self})
+    yield @bld_filelist_builder if block_given?
+    @bld_filelist_builder
+  end
 
 
   ##
