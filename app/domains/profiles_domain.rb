@@ -157,11 +157,11 @@ class ProfilesDomain < ::Factory::DomainsBase
                 when 'access'
                   {package: {success: true, message: params[:content_type_description], content: 'access',
                    username: pg_u.username, display_name: pg_u.display_name ,
-                  package: get_user_accessible_content(pg_u, "access", @profile)}}
+                  package: user_accessible_content(pg_u, "access", @profile)}}
                 when 'content'
                   {package: {success: true, message: params[:content_type_description], content: 'content',
                    username: pg_u.username, display_name: pg_u.display_name ,
-                   package: get_user_accessible_content(pg_u, "content", @profile)}}
+                   package: user_accessible_content(pg_u, "content", @profile)}}
                 else
                   {package: {success: false, message: "not found", content: 'error',
                    username: pg_u.username, display_name: pg_u.display_name ,
@@ -180,10 +180,10 @@ class ProfilesDomain < ::Factory::DomainsBase
                              }})
   end
 
-  def get_user_accessible_content(user_profile, context="access", profile=nil)
+  def user_accessible_content(user_profile, context="access", profile=nil)
     topic = :images
     content = '*'
-    result = factory.access_services.user_accessible_content(topic, content)
+    result = factory.filelist_builder.request_content_filelist({topic: topic, content: content})
     result
   end
 

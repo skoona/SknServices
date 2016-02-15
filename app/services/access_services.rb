@@ -14,10 +14,6 @@ class AccessServices < ::ProfilesDomain
   PROFILE_CONTEXT='access'
 
 
-  def user_accessible_content(topic, content)
-    factory.filelist_builder.request_content_filelist({topic: topic, content: content})
-  end
-
   def get_user_form_options
     SknUtils::PageControls.new({
        groups: group_select_options,
