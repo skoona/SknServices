@@ -8,6 +8,9 @@
 #      http://alistair.cockburn.us/Hexagonal+architecture
 #      http://www.slideshare.net/rdingwall/domain-driven-design-101
 #      http://www.slideshare.net/mariam_hakobyan/ddd-quickly
+##
+# Best thinking so far.
+# Ref: http://www.zephyrizing.net/blog/2015/06/29/the-many-faces-of-the-repository-pattern/
 #
 # See: lib/repo/backend/in_memory_backend, lib/repo/delegation,  
 #
