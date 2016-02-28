@@ -113,12 +113,12 @@ end
                        need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  Using a Repository strategy could be considered to add more isolation.  Ideally we
                        should be able to write RSpec tests for the service/domain classes without invoking the Rails environment.</p>
                     <p>If service objects are focused on transforming domain results to external interfaces, and domains themselves are focused on the core business logic of a single process.  Then yes, there will
-                       be many domains classes, one to support each business process or business entity.  However, a domain class need not do all the heavy lifting, its single-responsibility is producing a contextually valid result
+                       be many domains classes, one to support each business process.  However, a domain class need not do all the heavy lifting, its single-responsibility is producing a contextually valid result
                        from the triggering event or input.</p>
                     <p>Domains produce those results best by invoking secondary task oriented objects to complete elements of the overall process, positioning domains to be the orchestrator or main-line
-                       for the business entity/process they are assigned.  Task oriented objects must adhere to the single-responsibility guideline to maintain their value to the overall system's design.  Again enhancing
-                       our ability to test off-line from Rails, and making the code more portable with greater reuse opportunities.  A task object would completely handle a task step of the logicall process flow a
-                       domain object is responsible for.  <em>use the force!</em></p>
+                       for the business process they are assigned.  Task oriented objects must adhere to the single-responsibility guideline to maintain their value to the overall system's design.  Again enhancing
+                       our ability to test off-line from Rails, and making the code more portable with greater reuse opportunities.  A task object would completely handle a task step of the logical process flow
+                       domain objects are responsible for.  <em>use the force!</em></p>
                 </div>
             </div>
             <p>Admittedly, this demonstration app has not reached that level of <em>Nirvana</em> yet, but it is the design objective! Now for the deep details.</p>
@@ -154,7 +154,7 @@ end
                     </dl>
                 </div>
             </div>
-            <p>Now for the architectural component details. i.e how to build or apply these design principals.</p>
+            <p>Now for the architectural component details. i.e how to apply these design principals, to meet the business model objective?</p>
         </div>
 
         <div class="panel panel-info">
