@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 4.0'
 gem 'config'
-
+gem 'logging'
 gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
 gem 'pg', platform: :ruby
 

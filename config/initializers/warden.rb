@@ -237,7 +237,7 @@ Warden::Manager.on_request do |proxy|
     end
   end
 
-  Rails.logger.debug " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]}"
+  Rails.logger.perf " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]} RequestId=#{proxy.request.uuid}"
 end
 
 ##

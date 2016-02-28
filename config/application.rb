@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'logging'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -30,12 +31,24 @@ module SknService
     config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
 
+    # Add the PERF type
+    # https://github.com/TwP/logging/blob/master/examples/custom_log_levels.rb
+    Logging.init(:debug, :info, :perf, :warn, :success, :error, :fatal)
+      dpattern = Logging.layouts.pattern({ pattern: '%d %c:%-5l %m\n', date_pattern: '%Y-%m-%d %H:%M:%S.%3N' })
+       astdout = Logging.appenders.stdout( 'stdout', :layout => dpattern)
+      arolling = Logging.appenders.rolling_file( 'rolling_log', :filename => "./log/#{Rails.env}.log",
+                                                      :age => 'daily', :size => 12582912, :keep => 9,
+                                                      :layout => dpattern, :color_scheme => 'default' )
+      Logging.logger.root.level = (Rails.env.production? ? :info : :debug )
+      Logging.logger.root.appenders = (Rails.env.test? ? arolling : [astdout, arolling] )
+      Rails.logger = Logging.logger['SKN']
+      ActiveRecord::Base.logger = Rails.logger
+    Rails.logger.info "Rails_Config loaded #{Rails.env}"
+
+
+
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.active_record.schema_format = :ruby
-
-    # config.log_formatter = ActiveSupport::TaggedLogging::Formatter
-    config.log_tags = [Proc.new {Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')}, Proc.new {SknService::Application.config.log_level.upcase}]
-    config.logger = ActiveSupport::TaggedLogging.new(Logger.new("#{Rails.root}/log/#{Rails.env}.log", 'daily'))
   end
 end
