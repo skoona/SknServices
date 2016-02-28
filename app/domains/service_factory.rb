@@ -14,11 +14,10 @@ class ServiceFactory < ::Factory::ServicesBase
   attr_accessor :factory
 
   def initialize(params={})
-    @factory = params[:factory] || params[:controller]
+    @factory = params[:factory]
     @user = @factory.current_user unless @factory.nil?
     raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
   end
-
 
   def password_service
     @ct_password_service ||= ::PasswordService.new({factory: self})
@@ -61,10 +60,10 @@ class ServiceFactory < ::Factory::ServicesBase
   end
 
   # User Session Handler
-  def get_session_params(key)
+  def get_session_param(key)
     @factory.session[key]
   end
-  def set_session_params(key, value)
+  def set_session_param(key, value)
     @factory.session[key] = value
   end
 
@@ -80,9 +79,9 @@ class ServiceFactory < ::Factory::ServicesBase
 
   private
 
-  # Easier to code than delegation, or forwarder
+  # Easier to code than delegation, or forwarder; @factory assumed to equal @controller
   def method_missing(method, *args, &block)
-    Rails.logger.debug("ServiceFactory#method_missing() looking for: #{method}")
+    Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
     if @factory.respond_to?(method)
       block_given? ? @factory.send(method, *args, block) :
           (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))

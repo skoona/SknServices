@@ -14,28 +14,14 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
     it "#new throws an Exception without params." do
       expect{ AccessServices.new }.to raise_error(ArgumentError)
     end
-
-    it "#new succeeds with only :controller as init param." do
-      expect(AccessServices.new({controller: controller})).to be_a(AccessServices)
-    end
     it "#new succeeds with only :factory as init param." do
-      expect(AccessServices.new({factory: controller})).to be_a(AccessServices)
-    end
-    it "#new succeeds with all :factory, :controller, and :user as init params." do
-      expect(AccessServices.new({factory: controller, controller: controller, user: @user})).to be_a(AccessServices)
-    end
-
-    it "#new fails when :controller is invalid." do
-      expect{ AccessServices.new({controller: nil}) }.to raise_error(ArgumentError)
+      expect(AccessServices.new({factory: @factory})).to be_a(AccessServices)
     end
     it "#new fails when :factory is invalid." do
       expect{ AccessServices.new({factory: nil}) }.to raise_error(ArgumentError)
     end
-    it "#new recovers when :factory is invalid, :controller is valid." do
-      expect( AccessServices.new({factory: nil, controller: controller}) ).to be_a(AccessServices)
-    end
     it "#factory.access_services returns a proper service object." do
-      expect( @factory.access_services ).to be_a AccessServices
+      expect( @service ).to be_a AccessServices
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
@@ -44,7 +30,6 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
     end
     it "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
-      expect( @service.factory.user ).to be_a Secure::UserProfile
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
   end

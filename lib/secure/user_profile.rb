@@ -9,7 +9,8 @@ module Secure
 
     include Secure::UserAccessControl
 
-    attr_accessor :id, :person_authenticated_key, :last_access, :name, :user_options, :assigned_groups, :assigned_roles, :username, :email, :roles
+    attr_accessor :id, :person_authenticated_key, :last_access, :name, :user_options,
+                  :assigned_groups, :assigned_roles, :username, :email, :roles
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
     singleton_class.send :delegate, :find_by, :find_each, :where, :to => ::User
@@ -33,16 +34,15 @@ module Secure
       setup_combined_user_roles()
     end
 
-
-    def active?
-      @user_object.active and id.present?
-    end
-
     def proxy_u
       @user_object
     end
     def proxy_c
-      @user_object.class
+      proxy_u.class
+    end
+
+    def active?
+      proxy_u.active and id.present?
     end
 
     def display_name
@@ -53,7 +53,7 @@ module Secure
     #   user.authenticate('notright')      # => false
     #   user.authenticate('mUc3m00RsqyRe') # => user
     def authenticate(unencrypted_password)
-        @user_object.authenticate(unencrypted_password) && self
+        proxy_u.authenticate(unencrypted_password) && self
     end
 
     # Warden will call this methods
@@ -104,20 +104,20 @@ module Secure
     # answering for any attr that user_object actually handles
     #:nodoc:
     def respond_to_missing?(method, incl_private=false)
-      @user_object.send(:respond_to_missing?, method, incl_private) || super(method,incl_private)
+      proxy_u.send(:respond_to_missing?, method, incl_private) || super(method,incl_private)
     end
 
     private
 
     # Easier to code than delegation, or forwarder
     def method_missing(method, *args, &block)
-      Rails.logger.debug("Secure::UserProfile#method_missing() looking for: #{method.to_s}")
+      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method.to_s}")
       # puts("  #{self.name.to_s}.#{__method__} looking for: #{method.to_s}")   # ToDo: No internal methods (__method__) in method missing
       # puts("  UserProfile#method_missing() looking for: #{method.to_s}")
 
-      if @user_object.respond_to?(method)
-        block_given? ? @user_object.send(method, *args, block) :
-            (args.size == 0 ?  @user_object.send(method) : @user_object.send(method, *args))
+      if proxy_u.respond_to?(method)
+        block_given? ? proxy_u.send(method, *args, block) :
+            (args.size == 0 ?  proxy_u.send(method) : proxy_u.send(method, *args))
       else
         super(method, *args, &block)
       end

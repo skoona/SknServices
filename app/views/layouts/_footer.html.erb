@@ -8,25 +8,33 @@
                     <span>&nbsp;Architectural Information</span>
                 <% end %>
             </div>
-            <div class="col-md-4">
-                <%= link_to details_sysinfo_pages_path, class: "text-left" do %>
-                    <span>&nbsp;&copy; 2016</span>
+            <div class="col-md-4 text-center">
+                <%= link_to details_sysinfo_pages_path, class: "text-center" do %>
+                    <span>&nbsp;&copy; 2015-2016 Skoona Consulting</span>
                 <% end %>
             </div>
             <div class="col-md-4">
-                <% unless accessed_page.eql?('pages/home') %>
-                    <%= link_to home_pages_path, class: "pull-right" do %>
-                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                        <span>&nbsp;Home</span>
-                    <% end %>
-                <% end %>
+                <div class="row">
+                    <div class="col-md-9">
+                        <% unless accessed_page.eql?('pages/home') %>
+                            <%= link_to home_pages_path, class: "pull-right" do %>
+                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                                <span>&nbsp;Home</span>
+                            <% end %>
+                        <% end %>
+                    </div>
+                    <div class="col-md-3 pull-right">
+                        <%= link_to "#top", class: "pull-right" do %>
+                            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                            <span>&nbsp;Top</span>
+                        <% end %>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-push-8 col-md-4">
-                <%= link_to "#top", class: "pull-right" do %>
-                    <span>&nbsp;Top</span>
-                <% end %>
+            <div class="col-md-push-4 col-md-4 text-center">
+                    <span>SknServices Release Version: <%= Utility::BuildVersion.build_version %></span>
             </div>
         </div>
 

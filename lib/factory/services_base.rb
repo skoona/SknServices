@@ -7,8 +7,6 @@ module Factory
   class ServicesBase
     include Factory::ObjectStorageService
 
-
-
   end
 end
 

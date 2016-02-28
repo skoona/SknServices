@@ -16,23 +16,13 @@ RSpec.describe ApplicationController, "Service routines of ContentProfileService
     end
 
     it "#new succeeds with only :controller as init param." do
-      expect(ContentProfileService.new({controller: controller})).to be_a(ContentProfileService)
+      expect(ContentProfileService.new({factory: controller})).to be_a(ContentProfileService)
     end
     it "#new succeeds with only :factory as init param." do
       expect(ContentProfileService.new({factory: controller})).to be_a(ContentProfileService)
     end
-    it "#new succeeds with all :factory, :controller, and :user as init params." do
-      expect(ContentProfileService.new({factory: controller, controller: controller, user: @user})).to be_a(ContentProfileService)
-    end
-
-    it "#new fails when :controller is invalid." do
-      expect{ ContentProfileService.new({controller: nil}) }.to raise_error(ArgumentError)
-    end
     it "#new fails when :factory is invalid." do
       expect{ ContentProfileService.new({factory: nil}) }.to raise_error(ArgumentError)
-    end
-    it "#new recovers when :factory is invalid, :controller is valid." do
-      expect( ContentProfileService.new({factory: nil, controller: controller}) ).to be_a(ContentProfileService)
     end
 
     it "#factory.content_profile_service returns a proper service object." do

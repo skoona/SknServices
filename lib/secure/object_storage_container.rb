@@ -47,7 +47,7 @@ module Secure
           false
         end
       end
-      Rails.logger.debug "#{self.class.name}.#{__method__}() Count=#{counter}"
+      Rails.logger.perf "#{self.class.name}.#{__method__}() Count=#{counter}"
       counter
     end
 

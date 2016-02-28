@@ -7,33 +7,22 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
   before do
     @user = Secure::UserProfile.new( User.first )
     sign_in(@user, scope: :access_profile)
-    @sf = ServiceFactory.new(factory: controller)
-    @service = @sf.access_services
+    @factory = controller.service_factory
+    @service = @factory.access_services
   end
 
   context "Initialization "  do
     it "#new throws an Exception without params." do
       expect{ ProfilesDomain.new }.to raise_error(ArgumentError)
     end
-
-    it "#new succeeds with only :controller as init param." do
-      expect(ProfilesDomain.new({controller: controller})).to be_a(ProfilesDomain)
-    end
     it "#new succeeds with only :factory as init param." do
-      expect(ProfilesDomain.new({factory: controller})).to be_a(ProfilesDomain)
+      expect(ProfilesDomain.new({factory: @factory})).to be_a(ProfilesDomain)
     end
     it "#new succeeds with all :factory, :controller, and :user as init params." do
       expect(@service).to be_a(ProfilesDomain)
     end
-
-    it "#new fails when :controller is invalid." do
-      expect{ ProfilesDomain.new({controller: nil}) }.to raise_error(ArgumentError)
-    end
     it "#new fails when :factory is invalid." do
       expect{ ProfilesDomain.new({factory: nil}) }.to raise_error(ArgumentError)
-    end
-    it "#new recovers when :factory is invalid, :controller is valid." do
-      expect( ProfilesDomain.new({factory: nil, controller: controller}) ).to be_a(ProfilesDomain)
     end
     it "#service returns a proper domain object." do
       expect( @service ).to be_a ProfilesDomain
@@ -41,8 +30,6 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
     it "#current_user and #user returns a UserProfile object." do
       expect( @service.current_user ).to be_a Secure::UserProfile
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
-      expect( @service.factory.user ).to be_a Secure::UserProfile
-      expect( @service.current_user ).to be_a Secure::UserProfile
     end
   end
 
