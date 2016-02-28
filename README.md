@@ -4,6 +4,28 @@
 Author: James Scott
 Date: Dec 2015
 
+#Introduction
+---
+
+This is a Rails 4.2.5/Ruby 2.2.3/PostgreSQL Application, which demonstrates Authentication and Authorization strategies.  My original
+need was to demonstrate this methodology, rather than to continue open-ended theoretical discussions.  To end the conversations I needed
+to create two models, one based on an existing XML file; modeled after Java's Security Manager and permission.  The other model would
+be a Database driven model that represented the same goal.  It is my expectation that they both meet my objective, and could both
+be used successfully in any application base.  
+
+Of the two strategies the database model is my preference, as it would be easier to maintain and create a UI to support it. The demonstration
+of the final algorithmic result is the 'ContentProfile Demo' page.  It lists all the systems users, and when one is selected it displays
+both the XML AccessProfile, and the matching DB ContentProfile.
+
+After having proven my point, I've decided to share the body of this work and complete it by implementing my ToDo list, and a formal
+Domain Driven Design(DDD) focused on the business of Audio Engineering (Mixer).  Where collecting and delivering audio project files to 
+clients and partners, like mastering engineers, with absolutely tight security is essential.
+
+Again, I've not started the DDD yet, nor finished all the UI.  This I will complete over the next few months.  However, the basic
+security and authorization features are fully completed and I think quite usable as a secure starter application.
+
+James,
+
 
 ##Installation
 ---
