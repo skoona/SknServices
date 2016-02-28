@@ -18,22 +18,18 @@
             </div>
             <div id="guidance" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGuidance">
                 <div class="panel-body">
-                    <p class="lead">This application is a Rails 4.2.5+ &amp; JRuby-9.0.4.0 app.  However, WE DO NOT FOLLOW THE CLASSIC RAILS WAY.</p>
-                    <p>Doing it our way, is going to become more difficult
-                        as Rails continues to mature in the wrong direction; Rails 5 may be the last platform we engage.  Rails has not yet provided a container or
-                        methodology to include business logic safely or in a scalable way.  Our Way, has adopted a strategy to co-exist with Rails as the Web Interface.
-                        ActiveSupport::Concerns, among other features, is now challenging our strategy for co-existence.  When Rails impacts Core Ruby principals, like <code>Module#included</code>,
-                        we have to pay attention and make an informed and educated choice; make your voice heard!.
-                    </p>
-                    <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our application or business logic from it.  Calling on Rails only when absolutely needed to exchange
+                    <p class="lead">This application is a Rails 4.2.5+ &amp; Ruby-2.2.3 app.  However, WE DO NOT FOLLOW THE CLASSIC RAILS WAY.</p>
+                    <p> Rails is an MVC Web Framework.  The MVC model is a classic and used with success, as is, for many applications.  However, there are many maintenance, scaling, and growth issues when the codeset exceeds a certain size.
+                    We understand these growth issues, and have chosen to apply the more traditional <strong>Domain Driven Design(DDD)</strong> approach, with Rails isolated as a Web Interface; as much as possible.</p>
+                    <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our application business logic from it.  Calling on Rails only when absolutely needed to exchange
                         results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
                     <p>The persistent assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
                         technologies; is very dangerous and Microsoft-ish.  For examples of the wrong direction read the Rails Release notes starting a 4.0, up to version 5.
-                        Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
-                    <p>This application source, and implementation, serve as a model for how successful web application can be engineered without dumbing down or wasting time.</p>
+                        Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality, like <code>Module#include</code>: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
+                    <p class="lead">This application source, and implementation, serve as a model for how successful web application can be engineered without dumbing down or wasting time.</p>
                 </div>
             </div>
-            <p>Rails is a Great Web Framework.  Your application can derive great benefit from Rails when engineered (Desgined) for use with Rails.</p>
+            <p>Rails is a Great Web Framework.  Your application can derive great benefit from Rails when engineered (Designed) to co-exist with Rails.</p>
         </div>
 		<div class="panel panel-info">
 	        <div class="panel-heading" role="tab" id="headingOurWay">
@@ -46,12 +42,13 @@
 	        <div id="ourWay" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOurWay">
 	            <div class="panel-body">                   
 			        <p class="lead">We do not add business process logic to Models, controllers, or views!</p>
-			        <p>We consider controller methods as the entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code>:service_name.entry_method_name(params)</code>.
-			        	Where <code>:service_name</code> is the name of a logical business logic service associated with that page.
-			          This service's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values which can easily be converted into JSON,
-			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values bean. For apps that have some sort of menu-bar or top of page information
-			          section.  We up the instance variable count to two, by allowing a <code>@page_info</code> values bean, which would contain al the values needed to populate the page informaitn section of 
-			          that page thru the page partials prepared for it.  In cases where the return code the controller method is negative, we maintain the <code>:success, :message</code> keys in the
+			        <p>We consider controller methods as entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code>:service_name.entry_method_name(params)</code>.
+			          Where <code>:service_name</code> is the name of a business process service associated with that page.
+			          This service's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values, which can easily be converted into JSON,
+			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values bean.</p>
+                    <p>For apps that have some sort of menu-bar or top of page information
+			          section.  We up the instance variable count by one, by allowing a <code>@page_info</code> values bean, which would contain all the values needed to populate the top of page information section of
+			          that page thru the page partials prepared for it.  In cases where the return code to the controller method is negative, we maintain the <code>:success, :message</code> keys in the
 			          values bean (i.e. ResultsBean) to carry this failure state.  This allows the controller to redirect to the logical next page based on error, or continue to regular destination 
 			          on success; message is used for the Flash message when needed.</p>
 
@@ -62,6 +59,7 @@ class ProfilesController < ApplicationController
   def content_profile_demo
     @page_controls = content_profile_service.handle_demo_page(params)
     flash.notice.now = @page_controls.message if @page_controls.message.present?
+    # unless were CRUDing the view will handle any errors, so no redirects needed here.
   end
 
   # JSON only response

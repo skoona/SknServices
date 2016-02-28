@@ -61,7 +61,7 @@ module Secure
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.last_access = Time.now
-      remove_from_store
+      remove_existing_object(person_authenticated_key.to_sym)
       true
     end
 
@@ -70,7 +70,7 @@ module Secure
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.last_access = Time.now
-      add_to_store
+      set_existing_object(person_authenticated_key.to_sym, self)
       true
     end
 
@@ -121,20 +121,6 @@ module Secure
       else
         super(method, *args, &block)
       end
-    end
-
-    #
-    # Wraps methods from Factory::ObjectStorageServices to apply our default key
-    #
-
-    # Saves user object to InMemory Container
-    def add_to_store()
-      set_existing_object(person_authenticated_key.to_sym, self)
-    end
-
-    # Removes saved user object from InMemory Container
-    def remove_from_store()
-      remove_existing_object(person_authenticated_key.to_sym)
     end
 
   end # end UserProfile
