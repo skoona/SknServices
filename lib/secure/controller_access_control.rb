@@ -39,6 +39,7 @@ module Secure
                               :redirect_to_target_or_default
                             ]
       ) if respond_to?(:helper_method)
+      send( :before_action, :login_required)
     end
 
 

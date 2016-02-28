@@ -6,15 +6,12 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery
 
-  before_action :establish_domain_services, :login_required
+  before_action :establish_domain_services
 
   after_action  :manage_domain_services
 
+  helper_method :service_factory, :json_request?
 
-  delegate :password_service, :access_services, :content_profile_service, :profile_builder,
-           to: :service_factory
-
-  helper_method :service_factory, :profile_builder, :json_request?
 
   # New Services extension
   def service_factory
@@ -23,6 +20,7 @@ class ApplicationController < ActionController::Base
 
 
   protected
+
 
   def json_request?
     request.format.json?
@@ -35,6 +33,15 @@ class ApplicationController < ActionController::Base
     super
   end
 
+  # Enhance the PERF Logger output
+  # see: config/initializers/notification_logger.rb
+  def append_info_to_payload(payload)
+    super
+    payload[:uuid] = request.uuid || 'na'
+    payload[:username] = current_user.present? ? current_user.username :  'no-user'
+  end
+
+  # DeSerialize from Session
   def establish_domain_services
     service_factory
     flash_message(:alert, warden.message) if warden.message.present?
@@ -50,5 +57,17 @@ class ApplicationController < ActionController::Base
     end
     true
   end
+
+  # Easier to code than delegation, or forwarder
+  def method_missing(method, *args, &block)
+    Rails.logger.debug("#{self.class.name}.#{__method__}() looking for: ##{method}")
+    if service_factory.respond_to?(method)
+      block_given? ? service_factory.send(method, *args, block) :
+          (args.size == 0 ?  service_factory.send(method) : service_factory.send(method, *args))
+    else
+      super(method, *args, &block)
+    end
+  end
+
 
 end
