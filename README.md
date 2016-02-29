@@ -181,9 +181,9 @@ This translates to AccessRegistry XML like the following:
 ```
 
 
-Each role would be assigned to one or more individuals via the normal assignment method.  With the
+Each authorizedRole("ContentProfile.Access.Branch.Commission") would be assigned to one or more individuals via the normal assignment method.  With the
  role assigned to a user, and that user having branch '0024' in their 
-user profile options, they would be allowed to view/download commission reports for that branch, and all branch in their user profile.  
+user profile options, they would be allowed to view/download commission reports for that branch, and all branches in their user profile.  
 
 Implementations of AccessProfile would evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
 to include a user's list of assigned branches (options), and assigned roles for validation of their access privileges. 
@@ -191,8 +191,8 @@ to include a user's list of assigned branches (options), and assigned roles for 
 
 ###If the permission has options, at least one user options must match! 
 
-This allows for the options attribute to override the one value specified in the URI.  When XML options attribute list all branches for with this 
-service enabled, the user will be required to have at least one option in their profile and the specific authorizedRole.
+This allows for the options attribute array to override the one or more values specified in the URI.  When XML options attribute list all branches for which this 
+service is enabled, the user will be required to have at least one option in their profile and the specific authorizedRole.
 
 
 ```Ruby
