@@ -7,7 +7,9 @@ Date: Dec 2015
 #Introduction
 ---
 
-This is a Rails 4.2.5/Ruby 2.2.3/PostgreSQL Application, which demonstrates Authentication and Authorization strategies.  My original
+This is a Rails 4.2.5/Ruby 2.2.3/PostgreSQL Application, which demonstrates Authentication and Authorization strategies.  
+
+My original
 need was to demonstrate this methodology, rather than to continue open-ended theoretical discussions.  To end the conversations I needed
 to create two models, one based on an existing XML file; modeled after Java's Security Manager and permission.  The other model would
 be a Database driven model that represented the same goal.  It is my expectation that they both meet my objective, and could both
