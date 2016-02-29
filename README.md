@@ -192,7 +192,7 @@ to include a user's list of assigned branches (options), and assigned roles for 
 ###If the permission has options, at least one user options must match! 
 
 This allows for the options attribute array to override the one or more values specified in the URI.  When XML options attribute list all branches for which this 
-service is enabled, the user will be required to have at least one option in their profile and the specific authorizedRole.
+service is enabled, the user will be required to have at least one option in their profile and the specific authorizedRole.  Below is a bit of the AccessRegistry's ruby methods.
 
 
 ```Ruby
@@ -237,7 +237,7 @@ end
       hash_result = get_resource_content_entries(user_object.branches)
       hash_result = get_resource_content_entry("Commission/Branch/0024", user_object.branches)
       
-      hash_result has been standardized to be same as alternate method being proposed.
+      hash_result has been standardized to be same as alternate database method being proposed.
 
 
 ##ContentProfile (i.e. The preferred Approach )
