@@ -13,16 +13,22 @@ to create two models, one based on an existing XML file; modeled after Java's Se
 be a Database driven model that represented the same goal.  It is my expectation that they both meet my objective, and could both
 be used successfully in any application base.  
 
-Of the two strategies the database model is my preference, as it would be easier to maintain and create a UI to support it. The demonstration
+Of the two strategies the database model is my preference, as it would be easier to create a UI to support it and to maintain as new projects are added. The demonstration
 of the final algorithmic result is the 'ContentProfile Demo' page.  It lists all the systems users, and when one is selected it displays
 both the XML AccessProfile, and the matching DB ContentProfile.
 
+The algorithm and point being made was: Create a two-factor authorization per user, that precisely identifies the business entities a user is assigned, and precisely identifies the
+types of content that user is authorized to interact with.
+
 After having proven my point, I've decided to share the body of this work and complete it by implementing my ToDo list, and a formal
-Domain Driven Design(DDD) focused on the business of Audio Engineering (Mixer).  Where collecting and delivering audio project files to 
+Domain Driven Design(DDD) focused on the business of an Audio Engineering (Mixer).  Where collecting and delivering audio project files to 
 clients and partners, like mastering engineers, with absolutely tight security is essential.
 
 Again, I've not started the DDD yet, nor finished all the UI.  This I will complete over the next few months.  However, the basic
 security and authorization features are fully completed and I think quite usable as a secure starter application.
+
+Note: The initial context of the application was to provide protection of important business documents like commission statements, and capturing
+operational attributes like, which states is a branch licensed to quote new business.  I will transition to the new and more formal DDD in the coming weeks.
 
 James,
 
@@ -30,17 +36,17 @@ James,
 ##Installation
 ---
 
-You will need to install PostGreSQL, and add/edit database credentials:
+You will need to install PostGreSQL, and add/edit PostgreSQL credentials:
  
     config/settings.yml, 
     config/settings/development.yml or create and edit config/settings/development.local.yml
     config/settings/test.yml or create and edit config/settings/test.local.yml
  
-It might be helpful to set these environment parms too:
+It might be helpful to set these environment params too:
     
     export COVERAGE=true
     export JRUBY='--server --debug'
-    export BUNDLE_PATH='vendor/bundle'
+    export BUNDLE_PATH='vendor/bundle'     Note: use of rvm wipes out all these values, you may need to reset them
     
     
 The default Ruby for this package is JRuby-9.0.4.0.  If you want to use a different version of ruby; Edit
@@ -66,6 +72,7 @@ $ rspec
 
     Note: Ruby 2.2.+ is also supported with database adapter change. JRuby 9.0.40.+ is the default 
     Also: db/seeds.rb contains test user credentials
+          lib/tasks/profile_tools_task.rake contain creates the initial database version of the content profile.
 
 
 ![App Data Model](app/assets/images/SknService-Warden.jpg "Application Data Model")
@@ -87,17 +94,18 @@ ContentProfiles are the main focus of exploration in this app, which has proven 
 engineering challenge when it comes to handling the dynamics of Electronic Delivery.  
 
 
-####ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.
-
 ###Core Idea
+---
+
+####ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.
 
 In general anything that can be accessed is considered a CONTENT TYPE.  The specific entity that content is related to is considered a
 TOPIC TYPE.  Both types must be fully qualified with their respective Identifiers. Once qualified the two are combined into a holding object 
 called a Content Profile Entry, and given a descriptive title.
 
-One Content Profile Entry describes one permission, through the combination of a fully qualified content type and topic type.  It is expected that a
+One Content Profile Entry describes one permission, through the combination of a fully qualified content type identifiers and topic type identifiers.  It is expected that a
 user's collection would have many of these specialized entries, and that some entries may be shareable (reducing redundancy) with other users.  Entries
-are themselves assigned to a wrapper object called a Content Profile which maintains the collection.
+are themselves assigned to a wrapper object called a Content Profile which maintains a users unique collection.
 
 Content Profiles are the anchor back to the User Profile, via the person authentication key(PAK) or UUID they rely on as THE primary identifier.
 
@@ -176,12 +184,12 @@ Each role would be assigned to one or more individuals via the normal assignment
 user profile options, they would be allowed to view/download commission reports for that branch, and all branch in their user profile.  
 
 Implementations of AccessProfile would evaluate these entries when accessing secured content.  Programmatic calls to the AccessProfile will need
-to include a user's list of assigned agencies (options), and assigned roles for validation of their access privileges. 
+to include a user's list of assigned branches (options), and assigned roles for validation of their access privileges. 
 
 
 ###If the permission has options, at least one user options must match! 
 
-This allows for the options attribute to override the one value specified in the URI.  When XML options attribute list all agencies for with this 
+This allows for the options attribute to override the one value specified in the URI.  When XML options attribute list all branches for with this 
 service enabled, the user will be required to have at least one option in their profile and the specific authorizedRole.
 
 
@@ -224,8 +232,8 @@ end
 ```
 
     AccessControl API Examples: 
-      hash_result = get_resource_content_entries(user_object.agencies)
-      hash_result = get_resource_content_entry("Commission/Branch/0024", user_object.agencies)
+      hash_result = get_resource_content_entries(user_object.branches)
+      hash_result = get_resource_content_entry("Commission/Branch/0024", user_object.branches)
       
       hash_result has been standardized to be same as alternate method being proposed.
 
