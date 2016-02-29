@@ -20,7 +20,7 @@ of the final algorithmic result is the 'ContentProfile Demo' page.  It lists all
 both the XML AccessProfile, and the matching DB ContentProfile.
 
 The algorithm and point being made was: Create a two-factor authorization per user, that precisely identifies the business entities a user is assigned, and precisely identifies the
-types of content that user is authorized to interact with.
+types of content that user is authorized to interact with; for that specific business entity.
 
 After having proven my point, I've decided to share the body of this work and complete it by implementing my ToDo list, and a formal
 Domain Driven Design(DDD) focused on the business of an Audio Engineering (Mixer).  Where collecting and delivering audio project files to 
