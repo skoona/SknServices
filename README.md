@@ -133,7 +133,7 @@ The system shall offer methods to:
 The current implementation of AccessProfile contains an XML Secure::AccessRegistry file which could embody the specific requirements of
 the ContentProfile.  It would do this by creating an entry for each content type uri; like:
 
-* Description => 'URI'
+    Description => 'URI'
 *    Document Access => 'Commission/Branch/0024'
 * Process Constraint => 'Quoting/LicensedStates/USA'
 *         Operations => 'Notifications/Account/1003'
