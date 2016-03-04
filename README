@@ -733,3 +733,119 @@ eptester Selected.
         </ul>
     </div>
 </div>
+
+##
+module Utility
+
+  # Print Performance Elements of 'process_action.action_controller' event
+  class LogRequestDuration
+
+    def call(name, start, finish, id, payload)
+
+      message_format = %Q(EventID=@id RequestId=@uuid @method @action @status Duration:@durationms Logic:@logicms DB:@dbms View:@viewms User:@username Params:@requestparams)
+      db = (payload[:db_runtime] * 100).round / 100.0 rescue 0
+      view = (payload[:view_runtime] * 100).round / 100.0 rescue 0
+      duration = ( ((finish - start).to_f * 100000).round / 100.0 rescue 0)
+      logic = "%2.2f" % (duration - (db + view))
+
+      message = message_format.clone
+      message.sub!(/@id/, id)
+      message.sub!(/@uuid/,  payload.fetch(:uuid, 'na'))
+      message.sub!(/@method/, payload[:method])
+      message.sub!(/@action/, "#{payload[:controller]}##{payload[:action]}")
+      message.sub!(/@status/, payload[:status].to_s)
+      message.sub!(/@duration/, '%2.2f' % duration)
+      message.sub!(/@logic/, logic)
+      message.sub!(/@db/, '%2.2f' % db)
+      message.sub!(/@view/, '%2.3f' % view)
+      message.sub!(/@username/, payload.fetch(:username,'no-user'))
+      message.sub!(/@requestparams/, payload.fetch(:params,'none').inspect )
+
+      if payload[:exception].present? || payload[:status] == 500
+        message += " EXCEPTION: #{payload[:exception]}"
+      end
+
+      Rails.logger.perf(message)
+    end
+
+  end
+end
+
+module Utility
+  # Print Performance Elements of 'sql.active_record' event
+  class LogSQLRequests
+
+    def call(name, start, finish, id, payload)
+
+      message_format = %Q(EventID=@id Operation:@name Conn:@conn_id SQL:@sql Params:@params Duration:@durationms)
+      duration = ( ((finish - start).to_f * 100000).round / 100.0 rescue 0)
+
+      message = message_format.clone
+      message.sub!(/@id/, id)
+      message.sub!(/@name/,  payload.fetch(:name, 'na'))
+      message.sub!(/@conn_id/, payload.fetch(:connection_id, 'na'))
+      message.sub!(/@sql/, payload.fetch(:sql, 'na'))
+      message.sub!(/@params/, payload.fetch(:bind, 'na'))
+      message.sub!(/@duration/, '%2.2f' % duration)
+
+      Rails.logger.idata(message)
+    end
+
+  end
+end
+
+ActiveSupport::Notifications.subscribe('process_action.action_controller', Utility::LogRequestDuration.new)
+ActiveSupport::Notifications.subscribe('sql.active_record', Utility::LogSQLRequests.new)
+
+==OR
+# Notification Publish/Interceptors
+#      vendor/bundle/gems/actionpack-4.2.5/lib/action_controller/metal/instrumentation.rb
+#      vendor/bundle/gems/actionpack-4.2.5/lib/action_controller/log_subscriber.rb
+##
+# Ref: http://edgeguides.rubyonrails.org/active_support_instrumentation.html#sql-active-record
+##
+
+## REQUEST Ending Event
+ActiveSupport::Notifications.subscribe('process_action.action_controller') do |name, start, finish, id, payload|
+
+  message_format = %Q(EventID=@id RequestId=@uuid @method @action @status Duration:@durationms Logic:@logicms DB:@dbms View:@viewms User:@username Params:@requestparams)
+  db = (payload[:db_runtime] * 100).round / 100.0 rescue 0
+  view = (payload[:view_runtime] * 100).round / 100.0 rescue 0
+  duration = ( ((finish - start).to_f * 100000).round / 100.0 rescue 0)
+  logic = "%2.2f" % (duration - (db + view))
+
+  message = message_format.clone
+  message.sub!(/@id/, id)
+  message.sub!(/@uuid/,  payload.fetch(:uuid, 'na'))
+  message.sub!(/@method/, payload[:method])
+  message.sub!(/@action/, "#{payload[:controller]}##{payload[:action]}")
+  message.sub!(/@status/, payload[:status].to_s)
+  message.sub!(/@duration/, '%2.2f' % duration)
+  message.sub!(/@logic/, logic)
+  message.sub!(/@db/, '%2.2f' % db)
+  message.sub!(/@view/, '%2.3f' % view)
+  message.sub!(/@username/, payload.fetch(:username,'no-user'))
+  message.sub!(/@requestparams/, payload.fetch(:params,'none').inspect )
+
+  if payload[:exception].present? || payload[:status] == 500
+    message += " EXCEPTION: #{payload[:exception]}"
+  end
+
+  Rails.logger.perf(message)
+
+end
+
+
+ActiveSupport::Notifications.subscribe('sql.active_record') do |name, start, finish, id, payload|
+
+  message_format = %Q(EventID=@id SQL-Request Duration:@durationms PayLoad:@body)
+  duration = ( ((finish - start).to_f * 100000).round / 100.0 rescue 0)
+
+  message = message_format.clone
+  message.sub!(/@id/, id)
+  message.sub!(/@duration/, '%2.1f' % duration)
+  message.sub!(/@body/,  payload.inspect)
+
+  Rails.logger.idata(message)
+
+end
