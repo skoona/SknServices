@@ -27,7 +27,7 @@ ActiveSupport::Notifications.subscribe("process_action.action_controller") do |n
   message.sub!(/@method/, payload[:method])
   message.sub!(/@action/, "#{payload[:controller]}##{payload[:action]}")
   message.sub!(/@status/, payload[:status].to_s)
-  message.sub!(/@duration/, '%2.2f' % duration)
+  message.sub!(/@duration/, '%2.1f' % duration)
   message.sub!(/@logic/, logic)
   message.sub!(/@db/, '%2.1f' % db)
   message.sub!(/@view/, '%2.1f' % view)
