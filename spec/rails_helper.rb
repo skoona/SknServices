@@ -43,11 +43,6 @@ end
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
-# Rack::Test Supports
-# def app
-#   Rails.application
-# end
-
 # fixes: 'Missing host to link to! Please provide the :host parameter,
 #         set default_url_options[:host], or set :only_path to true'
 Rails.application.routes.default_url_options[:host] = 'http://test.localdomain.com'
