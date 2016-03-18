@@ -9,35 +9,34 @@
                 <% end %>
             </div>
             <div class="col-md-4 text-center">
-                <%= link_to details_sysinfo_pages_path, class: "text-center" do %>
-                    <span>&nbsp;&copy; 2015-2016 Skoona Consulting</span>
-                <% end %>
+                <span>&copy;&nbsp;2015-2016 Skoona Consulting</span>
             </div>
             <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-9">
-                        <% unless accessed_page.eql?('pages/home') %>
-                            <%= link_to home_pages_path, class: "pull-right" do %>
-                                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                                <span>&nbsp;Home</span>
-                            <% end %>
-                        <% end %>
-                    </div>
-                    <div class="col-md-3 pull-right">
-                        <%= link_to "#top", class: "pull-right" do %>
-                            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                            <span>&nbsp;Top</span>
-                        <% end %>
-                    </div>
-                </div>
+                <%= link_to "#top", class: "pull-right" do %>
+                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                    <span>&nbsp;Top</span>
+                <% end %>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-push-4 col-md-4 text-center">
-                    <span>SknServices Release Version: <%= Utility::BuildVersion.build_version %></span>
+            <div class="col-md-4">
+                <%= link_to details_sysinfo_pages_path, class: "text-left pull-left" do %>
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    <span>&nbsp;System Information</span>
+                <% end %>
+            </div>
+            <div class="col-md-4 text-center">
+                <span><em>SknServices Release Version: <%= Utility::BuildVersion.build_version %></em></span>
+            </div>
+            <div class="col-md-4">
+                <% unless accessed_page.eql?('pages/home') %>
+                    <%= link_to home_pages_path, class: "pull-right" do %>
+                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                        <span>&nbsp;Home</span>
+                    <% end %>
+                <% end %>
             </div>
         </div>
-
     </div>
 </footer>
 

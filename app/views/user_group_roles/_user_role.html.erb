@@ -1,15 +1,12 @@
-<div class="well col-md-6">
-    <div class="media">
-        <div class="media-left">
-            <%= link_to user_group_role_path do %>
-                <span class="media-object">
-                    <span style="font-size:2.5em;" class="glyphicon glyphicon-leaf" aria-hidden="true"></span>
-                </span>
-            <% end %>
+<div class="col-md-4">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h5 class="panel-title pull-right">Access Role</h5>
+            <span style="font-size:2.5em;" class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
         </div>
-        <div class="media-body">
-            <h4 class="media-heading"><%= entry.name %></h4>
-             <p class="lead"><%= entry.description %></p>
+        <div class="panel-body">
+            <h5><%= entry.name %></h5>
+             <p><%= entry.description %></p>
         </div>
     </div>
 </div>

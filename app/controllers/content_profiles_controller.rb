@@ -20,6 +20,7 @@ class ContentProfilesController < ApplicationController
   # GET /content_profiles.json
   def index
     @content_profiles = ContentProfile.paginate(page: params[:page], :per_page => 12)
+    flash
   end
 
   # GET /content_profiles/1
@@ -29,7 +30,8 @@ class ContentProfilesController < ApplicationController
 
   # GET /content_profiles/new
   def new
-    @content_profile = ContentProfile.new
+    @page_controls = factory.content_profile_service.make_new_content_profile()
+    flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
   # GET /content_profiles/1/edit

@@ -14,6 +14,23 @@ class AccessServices < ::ProfilesDomain
   PROFILE_CONTEXT='access'
 
 
+  def get_unassigned_user_attributes
+    results = []
+    User.where.not(person_authenticated_key: ContentProfile.select(:person_authentication_key)).find_each do |rec|
+      results << [ "#{rec.username} : #{rec.name}", rec.person_authenticated_key, { data: {user: {
+          username: rec.username,
+          person_authentication_key: rec.person_authenticated_key,
+          display_name: rec.display_name,
+          email: rec.email,
+          authentication_provider: 'BCrypt',
+          profile_type: rec.user_options.delete_if(&:blank?) }.to_json }}
+      ]
+    end
+    results
+  end
+  def get_empty_new_content_profile
+    ContentProfile.new
+  end
   def get_user_form_options
     SknUtils::PageControls.new({
        groups: group_select_options,

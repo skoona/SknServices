@@ -1,14 +1,14 @@
 ##
-# lib/respository/repository.rb
+# lib/respository/registry.rb
 #
 # Ref: https://blog.8thlight.com/mike-ebert/2013/03/23/the-repository-pattern.html
 ##
-# Respository::Repository.register(:user, Repository::UserRepository.new)
-# @user = Repository::Repository.for(:user).find_by_id(params[:id])
+# Respository::Registry.register(:user, Repository::UserRepository.new)
+# @user = Repository::Registry.for(:user).find_by_id(params[:id])
 ##
 
 module Respository
-  class Respository
+  class Registry
     
     def self.register(type, repo)
       repositories[type] = repo

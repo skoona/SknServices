@@ -27,16 +27,6 @@ module ApplicationHelper
     logo = image_tag("LinuxSMP.png", id: logo_id, alt: "SknServices", class: "brand-image")
   end
 
-  # Return title on a per-page basis.
-  def full_title(page_title)
-    base_title = "Time and it's Cost"
-    if page_title.empty?
-      base_title
-    else
-      "#{base_title} | #{page_title}"
-    end
-  end
-
   # Returns the Gravatar (http://gravatar.com/) for the given employee.
   def gravatar_for(user, options = { :size => 75 })
     gravatar_image_tag(user.email.strip,  :alt => h(user.name),

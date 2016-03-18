@@ -4,7 +4,7 @@
     <h1 class="text-center"><%= accessed_page_name %></h1>
 </header>
 
-<div class="row">
+<article>
     <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
     <div class="row">
         <%= render @user_group_roles %>
@@ -14,4 +14,4 @@
     <% if current_user_has_create?('user_group_roles/new') %>
         <%= link_to 'New User group role', new_user_group_role_path %>
     <% end %>
-</div>
+</article>

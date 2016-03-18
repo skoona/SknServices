@@ -10,6 +10,24 @@ class ContentProfileService < ::ProfilesDomain
 
   PROFILE_CONTEXT='content'
 
+
+  def make_new_content_profile
+    SknUtils::ResultBean.new({  # because we don't need deep nesting, or leave array hashes alone
+       success: true,
+       message: "",
+       pak_user_choices: factory.access_services.get_unassigned_user_attributes(),
+       content_profile: factory.access_services.get_empty_new_content_profile()
+    })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+       success: false,
+       message: e.message
+   })
+  end
+
+
+
   # Controller Entry Point
   def handle_demo_page(params={})
     SknUtils::PageControls.new({

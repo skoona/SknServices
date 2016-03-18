@@ -4,4 +4,16 @@
     <h1 class="text-center"><%= accessed_page_name %></h1>
 </header>
 
-<%= render 'form' %>
+<% if @page_controls.success %>
+    <%= render 'form' %>
+<% else %>
+    <article>
+        <div class="alert alert-warning">
+            <p><strong>One ContentProfile per User!</strong>  Currently there are no users without a ContentProfile.</p>
+        </div>
+        <%= link_to content_profiles_path, class: "pull-right" do %>
+            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+            Back
+        <% end %>
+    </article>
+<% end %>

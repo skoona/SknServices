@@ -1,14 +1,13 @@
 ## app/domains/service_factory.rb
 #
 # Replace factory helpers with Factory Object for DomainsBase
-# - Domain services live for one request cycle and are expensive to create, this object memotizes them
+# - Domain services live for one request cycle and are expensive to create, this object memorizes them
 # - This factory should be passed around like "factory"
 # - Should make testing easier
 #
 
 # self is factory
 # factory is the thing that initialized us: i.e. controller is really factory
-
 class ServiceFactory < ::Factory::ServicesBase
 
   attr_accessor :factory

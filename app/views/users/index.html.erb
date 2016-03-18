@@ -4,7 +4,7 @@
     <h1 class="text-center"><%= accessed_page_name %></h1>
 </header>
 
-<div class="container">
+<article>
     <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
     <div class="row">
         <%= render @users %>
@@ -14,4 +14,4 @@
     <% if current_user_has_create?('users/new') %>
         <%= link_to 'New UserProfile', new_user_path %>
     <% end %>
-</div>
+</article>

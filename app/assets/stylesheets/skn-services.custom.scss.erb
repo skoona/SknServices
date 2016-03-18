@@ -9,18 +9,14 @@ html {
   min-height: 100%;
 }
 body > .container-fluid { // top level wrapper in layout
-  margin-top: 60px;
-  margin-bottom: 60px;
-  padding-top: 0px;
+  padding: 70px 6px 72px 6px; // top right bottom left
 }
 main {                   // main page container, without menu or footer
-  @extend .container;
-  padding: 24px 0px 24px 0px; // top right bottom left
+  @extend .container-fluid;
 }
 article {                     // a whole page typically
   @extend .container;
-    padding-left: 0px;
-  padding-bottom: 40px;
+  padding: 6px 6px 72px 6px; // top right bottom left
 }
 section {                     // a piece of a page
   @extend .row;
@@ -47,7 +43,7 @@ div.show > table {  // Rails Properties Table
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 55px;
+  height: 66px;
   background-color: #eee;
 }
 .footer > .container {
