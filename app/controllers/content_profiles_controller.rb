@@ -17,67 +17,53 @@ class ContentProfilesController < ApplicationController
   before_action :set_content_profile, only: [:show, :edit, :update, :destroy]
 
   # GET /content_profiles
-  # GET /content_profiles.json
   def index
-    @content_profiles = ContentProfile.paginate(page: params[:page], :per_page => 12)
-    flash
+    @page_controls = content_profile_service.handle_content_profile_index(params)
+    flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
   # GET /content_profiles/1
-  # GET /content_profiles/1.json
   def show
-    @page_controls = factory.content_profile_service.show_and_edit_content_profile(@content_profile)
+    @page_controls = content_profile_service.show_and_edit_content_profile(@content_profile)
+    flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
   # GET /content_profiles/new
   def new
-    @page_controls = factory.content_profile_service.make_new_content_profile()
+    @page_controls = content_profile_service.make_new_content_profile()
     flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
   # GET /content_profiles/1/edit
   def edit
-    @page_controls = factory.content_profile_service.show_and_edit_content_profile(@content_profile)
+    @page_controls = content_profile_service.show_and_edit_content_profile(@content_profile)
+    flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
   # POST /content_profiles
-  # POST /content_profiles.json
   def create
-    @content_profile = ContentProfile.new(content_profile_params)
-
-    respond_to do |format|
-      if @content_profile.save
-        format.html { redirect_to @content_profile, notice: 'Content profile was successfully created.' }
-        format.json { render :show, status: :created, location: @content_profile }
+    @page_controls = content_profile_service.handle_content_profile_creations(content_profile_params)
+      if @page_controls.success
+        redirect_to @page_controls.content_profile, notice: @page_controls.message
       else
-        format.html { render :new }
-        format.json { render json: @content_profile.errors, status: :unprocessable_entity }
+        render :new, notice: @page_controls.message
       end
-    end
   end
 
   # PATCH/PUT /content_profiles/1
-  # PATCH/PUT /content_profiles/1.json
   def update
-    respond_to do |format|
-      if @content_profile.update(content_profile_params)
-        format.html { redirect_to @content_profile, notice: 'Content profile was successfully updated.' }
-        format.json { render :show, status: :ok, location: @content_profile }
-      else
-        format.html { render :edit }
-        format.json { render json: @content_profile.errors, status: :unprocessable_entity }
-      end
+    @page_controls = content_profile_service.handle_content_profile_update(@content_profile, content_profile_params)
+    if @page_controls.success
+      redirect_to @content_profile, notice: @page_controls.message
+    else
+      render :edit, notice: @page_controls.message
     end
   end
 
   # DELETE /content_profiles/1
-  # DELETE /content_profiles/1.json
   def destroy
-    @content_profile.destroy
-    respond_to do |format|
-      format.html { redirect_to content_profiles_url, notice: 'Content profile was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    @page_controls = content_profile_service.handle_content_profile_destroy(@content_profile)
+    redirect_to content_profiles_url, notice: @page_controls.message
   end
 
   private

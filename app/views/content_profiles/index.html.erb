@@ -9,9 +9,13 @@
       <%= link_to 'New Content profile', new_content_profile_path %>
   <% end %>
 
-  <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
-  <div class="row">
-      <%= render @content_profiles %>
-  </div>
-  <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
+  <% if @page_controls.success %>
+    <%= will_paginate @page_controls.content_profiles, class: "pagination col-md-3 col-md-push-9 pull-right" %>
+    <div class="row">
+        <%= render @page_controls.content_profiles %>
+    </div>
+    <%= will_paginate @page_controls.content_profiles, class: "pagination col-md-3 col-md-push-9 pull-right" %>
+  <% else %>
+    <h2 class="text-center lead">No Profiles Available, or System Error!</h2>
+  <% end %>
 </article>

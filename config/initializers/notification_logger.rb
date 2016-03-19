@@ -15,15 +15,15 @@
 ## REQUEST Ending Event
 ActiveSupport::Notifications.subscribe("process_action.action_controller") do |name, start, finish, id, payload|
 
-  message_format = %Q(EventID=@id RequestId=@uuid @method @action @status Duration:@durationms Logic:@logicms DB:@dbms View:@viewms User:@username Params:@requestparams)
+  message_format = %Q(EventID=@eid BrowserSessionID=@sid @method @action @status Duration:@durationms Logic:@logicms DB:@dbms View:@viewms User:@username Params:@requestparams)
   db = (payload[:db_runtime] * 100).round / 100.0 rescue 0
   view = (payload[:view_runtime] * 100).round / 100.0 rescue 0
   duration = ( ((finish - start).to_f * 100000).round / 100.0 rescue 0)
   logic = "%2.1f" % (duration - (db + view))
 
   message = message_format.clone
-  message.sub!(/@id/, id)
-  message.sub!(/@uuid/,  payload.fetch(:uuid, 'na'))
+  message.sub!(/@eid/,  id)
+  message.sub!(/@sid/, payload.fetch(:session_id, 'na'))
   message.sub!(/@method/, payload[:method])
   message.sub!(/@action/, "#{payload[:controller]}##{payload[:action]}")
   message.sub!(/@status/, payload[:status].to_s)

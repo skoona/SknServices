@@ -58,5 +58,19 @@ module Factory
       @user ||= @factory.current_user
     end
 
+    # Easier to code than delegation, or forwarder
+    def method_missing(method, *args, &block)
+      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: ##{method}")
+      if @factory.respond_to?(method)
+        block_given? ? @factory.send(method, *args, block) :
+            (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))
+      elsif @factory.respond_to?(:factory) and @factory.factory.respond_to?(method)
+        block_given? ? @factory.factory.send(method, *args, block) :
+            (args.size == 0 ?  @factory.factory.send(method) : @factory.factory.send(method, *args))
+      else
+        super(method, *args, &block)
+      end
+    end
+
   end
 end

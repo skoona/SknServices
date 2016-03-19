@@ -13,7 +13,26 @@ class AccessServices < ::ProfilesDomain
 
   PROFILE_CONTEXT='access'
 
-
+  ##
+  # Supporting ContentProfilesController Actions
+  def destroy_content_profile(content_profile_object)
+    content_profile_object.destroy
+  end
+  def update_content_profile_from_permitted_params(content_profile_object, permitted_params)
+    content_profile_object.update!(permitted_params)
+  end
+  def create_content_profile_from_permitted_params(permitted_params)
+    ContentProfile.create!(permitted_params)
+  end
+  def get_page_pagination_for_content_profile_index(params)
+    ContentProfile.paginate(page: params[:page], :per_page => 12)
+  end
+  def get_content_profiles_entries_entry_info(existing_content_profile_object)
+    existing_content_profile_object.content_profile_entries.map(&:entry_info)
+  end
+  def get_empty_new_content_profile
+    ContentProfile.new
+  end
   def get_unassigned_user_attributes
     results = []
     User.where.not(person_authenticated_key: ContentProfile.select(:person_authentication_key)).find_each do |rec|
@@ -28,9 +47,7 @@ class AccessServices < ::ProfilesDomain
     end
     results
   end
-  def get_empty_new_content_profile
-    ContentProfile.new
-  end
+
   def get_user_form_options
     SknUtils::PageControls.new({
        groups: group_select_options,

@@ -75,7 +75,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     end
     res
   rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     {
        success: false,
        user_options: [],
@@ -108,7 +108,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     end
     res
   rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     {
        success: false,
        message: e.message,
@@ -170,7 +170,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     SknUtils::PageControls.new(results)
 
   rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     SknUtils::PageControls.new({package: {
                                  success: false,
                                  message: e.message,
@@ -201,7 +201,7 @@ class ProfilesDomain < ::Factory::DomainsBase
         package: []
     }
   rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     {
         success: false,
         message: e.message,
@@ -216,7 +216,7 @@ class ProfilesDomain < ::Factory::DomainsBase
         package: []
     }
   rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     {
        success: false,
        message: e.message,
