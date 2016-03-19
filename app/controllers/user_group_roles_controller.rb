@@ -22,18 +22,18 @@ class UserGroupRolesController < ApplicationController
   # GET /user_group_roles/1
   # GET /user_group_roles/1.json
   def show
-    @page_controls = access_services.role_select_options
+    @page_controls = profile_data_services.role_select_options
   end
 
   # GET /user_group_roles/new
   def new
     @user_group_role = UserGroupRole.new
-    @page_controls = access_services.role_select_options
+    @page_controls = profile_data_services.role_select_options
   end
 
   # GET /user_group_roles/1/edit
   def edit
-    @page_controls = access_services.role_select_options
+    @page_controls = profile_data_services.role_select_options
   end
 
   # POST /user_group_roles

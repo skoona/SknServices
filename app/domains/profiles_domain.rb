@@ -1,6 +1,6 @@
 ##
 #
-# Inherited by: ContentProfileService, AccessServices
+# Inherited by: ContentProfileService, ProfileDataServices
 #
 #
 

@@ -1,5 +1,5 @@
 ##
-# app/services/access_services.rb
+# app/services/profile_data_services.rb
 #
 # Manages Access  interactions for Users
 # This is an internal service object and should not be exposed to a controller directly.
@@ -7,7 +7,7 @@
 #
 
 
-class AccessServices < ::ProfilesDomain
+class ProfileDataServices < ::ProfilesDomain
 
 # attr_accessor :factory, :current_user, :page_user  -- initialize by DomainService
 
@@ -15,23 +15,25 @@ class AccessServices < ::ProfilesDomain
 
   ##
   # Supporting ContentProfilesController Actions
-  def destroy_content_profile(content_profile_object)
-    content_profile_object.destroy
+  def get_page_pagination_for_content_profile_index(params)
+    ContentProfile.paginate(page: params[:page], :per_page => 12)
   end
-  def update_content_profile_from_permitted_params(content_profile_object, permitted_params)
+  def update_content_profile_from_permitted_params(permitted_params)
+    content_profile_object = profile_data_services.find_content_profile_by_id(permitted_params[:id])
     content_profile_object.update!(permitted_params)
+  end
+  def get_empty_new_content_profile
+    ContentProfile.new
   end
   def create_content_profile_from_permitted_params(permitted_params)
     ContentProfile.create!(permitted_params)
   end
-  def get_page_pagination_for_content_profile_index(params)
-    ContentProfile.paginate(page: params[:page], :per_page => 12)
+  def destroy_content_profile(params)
+    content_profile_object = find_content_profile_by_id(params[:id])
+    content_profile_object.destroy
   end
   def get_content_profiles_entries_entry_info(existing_content_profile_object)
     existing_content_profile_object.content_profile_entries.map(&:entry_info)
-  end
-  def get_empty_new_content_profile
-    ContentProfile.new
   end
   def get_unassigned_user_attributes
     results = []
@@ -46,6 +48,9 @@ class AccessServices < ::ProfilesDomain
       ]
     end
     results
+  end
+  def find_content_profile_by_id(rec_id)
+    ContentProfile.find(rec_id)  # Could raise a not found exception
   end
 
   def get_user_form_options

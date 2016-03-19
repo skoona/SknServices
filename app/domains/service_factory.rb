@@ -24,7 +24,7 @@ class ServiceFactory < ::Factory::ServicesBase
     @ct_password_service
   end
   def access_services
-    @ct_access_services ||= ::AccessServices.new({factory: self})
+    @ct_access_services ||= ::ProfileDataServices.new({factory: self})
     yield @ct_access_services if block_given?
     @ct_access_services
   end

@@ -12,16 +12,16 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ AccessServices.new }.to raise_error(ArgumentError)
+      expect{ ProfileDataServices.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(AccessServices.new({factory: @factory})).to be_a(AccessServices)
+      expect(ProfileDataServices.new({factory: @factory})).to be_a(ProfileDataServices)
     end
     it "#new fails when :factory is invalid." do
-      expect{ AccessServices.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ ProfileDataServices.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     it "#factory.access_services returns a proper service object." do
-      expect( @service ).to be_a AccessServices
+      expect( @service ).to be_a ProfileDataServices
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
