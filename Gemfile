@@ -17,6 +17,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'bootstrap-will_paginate'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'font-awesome-sass', '~> 4.5.0'
 
 gem 'jbuilder', '~> 2.0'
 gem 'simple_form'

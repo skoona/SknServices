@@ -26,6 +26,7 @@ class ContentProfilesController < ApplicationController
   # GET /content_profiles/1
   # GET /content_profiles/1.json
   def show
+    @page_controls = factory.content_profile_service.show_and_edit_content_profile(@content_profile)
   end
 
   # GET /content_profiles/new
@@ -36,6 +37,7 @@ class ContentProfilesController < ApplicationController
 
   # GET /content_profiles/1/edit
   def edit
+    @page_controls = factory.content_profile_service.show_and_edit_content_profile(@content_profile)
   end
 
   # POST /content_profiles

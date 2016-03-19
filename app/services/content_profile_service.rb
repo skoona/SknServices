@@ -11,6 +11,21 @@ class ContentProfileService < ::ProfilesDomain
   PROFILE_CONTEXT='content'
 
 
+  def show_and_edit_content_profile(content_profile_object)
+    SknUtils::PageControls.new({  # because we don't need deep nesting, or leave array hashes alone
+                                success: true,
+                                message: "",
+                                content_profile: content_profile_object,
+                                content_profile_entries: content_profile_object.content_profile_entries.map(&:entry_info)
+                             })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+                                   success: false,
+                                   message: e.message
+                               })
+  end
+
   def make_new_content_profile
     SknUtils::ResultBean.new({  # because we don't need deep nesting, or leave array hashes alone
        success: true,

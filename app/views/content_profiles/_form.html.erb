@@ -11,8 +11,12 @@
         <%= f.association :profile_type %>
         <%= f.input :authentication_provider, readonly: true %>
         <%= f.input :username, readonly: true %>
-        <%= f.input :display_name, readonly: true %>
-        <%= f.input :email, readonly: true %>
+        <% unless accessed_page.include?("edit") %>
+          <%= f.input :email, readonly: true %>
+        <% else %>
+            <%= f.input :display_name, autofocus: true %>
+            <%= f.input :email %>
+        <% end %>
       </div>
 
       <div class="form-actions">

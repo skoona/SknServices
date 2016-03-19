@@ -1,18 +1,22 @@
-<div class="col-md-6">
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h4 class="panel-title pull-right"><%= entry.content_type %>/<%= entry.topic_type %></h4>
-        <span style="font-size:2.5em;" class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-    </div>
-    <div class="panel-body">
-        <dl class="dl-horizontal">
-            <dt>Topic Type</dt><dd><%= entry.topic_type %></dd>
-            <dt>Topic Description</dt><dd><%= entry.description %></dd>
-            <dt>Topic Value</dt><dd><%= entry.topic_value %></dd>
-            <dt>Content Type</dt><dd><%= entry.content_type %></dd>
-            <dt>Content Description</dt><dd><%= entry.content_type_description %></dd>
-            <dt>Content Value</dt><dd><%= entry.content_value %></dd>
-        </dl>
-    </div>
-</div>
+<div class="<%=  action_name.eql?('edit') ? 'col-md-12' : 'col-md-6' %>">
+  <div class="panel panel-primary">
+      <div class="panel-heading white-text" id="headingOne<%= entry.content_type %>">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne<%= entry.content_type %>" aria-expanded="true" aria-controls="collapseOne<%= entry.content_type %>">
+          <h4 class="panel-title pull-right"><%= entry.content_type %>/<%= entry.topic_type %></h4>
+          <i class="fa fa-certificate  fa-3x" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div id="collapseOne<%= entry.content_type %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne<%= entry.content_type %>">
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+              <dt>Content Description</dt><dd><%= entry.content_type_description %></dd>
+              <dt>Content Type</dt><dd><%= entry.content_type %></dd>
+              <dt>Content Value</dt><dd><%= entry.content_value %></dd>
+              <dt>Topic Description</dt><dd><%= entry.description %></dd>
+              <dt>Topic Type</dt><dd><%= entry.topic_type %></dd>
+              <dt>Topic Value</dt><dd><%= entry.topic_value %></dd>
+            </dl>
+        </div>
+      </div>
+  </div>
 </div>

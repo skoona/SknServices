@@ -5,12 +5,12 @@
 </header>
 
 <article>
-    <%= render @content_profile %>
+    <%= render @page_controls.content_profile %>
 
     <% if action_name.eql?('show') %>
         <section>
-            <% @content_profile.content_profile_entries.each do |cpe| %>
-                <%= render 'content_profile_entry', entry: SknUtils::PageControls.new(cpe.entry_info)  %>
+            <% @page_controls.content_profile_entries.each do |cpe| %>
+                <%= render 'content_profile_entry', entry: cpe  %>
             <% end %>
         </section>
     <% end %>

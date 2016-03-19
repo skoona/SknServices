@@ -5,13 +5,13 @@
 </header>
 
 <article>
-    <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
-    <div class="row">
-        <%= render @content_profiles %>
-    </div>
-    <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
+  <% if current_user_has_create?('content_profiles/new') %>
+      <%= link_to 'New Content profile', new_content_profile_path %>
+  <% end %>
 
-    <% if current_user_has_create?('content_profiles/new') %>
-        <%= link_to 'New Content profile', new_content_profile_path %>
-    <% end %>
+  <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
+  <div class="row">
+      <%= render @content_profiles %>
+  </div>
+  <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
 </article>
