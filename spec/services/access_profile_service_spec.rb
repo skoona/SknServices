@@ -6,7 +6,7 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
     @user = Secure::UserProfile.new( User.first )
     sign_in(@user, scope: :access_profile)
     @factory = controller.service_factory
-    @service = @factory.access_services
+    @service = @factory.profile_data_services
   end
 
   context "Initialization "  do
@@ -20,7 +20,7 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
     it "#new fails when :factory is invalid." do
       expect{ ProfileDataServices.new({factory: nil}) }.to raise_error(ArgumentError)
     end
-    it "#factory.access_services returns a proper service object." do
+    it "#factory.profile_data_services returns a proper service object." do
       expect( @service ).to be_a ProfileDataServices
     end
     it "#service #factory and #controller objects to be different." do

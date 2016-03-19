@@ -55,7 +55,7 @@ class ContentProfilesController < ApplicationController
   def update
     @page_controls = content_profile_service.handle_content_profile_update(content_profile_params.merge(id: params[:id]))
     if @page_controls.success
-      redirect_to @content_profile, notice: @page_controls.message
+      redirect_to @page_controls.content_profile, notice: @page_controls.message
     else
       render :edit, notice: @page_controls.message
     end

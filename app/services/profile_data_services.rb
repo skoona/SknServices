@@ -21,6 +21,7 @@ class ProfileDataServices < ::ProfilesDomain
   def update_content_profile_from_permitted_params(permitted_params)
     content_profile_object = profile_data_services.find_content_profile_by_id(permitted_params[:id])
     content_profile_object.update!(permitted_params)
+    content_profile_object
   end
   def get_empty_new_content_profile
     ContentProfile.new

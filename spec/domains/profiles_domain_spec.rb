@@ -8,7 +8,7 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
     @user = Secure::UserProfile.new( User.first )
     sign_in(@user, scope: :access_profile)
     @factory = controller.service_factory
-    @service = @factory.access_services
+    @service = @factory.profile_data_services
   end
 
   context "Initialization "  do
@@ -69,7 +69,7 @@ RSpec.describe ApplicationController, "Service routines of ProfilesDomain.", :ty
       let!(:estesterC) {@service.get_page_user("vstester", "content")}
 
       before() do
-        @access = controller.service_factory.access_services
+        @access = controller.service_factory.profile_data_services
         @content = controller.service_factory.content_profile_service
       end
     context "For user aptester, that has content and access profiles available. " do

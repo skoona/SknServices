@@ -23,10 +23,10 @@ class ServiceFactory < ::Factory::ServicesBase
     yield @ct_password_service if block_given?
     @ct_password_service
   end
-  def access_services
-    @ct_access_services ||= ::ProfileDataServices.new({factory: self})
-    yield @ct_access_services if block_given?
-    @ct_access_services
+  def profile_data_services
+    @ct_profile_data_services ||= ::ProfileDataServices.new({factory: self})
+    yield @ctprofile_data_services if block_given?
+    @ct_profile_data_services
   end
   def content_profile_service
     @ct_content_profile_service ||= ::ContentProfileService.new({factory: self})

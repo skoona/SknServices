@@ -20,7 +20,7 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
     it "#new fails when :factory is invalid." do
       expect{ Builder::ProfileBuilder.new({factory: nil}) }.to raise_error(ArgumentError)
     end
-    it "#factory.access_services returns a proper service object." do
+    it "#factory.profile_data_services returns a proper service object." do
       expect( @service ).to be_a Builder::ProfileBuilder
     end
     it "#service #factory and #controller objects to be different." do
