@@ -11,7 +11,7 @@ class ProfilesController < ApplicationController
 
   # GET
   def manage_content_profiles
-    @page_controls = content_profile_service.manage_content_profiles(params)
+    @page_controls = content_profile_service.handle_content_profile_management(params)
     flash[:notice] = @page_controls.message if @page_controls.message?
   end
 

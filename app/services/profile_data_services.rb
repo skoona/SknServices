@@ -19,7 +19,7 @@ class ProfileDataServices < ::ProfilesDomain
     ContentProfile.paginate(page: params[:page], :per_page => 12)
   end
   def update_content_profile_from_permitted_params(permitted_params)
-    content_profile_object = profile_data_services.find_content_profile_by_id(permitted_params[:id])
+    content_profile_object = find_content_profile_by_id(permitted_params[:id])
     content_profile_object.update!(permitted_params)
     content_profile_object
   end
@@ -44,7 +44,7 @@ class ProfileDataServices < ::ProfilesDomain
           person_authentication_key: rec.person_authenticated_key,
           display_name: rec.display_name,
           email: rec.email,
-          authentication_provider: 'BCrypt',
+          authentication_provider: 'SknService::Bcrypt',
           profile_type: rec.user_options.delete_if(&:blank?) }.to_json }}
       ]
     end

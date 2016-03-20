@@ -59,6 +59,7 @@ module Factory
     end
 
     # Easier to code than delegation, or forwarder
+    # Allows domains, service, to access objects in service_factory and/or controller by name only
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: ##{method}")
       if @factory.respond_to?(method)

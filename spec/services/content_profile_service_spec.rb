@@ -11,35 +11,72 @@ RSpec.describe ApplicationController, "Service routines of ContentProfileService
 
   context "Initialization "  do
 
-    it "#new throws an Exception without params." do
+    scenario "#new throws an Exception without params." do
       expect{ ContentProfileService.new }.to raise_error(ArgumentError)
     end
 
-    it "#new succeeds with only :controller as init param." do
-      expect(ContentProfileService.new({factory: controller})).to be_a(ContentProfileService)
+    scenario "#new succeeds when :factory is valid value." do
+      expect(ContentProfileService.new({factory: @factory})).to be_a(ContentProfileService)
     end
-    it "#new succeeds with only :factory as init param." do
-      expect(ContentProfileService.new({factory: controller})).to be_a(ContentProfileService)
-    end
-    it "#new fails when :factory is invalid." do
+    scenario "#new fails when :factory is invalid value." do
       expect{ ContentProfileService.new({factory: nil}) }.to raise_error(ArgumentError)
     end
 
-    it "#factory.content_profile_service returns a proper service object." do
+    scenario "#factory.content_profile_service returns a proper service object." do
       expect( @service ).to be_a ContentProfileService
     end
-    it "#service #factory and #controller objects to be different." do
+    scenario "#service #factory objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
       expect( @service.factory.factory ).to be_a ApplicationController
-      expect( @service.factory.controller ).to be_a ApplicationController
     end
-    it "#current_user and #user returns a UserProfile object." do
+    scenario "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
   end
 
+  context "Provided methods return proper results. " do
 
+    scenario "#handle_content_profile_destroy" do
+      result = @service.handle_content_profile_destroy({id: 2})
+      expect(result).to be_a(SknUtils::ResultBean)
+      expect(result.success).to be true
+    end
+    scenario "#handle_content_profile_update" do
+    end
+    scenario "#handle_content_profile_creations" do
+    end
+    scenario "#handle_content_profile_index" do
+      result = @service.handle_content_profile_index({})
+      expect(result).to be_a(SknUtils::ResultBean)
+      expect(result.success).to be true
+    end
+    scenario "#handle_content_profile_show_or_edit" do
+      result = @service.handle_content_profile_show_or_edit({id: 2})
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.success).to be true
+    end
+    scenario "#handle_content_profile_new" do
+      result = @service.handle_content_profile_new()
+      expect(result).to be_a(SknUtils::ResultBean)
+      expect(result.success).to be true
+    end
+    scenario "#handle_demo_page" do
+      result = @service.handle_demo_page({})
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.success).to be true
+    end
+    scenario "#api_accessible_content" do
+    end
+    scenario "#handle_content_profile_management prepares a page package of all users" do
+      result = @service.handle_content_profile_management({})
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.success).to be false
+      expect(result.message).to include('Page Not Implemented!')
+    end
+    scenario "#api_content_profiles" do
+    end
+  end
 
 
 end

@@ -85,7 +85,7 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
     full << [{
          header: "Rspec Testing",
          id: "test-action",
-         path: [:manage_content_profiles_profiles_path],
+         path: [:handle_content_profile_management_profiles_path],
          text: "Refresh",
          icon: 'glyphicon-refresh',
          html_options: {

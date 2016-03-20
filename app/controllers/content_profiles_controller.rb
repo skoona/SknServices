@@ -23,20 +23,20 @@ class ContentProfilesController < ApplicationController
 
   # GET /content_profiles/1
   def show
-    @page_controls = content_profile_service.show_and_edit_content_profile(params)
+    @page_controls = content_profile_service.handle_content_profile_show_or_edit(params)
     flash[:notice] = @page_controls.message if @page_controls.message?
     redirect_to content_profiles_url unless @page_controls.success
   end
 
   # GET /content_profiles/new
   def new
-    @page_controls = content_profile_service.make_new_content_profile()
+    @page_controls = content_profile_service.handle_content_profile_new()
     flash[:notice] = @page_controls.message if @page_controls.message?
   end
 
   # GET /content_profiles/1/edit
   def edit
-    @page_controls = content_profile_service.show_and_edit_content_profile(params)
+    @page_controls = content_profile_service.handle_content_profile_show_or_edit(params)
     flash[:notice] = @page_controls.message if @page_controls.message?
     redirect_to content_profiles_url unless @page_controls.success
   end

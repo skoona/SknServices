@@ -70,7 +70,7 @@ class ContentProfileService < ::ProfilesDomain
                                })
   end
 
-  def show_and_edit_content_profile(params)
+  def handle_content_profile_show_or_edit(params)
     content_profile_object = profile_data_services.find_content_profile_by_id(params[:id])
     SknUtils::PageControls.new({
                                 success: true,
@@ -86,7 +86,7 @@ class ContentProfileService < ::ProfilesDomain
                                })
   end
 
-  def make_new_content_profile
+  def handle_content_profile_new
     SknUtils::ResultBean.new({  # because we don't need deep nesting, or leave array hashes alone
        success: true,
        message: "",
@@ -125,7 +125,7 @@ class ContentProfileService < ::ProfilesDomain
   end
 
   # Controller Entry Point
-  def manage_content_profiles(params)
+  def handle_content_profile_management(params)
     res = SknUtils::PageControls.new({
        success: true,
        message: "",
