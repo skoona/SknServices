@@ -19,14 +19,14 @@
             <div id="guidance" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGuidance">
                 <div class="panel-body">
                     <p class="lead">This application is a Rails 4.2.5+ &amp; Ruby-2.2.3 app.  However, WE DO NOT FOLLOW THE CLASSIC RAILS WAY.</p>
-                    <p> Rails is an MVC Web Framework.  The MVC model is a classic and used with success, as is, for many applications.  However, there are many maintenance, scaling, and growth issues when the codeset exceeds a certain size.
+                    <p> Rails is an MVC Web Framework.  The MVC model is a classic and used with success, as is, for many applications.  However, there are many maintenance, scaling, and growth issues when the codeset exceeds a certain size or features set mix.
                     We understand these growth issues, and have chosen to apply the more traditional <strong>Domain Driven Design(DDD)</strong> approach, with Rails isolated as a Web Interface; as much as possible.</p>
                     <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our application business logic from it.  Calling on Rails only when absolutely needed to exchange
                         results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
                     <p>The persistent assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
                         technologies; is very dangerous and Microsoft-ish.  For examples of the wrong direction read the Rails Release notes starting a 4.0, up to version 5.
                         Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality, like <code>Module#include</code>: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
-                    <p class="lead">This application source, and implementation, serve as a model for how successful web application can be engineered without dumbing down or wasting time.</p>
+                    <p class="lead">This application source, and implementation, serves as a model for how web applications can be engineered without dumbing down or wasting time.</p>
                 </div>
             </div>
             <p>Rails is a Great Web Framework.  Your application can derive great benefit from Rails when engineered (Designed) to co-exist with Rails.</p>
@@ -41,12 +41,14 @@
 	        </div>
 	        <div id="ourWay" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOurWay">
 	            <div class="panel-body">                   
-			        <p class="lead">We do not add business process logic to Models, controllers, or views!</p>
+			        <p class="lead">We do not add business process logic to Models, controllers, or views! (the classic Rails Way)</p>
+              <p>We choose to step one step back from Rails code containers, models - views - controllers, and place our code in different containers more appropriate to our application purpose.  This need not be
+                considered a huge departure from the Rails Way, just an alternate approach to building application with Rails.</p>
 			        <p>We consider controller methods as entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code>:service_name.entry_method_name(params)</code>.
-			          Where <code>:service_name</code> is the name of a business process service associated with that page.
+			          Where <code>:service_name</code> is the name of a business process service class associated with that page.
 			          This service's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values, which can easily be converted into JSON,
 			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values bean.</p>
-                    <p>For apps that have some sort of menu-bar or top of page information
+                <p>For apps that have some sort of menu-bar or top of page information
 			          section.  We up the instance variable count by one, by allowing a <code>@page_info</code> values bean, which would contain all the values needed to populate the top of page information section of
 			          that page thru the page partials prepared for it.  In cases where the return code to the controller method is negative, we maintain the <code>:success, :message</code> keys in the
 			          values bean (i.e. ResultsBean) to carry this failure state.  This allows the controller to redirect to the logical next page based on error, or continue to regular destination 
@@ -80,7 +82,7 @@ ProfileType < ActiveRecord::Base
 
   def self.pt_options_selects
     self.all.map do |pts|
-      [pts.name, pts.id, {'data-description'.to_sym => pts.description}]
+      [pts.name, pts.id, {data: {description: pts.description}}]
     end
   end
 end          				
@@ -88,8 +90,9 @@ end
                     <p>In the case of models this mean only short methods to help with form option lists, and the model's own validation methods. Nothing more!</p>
           		</div>
        		</div>
-       		<p>If we don't add business logic to the controllers or the models, where does it go?  Answer, in the Services objects which inherit from domain objects.</p>
-       		<p>A side benefit of not adding business logic in controllers and models is: <strong><em>If there is no code there, then you don't have to test them!</em></strong></p>
+       		<p>If we don't add business logic to the controllers or the models, where does it go?  Answer, in the Services objects which inherit directly from Domain objects.</p>
+       		<p>A side benefit of not adding business logic in controllers and models is: <strong><em>If there is no code there, then you don't have to test them!</em></strong>.
+          Additionally, if you must test a controller; mocking a single method call, and mocking the @page_controls makes controller testing simpler.</p>
      	</div>
 
         <div class="panel panel-info">
@@ -110,14 +113,15 @@ end
                        When changes and enhancements to the business logic is needed, we can make those changes without great concern or contraints being imposed by the delivery mechanism.  This also faciliates
                        making changes or upgrades to the delivery frameworks.</p>
                     <p>Services inherit directly from Domains to further shield our application from the external frameworks; this is easy to see when considering the controller.  Models on the other hand
-                       need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  Using a Repository strategy could be considered to add more isolation.  Ideally we
-                       should be able to write RSpec tests for the service/domain classes without invoking the Rails environment.</p>
+                       need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  I've chosen to go one step further and dedicate a <code>&lt;domain&gt;DataServices</code>
+                       class that wraps all the ActiveRecord IO calls, expecting it to be called by either Domain methods or Services methods.  I have considered using a Repository strategy to add more isolation and to facilitate testing.
+                       For now the specialty domain level IO class provides enough isolation.  Ideally we should be able to write RSpec tests for the service/domain classes without invoking the Rails environment, or at least with fewer dependencies.</p>
                     <p>If service objects are focused on transforming domain results to external interfaces, and domains themselves are focused on the core business logic of a single process.  Then yes, there will
-                       be many domains classes, one to support each business process.  However, a domain class need not do all the heavy lifting, its single-responsibility is producing a contextually valid result
+                       be many or several domains classes, one to support each business process.  However, a domain class need not do all the heavy lifting, its single-responsibility is producing a contextually valid result
                        from the triggering event or input.</p>
                     <p>Domains produce those results best by invoking secondary task oriented objects to complete elements of the overall process, positioning domains to be the orchestrator or main-line
                        for the business process they are assigned.  Task oriented objects must adhere to the single-responsibility guideline to maintain their value to the overall system's design.  Again enhancing
-                       our ability to test off-line from Rails, and making the code more portable with greater reuse opportunities.  A task object would completely handle a task step of the logical process flow
+                       our ability to test off-line from Rails, and making the code more portable with greater reuse opportunities.  A task object would completely handle a task step or elements of the logical process flow
                        domain objects are responsible for.  <em>use the force!</em></p>
                 </div>
             </div>
@@ -143,7 +147,7 @@ end
                             by access and content controls, ensuring only users authorized for that type of content have access.</p>
                             <p>If you are a audio mix engineer and need to exchange music files with clients or mastering partners,  this app would facilitate that exchange unsuring
                             only the right people at a client or partner could access the protected project files.  No doubt you have signed several confidentiality contracts that
-                            require you not to expose the musical content <em>in any way</em> to parties not listed on the contract: This app meets that strict requirement.</p>
+                            require you not to expose the musical content <em>in any way</em> to parties not listed on the contract: This app enables you to meet those strict requirements.</p>
                         </dd>
                         <dt>Administer Profiles</dt>
                             <dd>
@@ -152,12 +156,11 @@ end
                             </dd>
                         <dt>Execute AccessProfile</dt>
                             <dd>
-                                <p>Apply AccessProfile's control to all navigation and clickable actions of the application.</p>
+                                <p>Apply the pre-defined AccessProfile control to all navigation and clickable actions of the application.</p>
                             </dd>
                         <dt>Execute ContentProfile</dt>
                             <dd>
-                                <p>Apply the pre-defined profile controls against down-loadable assets.
-                                   Apply the pre-defined profile controls when handling an upload request from a user.</p>
+                                <p>Apply the pre-defined ContentProfile controls against down-loadable assets, and upload requests from a user.</p>
                             </dd>
                     </dl>
                 </div>
@@ -179,7 +182,7 @@ end
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                             <dd>
-                                <p>By Warden at user login, via methods on Class.</p>
+                                <p>By Warden at user login, via Class methods.</p>
                                 <p>Requires a User object to instantiate itself, and that object must have a unique Id.</p>
                                 <p>During initialization the user's roles are rendered from those assigned via group roles.</p>
                             </dd>
@@ -207,9 +210,9 @@ end
                                         <dt><code>:last_login_time_expired?(user_object)</code></dt>
                                             <dd>Update the last time user access the system and if expired, revalidate their credentials.</dd>
                                         <dt><code>:authenticate?(unencrypted_password)</code></dt>
-                                            <dd>Bcryts Authenticate returns self, we need to override that return value to return us instead</dd>
+                                            <dd>Bcryts Authenticate returns self, we need to override that return value to return self instead</dd>
                                         <dt><code>:enable_authentication_controls</code></dt>
-                                            <dd>After successful login, this methods save the user object into our inMemory storage for later session level retrieval. Also update :last_access.</dd>
+                                            <dd>After successful login, this method saves the user object into our inMemory storage for later session level retrieval. Also update :last_access.</dd>
                                         <dt><code>:disable_authentication_controls</code></dt>
                                             <dd>Remove the user object reference from inMemory storage, updates :last_access.</dd>
                                     </dl>
@@ -334,7 +337,7 @@ end
                             </dl>
                         </dd>
                     </dl>
-                    <p>All Services, like ContentProfileBuilder, AccessServicess or ContentProfileService, should be instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
+                    <p>All Services, like ContentProfileBuilder, ProfileDataServicess or ContentProfileService, should be instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
                 </div>
             </div>
             <p>Container, and Provider of Business Object Services!</p>
@@ -343,26 +346,26 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#AccessServices" aria-expanded="true" aria-controls="collapseOne">
-                        AccessServices
+                    <a role="button" data-toggle="collapse" href="#ProfileDataServices" aria-expanded="true" aria-controls="collapseOne">
+                        ProfileDataServices
                     </a>
                 </h4>
             </div>
-            <div id="AccessServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div id="ProfileDataServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body">
-                    <h5>AccessServices</h5>
+                    <h5>ProfileDataServices</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
                             <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                            <p>The intended use of this services object methods is to handle all access related operations for other services. It does not interact directly with ApplicationController entry points.</p>
+                            <p>The intended use of this services object methods is to handle all IO related operations for Profile Data. It should not interact directly with ApplicationController entry points.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>AccessServices, inherits io routines and common business logic from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
+                        <dd><p>ProfileDataServices, inherits common instantiation service from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
                             which yields common initialization services, like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
                             object storage services and session storage services through its inheritance chain.</p></dd>
                         <dt>Provides</dt>
-                        <dd><p>AccessServices provides customized business logic and standard information packaging for the application internal processes needing access verification.</p>
+                        <dd><p>ProfileDataServices provides contextual data access for content profile data objects and standard data packaging for internal processes.</p>
                         </dd>
                     </dl>
                 </div>
@@ -481,7 +484,7 @@ end
                 </div>
                 <p>The Business Process Interface is here.</p>
             </div>
-            <p>Inherited by: <code>ContentProfileService, AccessServices, ...</code></p>
+            <p>Inherited by: <code>ContentProfileService, ProfileDataServices, ...</code></p>
         </div>
 
         <div class="panel panel-info">

@@ -1,13 +1,12 @@
 ##
 # app/services/profile_data_services.rb
 #
-# Manages Access  interactions for Users
+# Manages Data Access to Profile Data
 # This is an internal service object and should not be exposed to a controller directly.
-# It can do the heavy lifting for access related actions, like render content based on a profile
 #
 
 
-class ProfileDataServices < ::ProfilesDomain
+class ProfileDataServices < ::Factory::DomainsBase
 
 # attr_accessor :factory, :current_user, :page_user  -- initialize by DomainService
 

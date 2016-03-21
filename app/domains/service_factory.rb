@@ -19,29 +19,29 @@ class ServiceFactory < ::Factory::ServicesBase
   end
 
   def password_service
-    @ct_password_service ||= ::PasswordService.new({factory: self})
-    yield @ct_password_service if block_given?
-    @ct_password_service
+    @sf_password_service ||= ::PasswordService.new({factory: self})
+    yield @sf_password_service if block_given?
+    @sf_password_service
   end
   def profile_data_services
-    @ct_profile_data_services ||= ::ProfileDataServices.new({factory: self})
+    @sf_profile_data_services ||= ::ProfileDataServices.new({factory: self})
     yield @ctprofile_data_services if block_given?
-    @ct_profile_data_services
+    @sf_profile_data_services
   end
   def content_profile_service
-    @ct_content_profile_service ||= ::ContentProfileService.new({factory: self})
-    yield @ct_content_profile_service if block_given?
-    @ct_content_profile_service
+    @sf_content_profile_service ||= ::ContentProfileService.new({factory: self})
+    yield @sf_content_profile_service if block_given?
+    @sf_content_profile_service
   end
   def profile_builder
-    @bld_profile_builder ||= Builder::ProfileBuilder.new({factory: self})
-    yield @bld_profile_builder if block_given?
-    @bld_profile_builder
+    @sf_profile_builder ||= Builder::ProfileBuilder.new({factory: self})
+    yield @sf_profile_builder if block_given?
+    @sf_profile_builder
   end
   def filelist_builder
-    @bld_filelist_builder ||= Builder::FilelistBuilder.new({factory: self})
-    yield @bld_filelist_builder if block_given?
-    @bld_filelist_builder
+    @sf_filelist_builder ||= Builder::FilelistBuilder.new({factory: self})
+    yield @sf_filelist_builder if block_given?
+    @sf_filelist_builder
   end
 
 
