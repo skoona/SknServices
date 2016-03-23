@@ -35,7 +35,7 @@ RSpec.describe ProfilesDomain, "Service routines of ProfilesDomain." do
       expect{ ProfilesDomain.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     scenario "#new succeeds when initialized via #service_factory and a #domain_service." do
-      expect(@factory.profile_data_services).to be_kind_of ProfilesDomain
+      expect(@factory.content_profile_service).to be_kind_of ProfilesDomain
     end
     scenario "#service returns an #is_a ProfilesDomain object." do
       expect( @service ).to be_a ProfilesDomain

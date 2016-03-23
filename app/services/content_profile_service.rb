@@ -122,6 +122,16 @@ class ContentProfileService < ::ProfilesDomain
   # Controller Entry Point
   def api_accessible_content(params)
     handle_accessible_content_api(params)
+
+  rescue Exception => e
+    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({package: {
+        success: false,
+        message: e.message,
+        username: "", display_name: "" ,
+        content: @accessible_type,
+        package: []
+    }})
   end
 
   # Controller Entry Point

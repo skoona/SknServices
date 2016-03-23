@@ -28,6 +28,11 @@ class ServiceFactory < ::Factory::ServicesBase
     yield @ctprofile_data_services if block_given?
     @sf_profile_data_services
   end
+  def access_profile_service
+    @sf_access_profile_service ||= ::AccessProfileService.new({factory: self})
+    yield @sf_access_profile_service if block_given?
+    @sf_access_profile_service
+  end
   def content_profile_service
     @sf_content_profile_service ||= ::ContentProfileService.new({factory: self})
     yield @sf_content_profile_service if block_given?

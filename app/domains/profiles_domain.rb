@@ -1,6 +1,6 @@
 ##
 #
-# Inherited by: ContentProfileService, ProfileDataServices
+# Inherited by: ContentProfileService
 #
 #
 
@@ -168,16 +168,6 @@ class ProfilesDomain < ::Factory::DomainsBase
                    package: []}}
               end
     SknUtils::PageControls.new(results)
-
-  rescue Exception => e
-    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({package: {
-                                 success: false,
-                                 message: e.message,
-                                 username: "", display_name: "" ,
-                                 content: @accessible_type,
-                                 package: []
-                             }})
   end
 
   def user_accessible_content(user_profile, context="access", profile=nil)
