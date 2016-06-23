@@ -26,7 +26,6 @@ require 'spec_helper'
 
 require 'warden/test/helpers'
 require 'warden/test/warden_helpers'
-require 'warden-rspec-rails'
 
 require 'capybara/rspec'
 require 'capybara/rails'

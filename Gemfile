@@ -43,7 +43,7 @@ end
 group :test do
   gem 'launchy'
   gem 'rack_session_access'
-  gem 'warden-rspec-rails'
+  # gem 'warden-rspec-rails'
 end
 group :development, :test do
   # gem 'ruby-debug'
