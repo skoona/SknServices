@@ -15,10 +15,17 @@ module Secure
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
     singleton_class.send :delegate, :find_by, :find_each, :where, :to => ::User
 
+    #
+    # Set OSS Context Value -- Manually for now, so all includes use the same value
+    #
+    class_variable_set(:@@object_storage_service_prefix, nil)
+    class_variable_set(:@@object_storage_service_prefix, self.name.to_s)
+
     ##
     # Initialize with a user_object only
     def initialize(user)
-        raise(Utility::Errors::NotFound, "UserProfile Requires a instance from the Users model.") if user.nil?
+      raise(Utility::Errors::NotFound, "UserProfile Requires a instance from the Users model.") if user.nil?
+
       @user_object = user
       @last_access = Time.now
 

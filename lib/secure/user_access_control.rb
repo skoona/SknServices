@@ -27,8 +27,8 @@ module Secure
         upp = nil
         value = self.find_by(username: uname)
         upp = self.new(value) if value.present?
-        upp = nil unless upp && value
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
+        upp = nil unless upp
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}")
         upp
 
       rescue Exception => e
@@ -42,8 +42,8 @@ module Secure
         upp = nil
         value = self.find_by(username: uname).authenticate(upass)
         upp = self.new(value) if value.present?
-        upp = nil unless upp && value
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
+        upp = nil unless upp
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}")
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
@@ -56,8 +56,8 @@ module Secure
         upp = nil
         value = self.find_by(remember_token: token)
         upp = self.new(value) if value.present?
-        upp = nil unless upp && value && value.token_authentic?(token)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}")
+        return nil unless upp && value.token_authentic?(token)
         upp.last_access = Time.now if upp
         upp
       rescue Exception => e

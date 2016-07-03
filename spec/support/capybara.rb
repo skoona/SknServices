@@ -32,7 +32,7 @@ end
 #
 Capybara::Screenshot.autosave_on_failure = true
 Capybara::Screenshot.prune_strategy = :keep_last_run
-Capybara.save_and_open_page_path = "tmp/capybara"
+Capybara.save_path = "tmp/capybara"
 Capybara::Screenshot.append_timestamp = true
 Capybara::Screenshot::RSpec.add_link_to_screenshot_for_failed_examples = true
 Capybara::Screenshot::RSpec::REPORTERS["RSpec::Core::Formatters::HtmlFormatter"] = Capybara::Screenshot::RSpec::HtmlEmbedReporter

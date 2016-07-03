@@ -14,7 +14,7 @@ module Secure
     include Singleton
 
     COVERRIDE = "Admin"  # Context Override
-    CDEFAULT = "Warden"
+    CDEFAULT =  "Warden"
 
     def initialize
       @objects_storage_container = Hash.new

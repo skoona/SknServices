@@ -86,10 +86,10 @@ Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, R
   # manager.default_user_class = Secure::UserProfile
   # manager.unauthenticated_action = "unauthenticated"
   manager.default_scope = :access_profile
-  manager.default_strategies :remember_token, :password, :http_basic_auth, :not_authorized
+  manager.default_strategies :password, :http_basic_auth, :not_authorized
   manager.scope_defaults :access_profile,
                          :store => true,
-                         :strategies => [:remember_token, :password, :http_basic_auth, :not_authorized],
+                         :strategies => [:password, :http_basic_auth, :not_authorized],
                          :action => :new
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
 end
@@ -127,6 +127,25 @@ end
 
 
 ##
+# Use the remember_token from the requests cookies to authorize user
+Warden::Strategies.add(:remember_token) do
+  def valid?
+    # puts "===============[DEBUG]:rt #{self.class}\##{__method__}"
+    request.cookies["remember_token"].present?
+  end
+
+  def authenticate!
+    Rails.logger.debug "  -> Warden::Strategies.add(:remember_token).authenticate!()"
+    remember_token = request.cookies["remember_token"]
+    token = Base64.decode64(remember_token.split('--').first)
+    user = Secure::UserProfile.fetch_remembered_user(token)
+    (user.present? and user.active?) ? success!(user, "Signed in successfully. Remembered!") : fail("Your Credentials are invalid or expired. FailRemembered")
+  rescue => e
+    fail("Your Credentials are invalid or expired. Not Authorized! RescueRemembered: #{e.message}")
+  end
+end
+
+##
 # Use the fields from the Signin page to authorize user
 Warden::Strategies.add(:password) do
   def valid?
@@ -137,29 +156,11 @@ Warden::Strategies.add(:password) do
   end
 
   def authenticate!
+    Rails.logger.debug "  -> Warden::Strategies.add(:password).authenticate!()"
     user = Secure::UserProfile.find_and_authenticate_user(params["session"]["username"], params["session"]["password"])
     (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
   rescue
     fail!("Your Credentials are invalid or expired. RescuePassword")
-  end
-end
-
-##
-# Use the remember_token from the requests cookies to authorize user
-Warden::Strategies.add(:remember_token) do
-  def valid?
-    return false if request.get?
-    # puts "===============[DEBUG]:rt #{self.class}\##{__method__}"
-    request.cookies["remember_token"].present?
-  end
-
-  def authenticate!
-    remember_token = request.cookies["remember_token"]
-    token = Marshal.load(Base64.decode64(CGI.unescape(remember_token.split("\n").join).split('--').first)) if remember_token
-    user = Secure::UserProfile.fetch_remembered_user(token)
-    (user.present? and user.active?) ? success!(user, "Signed in successfully. Remembered!") : fail("Your Credentials are invalid or expired. FailRemembered")
-  rescue
-    fail("Your Credentials are invalid or expired. Not Authorized! RescueRemembered")
   end
 end
 
@@ -170,12 +171,12 @@ Warden::Strategies.add(:http_basic_auth) do
   end
 
   def valid?
-    return false if request.get?
     # puts "===============[DEBUG]:ba #{self.class}\##{__method__}"
     auth.provided? && auth.basic? && auth.credentials
   end
 
   def authenticate!
+    Rails.logger.debug "  -> Warden::Strategies.add(:http_basic_auth).authenticate!()"
     user = Secure::UserProfile.find_and_authenticate_user(auth.credentials[0],auth.credentials[1])
     (user.present? and user.active?) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
    rescue
@@ -192,6 +193,7 @@ Warden::Strategies.add(:not_authorized) do
   end
 
   def authenticate!
+    Rails.logger.debug "  -> Warden::Strategies.add(:not_authorized).authenticate!()"
     fail!("Your Credentials are invalid or expired. Not Authorized! FailNotAuthorized")
   end
 end
@@ -244,8 +246,8 @@ end
 # Set remember_token only after a signin, and verify last login window
 #
 # A callback hook set to run every time after a user is set.
-# This callback is triggered the first time one of those three events happens
-# during a request: :authentication, :fetch (from session) and :set_user (when manually set).
+# This callback is triggered the first time one of those two events happens
+# during a request: :authentication, and :set_user (when manually set).
 #
 # after_authentication is just a wrapper to after_set_user, which is only invoked
 # when the user is set through the authentication path. The options and yielded arguments
@@ -298,13 +300,15 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
 end
 
 ##
-# Injects the home action to match SessionsController
+# Injects the :new action on SessionsController
 #
 # A callback that runs just prior to the failure application being called.
 # This callback occurs after PATH_INFO has been modified for the failure (default /unauthenticated)
 # In this callback you can mutate the environment as required by the failure application
 # If a Rails controller were used for the failure_app for example, you would need to set request[:params][:action] = :unauthenticated
 # Ref: https://github.com/hassox/warden/blob/master/lib/warden/hooks.rb
+#
+# UnAuthenticated action is to allow another login attempt, thus we redirect to SessionController#new
 #
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
@@ -317,13 +321,11 @@ Warden::Manager.before_failure do |env, opts|
       Secure::AccessRegistry.security_check?(uri)            #  'signin'
 
   Rails.logger.debug " Warden::Manager.before_failure(bypass:#{bypass_flag}:#{full_path}) session.id=#{env['warden'].request.session_options[:id]}"
-  env['warden'].cookies.delete :remember_token, domain: env["SERVER_NAME"]
   unless bypass_flag
     params = Rack::Request.new(env).params
     params[:action] = :new
     params[:warden_failure] = opts
   end
-  # env['action_dispatch.request.path_parameters'][:action] = :new unless bypass
 end
 
 ##

@@ -9,8 +9,8 @@ module Factory
     extend ActiveSupport::Concern
 
     included do |klass|
-        Rails.logger.debug("ObjectStorageService => #{self.name} included By #{klass.name}")
         klass.class_variable_set(:@@object_storage_service_prefix, klass.name.to_s)
+        Rails.logger.debug("ObjectStorageService => #{self.name} included By #{klass.name}")
     end
 
     ##
@@ -52,7 +52,7 @@ module Factory
       end
 
       def stored_user_profile_keys
-        object_store.get_warden_stored_user_profile_keys
+        object_store.get_warden_stored_user_profile_keys(get_context)
       end
 
       # Purge all over 2 days old
@@ -60,7 +60,7 @@ module Factory
         object_store.purge_by_seconds(seconds) # 2 days is default, else (Time.now - 2.days).to_i
       end
 
-      private
+      protected
 
       def get_context
         class_variable_get(:@@object_storage_service_prefix)
