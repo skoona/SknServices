@@ -138,6 +138,7 @@ Warden::Strategies.add(:remember_token) do
     Rails.logger.debug "  -> Warden::Strategies.add(:remember_token).authenticate!()"
     remember_token = request.cookies["remember_token"]
     token = Base64.decode64(remember_token.split('--').first)
+    token = token[1..-2] if token[0] == '"'
     user = Secure::UserProfile.fetch_remembered_user(token)
     (user.present? and user.active?) ? success!(user, "Signed in successfully. Remembered!") : fail("Your Credentials are invalid or expired. FailRemembered")
   rescue => e
@@ -240,6 +241,7 @@ Warden::Manager.on_request do |proxy|
   end
 
   Rails.logger.perf " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]} RequestId=#{proxy.request.uuid}"
+  true
 end
 
 ##
@@ -266,14 +268,15 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
 
   if remember
     if Rails.env.production?
-      auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: Settings.security.session_expires, httponly: true, secure: true }
+      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Settings.security.session_expires, httponly: true, secure: true }
     else
-      auth.cookies.permanent.signed[:remember_token] = { value: user.remember_token, domain: auth.env["SERVER_NAME"], expires: Settings.security.remembered_for, httponly: true }
+      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Settings.security.remembered_for, httponly: true }
     end
   else
     auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
   end
   Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]} !
+  true
 end
 
 
@@ -297,6 +300,7 @@ Warden::Manager.after_failed_fetch do |user,auth,opts|
   end
 
   Rails.logger.debug " Warden::Manager.after_failed_fetch(bypass:#{bypass_flag}:#{full_path}) remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, user=#{auth.user().name unless user.nil?}, session.id=#{auth.request.session_options[:id]}"
+  true
 end
 
 ##
@@ -326,6 +330,7 @@ Warden::Manager.before_failure do |env, opts|
     params[:action] = :new
     params[:warden_failure] = opts
   end
+  true
 end
 
 ##
@@ -340,4 +345,5 @@ Warden::Manager.before_logout do |user,auth,opts|
   auth.request.flash[:notice] = opts[:message] if opts[:message]
 
   Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, Host=#{auth.env["SERVER_NAME"]}, session.id=#{auth.request.session_options[:id]}"
+  true
 end
