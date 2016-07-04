@@ -209,7 +209,6 @@ Warden::Manager.on_request do |proxy|
   bypass_flag = false
   remembered = false
   attempted_remember_flag = false
-  user_object = proxy.user()
   full_path = proxy.env['PATH_INFO']
   uri = (full_path.present? and full_path.starts_with?('/')) ? full_path[1..-1] : full_path
 
@@ -222,21 +221,27 @@ Warden::Manager.on_request do |proxy|
 
   # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
 
-  if !bypass_flag && user_object.present? && Secure::UserProfile.last_login_time_expired?(user_object)
-    timeout_flag = true   # should really log user out if timeout occurs -- we don't need that feature active
-  end
+  unless bypass_flag
 
-  # see if we can restore a session using remember token
-  if (!user_object.present? and remembered) or (timeout_flag and remembered)
-    attempted_remember_flag = true
-    Rails.logger.debug " Warden::Manager.on_request(BeforeAuth)"
-    proxy.authenticate(:api_auth, :remember_token)
-    unless proxy.authenticated?
-      proxy.cookies.delete(:remember_token, {domain: proxy.env["SERVER_NAME"]})
+    if proxy.user() and Secure::UserProfile.last_login_time_expired?(proxy.user())
+      timeout_flag = true
+      proxy.logout()
+      proxy.request.flash[:alert] = "Your Session has Expired! Warden#on_request"
     end
-  end
 
-  Rails.logger.perf " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Remembered=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]} RequestId=#{proxy.request.uuid}"
+    # see if we can restore a session via API or RememberToken
+    if !proxy.user() and !timeout_flag
+      attempted_remember_flag = true
+      Rails.logger.debug " Warden::Manager.on_request(BeforeAuth)"
+      proxy.authenticate(:api_auth, :remember_token)
+      unless proxy.authenticated? and remembered
+        proxy.cookies.delete(:remember_token, {domain: proxy.env["SERVER_NAME"]})
+      end
+    end
+
+  end # end bypass
+
+  Rails.logger.perf " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Attempted Restore=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]} RequestId=#{proxy.request.uuid}"
   true
 end
 
