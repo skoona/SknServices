@@ -7,6 +7,10 @@ module Secure
 
     ADMIN_ROLE = Settings.security.admin_role
 
+    included do |klass|
+      Rails.logger.debug("Secure::UserAccessControl => #{self.name} included By #{klass.name}")
+    end
+
     module ClassMethods   # mostly called by Warden
 
       # AccessProfile will call this
@@ -43,7 +47,7 @@ module Secure
         value = self.find_by(username: uname).authenticate(upass)
         upp = self.new(value) if value.present?
         upp = nil unless upp
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}")
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
@@ -56,7 +60,7 @@ module Secure
         upp = nil
         value = self.find_by(remember_token: token)
         upp = self.new(value) if value.present?
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}")
         return nil unless upp && value.token_authentic?(token)
         upp.last_access = Time.now if upp
         upp
@@ -68,7 +72,7 @@ module Secure
       def fetch_cached_user(token)
         raise ArgumentError, "Invalid Credentials!" unless token.present?
         value = retrieve_storage_key(token)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}:#{stored_user_profile_keys}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}")
         value
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")

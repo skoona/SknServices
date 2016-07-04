@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
   # DeSerialize from Session
   def establish_domain_services
     service_factory
-    flash_message(:alert, warden.message) if warden.message.present?
+    flash_message(:notice, warden.message) if warden.message.present?
     flash_message(:alert, warden.errors.full_messages) unless warden.errors.empty?
     # your code here
     Rails.logger.debug "#{self.class.name}.#{__method__}() Called for session.id=#{request.session_options[:id]}"

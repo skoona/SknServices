@@ -28,7 +28,8 @@ module Secure
   module ControllerAccessControl
     extend ActiveSupport::Concern
 
-    included do
+    included do |klass|
+      Rails.logger.debug("Secure::ControllerAccessControl => #{self.name} included By #{klass.name}")
       send( :helper_method, [ :accessed_page,
                               :accessed_page_name,
                               :current_user_has_access?,
@@ -39,7 +40,7 @@ module Secure
                               :redirect_to_target_or_default
                             ]
       ) if respond_to?(:helper_method)
-      send( :before_action, :login_required)
+      send( :before_action, :login_required) unless self.is_a?(SessionsController)
     end
 
 
@@ -48,13 +49,13 @@ module Secure
       unless public_page
         unless authenticated?
           store_target_location
-          Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page. ControllerAccessProfile#login_required")
-          flash_message(:alert, "You must sign in before accessing the '#{accessed_page_name}' page.  ControllerAccessProfile#login_required")
+          Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page. #{controller_name}#login_required")
+          flash_message(:alert, "You must sign in before accessing the '#{accessed_page_name}' page.  #{controller_name}#login_required")
           redirect_to unauthenticated_sessions_url
         else
           # This is the sole page level access control, based on controller/action URI entries in the access registry
           unless current_user_has_access?(accessed_page)
-            flash_message(:alert, "You are not authorized to access the #{accessed_page_name} page!  ControllerAccessProfile#login_required")
+            flash_message(:alert, "You are not authorized to access the #{accessed_page_name} page!  #{controller_name}#login_required")
             redirect_to not_authorized_sessions_url
           end
         end

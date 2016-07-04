@@ -9,8 +9,7 @@ module Factory
     extend ActiveSupport::Concern
 
     included do |klass|
-        klass.class_variable_set(:@@object_storage_service_prefix, klass.name.to_s)
-        Rails.logger.debug("ObjectStorageService => #{self.name} included By #{klass.name}")
+        Rails.logger.debug("Factory::ObjectStorageService => #{self.name} included By #{klass.name}")
     end
 
     ##
@@ -28,31 +27,32 @@ module Factory
 
       # tests for keys existence
       def query_storage_key?(storage_key)
-        object_store.has_storage_key?(storage_key, get_context)
+        object_store.has_storage_key?(storage_key, oscs_get_context)
       end
 
       # returns stored object
       def retrieve_storage_key(storage_key)
-        object_store.get_stored_object(storage_key, get_context)
+        object_store.get_stored_object(storage_key, oscs_get_context)
       end
 
       # Saves user object to InMemory Container
       def persist_storage_key(storage_key, obj)
-        object_store.add_to_store(storage_key.to_sym, obj, get_context)
+        object_store.add_to_store(storage_key.to_sym, obj, oscs_get_context)
       end
 
       # Removes saved user object from InMemory Container
       def release_storage_key(storage_key)
-        object_store.remove_from_store(storage_key.to_sym, get_context)
+        object_store.remove_from_store(storage_key.to_sym, oscs_get_context)
       end
 
       # Returns number of record in cache
-      def count_objects_stored
-        object_store.size_of_store(get_context)
+      def count_objects_stored(ctx=nil)
+        context = ctx || oscs_get_context
+        object_store.size_of_store(context)
       end
 
       def stored_user_profile_keys
-        object_store.get_warden_stored_user_profile_keys(get_context)
+        object_store.get_warden_stored_user_profile_keys(oscs_get_context)
       end
 
       # Purge all over 2 days old
@@ -62,10 +62,10 @@ module Factory
 
       protected
 
-      def get_context
+      def oscs_get_context
         class_variable_get(:@@object_storage_service_prefix)
       end
-      def set_context=(str_val)
+      def oscs_set_context=(str_val)
         class_variable_set(:@@object_storage_service_prefix, str_val)
       end
 
@@ -94,7 +94,7 @@ module Factory
     # Updates existing container with new object reference
     # returns object
     def set_existing_object(key, obj)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
       obj
     end
@@ -103,7 +103,7 @@ module Factory
     # returns object
     def get_existing_object(key)
       obj = singleton_class.retrieve_storage_key(key)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
+      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
       obj
     end
 

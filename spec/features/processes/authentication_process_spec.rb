@@ -82,7 +82,7 @@ feature "Authentication process for all users.", js: true do
       fill_in 'Password', :with => "nobugs"
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
-      expect(page).to have_alert_message("Your Credentials are invalid or expired")
+      expect(page).to have_notice_message("Your Credentials are invalid or expired")
     end
 
     scenario "Cannot sign in with incorrect password." do
@@ -91,14 +91,14 @@ feature "Authentication process for all users.", js: true do
       fill_in 'Password', :with => "somebody"
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
-      expect(page).to have_alert_message("Your Credentials are invalid or expired")
+      expect(page).to have_notice_message("Your Credentials are invalid or expired")
     end
 
     scenario "Cannot sign in when no credentials are offered." do
       visit signin_url
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
-      expect(page).to have_alert_message("Your Credentials are invalid or expired")
+      expect(page).to have_notice_message("Your Credentials are invalid or expired")
     end
 
   end

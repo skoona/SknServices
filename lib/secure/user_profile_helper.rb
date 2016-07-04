@@ -39,10 +39,12 @@ module Secure
     # returns true/false if any <column>_digest matches token
     # note: Password.new(digest) decrypts digest
     def token_authentic?(token)
-      self.attribute_names.select do |attr|
+      rcode = self.attribute_names.select do |attr|
         attr.split("_").last.eql?("digest") ?
             BCrypt::Password.new(self[attr]).is_password?(token) : false
       end.any?    # any? returns true/false if any digest matched
+      Rails.logger.debug "  #{self.class.name}.#{__method__} called for #{username}'s Token Valid=#{rcode}"
+      rcode
     end
 
   end

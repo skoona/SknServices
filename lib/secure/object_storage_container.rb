@@ -17,6 +17,7 @@ module Secure
     CDEFAULT =  "Warden"
 
     def initialize
+      Rails.logger.debug("Secure::ObjectStorageContainer => #{self.class.name} initialized.")
       @objects_storage_container = Hash.new
     end
 
@@ -54,14 +55,14 @@ module Secure
     def add_to_store(key, object, context=CDEFAULT)
       store_key = "#{context}.#{key.to_s}".to_sym
       @objects_storage_container.update({store_key => [object, Time.now.to_i]})
-      Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
+      Rails.logger.debug "  #{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
       true # prevent return of full hash
     end
 
     def get_stored_object(key, context=CDEFAULT)
       store_key = "#{context}.#{key.to_s}".to_sym
       rc = @objects_storage_container.key?(store_key) ? @objects_storage_container[store_key].first : nil
-      Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
+      Rails.logger.debug "  #{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
       rc
     end
 
@@ -79,6 +80,7 @@ module Secure
           counter += 1
         end
       end
+      Rails.logger.debug "  #{self.class.name}.#{__method__}(#{context}) KeyCount=#{counter}"
       counter
     end
 
@@ -97,6 +99,13 @@ module Secure
       end
       Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Results=#{results}"
       results
+    end
+
+    ##
+    # Test Support -- Clear without delay
+    def test_reset!
+      @objects_storage_container.clear
+      true
     end
 
     ##

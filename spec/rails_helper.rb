@@ -49,6 +49,8 @@ Rails.application.routes.default_url_options[:host] = 'http://test.localdomain.c
 # Checks for pending migration and applies them before tests are run.
 ActiveRecord::Migration.maintain_test_schema!
 
+ActionView::TestCase::TestController.send :include, Secure::ControllerAccessControl
+
 RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.use_transactional_fixtures = false

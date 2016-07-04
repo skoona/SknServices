@@ -54,6 +54,11 @@ module Factory
       raise ArgumentError, "Factory::DomainsBase: for #{self.class.name}.  Missing required initialization param(factory)" if @factory.nil?
     end
 
+    def self.inherited(klass)
+      Rails.logger.debug("Factory::DomainsBase => #{self.name} inherited By #{klass.name}")
+    end
+
+
     def current_user
       @user ||= @factory.current_user
     end
