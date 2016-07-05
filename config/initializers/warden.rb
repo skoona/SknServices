@@ -223,9 +223,11 @@ Warden::Manager.on_request do |proxy|
 
   unless bypass_flag
 
+    # If session has expired logout the user, unless remember cookie is still valid
+    # Browser deletes cookies that have expired so remembered should be nil or false
     if proxy.user() and Secure::UserProfile.last_login_time_expired?(proxy.user())
       timeout_flag = true
-      proxy.logout()
+      proxy.logout() unless remembered
       proxy.request.flash[:alert] = "Your Session has Expired! Warden#on_request"
     end
 
@@ -269,9 +271,9 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
 
   if remember
     if Rails.env.production?
-      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Settings.security.session_expires, httponly: true, secure: true }
+      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Secure::UserProfile.security_session_time, httponly: true, secure: true } # Settings.security.session_expires
     else
-      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Settings.security.remembered_for, httponly: true }
+      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Secure::UserProfile.security_remember_time, httponly: true } # Settings.security.remembered_for
     end
   else
     auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]

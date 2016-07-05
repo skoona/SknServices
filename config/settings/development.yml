@@ -11,6 +11,6 @@ PostgreSQL:
 
 
 security:
-  session_expires: <%= -> { 30.minutes.from_now } %>
-  remembered_for:  <%= -> { 60.minutes.from_now } %>
+  session_expires: 30
+  remembered_for:  60
   verify_login_after_seconds: 360   # 5 minutes

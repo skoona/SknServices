@@ -12,6 +12,15 @@ module Secure
     end
 
     module ClassMethods   # mostly called by Warden
+      def security_session_time
+        minutes_from_now(Settings.security.session_expires)
+      end
+      def security_remember_time
+        minutes_from_now(Settings.security.remembered_for)
+      end
+      def minutes_from_now(val=1)
+        val.minutes.from_now
+      end
 
       # AccessProfile will call this
       def page_users(context='access')

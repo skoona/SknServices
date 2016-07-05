@@ -28,8 +28,8 @@ access_profile:
 security:
   admin_role: Services.Action.Admin
   extra_digest_strength: 3
-  session_expires: <%= -> { 4.hours.from_now } %>
-  remembered_for:  <%= -> { 12.hours.from_now } %>
+  session_expires: 160
+  remembered_for:  720
   verify_login_after_seconds: 28800   # 8 hours
   ! public_pages: # no easily stored in the xml, because of leading slash
    - /assets

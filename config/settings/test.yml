@@ -11,5 +11,5 @@ rspec_users:
   support: support1
 
 security:
-  session_expires: <%= -> { 4.hours.from_now } %>
-  remembered_for:  <%= -> { 12.hours.from_now } %>
+  session_expires: 240
+  remembered_for:  720
