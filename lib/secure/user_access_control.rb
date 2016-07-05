@@ -89,9 +89,9 @@ module Secure
         return true unless person.present?
         a = (Time.now.to_i - person.last_access.to_i)
         b = Settings.security.verify_login_after_seconds.to_i
-        rc = (person &&  (a > b ))
+        rc = (a > b )
         person.last_access = Time.now
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username if person}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
         rc
       end
     end # end class methods
