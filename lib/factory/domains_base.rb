@@ -63,6 +63,15 @@ module Factory
       @user ||= @factory.current_user
     end
 
+    protected
+
+    # Support the regular respond_to? method by
+    # answering for any attr that user_object actually handles
+    #:nodoc:
+    def respond_to_missing?(method, incl_private=false)
+      @factory.send(:respond_to?, method) || super(method,incl_private)
+    end
+
     # Easier to code than delegation, or forwarder
     # Allows domains, service, to access objects in service_factory and/or controller by name only
     def method_missing(method, *args, &block)

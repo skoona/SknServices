@@ -60,6 +60,12 @@ class ApplicationController < ActionController::Base
     end
     true
   end
+  # Support the regular respond_to? method by
+  # answering for any attr that user_object actually handles
+  #:nodoc:
+  def respond_to_missing?(method, incl_private=false)
+    @factory.send(:respond_to?, method) || super(method,incl_private)
+  end
 
   # Easier to code than delegation, or forwarder
   def method_missing(method, *args, &block)

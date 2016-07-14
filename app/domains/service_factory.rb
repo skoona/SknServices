@@ -77,7 +77,7 @@ class ServiceFactory < ::Factory::ServicesBase
   # answering for any attr that user_object actually handles
   #:nodoc:
   def respond_to_missing?(method, incl_private=false)
-    super(method,incl_private) || @factory.send(:respond_to_missing?, method, incl_private)
+    @factory.send(:respond_to?, method) || super(method,incl_private)
   end
 
 

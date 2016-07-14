@@ -110,7 +110,7 @@ module Secure
     # answering for any attr that user_object actually handles
     #:nodoc:
     def respond_to_missing?(method, incl_private=false)
-      proxy_u.send(:respond_to_missing?, method, incl_private) || super(method,incl_private)
+      proxy_u.send(:respond_to?, method) || super(method,incl_private)
     end
 
     private
