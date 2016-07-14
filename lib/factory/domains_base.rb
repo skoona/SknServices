@@ -37,7 +37,7 @@
 # - Provides access to all the other <Name>Services objects via #factory.other_service.service_method,
 #   and the invoking Controller via #factory.controller.some_method
 # - Provides #get_session_param and #set_session_param
-# - Access an in-memory object/data storage container, #save_new_object, #set_existing_object, #get_existing_object, #remove_existing_object
+# - Access an in-memory object/data storage container, #create_storage_key_and_store_object, #update_stored_object, #get_stored_object, #delete_stored_object
 #
 # #current_user
 # - Provides local access to the user object for this request cycle.  You could alternately ask the controller for this same

@@ -11,12 +11,12 @@ module TestProviders
     end
 
     def save
-      @key << save_new_object(obj)
+      @key << create_storage_key_and_store_object(obj)
       @key.last
     end
     def find(key_id=nil)
       value = key_id || key.first
-      get_existing_object(value)
+      get_stored_object(value)
     end
     def storage_context
       singleton_class.class_storage_context
@@ -36,12 +36,12 @@ module TestProviders
     end
 
     def save
-      @key << save_new_object(obj)
+      @key << create_storage_key_and_store_object(obj)
       @key.last
     end
     def find(key_id=nil)
       value = key_id || key.first
-      get_existing_object(value)
+      get_stored_object(value)
     end
     def storage_context
       singleton_class.class_storage_context

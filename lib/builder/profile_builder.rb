@@ -78,12 +78,12 @@ module Builder
       unless results[:entries].empty?
         results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      factory.set_existing_object(PREFIX_CONTENT + user_profile.person_authenticated_key, results)
+      factory.update_stored_object(PREFIX_CONTENT + user_profile.person_authenticated_key, results)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      factory.remove_existing_object(PREFIX_CONTENT + user_profile.person_authenticated_key) unless user_profile.nil?
+      factory.delete_stored_object(PREFIX_CONTENT + user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
           message: e.message,
@@ -135,12 +135,12 @@ module Builder
       unless results[:entries].empty?
         results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      factory.set_existing_object(PREFIX_ACCESS + user_profile.person_authenticated_key, results)
+      factory.update_stored_object(PREFIX_ACCESS + user_profile.person_authenticated_key, results)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      factory.remove_existing_object(PREFIX_ACCESS + user_profile.person_authenticated_key) unless user_profile.nil?
+      factory.delete_stored_object(PREFIX_ACCESS + user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
           message: e.message,
@@ -156,7 +156,7 @@ module Builder
     def get_prebuilt_profile(pak, context)
       key = context + pak
       profile = nil
-      profile = factory.get_existing_object(key) if factory.existing_object_stored?(key)
+      profile = factory.get_stored_object(key) if factory.is_object_stored?(key)
       profile
     end
 

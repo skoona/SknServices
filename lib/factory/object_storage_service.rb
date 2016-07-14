@@ -84,7 +84,7 @@ module Factory
 
     # Saves object to inMemory ObjectStore
     # Returns storage key, needed to retrieve
-    def save_new_object(obj)
+    def create_storage_key_and_store_object(obj)
       key = singleton_class.storage_generate_new_key()
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) saved as new with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
@@ -93,7 +93,7 @@ module Factory
 
     # Updates existing container with new object reference
     # returns object
-    def set_existing_object(key, obj)
+    def update_stored_object(key, obj)
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
       obj
@@ -101,7 +101,7 @@ module Factory
 
     # Retrieves object from InMemory Storage
     # returns object
-    def get_existing_object(key)
+    def get_stored_object(key)
       obj = singleton_class.retrieve_storage_key(key)
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
       obj
@@ -109,7 +109,7 @@ module Factory
 
     # Releases object from InMemory Storage
     # returns object, if present
-    def remove_existing_object(key)
+    def delete_stored_object(key)
       obj = singleton_class.release_storage_key(key)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) removed existing object with key:#{key}")
       obj
@@ -117,7 +117,7 @@ module Factory
 
     # Checks if object is in Storage
     # returns true|false
-    def existing_object_stored?(key)
+    def is_object_stored?(key)
       rc = singleton_class.query_storage_key?(key)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() existing object with key:#{key}, exists?:#{rc ? 'True' : 'False'}")
       rc
