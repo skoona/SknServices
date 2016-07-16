@@ -72,8 +72,12 @@ module ApplicationHelper
   #        '[:named_route_path, {options}]'
   #        '[:named_route_path, {options}, '?query_string']'
   #
-  # Advanced ==> {engine: :demo, path: :demo_profiles_path, options: {id: 111304}, query: '?query_string'}
-  #              {engine: , path: , options: {}, query: ''}
+  # Advanced ==> {engine: :demo,
+  #               path: :demo_profiles_path,
+  #               options: {id: 111304},
+  #               query: '?query_string'
+  #              }
+  #              {engine: :sym, path: :sym , options: {}, query: ''}
   def page_action_paths(paths)
     case paths
       when Array

@@ -9,7 +9,7 @@ module Factory
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Factory::ServicesBase => #{self.name} inherited By #{klass.name}")
+      Rails.logger.debug("Factory::ServicesBase inherited By #{klass.name}")
     end
 
   end

@@ -67,7 +67,7 @@ module Secure
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.last_access = Time.now
-      delete_stored_object(person_authenticated_key.to_sym)
+      delete_storage_object(person_authenticated_key.to_sym)
       true
     end
 
@@ -76,7 +76,7 @@ module Secure
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.last_access = Time.now
-      update_stored_object(person_authenticated_key.to_sym, self)
+      update_storage_object(person_authenticated_key.to_sym, self)
       true
     end
 

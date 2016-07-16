@@ -8,7 +8,7 @@ module Secure
     ADMIN_ROLE = Settings.security.admin_role
 
     included do |klass|
-      Rails.logger.debug("Secure::UserAccessControl => #{self.name} included By #{klass.name}")
+      Rails.logger.debug("Secure::UserAccessControl included By #{klass.name}")
     end
 
     module ClassMethods   # mostly called by Warden
@@ -56,7 +56,7 @@ module Secure
         value = self.find_by(username: uname).authenticate(upass)
         upp = self.new(value) if value.present?
         upp = nil unless upp
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
@@ -69,7 +69,7 @@ module Secure
         upp = nil
         value = self.find_by(remember_token: token)
         upp = self.new(value) if value.present?
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
         return nil unless upp && value.token_authentic?(token)
         upp.last_access = Time.now if upp
         upp
@@ -81,7 +81,7 @@ module Secure
       def fetch_cached_user(token)
         raise ArgumentError, "Invalid Credentials!" unless token.present?
         value = retrieve_storage_key(token)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_objects_stored}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
         value
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
@@ -95,7 +95,7 @@ module Secure
       end
 
       def last_login_time_expired?(person)
-        return true unless person.present?
+        return false unless person.present?
         a = (Time.now.to_i - person.last_access.to_i)
         b = Settings.security.verify_login_after_seconds.to_i
         rc = (a > b )

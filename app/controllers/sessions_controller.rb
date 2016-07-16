@@ -34,27 +34,6 @@ class SessionsController < ActionController::Base
 
   protected
 
-  # helper_method [ :accessed_page, :accessed_page_name, :redirect_to_target_or_default, :current_user_has_access? ]
-  #
-  # def accessed_page
-  #   "#{controller_name}/#{action_name}"
-  # end
-  #
-  # def accessed_page_name
-  #   Secure::AccessRegistry.get_resource_description(accessed_page) || ""
-  # end
-  #
-  # def redirect_to_target_or_default(default, *args)
-  #   redirect_to(session[:return_to] || default, *args)
-  #   session[:return_to] = nil
-  # end
-  #
-  # def current_user_has_access?(uri, options=nil)
-  #   opts = options || current_user.try(:user_options) || nil
-  #   current_user.present? and current_user.has_access?(uri, opts)
-  # end
-
-
   private
 
   def do_flashes

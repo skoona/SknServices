@@ -7,7 +7,6 @@
 #  name                     :string(255)
 #  email                    :string(255)
 #  password_digest          :string(255)
-#  remember_token           :string(255)
 #  password_reset_token     :string(255)
 #  password_reset_date      :datetime
 #  assigned_groups          :string(4096)
@@ -18,6 +17,7 @@
 #  updated_at               :datetime         not null
 #  person_authenticated_key :string(255)
 #  assigned_roles           :string(4096)
+#  remember_token           :string(255)
 #  remember_token_digest    :string(255)
 #  user_options             :string(4096)
 #

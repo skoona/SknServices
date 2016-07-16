@@ -100,7 +100,7 @@ class PageActionsBuilder
 
   def prepare_options(params={})
     # fixup named routes
-    params[:path] = page_action_paths(params[:path]) if params.key?(:path)
+    params[:path] = @view.page_action_paths(params[:path]) if params.key?(:path)
     results = {
         html_options: params.delete(:html_options)
     }.merge(params)    # should|could include [:header, :divider, :id, :path, :text, :icon ])
@@ -208,42 +208,6 @@ class PageActionsBuilder
         html += tag(:li,class: "divider") if opts.key?(:divider)
         html
     end.html_safe
-  end
-
-  ### Converts named routes to string
-  #  Basic '/some/hardcoded/string/path'
-  #        '[:named_route_path]'
-  #        '[:named_route_path, {options}]'
-  #        '[:named_route_path, {options}, '?query_string']'
-  #
-  # Advanced ==> {engine: :demo,
-  #               path: :demo_profiles_path,
-  #               options: {id: 111304},
-  #               query: '?query_string'
-  #              }
-  #              {engine: :sym, path: :sym , options: {}, query: ''}
-  def page_action_paths(paths)
-    case paths
-      when Array
-        case paths.size
-          when 1
-            view.send( paths[0] )
-          when 2
-            view.send( paths[0], paths[1] )
-          when 3
-            rstr = view.send( paths[0], paths[1] )
-            rstr + paths[2]
-        end
-
-      when Hash
-        rstr = view.send(paths[:engine]).send(paths[:path], paths.fetch(:options,{}) )
-        rstr + paths.fetch(:query, '')
-
-      when String
-        paths
-    end
-  rescue
-    '#page_action_error'
   end
 
 end

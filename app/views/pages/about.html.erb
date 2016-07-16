@@ -10,83 +10,147 @@
     <section>
         <p class="lead">
             The SknServices project exists to explore Authentication and Authorization services.
-            With special focus on content-based authorization using expanded UserProfile Permission properties.
-        </p>
-        <h4>Users must first logon before accessing a secured resource.</h4>
-        <p>
-            Authentication is evaluated with every page request, except for images,
-            javascript, and css script files.  Token-based single signon is supported, along with a local Signin page.
-            Local Signin includes the popular <em>remember me</em>, and <em>reset my password</em> features
-            via secure email.
+            With special focus on content-based authorization using expanded Permissions properties.  It also implements a
+            design strategy that lessens it's dependancy on Rails.
         </p>
 
-        <h4>All secured page elements shall be assigned an unique id, called URI, by a developer.</h4>
-        <p>
-            Authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and
-            for each <em>showable data element</em>.  Page Access authorization is automated by examining the
-            the controller name and method to compose the URI for the page.  Clickable (menu items, buttons, etc)
-            authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
-            have two levels of authorization available; Clickable, and content-based
-            authorization using the expanded UserProfile permissions, both use the Secure::AccessRegistry.
-        </p>
-        <div class="panel panel-info">
-            <div class="panel-body">
-                <p>
-                    A user might have general access to an Account page which could list five
-                    sensitive documents types, but is only allowed to view two document types for that specific
-                    account.  Content-based authorization requires a document-type permissions list by account, to
-                    enforce access restrictions.
-                </p>
-            </div>
-        </div>
+      <div>
+        <h4>SknServices Strategies</h4>
+        <dl class="dl-horizontal">
+          <dt>Authentication</dt>
+          <dd>
+            <p><strong>UserProfile</strong></p>
+            <p>The Warden Gem is used for its highly secure and flexible rack-based security engine.</p>
+            <p>A unique ID, Personal Authentication Token(PAK), is assigned to each user and persisted internally forever. This id is used to coordinate the collection of user
+               profile attributes and permissions used to enable the users access to the system once they are authenticated.  Authentication
+               is handled by Warden Strategies capable of user/password, http basic auth, single-sign-on tokens, and several more.</p>
+            <p>Remember me, secure email based password-reset, and session timeout is also enabled.</p>
+            <p>The UserProfile class centralizes authentication and authorization methods and/or services into a single user class.  The current user is locally available from every Rails controller as :current_user.</p>
+            <p>Authentication is evaluated with every page request, except for images, javascript, and css script files.</p>
+            <p>The UserProfile coordinates the services of the AccessProfile and the ContentProfile, providing controlled and consistent access to business information.</p>
+          </dd>
 
-        <h4>Authorization shall consider business entities when determining access restrictions.</h4>
-        <p>
-            Content-based Authorization goes deeper that the normal show/hide or access/no-access authorization outcomes.
-            It first identifies access authorization to a specific business entity. Then specific access, by type, to secure objects related to that entity.
-        </p>
-        <div>
-            <h4>Content-based Authorization Specification</h4>
-            <dl class="dl-horizontal">
-                <dt>Identify Person</dt>
-                <dd>
-                    <p>The authentication system will provide an active user object with a persistent UUID, which we use to relate the user to our facility.
-                    We also use the persistent ID to determine the user's title or role in our facility, where customer service rep, primary
-                    producer, or administrator could be the discovery.</p>
-                </dd>
+          <dt>Authorization: Access</dt>
+          <dd>
+            <p><strong>AccessProfile</strong></p>
+            <p>AccessRegistry.xml, registers and/or assigns a URI to every page, action, and information element.  All secured page elements are assigned an unique id, called URI, by a developer.</p>
+            <p>AccessRegistry class maps internal URIs to external String Roles; which can be managed in LDAP or similar systems.  Users having a particular role would be allowed to
+              interact the associated resource, using RESTFul or CRUD or semantics.</p>
+            <p>Access control methods are attached to the UserProfile object and thus available in all contexts of the application via :current_user.  Application Pages are easily
+               represented by combining the controller name and controller method name; or URL path.  An example URI for the index page in the HomeController would be 'home/index'.  Actions which may exist
+               on menus or page action buttons may be given URL labels like: '#Print', '#ManageAccount', '#ManageContacts', etc.  On-page information elements URIs may
+               be '_RecentOrders', '_CanceledOrders', or '_OrderHistory'</p>
+            <p>Access permission roles, dynamically assigned to each user at login, might map URI='#ManageContacts' to Role='App.Manage.Contacts', giving that user the ability to manage contacts.  The AccessRegistry method call
+              would be: userProfileObject.has_access?(URI) = true.</p>
+            <p>
+              Access authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and for each <em>showable data element</em>.
+              Page Access authorization is automated by examining the the controller name and method to compose the URI for the page.  Clickable (menu items,
+              buttons, etc) authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
+              have two levels of authorization available; Clickable, and content-based authorization using expanded permissions, both use the AccessRegistry.
+            </p>
+          </dd>
+          <dt>Authorization: Content</dt>
+          <dd>
+            <p><strong>ContentProfile</strong></p>
+            <p>A ContentProfile contains a the collection of permission entries for a user identified via their PAK id.  Each user is optionally assigned a content profile, which will grant access to
+               its associated resources.  </p>
+            <p><strong>ContentProfileEntries</strong></p>
+            <p>A data model is the preferred container for the ContentProfile, although the access registry xml file could contain the needed modeling without the use of a database. This model registers each secured resource
+               using two-factors with each factor being composed of a key-value pair of attributes. A ContentProfileEntry(CPE) wraps these two factors to specify a user access to this type of content. The CPE itself represents
+              one permission and many CPEs can be associated with one ContentProfile belonging to one identified user.</p>
+            <p>The First factor key is TopicType, it categorizes the type of entity domain being secured; like Account, Branch Office, Product, Operational-Info, or other similar entities.  Each TopicType key
+               uses its value attribute to specifically identify it; a k,v example being key=Account, value=#account number.</p>
+            <p>The second factor's key is ContentType, categorizes the type of asset or resources being secured; like Contracts, Commission Statements, Licenses, or other similar assets. Each ContentType uses its
+               value attribute as a precise identifier or search term that can be used to select a certain type of item; presuming these items are stored a filesystem or
+               document management system. The identifier is used to retrieve items matching.</p>
+            <p>Here is an example of how a CPE could be applied to a file system storage container.
+              <ul>
+                <li>   syntax: //storage/TopicType/TopicValue/ContentType/ContentValue</li>
+                <li>populated: //storage/Account/160032/Contracts/*_purchase.*</li>
+                <li>populated: //storage/Account/160032/Images/*.jpg</li>
+                <li>populated: //storage/Account/160032/Commission/*_commisson.pdf</li>
+                <li>populated: //storage/Agency/4014/Licenses/*_license.txt</li>
+                <li>populated: //storage/Product/MDL-8433167/Specifications/{"docId":"810", "folder": "model_specs"}</li>
+              </ul>
+            </p>
+            <p>
+              Content-based Authorization goes deeper than the normal show/hide or access/no-access authorization outcomes.
+              It first identifies an authentication user's access authorization to a specific business entity. Then specifies access, by type, to secured assets related to that business entity.
+            </p>
+          </dd>
+        </dl>
+      </div>
 
-                <dt>ContentProfile</dt>
-                <dd>
-                    <p>The ContentProfile class is identified by the combination of a users persistent ID and their authentication provider.
-                    The provider is used as part of the access key because we anticipate more than one provider.  In fact today we have Domino, ActiveDirectory,
-                    and we are expecting more.</p>
-                    <p>ContentProfiles contain a collection of the users permissions in our system, called ContentProfileEntry.  Entries have three parts:</p>
-                    <ol>
-                        <li>
-                            Description of the intent.
-                        </li>
-                        <li>
-                            (Topic) Specific Business Entity related to the content. example: Account 1261, or All My Accounts
-                        </li>
-                        <li>
-                            (Content) Specific Content to be accessed, or answer to be given.  example: Commission => [1243, 1244, 1255], or LicensedStates => [Mi,In,Oh]
-                        </li>
-                    </ol>
-                </dd>
-                <dt>ContentProfile Entries</dt>
-                <dd>
-                    <p>Entries can be shared among many different users, as their focus is on the assets being protected and not the users directly. To avoid freehand text
-                    input of the content/topic values, option tables exists for both topics and content.  These option tables have been preloaded with all the relevant values, making
-                    the creation of new Content and Topic entries a simple matter of selection, while keeping the integrity and cleanliness of our information intact.</p>
-                </dd>
-            </dl>
-        </div>
-        <p>Secure::AccessRegistry is the controlling class which maps all the pre-defined (URIs) of the
-            application to access role strings; which could be externally administered via LDAP or SQL.  The
-            Secure::AccessRegistry is an important component of this authorization system.</p>
-        <p>The Secure::UserProfile
-            coordinates the services of the Secure::AccessRegistry and the Secure::ContentProfile to meets the needs of
-            controlled and consistent access to business information and policies.</p>
+      <div>
+        <h4>DDD Lite Strategy</h4>
+        <dl class="dl-horizontal">
+          <dt>Web Frameworks</dt>
+          <dd>
+            <p><strong>Are not Application Servers</strong></p>
+            <p>Rather than building the application the Rails (MVC) Way.  We took a step back from MVC, and opportunistically use a strategy influenced by Domain Driven Design principals.  Our intent was
+               to separate as much of our application logic from the direct mechanics of Rails as possible; treating Rails more like a library or web adapter.</p>
+            <p>This approach does not intend to discount the usability or value of Rails as a Web Framework, it's excellent as a Web Framework; but it is not an Application Server similar to TomCat, or Jetty.</p>
+            <p>We believe the resulting application will be easier to maintain, won't require us to test controllers and code we didn't write, and it will be easier to upgrade Rails versions.</p>
+          </dd>
+          <dt>ServiceFactory</dt>
+          <dd>
+            <p><strong>Business Logic Propagation</strong></p>
+            <p>Rails ApplicationController is augmented with a <code>#login_required</code> method to support the Authentication/Authorization processes.  In support of business logic two more
+            methods are added to the base ApplicationController for use by all controllers that inherit from it.
+              <ul>
+                <li><code>#service_factory</code> module contains controller helpers designed to be used by Services to gain
+                  access to standard controller capabilities and other Services; these methods can easily be mocked, allowing the Services
+                  to be tested without a Controller being active in many cases. It wraps all Service/Domain object and standardizes their initialization params.
+                </li>
+                <li>
+                  <code>#method_missing</code> method routes Services method calls to the service_factory, relieving us from defining every Service as a Controller Helper.
+                </li>
+              </ul>
+            </p>
+            <p>You can think of the ServiceFactory as a classic Rails ControllerHelper.  However, all our business logic and data generation logic is defined in Service Classes memorized by the ServiceFactory.  For testing this allows the ServiceFactory mock out the controller, in many cases.</p>
+            <p><strong>Object Storage Services</strong></p>
+            <p>The ServiceFactory provides controller services to the Services Object and it also provides and in-memory storage facility where objects can be stored across multiple request/response cycles if needed.</p>
+          </dd>
+          <dt>Domains</dt>
+          <dd>
+            <p><strong>Domain Objects</strong></p>
+            <p>Domain classes contain methods related to the business process it is responsible for.  PasswordResetDomain would have methods structured to handle each step in the process of resetting a
+               user password, and all the related IO routines involved. This a base class for its related Services object, and should not be directly instantiated.</p>
+            <p>A Domain's class single responsibility is to have methods to complete the whole process of a business service.  It has no concern for how its resolved information will be presented or displayed.</p>
+            <p>Domain classes do make IO calls to ActiveRecord Models, and by this strategies convention the only class to make these AR calls.  However, the AR Models have no business logic and minimal validations and callbacks implemented.</p>
+            <p>If the work of a particular step in the business process gets deeply involved (more than 50 lines), a ProcessStep class should be created the handle that step for the Domain class</p>
+          </dd>
+          <dt>Services</dt>
+          <dd>
+            <p><strong>Service Objects</strong></p>
+            <p>Service objects inherit a related Domain Class and have the single respobsibility to transpose the Domains information to a data bean useable by the controller or view.  It may invoke some controller methods to format certain
+               values, like a named URL; however such calls are supported by Controller/View Helpers which can be mocked for testing.</p>
+            <p>Service object are directly invoked by a Controller route-based method, like: HomeController#index.   The implementation of the :index method looks similar
+               to: <code>page_controls = service_factory.home_service.homes_list()</code></p>
+            <p>The return value from the above call is a ResultsBean object.  All Services return a bean of this type containing all the data or information elements relevant to this methods
+               response.  This bean package can be converted to JSON or a Hash bundle as needed by the View handler or API Response.  The only required elements for this type of bean is :success, and :message, so each service methods
+              includes these elements allowing the controller method coding to flash a message and/or redirect as needed.</p>
+            <p>All the statements you would normally see in a MVC controller method are actually contained in the Service object's method.</p>
+            <p>Service objects should perform any authorization checks needed before packaging domain data in the ResultsBean.  This prevents the View handler from being required to do it, and provides better protection of the applications data.</p>
+          </dd>
+          <dt>ResultsBean</dt>
+          <dd>
+            <p><strong>Data exchange between Service and Rails MVC classes</strong></p>
+            <p>SknUtils Gem is utilized to provide a flexible container to hold all data returned by a Service.  Dot notation or hash notation is supported by this object, again making it easy to capture test data.</p>
+            <p><strong>Controller &amp; View Helpers</strong></p>
+            <p><code>ApplicationHelper</code> module and the <code>ControllerAccessControl</code> module contain helpers designed for views to operate on the data-only results returned by all Services, and to authorize on-page elements. </p>
+          </dd>
+          <dt>Testing</dt>
+          <dd>
+            <p><strong>Directly test the code you write</strong></p>
+            <p>To implement an application using these strategies you will create Domains, ProcessStep, Services, and Helpers Classes; along with the necessary Views.</p>
+            <p>Using the ServiceFactory as a stand in for a Controller, many of the Services and Domains can be tested without engaging the full Rails stack, which might make tests run faster.</p>
+            <p>Rather than test a Rails Controller to verify business logic, test the Service#method that's invoked in that controllers method.  Only during LIVE Integration or Feature tests
+               should concerned about what the Rails Controller is doing.</p>
+          </dd>
+        </dl>
+      </div>
+
     </section>
 
 </article>

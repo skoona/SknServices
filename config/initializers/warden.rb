@@ -225,10 +225,10 @@ Warden::Manager.on_request do |proxy|
 
     # If session has expired logout the user, unless remember cookie is still valid
     # Browser deletes cookies that have expired so remembered should be nil or false
-    if proxy.user() and Secure::UserProfile.last_login_time_expired?(proxy.user())
+    if Secure::UserProfile.last_login_time_expired?(proxy.user())
       timeout_flag = true
       proxy.logout() unless remembered
-      proxy.request.flash[:alert] = "Your Session has Expired! Warden#on_request"
+      proxy.request.flash[:alert] = "Your Session has Expired! Warden#on_request" unless remembered
     end
 
     # see if we can restore a session via API or RememberToken
@@ -290,7 +290,7 @@ end
 #
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) stored_users=#{Secure::UserProfile.count_objects_stored}, remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, session.id=#{auth.request.session_options[:id]}"
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) stored_users=#{Secure::UserProfile.count_storage_objects}, remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, session.id=#{auth.request.session_options[:id]}"
   true
 end
 

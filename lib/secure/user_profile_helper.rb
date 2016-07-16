@@ -3,7 +3,7 @@ module Secure
     extend ActiveSupport::Concern
 
     included do |klass|
-      Rails.logger.debug("Secure::UserProfileHelper => #{self.name} included By #{klass.name}")
+      Rails.logger.debug("Secure::UserProfileHelper included By #{klass.name}")
       raise Utility::Errors::SecurityImplementionError,
             "You are missing one or more critical security fields; Please implement!" unless
             self.attribute_names.include?("person_authenticated_key") and

@@ -28,16 +28,16 @@
 # instantiation method providing the #factory object and the #current_user object.
 #
 # Class Model and Request Flow:
-#                                                                       ServiceFactory#name1_service >> Name1Domain#some_method  >|
-#   Rack(Warden middleware) >> Router >> Controller#url_named_method >> ServiceFactory#name2_service >> Name2Domain#some_method  >|
-#                                                                       ServiceFactory#nameX_service >> NameXDomain#some_method  >|
-#   Rack(Warden middleware) << ActionView#NameView#render << Controller#url_named_method << --------------------------------------|
+#                                                                       ServiceFactory#name1_service >> Name1Service#some_method          >|
+#   Rack(Warden middleware) >> Router >> Controller#url_named_method >> ServiceFactory#name2_service >> Name2Service#some_method          >|
+#                                                                       ServiceFactory#nameX_service >> NameX[Domain|Service]#some_method >|
+#   Rack(Warden middleware) << ActionView#NameView#render << Controller#url_named_method << ------------------[ResultsBean]----------------|
 #
 # #factory
 # - Provides access to all the other <Name>Services objects via #factory.other_service.service_method,
 #   and the invoking Controller via #factory.controller.some_method
 # - Provides #get_session_param and #set_session_param
-# - Access an in-memory object/data storage container, #create_storage_key_and_store_object, #update_stored_object, #get_stored_object, #delete_stored_object
+# - Access an in-memory object/data storage container, #create_storage_key_and_store_object, #update_storage_object, #get_storage_object, #delete_storage_object
 #
 # #current_user
 # - Provides local access to the user object for this request cycle.  You could alternately ask the controller for this same

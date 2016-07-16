@@ -9,7 +9,7 @@ module Factory
     extend ActiveSupport::Concern
 
     included do |klass|
-        Rails.logger.debug("Factory::ObjectStorageService => #{self.name} included By #{klass.name}")
+        Rails.logger.debug("Factory::ObjectStorageService included By #{klass.name}")
     end
 
     ##
@@ -21,7 +21,7 @@ module Factory
       # protected
 
       # generate a new unique storage key
-      def storage_generate_new_key
+      def generate_new_storage_key
         object_store.generate_unique_key
       end
 
@@ -32,7 +32,7 @@ module Factory
 
       # returns stored object
       def retrieve_storage_key(storage_key)
-        object_store.get_stored_object(storage_key, oscs_get_context)
+        object_store.get_storage_object(storage_key, oscs_get_context)
       end
 
       # Saves user object to InMemory Container
@@ -46,7 +46,7 @@ module Factory
       end
 
       # Returns number of record in cache
-      def count_objects_stored(ctx=nil)
+      def count_storage_objects(ctx=nil)
         context = ctx || oscs_get_context
         object_store.size_of_store(context)
       end
@@ -85,7 +85,7 @@ module Factory
     # Saves object to inMemory ObjectStore
     # Returns storage key, needed to retrieve
     def create_storage_key_and_store_object(obj)
-      key = singleton_class.storage_generate_new_key()
+      key = singleton_class.generate_new_storage_key()
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) saved as new with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
       key
@@ -93,7 +93,7 @@ module Factory
 
     # Updates existing container with new object reference
     # returns object
-    def update_stored_object(key, obj)
+    def update_storage_object(key, obj)
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
       obj
@@ -101,7 +101,7 @@ module Factory
 
     # Retrieves object from InMemory Storage
     # returns object
-    def get_stored_object(key)
+    def get_storage_object(key)
       obj = singleton_class.retrieve_storage_key(key)
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
       obj
@@ -109,7 +109,7 @@ module Factory
 
     # Releases object from InMemory Storage
     # returns object, if present
-    def delete_stored_object(key)
+    def delete_storage_object(key)
       obj = singleton_class.release_storage_key(key)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) removed existing object with key:#{key}")
       obj

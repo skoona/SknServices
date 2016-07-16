@@ -16,7 +16,7 @@ module TestProviders
     end
     def find(key_id=nil)
       value = key_id || key.first
-      get_stored_object(value)
+      get_storage_object(value)
     end
     def storage_context
       singleton_class.class_storage_context
@@ -41,7 +41,7 @@ module TestProviders
     end
     def find(key_id=nil)
       value = key_id || key.first
-      get_stored_object(value)
+      get_storage_object(value)
     end
     def storage_context
       singleton_class.class_storage_context
@@ -76,10 +76,10 @@ RSpec.describe 'Inherited Factory Base Services' do
     u = Secure::UserProfile.find_and_authenticate_user("vstester", "nobugs").enable_authentication_controls
     k1 = provider_one.save
     k2 = provider_two.save
-    expect(TestProviders::DocumentProvider.count_objects_stored).to eq(1)
-    expect(TestProviders::ImageProvider.count_objects_stored).to eq(1)
-    expect(Secure::UserProfile.count_objects_stored).to eq(1)
-    expect(TestProviders::ImageProvider.count_objects_stored("Admin")).to eq(3)
+    expect(TestProviders::DocumentProvider.count_storage_objects).to eq(1)
+    expect(TestProviders::ImageProvider.count_storage_objects).to eq(1)
+    expect(Secure::UserProfile.count_storage_objects).to eq(1)
+    expect(TestProviders::ImageProvider.count_storage_objects("Admin")).to eq(3)
   end
 
   it 'Restores saved objects by key using default context' do

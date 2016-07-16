@@ -48,17 +48,17 @@ RSpec.describe Secure::ObjectStorageContainer, "Singleton for use as object cach
     expect(object_store.size_of_store).to be == count
   end
 
-  it "#get_stored_object returns the requested object" do
+  it "#get_storage_object returns the requested object" do
     objectx = AccessRegistryTestUser.new
     object_store.add_to_store(objectx.key, objectx)
 
-    expect(object_store.get_stored_object(objectx.key)).to be_eql objectx
+    expect(object_store.get_storage_object(objectx.key)).to be_eql objectx
   end
-  it "#get_stored_object returns nil when requested object is not found" do
+  it "#get_storage_object returns nil when requested object is not found" do
     objectx = AccessRegistryTestUser.new
     object_store.add_to_store(objectx.key, objectx)
 
-    expect(object_store.get_stored_object("sample entry that cannot be found")).to be_nil
+    expect(object_store.get_storage_object("sample entry that cannot be found")).to be_nil
   end
 
   it "#has_storage_key? return true/false according to presence of requested symbol key" do

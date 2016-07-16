@@ -59,7 +59,7 @@ module Secure
       true # prevent return of full hash
     end
 
-    def get_stored_object(key, context=CDEFAULT)
+    def get_storage_object(key, context=CDEFAULT)
       store_key = "#{context}.#{key.to_s}".to_sym
       rc = @objects_storage_container.key?(store_key) ? @objects_storage_container[store_key].first : nil
       Rails.logger.debug "  #{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
