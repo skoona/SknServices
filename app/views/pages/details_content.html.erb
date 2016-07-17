@@ -16,37 +16,43 @@
             <h3>Core Idea</h3>
 
             <p>In general anything that can be accessed is considered a <strong>content type</strong>.  The specific entity that content is related to is considered a
-                <strong>topic type</strong>.  Both types <em>must be fully qualified with their respective <strong>Identifiers</strong></em>.
-                Once qualified the two are combined into a holding object called a Content Profile Entry, and given a descriptive title.</p>
-            <p>One Content Profile Entry describes one permission, through the combination of a fully qualified content type and topic type.  It is expected that a
-                user's collection would have many of these specialized entries, and that some entries may be shareable (reducing redundancy) with other users.  Entries
-               are themselves assigned to a wrapper object called a Content Profile which maintains the collection.</p>
-            <p>Content Profiles are the anchor back to the User Profile, via the person authentication key(PAK) or UUID they rely on as <strong>the</strong> primary identifier.</p>
+               <strong>topic type</strong>.  Both types <em>must be fully qualified with their respective <strong>Identifiers</strong></em>.
+               Once qualified the two are combined into a holding object called a ContentProfileEntry, and given a descriptive title.</p>
+            <p>Most business will have many topic types and not everyone will be allowed to view the content associated with all instances of that topic type.  Example: A
+               Sales Representative should only be able to view commission documents for Accounts in their territory.</p>
+            <p>One ContentProfileEntry describes one permission, through the combination of a fully qualified content type and topic type.  It is expected that a
+               user's collection would have many of these specialized entries, and that some entries may be shareable (reducing redundancy) with other users.  Entries
+               are themselves assigned to a wrapper object called a ContentProfile which maintains the collection.</p>
+            <p>ContentProfiles are also the anchor back to the User Profile, using the person authentication key(PAK) or UUID they rely on as <strong>the users</strong> primary identifier.</p>
         </div>
 
         <div>
-            <h3>Objective</h3>
+            <h3>Features</h3>
 
-            <h4>The system shall offer methods to:</h4>
+            <h4>A ContentProfile Implementation offers:</h4>
             <ol>
-                <li>Clearly indicate an employee, vendor, manager, customer service representative, or any business ACTORs role!<br/><p>
-                    * by identifying the person(s) using a permanent and persistent identifier from a trusted authentication source.</p>
-                <li>Ensure user is authenticated and that user has specific access to the requested page, api, and click-ables on that page; unless the target page is public.<br/><p>
-                    * by using the permission roles assigned to each authenticated user and the <code>Secure::AccessProfile</code> access class.</p>
-                <li>Ensure user is constrained to interact with processes or view information they were specifically authorized for!<br/><p>
-                    * by identifying the person(s) identifier, and applying their <code>Secure::ContentProfile</code> collection of permissions to control access to both processes and information.</p>
-                <li>Have no hard Rails dependencies, and serve as a technology platform for building secure web applications.<br/><p>
-                    * Outside of keeping its private tables in AR, it supplies its services independent of Rails.<br/>
-                    * It is assumed that user records and most displayable information is not solely housed locally in Rails; but sourced from external systems or computed.</p>
+              <li><strong>ContentProfile</strong> is anchored to a specific Authenticated User, by associating and identifying the person using a permanent and persistent identifier from a trusted authentication
+                  source; and manages the collection of <strong>ContentProfileEntries</strong> for that user.</li>
+              <li>A <strong>ContentEntry</strong> ensures both the Topic and the Content are uniquely identified and specific to their respective types.</li>
+              <li>Each <strong>TopicType</strong> identifies one type of business entity class; like an Account, Customer, Order, Product, Branch Office, Partner, etc.  Further, the <strong>TopicTypeValue</strong> contains
+                the ID number/reference for that single entity.  An example being: <em>TopicType:Account, TopicTypeValue:12016</em>.</li>
+              <li>Each <strong>ContentType</strong> identifies one type of business asset related to the current TopicType; like a Commission Statement for an Account, Order History Document for a
+                  Customer, Profitability Report for an Order, etc.  Further, the <strong>ContentTypeValue</strong> contains the ID number/reference, or SearchTerm for that specific asset.  An example being: <em>TopicType:Account,
+                  TopicTypeValue:12016, ContentType:Commission, ContentTypeValue:{docTypeID=486}</em>.</li>
+              <li>Type Values may contain one or more elements as needed to specifically identify their entity; the ContentProfile class only insists on at least one value.  Values may also be simple values and not refer to
+                  external sub-systems.  Here is an example of an operational value that describes the states a branch is licensed to do business
+                  in: <em>TopicType:BranchOffice, TopicTypeValue:44201, ContentType:LicensedStates, ContentTypeValue:['Indiana','Michigan','Ohio']</em>.</li>
+              <li>Rake Tasks to load and update selection values for Topics, Contents, and their values.  From a User Interface free-hand typing of values is not allowed, only prerecorded values are allowed.</li>
+              <li>Each ContentType may require a ContentAdapter class to execute the retrieval process.  The actual business asset a ContentType refers to may in fact be stored in a
+                  FileSystem, or Document Management System requiring a WebService call to retrieve it.</li>
             </ol>
         </div>
         <div>
             <h3>Implementation</h3>
 
-            <p>An implementation would include the database model, admin ui to create profiles and entries, a defined request/response template, and a execution adapter
-               focused on retrieval of requested documents or the true/false result when appropriate.</p>
+            <p>An implementation would include the database model, admin ui to manage profiles and entries, and a content adapter classes focused on retrieval of requested assets.</p>
 
-            <p>This demonstration app contain the database model, a partial admin ui, a partial request/response template, and no real execution adapter.  I will be adding or completing
+            <p>This demonstration app contain the database model, a partial admin ui, and no real content adapter classes.  I will be adding or completing
                 those components over the next couple of months of free time.</p>
 
         </div>
