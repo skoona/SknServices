@@ -84,6 +84,7 @@ RSpec.describe Secure::ObjectStorageContainer, "Singleton for use as object cach
   end
 
   it "#Marshal.dump/_load saves the object with current state intact" do
+    object_store.test_reset!
     count = object_store.size_of_store
     objectx = AccessRegistryTestUser.new
     objecty = AccessRegistryTestUser.new
