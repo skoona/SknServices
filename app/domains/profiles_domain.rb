@@ -123,57 +123,73 @@ class ProfilesDomain < ::Factory::DomainsBase
   ##
   # Returns content available via profile to specified user
   ##
-  # REQUEST: { ContentProfile
-  #     "user_options":["Manager","0034","0037","0040"],
-  #     "topic_value":"Branch",
-  #     "content_value":["68601","68602","68603"],
-  #     "content_type":"Commission",
-  #     "content_type_description":"Monthly Commission Reports and Files",
-  #     "topic_type":"Branch",
-  #     "topic_type_description":"Branch Actions",
-  #     "description":"Determine which branch documents can be seen",
-  #     "username":"developer"
+  # Parameters: {"id"=>"content",
+  #              "username"=>"aptester",
+  #              "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
+  #              "content_type"=>"Commission", "content_value"=>["68613"],
+  #              "topic_type"=>"Branch",
+  #              "topic_value"=>["0038"],
+  #              "description"=>"Determine which branch documents can be seen",
+  #              "topic_type_description"=>"Branch Actions for a specific branch",
+  #              "content_type_description"=>"Monthly Commission Reports and Files"
   # }
-  ##
-  # REQUEST:  { AccessProfile
-  # "user_options":["Manager","0034","0037","0040"],
-  #     "topic_value":"PDF",
-  #     "content_value":{"doctype":"954"},
-  #     "content_type":"Commission",
-  #     "content_type_description":"Branch Commission Statements",
-  #     "topic_type":"Branch",
-  #     "topic_type_description":"Branch Commission Statements",
-  #     "description":"Branch Commission Statements",
-  #     "uri":"Commission/Branch/PDF",
-  #     "username":"developer"
+  # Parameters: {"id"=>"access",
+  #              "username"=>"aptester",
+  #              "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
+  #              "uri"=>"Commission/Branch/PDF",
+  #              "resource_options"=>{
+  #                  "uri"=>"Commission/Branch/PDF",
+  #                  "role"=>"Test.Branch.Commission.Statement.PDF.Access",
+  #                  "role_opts"=>["0034", "0037", "0040"]
+  #              },
+  #              "content_type"=>"Commission",
+  #              "content_value"=>{"0"=>{"doctype"=>"954"}},
+  #              "topic_type"=>"Branch",
+  #              "topic_value"=>["0034", "0037", "0040"],
+  #              "description"=>"Branch Commission Statements",
+  #              "topic_type_description"=>"Branch Commission Statements",
+  #              "content_type_description"=>"Branch Commission Statements"
   # }
   def handle_accessible_content_api(params) # :access, :username, :profile
-    @accessible_type = params[:id] || params[:access] # [:access, :content]
-    @profile = params[:profile] # [:access=role, :content=content]
+    @accessible_type = params[:id]          # [:access, :content]
+    cpe = params # [:access=role, :content=content]
     pg_u = get_page_user(params[:username], @accessible_type)
       raise(Utility::Errors::NotFound, "No profile data available for user") unless pg_u.present?
 
+    cpe[:profile] = cpe[:id]
+    cpe[:id] = pg_u.id
+    Rails.logger.debug "#{self.class}##{__method__} results => #{cpe}"
+
     results = case @accessible_type
                 when 'access'
-                  {package: {success: true, message: params[:content_type_description], content: 'access',
-                   username: pg_u.username, display_name: pg_u.display_name ,
-                  package: user_accessible_content(pg_u, "access", @profile)}}
+                  {package: {
+                      success: true, message: params[:content_type_description], content: 'access',
+                      username: pg_u.username, display_name: pg_u.display_name,
+                      payload: user_accessible_content(cpe)
+                    }
+                  }
                 when 'content'
-                  {package: {success: true, message: params[:content_type_description], content: 'content',
-                   username: pg_u.username, display_name: pg_u.display_name ,
-                   package: user_accessible_content(pg_u, "content", @profile)}}
+                  {package: {
+                      success: true, message: params[:content_type_description], content: 'content',
+                      username: pg_u.username, display_name: pg_u.display_name,
+                      payload: user_accessible_content(cpe)
+                    }
+                  }
                 else
-                  {package: {success: false, message: "not found", content: 'error',
-                   username: pg_u.username, display_name: pg_u.display_name ,
-                   package: []}}
+                  {package: {
+                      success: false, message: "not found", content: 'error',
+                      username: pg_u.username, display_name: pg_u.display_name ,
+                      payload: []
+                    }
+                  }
               end
     SknUtils::PageControls.new(results)
   end
 
-  def user_accessible_content(user_profile, context="access", profile=nil)
-    topic = :images
-    content = '*'
-    result = factory.filelist_builder.request_content_filelist({topic: topic, content: content})
+  # Returns an empty Array on Error, or Array of Hashes on Success
+  def user_accessible_content(profile)
+    result = factory.content_adapter_file_system.available_content_list(profile)
+    Rails.logger.debug "#{self.class}##{__method__} results => #{profile}"
     result
   end
 

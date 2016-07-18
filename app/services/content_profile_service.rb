@@ -130,7 +130,7 @@ class ContentProfileService < ::ProfilesDomain
         message: e.message,
         username: "", display_name: "" ,
         content: @accessible_type,
-        package: []
+        payload: []
     }})
   end
 

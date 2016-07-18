@@ -91,21 +91,21 @@ RSpec.describe ProfilesDomain, "Service routines of ProfilesDomain." do
 
     context "For user aptester, that has content and access profiles available. " do
       scenario "#api_accessible_content(access) return a PageControls object. " do
-        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'access'})).to be_a(SknUtils::PageControls)
-        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'access'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'access'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'access'}).package.success).to be true
       end
       scenario "#api_accessible_content(content) return a PageControls object. " do
-        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'content'})).to be_a(SknUtils::PageControls)
-        expect(@service.handle_accessible_content_api({username: 'aptester', access: 'content'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'content'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'content'}).package.success).to be true
       end
     end
     context "For user estester, that has access but no content profile available. " do
       scenario "#handle_accessible_content_api(access) return a PageControls object. " do
-        expect(@service.handle_accessible_content_api({username: 'estester', access: 'access'})).to be_a(SknUtils::PageControls)
-        expect(@service.handle_accessible_content_api({username: 'estester', access: 'access'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'estester', id: 'access'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'estester', id: 'access'}).package.success).to be true
       end
       scenario "#handle_accessible_content_api(content) return a PageControls object. " do
-        expect(@service.handle_accessible_content_api({username: 'estester', access: 'content'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'estester', id: 'content'})).to be_a(SknUtils::PageControls)
       end
     end
 

@@ -55,7 +55,7 @@ module Factory
     end
 
     def self.inherited(klass)
-      Rails.logger.debug("Factory::DomainsBase => #{self.name} inherited By #{klass.name}")
+      Rails.logger.debug("Factory::DomainsBase inherited By #{klass.name}")
     end
 
 

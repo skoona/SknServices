@@ -14,6 +14,10 @@ class ContentTypeOpt < ActiveRecord::Base
 
   validates_presence_of :value, :description
 
+  before_create {|opts|
+    opts.value.gsub!(/\s+/,'')
+  }
+
   def self.options_selects
     self.all.map do |r|
       [r.value, r.id, {'data-description'.to_sym => r.description}]

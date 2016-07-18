@@ -43,10 +43,10 @@ class ServiceFactory < ::Factory::ServicesBase
     yield @sf_profile_builder if block_given?
     @sf_profile_builder
   end
-  def filelist_builder
-    @sf_filelist_builder ||= Builder::FilelistBuilder.new({factory: self})
-    yield @sf_filelist_builder if block_given?
-    @sf_filelist_builder
+  def content_adapter_file_system
+    @sf_content_adapter_file_system ||= Builder::FileSystemAdapter.new({factory: self})
+    yield @sf_content_adapter_file_system if block_given?
+    @sf_content_adapter_file_system
   end
 
 
