@@ -23,7 +23,7 @@ module Builder
           images: './controlled/downloads/images/',
           pdf: './controlled/downloads/pdf/'
       }
-      @file_system = Pathname('./controlled')
+      @file_system = Pathname('./controlled/projects')
     end
 
     def ready?
@@ -77,7 +77,6 @@ module Builder
                   }
       end
       Rails.logger.debug "#{self.class}##{__method__} result: #{result}"
-
       result
     rescue Exception => e
       Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
@@ -85,6 +84,7 @@ module Builder
     end
 
 
+    # Returns an Array|Hash of Values
     def retrieve_content_values(cpe={}) # ContentProfileEntry Hash
       result = cpe[:content_value] || cpe["content_value"] || []
 
@@ -95,6 +95,21 @@ module Builder
       []
     end
 
+    # Composes a new path from the CPE
+    def create_new_content_entry_path(cpe={}) # ContentProfileEntry Hash
+      base_path = cpe[:base_path] || @file_system.to_path
+      topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
+      content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
+      topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
+      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }
+      paths.each {|path| path.mkpath() unless path.exist?}
+
+    Rails.logger.debug "#{self.class}##{__method__} result: #{paths.map(&:to_s)}"
+      true
+    rescue Exception => e
+      Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      false
+    end
 
     protected
 
