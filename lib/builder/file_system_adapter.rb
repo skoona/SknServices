@@ -62,21 +62,24 @@ module Builder
     # }
     # Returns and array of {source: "", filename: "", created: "", size: ""}
     def available_content_list(cpe)
-      topic = :pdf || cpe[:topic]
-      content = "*" || cpe[:content]
-        return [] unless topic and content
-
       result = []
-      path = File.join(@topic_values[topic],content)
-      Dir.glob(path).collect {|f| Pathname.new(f) }.each do |pn|
-        result << { source: cpe["content_type_description"], # topic.to_s,
-                    filename: pn.basename.to_s,
-                    created: pn.ctime.strftime("%Y/%m/%d"),
-                    size: human_filesize(pn.size),
-                    mime: content_mime_type(pn.extname)
-                  }
+      base_path = cpe[:base_path] || @file_system.to_path
+      topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
+      content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
+      topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
+      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }
+      paths.each do |path|
+        Dir.glob(File.join(path.to_path, "**") ).collect {|f| Pathname.new(f) }.each do |pn|
+          result << { source: cpe["content_type_description"], # topic.to_s,
+                      filename: pn.basename.to_s,
+                      created: pn.ctime.strftime("%Y/%m/%d"),
+                      size: human_filesize(pn.size),
+                      mime: content_mime_type(pn.extname)
+                    }
+        end
       end
       Rails.logger.debug "#{self.class}##{__method__} result: #{result}"
+      
       result
     rescue Exception => e
       Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
