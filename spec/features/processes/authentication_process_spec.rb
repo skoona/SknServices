@@ -43,7 +43,7 @@ feature "Authentication process for all users.", js: true do
     end
 
     scenario "Unauthorized access is redirected to Not Authorized page with unauthorized message." do
-      user = page_user_astester
+      user = page_user_bstester
       visit new_user_url
       expect(current_path).to eq unauthenticated_sessions_path
       expect(page).to have_alert_message("You must sign in before accessing")

@@ -57,7 +57,7 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
                    "content_type"=>"Commission",
                    "content_value"=>["68613"],
                    "topic_type"=>"Branch",
-                   "topic_value"=>["0038"],
+                   "topic_value"=>["0038","4402"],
                    "description"=>"Determine which branch documents can be seen",
                    "topic_type_description"=>"Branch Actions for a specific branch",
                    "content_type_description"=>"Monthly Commission Reports and Files"
@@ -68,7 +68,6 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
     end
 
     ## Expected Response
-    #
     # {:source=>"images", :filename=>"galaxy-man.png", :created=>"2016/02/14", :size=>"3.2 MB"}
     it "#available_content_list returns array of options with descriptions. " do
       expect( @service.available_content_list({}) ).to be_a Array
@@ -80,6 +79,10 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
       expect( @service.retrieve_content_values(cpe).first ).to be_a(String)
     end
 
+    it "#create_new_content_entry_path returns true on success. " do
+      expect( @service.create_new_content_entry_path() ).to be false
+      expect( @service.create_new_content_entry_path(cpe, {noop: true}) ).to be true
+    end
 
   end
 

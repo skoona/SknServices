@@ -171,12 +171,12 @@ module Utility
       ## Begin Good Work
 
       pt = [
-          {name: "BranchPrimary",   description: "Branch Super User"},
-          {name: "BranchSecondary", description: "Limited User"},
-          {name: "EmployeePrimary",   description: "BMI Admin User"},
-          {name: "EmployeeSecondary", description: "BMI Limited User"},
-          {name: "VendorPrimary",   description: "External Vendor Long Term Role"},
-          {name: "VendorSecondary", description: "External Vendor Short Term Role"}
+          {name: "EmployeePrimary",   description: "Corporate Managers"},
+          {name: "EmployeeSecondary", description: "Corporate Staff"},
+          {name: "BranchPrimary",     description: "Branch Manager"},
+          {name: "BranchSecondary",   description: "Branch Staff"},
+          {name: "VendorPrimary",     description: "Partner Manager"},
+          {name: "VendorSecondary",   description: "Partner Staff"}
       ]
 
       results = []
@@ -356,7 +356,9 @@ module Utility
             topic_types_attributes: {
             "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0034", description: "Some Branch Number"} }}}
+            "0" => {value: "0034", description: "South Branch Number"},
+            "1" => {value: "0037", description: "North Branch Number"},
+            "2" => {value: "0040", description: "West Branch Number"} }}}
         },
         {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
             content_types_attributes: {
@@ -369,11 +371,12 @@ module Utility
             topic_types_attributes: {
             "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "0" => {value: "Branch", description: "All Branch Accounts"} }}}
+            "0" => {value: "1601", description: "All Branch Accounts"},
+            "1" => {value: "1602", description: "All Branch Accounts"} }}}
         },
         {topic_value: [], content_value: [], description: 'Determine which States producer may operate in.',
             content_types_attributes: {
-            "0" => {name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
+            "0" => {name: "Operations",   description: "Business Operational Metric", value_data_type: "Integer",
             content_type_opts_attributes: {
             "0" => {value: "21", description: "Michigan"},
             "1" => {value: "9",  description: "Ohio"},
@@ -396,7 +399,7 @@ module Utility
             topic_types_attributes: {
             "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0038", description: "Some Branch Number"}}}}
+            "0" => {value: "0037", description: "North Branch Number"}}}}
         },
         {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
             content_types_attributes: {
@@ -407,21 +410,21 @@ module Utility
             topic_types_attributes: {
             "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "1" => {value: "Producer",  description: "All Producer Accounts"} }}}
+            "1" => {value: "1602",  description: "All Producer Accounts"} }}}
         }
       ]
 
       cpev = [
-        {topic_value: [],     content_value: [], description: 'Determine which branch documents can be seen',
+        {topic_value: [], content_value: [], description: 'Relationship Activity Reports',
             content_types_attributes: {
-            "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+            "0" => {name: "Activity",   description: "Project Status Reports", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "68701", description: "Document store Project Status Report Document Type ID"} }}
+            "0" => {value: "0099", description: "Document store Project Status Report Document Type ID"} }}
           },
             topic_types_attributes: {
-            "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
+            "0" => {name: "Partner",  description: "This Corporate Account",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "9999", description: "Some Branch Number"}}}}
+            "0" => {value: "0099", description: "Skoona Development Account"}}}}
         }
       ]
 
@@ -442,7 +445,7 @@ module Utility
         rec.reload
         rec.profile_type = ProfileType.find_by(name: u.assigned_groups.first)
         rec.content_profile_entries = case u.assigned_groups.first
-                                        when  'EmployeePrimary'
+                                        when 'EmployeePrimary'
                                           cpep_recs
                                         when 'EmployeeSecondary'
                                           cpes_recs

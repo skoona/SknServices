@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'pathname'
+require 'fileutils'
 
 # path to your application root.
 APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
@@ -11,12 +12,22 @@ Dir.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system "gem install bundler rake rspec --conservative"
   ENV['BUNDLE_PATH'] = 'vendor/bundle'
-  system "bundle check || bundle install || bundle clean"
+  system "bundle check || bundle install && bundle clean"
 
-  # puts "\n== Copying sample files =="
-  # unless File.exist?("config/database.yml")
-  #   system "cp config/database.yml.sample config/database.yml"
-  # end
+  puts "\n== Creating Content Paths  =="
+  FileUtils.mkpath( [
+    "./controlled/projects/Branch/0034/Commission",
+    "./controlled/projects/Branch/0037/Commission",
+    "./controlled/projects/Branch/0040/Commission",
+    "./controlled/projects/Account/1601/Notification",
+    "./controlled/projects/Account/1602/Notification",
+    "./controlled/projects/LicensedStates/USA/Operations",
+    "./controlled/projects/Partner/0099/Activity",
+    "./controlled/projects/FileDownload/UserGroups/Datafiles",
+    "./controlled/projects/FileDownload/UserGroups/Images",
+    "./controlled/projects/FileDownload/UserGroups/Pdf",
+    "./log"
+  ], verbose: true)
 
   puts "\n== Preparing databases =="
   system "RAILS_ENV=development bin/rake db:reset"

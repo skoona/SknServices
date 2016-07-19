@@ -11,11 +11,14 @@ module TestUsers
   def user_estester
     Secure::UserProfile.find_and_authenticate_user("estester", "nobugs")
   end
-  def user_aptester
-    Secure::UserProfile.find_and_authenticate_user("aptester", "nobugs")
+  def user_bptester
+    Secure::UserProfile.find_and_authenticate_user("bptester", "nobugs")
   end
-  def user_astester
-    Secure::UserProfile.find_and_authenticate_user("astester", "nobugs")
+  def user_bstester
+    Secure::UserProfile.find_and_authenticate_user("bstester", "nobugs")
+  end
+  def user_bnptester
+    Secure::UserProfile.find_and_authenticate_user("bnptester", "nobugs")
   end
   def user_vptester
     Secure::UserProfile.find_and_authenticate_user("vptester", "nobugs")
@@ -35,11 +38,14 @@ module TestUsers
   def page_user_estester
     Secure::UserProfile.page_user("estester")
   end
-  def page_user_aptester
-    Secure::UserProfile.page_user("aptester")
+  def page_user_bptester
+    Secure::UserProfile.page_user("bptester")
   end
-  def page_user_astester
-    Secure::UserProfile.page_user("astester")
+  def page_user_bstester
+    Secure::UserProfile.page_user("bstester")
+  end
+  def page_user_bnptester
+    Secure::UserProfile.page_user("bnptester")
   end
   def user_vptester
     Secure::UserProfile.page_user("vptester")

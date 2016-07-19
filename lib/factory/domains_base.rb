@@ -58,7 +58,6 @@ module Factory
       Rails.logger.debug("Factory::DomainsBase inherited By #{klass.name}")
     end
 
-
     def current_user
       @user ||= @factory.current_user
     end

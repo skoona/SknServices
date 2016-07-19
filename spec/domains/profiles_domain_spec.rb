@@ -84,19 +84,19 @@ RSpec.describe ProfilesDomain, "Service routines of ProfilesDomain." do
   end
 
   context "Controller accessible methods handle requests properly. " do
-      let!(:aptesterA) {@service.get_page_user("aptester", "access")}
+      let!(:bptesterA) {@service.get_page_user("bptester", "access")}
       let!(:estesterA) {@service.get_page_user("estester", "access")}
-      let!(:aptesterC) {@service.get_page_user("aptester", "content")}
+      let!(:bptesterC) {@service.get_page_user("bptester", "content")}
       let!(:estesterC) {@service.get_page_user("vstester", "content")}
 
-    context "For user aptester, that has content and access profiles available. " do
+    context "For user bptester, that has content and access profiles available. " do
       scenario "#api_accessible_content(access) return a PageControls object. " do
-        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'access'})).to be_a(SknUtils::PageControls)
-        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'access'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'bptester', id: 'access'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'bptester', id: 'access'}).package.success).to be true
       end
       scenario "#api_accessible_content(content) return a PageControls object. " do
-        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'content'})).to be_a(SknUtils::PageControls)
-        expect(@service.handle_accessible_content_api({username: 'aptester', id: 'content'}).package.success).to be true
+        expect(@service.handle_accessible_content_api({username: 'bptester', id: 'content'})).to be_a(SknUtils::PageControls)
+        expect(@service.handle_accessible_content_api({username: 'bptester', id: 'content'}).package.success).to be true
       end
     end
     context "For user estester, that has access but no content profile available. " do
@@ -109,14 +109,14 @@ RSpec.describe ProfilesDomain, "Service routines of ProfilesDomain." do
       end
     end
 
-    context "For user aptester, that has content and access profiles available. " do
+    context "For user bptester, that has content and access profiles available. " do
       scenario "#access_profile_package(access) returns True with a Hash object. " do
-        expect(@service.access_profile_package(aptesterA)).to be_a(Hash)
-        expect(@service.access_profile_package(aptesterA)[:success]).to be true
+        expect(@service.access_profile_package(bptesterA)).to be_a(Hash)
+        expect(@service.access_profile_package(bptesterA)[:success]).to be true
       end
       scenario "#content_profile_package(content) returns True with a Hash object." do
-        expect(@service.content_profile_package(aptesterC)).to be_a(Hash)
-        expect(@service.content_profile_package(aptesterC)[:success]).to be true
+        expect(@service.content_profile_package(bptesterC)).to be_a(Hash)
+        expect(@service.content_profile_package(bptesterC)[:success]).to be true
       end
     end
     context "For user estester, that has access but no content profile available. " do

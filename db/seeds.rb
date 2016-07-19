@@ -8,11 +8,11 @@ begin
   Rails.logger.info "Defining  Users"
   users =[ {
       username:              "developer",
-      name:                  "Employee Primary User: Developer",
+      name:                  "Skoona Developer",
       email:                 "skoona@gmail.com",
       password:                "developer99",
       password_confirmation:   "developer99",
-      user_options:            ["Manager", "0034", "0037", "0040"],
+      user_options:            ["Developer","Manager", "0034", "0037", "0040"],
       assigned_groups:         ["EmployeePrimary"],
       assigned_roles:          ["Services.Action.Developer"]
   },
@@ -22,8 +22,8 @@ begin
       email:                 "appdev@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["Manager", "0034", "0037", "0040"],
-      assigned_groups:             ["EmployeePrimary"],
+      user_options:            ["Manager", "EmployeePrimary", "0034", "0037", "0040"],
+      assigned_groups:         ["EmployeePrimary"],
       assigned_roles:          ["Services.Action.Admin"]
   },
   {
@@ -33,54 +33,65 @@ begin
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["EmployeeSecondary", "0037"],
-      assigned_groups:             ["EmployeeSecondary"],
-      assigned_roles:          ["Services.Action.Admin",
+      assigned_groups:         ["EmployeeSecondary"],
+      assigned_roles:          ["Services.Action.Primary",
                                 "Test.Branch.Commission.Experience.PDF.Access",
                                 "Test.Branch.Commission.Statement.PDF.Access",
                                 "Test.Branch.Commission.Statement.CSV.Access"]
-
   },
   {
-      username:              "aptester",
+      username:              "bptester",
       name:                  "Branch Primary User",
       email:                 "appdev2@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["BranchPrimary", "0034", "0037", "0040"],
-      assigned_groups:             ["BranchPrimary"],
-      assigned_roles:          ["Services.Action.ResetPassword",
+      assigned_groups:         ["BranchPrimary"],
+      assigned_roles:          ["Services.Action.Primary",
+                                "Services.Action.ResetPassword",
                                 "Test.Branch.Commission.Experience.PDF.Access",
-                                "Test.Branch.Commission.Statement.PDF.Access"]
+                                "Test.Branch.Commission.Statement.PDF.Access",
+                                "Test.Branch.Commission.Statement.CSV.Access"]
   },
   {
-      username:              "astester",
+      username:              "bstester",
       name:                  "Branch Secondary User",
       email:                 "appdev3@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["BranchSecondary", "0037"],
-      assigned_groups:             ["BranchSecondary"],
+      assigned_groups:         ["BranchSecondary"],
       assigned_roles:          ["Services.Action.ResetPassword",
                                 "Test.Branch.Commission.Statement.CSV.Access"]
   },
+   {
+       username:              "bnptester",
+       name:                  "Branch No Privileges User",
+       email:                 "appdev6@localhost.com",
+       password:                "nobugs",
+       password_confirmation:   "nobugs",
+       user_options:            [],
+       assigned_groups:         ["BranchSecondary"],
+       assigned_roles:          ["Services.Action.ResetPassword" ]
+   },
   {
       username:              "vptester",
-      name:                  "Vendor Long Term User",
+      name:                  "Vendor Primary User",
       email:                 "appdev4@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["VendorPrimary"],
-      assigned_groups:             ["VendorPrimary"],
+      user_options:            ["VendorPrimary", "0099"],
+      assigned_groups:         ["VendorPrimary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   },
   {
       username:              "vstester",
-      name:                  "Vendor Short Term User",
+      name:                  "Vendor Secondary User",
       email:                 "appdev5@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
       user_options:            ["VendorSecondary"],
-      assigned_groups:             ["VendorSecondary"],
+      assigned_groups:         ["VendorSecondary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   }
   ]
@@ -118,12 +129,12 @@ begin
   Rails.logger.info "Defining UserGroup Management process tables"
   # requires user_group_role_id: ''
   all_admin = [
-      {name: "Services.Action.Admin", description: "Super User"},
-      {name: "Services.Action.Primary", description: "Super User"},
-      {name: "Services.Action.Developer", description: "Developer"},
-      {name: "Test.Branch.Commission.Statement.PDF.Access", description: "Developer"},
-      {name: "Test.Branch.Commission.Statement.CSV.Access", description: "Developer"},
-      {name: "Test.Branch.Commission.Experience.PDF.Access", description: "Developer"}]
+      {name: "Services.Action.Admin", description: "Employee Managers"},
+      {name: "Services.Action.Primary", description: "Branch Managers"},
+      {name: "Services.Action.Developer", description: "Super User or Developer"},
+      {name: "Test.Branch.Commission.Statement.PDF.Access", description: "Access Branch Commission Statements"},
+      {name: "Test.Branch.Commission.Statement.CSV.Access", description: "Access Branch Commission Data Files"},
+      {name: "Test.Branch.Commission.Experience.PDF.Access", description: "Access Branch Experience Report"}]
 
   all_users =
       {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}
@@ -148,14 +159,14 @@ begin
 
   file_manage_p = [
       {name: "Services.Action.Admin.FileDownload.Datafile",   description: "Administer Datafile Downloads"},
-      {name: "Services.Action.Admin.FileDownload.Image",   description: "Administer Image Downloads"},
-      {name: "Services.Action.Admin.FileDownload.Pdf",   description: "Administer Pdf Downloads"}
+      {name: "Services.Action.Admin.FileDownload.Image",      description: "Administer Image Downloads"},
+      {name: "Services.Action.Admin.FileDownload.Pdf",        description: "Administer Pdf Downloads"}
   ]
 
   file_manage_s = [
       {name: "Services.Action.Use.FileDownload.Datafile",   description: "Consumer of Datafile Downloads"},
-      {name: "Services.Action.Use.FileDownload.Image",   description: "Consumer of Image Downloads"},
-      {name: "Services.Action.Use.FileDownload.Pdf",   description: "Consumer of Pdf Downloads"}
+      {name: "Services.Action.Use.FileDownload.Image",      description: "Consumer of Image Downloads"},
+      {name: "Services.Action.Use.FileDownload.Pdf",        description: "Consumer of Pdf Downloads"}
   ]
 
   all_roles = [all_admin , all_users , file_manage_p, file_manage_s,
@@ -165,12 +176,12 @@ begin
   ].flatten.uniq
 
   all_groups = [
-      {name: "EmployeePrimary",   group_type: "BMI Admin",    description: "BMI Admin User"},
-      {name: "EmployeeSecondary", group_type: "BMI Limited",  description: "BMI Limited User"},
-      {name: "BranchPrimary",     group_type: "Branch Admin", description: "BMI Limited: Branch Admin User"},
-      {name: "BranchSecondary",   group_type: "BMI Public",   description: "BMI Public: Branch Limited User"},
-      {name: "VendorPrimary",     group_type: "BMI Limited",  description: "BMI Limited: Long Term"},
-      {name: "VendorSecondary",   group_type: "BMI Public",   description: "BMI Public: Short Term"}
+      {name: "EmployeePrimary",   group_type: "Corporate Admin",  description: "Corporate Managers"},
+      {name: "EmployeeSecondary", group_type: "Corporate Staff",  description: "Corporate Staff"},
+      {name: "BranchPrimary",     group_type: "Branch Admin",     description: "Branch Manager"},
+      {name: "BranchSecondary",   group_type: "Branch Staff",     description: "Branch Staff"},
+      {name: "VendorPrimary",     group_type: "Partner Admin",    description: "Partner Manager"},
+      {name: "VendorSecondary",   group_type: "Partner Staff",    description: "Partner Staff"}
   ]
 
   admin_collection = [
@@ -204,10 +215,12 @@ begin
 
 
   control = {
-       "BMI Admin"   => admin_collection,
-       "BMI Limited" => limited_collection,
-       "BMI Public"  => public_collection,
-      "Branch Admin" => branch_admin_collection
+       "Corporate Admin" => admin_collection,
+       "Corporate Staff" => limited_collection,
+       "Branch Staff"    => public_collection,
+       "Partner Admin"    => public_collection,
+       "Partner Staff"    => public_collection,
+       "Branch Admin"    => branch_admin_collection
   }
 
   # Remove Current Stuf

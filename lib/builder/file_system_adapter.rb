@@ -96,13 +96,15 @@ module Builder
     end
 
     # Composes a new path from the CPE
-    def create_new_content_entry_path(cpe={}) # ContentProfileEntry Hash
+    def create_new_content_entry_path(cpe={}, opts={}) # ContentProfileEntry Hash, { noop: true, mode: 0700, verbose: true }
       base_path = cpe[:base_path] || @file_system.to_path
       topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
       content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
       topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
       paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }
-      paths.each {|path| path.mkpath() unless path.exist?}
+      paths.each do |path|
+        FileUtils.mkpath(path.to_path, opts) unless path.exist?
+      end
 
     Rails.logger.debug "#{self.class}##{__method__} result: #{paths.map(&:to_s)}"
       true

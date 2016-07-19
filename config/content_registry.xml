@@ -55,34 +55,60 @@
     </resource>
 
     <resource secured="true" content="true">
+        <uri>Activity/Partner/0099</uri>
+        <description>Partner Relationship Reports</description>
+        <userdata>"doctype:956"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0099">Services.Action.Use.FileDownload.Pdf</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
         <uri>FileDownload/UserGroups/Pdf</uri>
         <description>Permission to Download PDF Files</description>
-        <userdata>"directory_control:download/pdf/dev*.pdf"</userdata>
+        <userdata>"dev*.pdf"</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
             </authorizedRoles>
         </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>FileDownload/UserGroups/Datafile</uri>
-        <description>Permission to Download Data Files</description>
-        <userdata>"directory_control:download/datafiles/dev*.dat|directory_control:download/datafiles/dev*.csv"</userdata>
-        <permission type="READ">
+        <permission type="DELETE">
             <authorizedRoles>
-                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
+                <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
 
     <resource secured="true" content="true">
-        <uri>FileDownload/Developers/Image</uri>
+        <uri>FileDownload/UserGroups/Datafiles</uri>
+        <description>Permission to Download Data Files</description>
+        <userdata>"dev*.dat,dev*.csv"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+        <permission type="DELETE">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>FileDownload/UserGroups/Images</uri>
         <description>Permission to Download Image Files</description>
-        <userdata>"directory_control:download/images/dev*.png|directory_control:download/images/dev*.jpg"</userdata>
+        <userdata>"dev*.png,dev*.jpg"</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Image</authorizedRole>
+            </authorizedRoles>
+        </permission>
+        <permission type="DELETE">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Image</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
