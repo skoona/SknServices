@@ -3,7 +3,8 @@
 
 describe ApplicationController, "Service routines of Builder::ProfileBuilder.", :type => :controller  do
   before do
-    @user = page_user_eptester
+    Secure::ObjectStorageContainer.instance.test_reset!
+    @user = page_user_developer
     sign_in(@user, scope: :access_profile)
     @factory = controller.service_factory
     @service = @factory.profile_builder
@@ -38,7 +39,7 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
 
     before :each do
       @auth = AccessRegistryTestUser.new(["Test.Action.Read"])
-      @service.factory.class.purge_older_than_two_days(1)
+      Secure::ObjectStorageContainer.instance.test_reset!
     end
 
     it "#combined_profiles returns hash" do
@@ -66,7 +67,7 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
     it "#get_existing_content_profile returns nil" do
       expect( @service.get_existing_content_profile(@auth) ).to be_nil
     end
-    xit "#get_existing_content_profile returns found object" do
+    it "#get_existing_content_profile returns found object" do
       expect( @service.content_profile(@user,true) ).to be_a Utility::ContentProfileBean
       expect( @service.get_existing_content_profile(@user) ).to be_a Hash
     end
@@ -82,7 +83,7 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
   context "Core routines handle not found errors properly. " do
      before :each do
        @auth = AccessRegistryTestUser.new(["Test.Action.Read"])
-       @service.factory.class.purge_older_than_two_days(1)
+       Secure::ObjectStorageContainer.instance.test_reset!
      end
 
      it "#content_profile should handle user with no permissions" do

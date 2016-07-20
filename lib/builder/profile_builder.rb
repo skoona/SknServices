@@ -157,6 +157,7 @@ module Builder
       key = context + pak
       profile = nil
       profile = factory.get_storage_object(key) if factory.is_object_stored?(key)
+      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{profile}")
       profile
     end
 
