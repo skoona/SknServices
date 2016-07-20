@@ -171,6 +171,7 @@ module Utility
       ## Begin Good Work
 
       pt = [
+          {name: "Developer",         description: "Open Source Independent Consultancy"},
           {name: "EmployeePrimary",   description: "Corporate Managers"},
           {name: "EmployeeSecondary", description: "Corporate Staff"},
           {name: "BranchPrimary",     description: "Branch Manager"},
@@ -349,9 +350,9 @@ module Utility
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "68601", description: "Document store Commision Document Type ID" },
-            "1" => {value: "68602", description: "Document store Commision CSV Document Type ID" },
-            "2" => {value: "68603", description: "Document store Branch Experience Document Type ID"} }}
+            "0" => {value: "*.pdf", description: "Document store Commision Document Type ID" },
+            "1" => {value: "*.csv", description: "Document store Commision CSV Document Type ID" },
+            "2" => {value: "*.log", description: "Document store Branch Experience Document Type ID"} }}
           },
             topic_types_attributes: {
             "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
@@ -394,7 +395,7 @@ module Utility
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "68613", description: "Document store Branch Experience Document Type ID"} }}
+            "0" => {value: "*.pdf", description: "Document store Branch Experience Document Type ID"} }}
           },
             topic_types_attributes: {
             "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
@@ -419,7 +420,7 @@ module Utility
             content_types_attributes: {
             "0" => {name: "Activity",   description: "Project Status Reports", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "0099", description: "Document store Project Status Report Document Type ID"} }}
+            "0" => {value: "*.pdf", description: "Document store Project Status Report Document Type ID"} }}
           },
             topic_types_attributes: {
             "0" => {name: "Partner",  description: "This Corporate Account",  value_based_y_n: "Y",
@@ -445,6 +446,8 @@ module Utility
         rec.reload
         rec.profile_type = ProfileType.find_by(name: u.assigned_groups.first)
         rec.content_profile_entries = case u.assigned_groups.first
+                                        when 'Developer'
+                                          cpep_recs
                                         when 'EmployeePrimary'
                                           cpep_recs
                                         when 'EmployeeSecondary'

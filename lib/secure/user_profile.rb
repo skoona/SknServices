@@ -68,6 +68,7 @@ module Secure
       return self if prepare_only
       self.last_access = Time.now
       delete_storage_object(person_authenticated_key.to_sym)
+      proxy_u.save
       true
     end
 

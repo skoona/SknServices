@@ -97,9 +97,8 @@ module Secure
       def last_login_time_expired?(person)
         return false unless person.present?
         a = (Time.now.to_i - person.last_access.to_i)
-        b = Settings.security.verify_login_after_seconds.to_i
+        b = (@login_after_seconds ||= Settings.security.verify_login_after_seconds.to_i)
         rc = (a > b )
-        person.last_access = Time.now
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
         rc
       end

@@ -12,8 +12,8 @@ begin
       email:                 "skoona@gmail.com",
       password:                "developer99",
       password_confirmation:   "developer99",
-      user_options:            ["Developer","Manager", "0034", "0037", "0040"],
-      assigned_groups:         ["EmployeePrimary"],
+      user_options:            ["Developer","EmployeePrimary", "0034", "0037", "0040","0099", "1601", "USA"],
+      assigned_groups:         ["Developer","EmployeePrimary"],
       assigned_roles:          ["Services.Action.Developer"]
   },
   {
@@ -22,8 +22,8 @@ begin
       email:                 "appdev@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["Manager", "EmployeePrimary", "0034", "0037", "0040"],
-      assigned_groups:         ["EmployeePrimary"],
+      user_options:            ["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"],
+      assigned_groups:         ["Manager", "EmployeePrimary"],
       assigned_roles:          ["Services.Action.Admin"]
   },
   {
@@ -32,7 +32,7 @@ begin
       email:                 "appdev1@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["EmployeeSecondary", "0037"],
+      user_options:            ["EmployeeSecondary", "0037","0099", "1602", "USA"],
       assigned_groups:         ["EmployeeSecondary"],
       assigned_roles:          ["Services.Action.Primary",
                                 "Test.Branch.Commission.Experience.PDF.Access",
@@ -45,7 +45,7 @@ begin
       email:                 "appdev2@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["BranchPrimary", "0034", "0037", "0040"],
+      user_options:            ["BranchPrimary", "0034", "0037", "0040", "USA"],
       assigned_groups:         ["BranchPrimary"],
       assigned_roles:          ["Services.Action.Primary",
                                 "Services.Action.ResetPassword",
@@ -59,7 +59,7 @@ begin
       email:                 "appdev3@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["BranchSecondary", "0037"],
+      user_options:            ["BranchSecondary", "0037", "USA"],
       assigned_groups:         ["BranchSecondary"],
       assigned_roles:          ["Services.Action.ResetPassword",
                                 "Test.Branch.Commission.Statement.CSV.Access"]
@@ -90,7 +90,7 @@ begin
       email:                 "appdev5@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["VendorSecondary"],
+      user_options:            ["VendorSecondary", "0099"],
       assigned_groups:         ["VendorSecondary"],
       assigned_roles:          ["Services.Action.ResetPassword"]
   }
@@ -176,6 +176,7 @@ begin
   ].flatten.uniq
 
   all_groups = [
+      {name: "Developer",         group_type: "Skoona Development",  description: "Open Source Independent Consultancy"},
       {name: "EmployeePrimary",   group_type: "Corporate Admin",  description: "Corporate Managers"},
       {name: "EmployeeSecondary", group_type: "Corporate Staff",  description: "Corporate Staff"},
       {name: "BranchPrimary",     group_type: "Branch Admin",     description: "Branch Manager"},
@@ -215,6 +216,7 @@ begin
 
 
   control = {
+       "Skoona Development" => all_roles,
        "Corporate Admin" => admin_collection,
        "Corporate Staff" => limited_collection,
        "Branch Staff"    => public_collection,

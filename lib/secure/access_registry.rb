@@ -250,7 +250,7 @@ module Secure
             uri: resource_uri.to_s,
             resource_options: opts,
             content_type: content_type,
-            content_value: [bundle[:userdata]],
+            content_value: bundle[:userdata].is_a?(Array) ? bundle[:userdata] : [bundle[:userdata]],
             topic_type: topic_type,
             topic_value: opts.fetch(:role_opts,[]),   # role_opts are now required for use as Topic Options Values -- [topic_opts],
             description: bundle[:description],

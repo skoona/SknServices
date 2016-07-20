@@ -67,18 +67,34 @@ module Builder
       topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
       content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
       topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
-      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }
+      content_value = cpe[:content_value] || cpe["content_value"]  # should always be an array
+      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") if cpe["user_options"].include?(topic_id) }.compact
       paths.each do |path|
-        Dir.glob(File.join(path.to_path, "**") ).collect {|f| Pathname.new(f) }.each do |pn|
-          result << { source: cpe["content_type_description"], # topic.to_s,
-                      filename: pn.basename.to_s,
-                      created: pn.ctime.strftime("%Y/%m/%d"),
-                      size: human_filesize(pn.size),
-                      mime: content_mime_type(pn.extname)
-                    }
+        content_values = content_value unless content_value.first.is_a?(Hash)
+        content_values = content_value.map(&:values).flatten if content_value.first.is_a?(Hash)
+        content_values.each do |cv|
+          case content_type
+            when "Notification", "Operations"
+              result << { source: cpe["content_type_description"],
+                          filename: cv.to_s,
+                          created: DateTime.now.strftime("%m/%d/%Y"),
+                          size: "N/A",
+                          mime: "N/A"
+              }
+            else
+              Dir.glob(File.join(path.to_path, cv.to_s) ).collect {|f| Pathname.new(f) }.each do |pn|
+                next unless pn.exist?
+                result << { source: cpe["content_type_description"], # topic.to_s,
+                            filename: pn.basename.to_s,
+                            created: pn.ctime.strftime("%Y/%m/%d"),
+                            size: human_filesize(pn.size),
+                            mime: content_mime_type(pn.extname)
+                          }
+              end
+          end
         end
       end
-      Rails.logger.debug "#{self.class}##{__method__} result: #{result}"
+      Rails.logger.debug "#{self.class}##{__method__} Result: #{result}"
       
       result
     rescue Exception => e

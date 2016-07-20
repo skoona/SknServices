@@ -15,19 +15,34 @@ Dir.chdir APP_ROOT do
   system "bundle check || bundle install && bundle clean"
 
   puts "\n== Creating Content Paths  =="
+  FileUtils.remove("./controlled/projects/*", force: true)
   FileUtils.mkpath( [
     "./controlled/projects/Branch/0034/Commission",
     "./controlled/projects/Branch/0037/Commission",
     "./controlled/projects/Branch/0040/Commission",
     "./controlled/projects/Account/1601/Notification",
-    "./controlled/projects/Account/1602/Notification",
     "./controlled/projects/LicensedStates/USA/Operations",
     "./controlled/projects/Partner/0099/Activity",
-    "./controlled/projects/FileDownload/UserGroups/Datafiles",
-    "./controlled/projects/FileDownload/UserGroups/Images",
-    "./controlled/projects/FileDownload/UserGroups/Pdf",
+    "./controlled/projects/UserGroups/Developer/FileDownload",
+    "./controlled/projects/UserGroups/EmployeePrimary/FileDownload",
+    "./controlled/projects/UserGroups/Manager/FileDownload",
     "./log"
   ], verbose: true)
+
+  puts "\n== Preloading some test data files #{FileUtils.pwd} =="
+  system "cp -v controlled/downloads/pdf/* controlled/projects/Branch/0037/Commission/"
+  system "cp -v controlled/downloads/images/* controlled/projects/Branch/0037/Commission/"
+  system "cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0037/Commission/"
+
+  system "cp -v controlled/downloads/pdf/* controlled/projects/UserGroups/Manager/FileDownload/"
+  system "cp -v controlled/downloads/images/* controlled/projects/UserGroups/Manager/FileDownload/"
+  system "cp -v controlled/downloads/datafiles/* controlled/projects/UserGroups/Manager/FileDownload/"
+
+  system "cp -v controlled/downloads/pdf/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/"
+  system "cp -v controlled/downloads/images/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/"
+  system "cp -v controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/"
+
+  system "cp -v controlled/downloads/pdf/* controlled/projects/Partner/0099/Activity/"
 
   puts "\n== Preparing databases =="
   system "RAILS_ENV=development bin/rake db:reset"

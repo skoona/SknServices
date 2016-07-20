@@ -211,7 +211,11 @@
                                                 <td><%= row.content_type_description %></td>
                                                 <td><%= row.topic_type %></td>
                                                 <td><%= row.topic_value.join(',') %></td>
-                                                <td><%= row.content_value.map(&:to_hash) %></td>
+                                                <% if row.content_value.first.respond_to?(:to_hash) %>
+                                                  <td><%= row.content_value.map(&:to_hash) %></td>
+                                                <% else %>
+                                                  <td><%= row.content_value.join(",") %></td>
+                                                <% end %>
                                             </tr>
                                         <% end %>
                                         </tbody>
@@ -336,3 +340,4 @@
     <% end %>
 
 </article>
+

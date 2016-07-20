@@ -21,12 +21,12 @@
     <resource secured="false">
         <uri>testing/public</uri>
         <description>Unsecured or Public Resource. (Hash)</description>
-        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <userdata>drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955</userdata>
     </resource>
     <resource secured="false">
         <uri>testing/public_array</uri>
         <description>Unsecured or Public Resource. (Array)</description>
-        <userdata>"drawerid|filetype|foldertype|doctype"</userdata>
+        <userdata>drawerid|filetype|foldertype|doctype</userdata>
     </resource>
     <resource secured="false">
         <uri>testing/public_string</uri>
@@ -37,7 +37,7 @@
     <resource secured="true">
         <uri>testing/userdata</uri>
         <description>Secured Content Description (Hash)</description>
-        <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+        <userdata>drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Test.Action.Create</authorizedRole>
@@ -609,7 +609,7 @@
   <resource secured="false">
       <uri>pages/details_sysinfo</uri>
       <description>System Information</description>
-      <userdata>"drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955"</userdata>
+      <userdata>drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955</userdata>
       <permission type="READ">
           <authorizedRoles>
               <authorizedRole>Services.Action.Admin</authorizedRole>

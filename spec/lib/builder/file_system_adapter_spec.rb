@@ -55,9 +55,9 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
                    "username"=>"aptester",
                    "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
                    "content_type"=>"Commission",
-                   "content_value"=>["68613"],
+                   "content_value"=>["*.pdf"],
                    "topic_type"=>"Branch",
-                   "topic_value"=>["0038","4402"],
+                   "topic_value"=>["0037"],
                    "description"=>"Determine which branch documents can be seen",
                    "topic_type_description"=>"Branch Actions for a specific branch",
                    "content_type_description"=>"Monthly Commission Reports and Files"

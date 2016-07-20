@@ -130,7 +130,7 @@ module Secure
     #   Reserved chars: |:     - vertical-bar and semi-colon
     def process_resource_content(name, value)
       return value unless name.eql?("userdata")
-      return value unless value.match(/[\||:]/)
+      return value.gsub('"','') unless value.match(/[\||:]/)
 
       a_result = []
       h_result = HashWithIndifferentAccess.new
@@ -140,7 +140,7 @@ module Secure
       a_result = value.split('|') if value.match(/\|/)
       a_result = [value] if a_result.empty?
 
-      if value.match(/:/)
+      if a_result.first.match(/:/)
         a_result.each do |outer|
           item = outer.split(':')
           h_result.store(item[0].strip, item[1].strip)

@@ -16,12 +16,12 @@
                                   ** Note: :options are now required for TopicOpts values
 
                 <resource secured="true|false" content="true|false">
-                    <uri>anyString</uri>
+                    <uri>CONTENT/TOPIC/anyString</uri>
                     <description></description>
-                    <userdata></userdata>
+                    <userdata>CONTENT_VALUE</userdata>
                     <permission type="READ">
                         <authorizedRoles>
-                            <authorizedRole options="RequiredCommaSepTopicValues">security-role-name</authorizedRole>
+                            <authorizedRole options="TOPIC_VALUE RequiredCommaSepTopicValues">security-role-name</authorizedRole>
                         </authorizedRoles>
                     </permission>
                 </resource>
