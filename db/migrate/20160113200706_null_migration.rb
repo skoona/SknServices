@@ -15,9 +15,9 @@ class NullMigration < ActiveRecord::Migration
     create_table "content_profile_entries", force: :cascade do |t|
       t.string   "topic_value",   limit: 255
       t.string   "content_value", limit: 255
+      t.string   "description",   limit: 255
       t.datetime "created_at",                null: false
       t.datetime "updated_at",                null: false
-      t.string   "description",   limit: 255
     end
 
     create_table "content_profiles", force: :cascade do |t|
@@ -37,6 +37,7 @@ class NullMigration < ActiveRecord::Migration
     create_table "content_type_opts", force: :cascade do |t|
       t.string   "value",       limit: 255
       t.string   "description", limit: 255
+      t.string   "type_name",   limit: 255
       t.datetime "created_at",              null: false
       t.datetime "updated_at",              null: false
     end
@@ -91,6 +92,7 @@ class NullMigration < ActiveRecord::Migration
     create_table "topic_type_opts", force: :cascade do |t|
       t.string   "value",       limit: 255
       t.string   "description", limit: 255
+      t.string   "type_name",   limit: 255
       t.datetime "created_at",              null: false
       t.datetime "updated_at",              null: false
     end
