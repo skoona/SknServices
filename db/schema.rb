@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20160113200706) do
   create_table "content_type_opts", force: :cascade do |t|
     t.string   "value",       limit: 255
     t.string   "description", limit: 255
+    t.string   "type_name",   limit: 255
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
@@ -103,6 +104,7 @@ ActiveRecord::Schema.define(version: 20160113200706) do
   create_table "topic_type_opts", force: :cascade do |t|
     t.string   "value",       limit: 255
     t.string   "description", limit: 255
+    t.string   "type_name",   limit: 255
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
