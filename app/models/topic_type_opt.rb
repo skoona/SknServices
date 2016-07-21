@@ -11,7 +11,7 @@
 #
 
 class TopicTypeOpt < ActiveRecord::Base
-  has_and_belongs_to_many :topic_types, :join_table => :topic_options, inverse_of: :topic_type_opts
+  belongs_to :topic_type
 
   validates_presence_of :value, :description
 

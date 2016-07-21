@@ -11,7 +11,7 @@
 #
 
 class ContentTypeOpt < ActiveRecord::Base
-  has_and_belongs_to_many :content_types, join_table: :content_options, inverse_of: :content_type_opts
+  belongs_to :content_type
 
   validates_presence_of :value, :description
 
