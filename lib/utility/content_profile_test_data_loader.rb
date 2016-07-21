@@ -350,68 +350,68 @@ module Utility
             content_types_attributes: {
             "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "*.pdf", description: "Document store Commision Document Type ID" },
-            "1" => {value: "*.csv", description: "Document store Commision CSV Document Type ID" },
-            "2" => {value: "*.log", description: "Document store Branch Experience Document Type ID"} }}
+            "0" => {value: "*.pdf", type_name: "content", description: "Document store Commision Document Type ID" },
+            "1" => {value: "*.csv", type_name: "content", description: "Document store Commision CSV Document Type ID" },
+            "2" => {value: "*.log", type_name: "content", description: "Document store Branch Experience Document Type ID"} }}
           },
             topic_types_attributes: {
             "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0034", description: "South Branch Number"},
-            "1" => {value: "0037", description: "North Branch Number"},
-            "2" => {value: "0040", description: "West Branch Number"} }}}
+            "0" => {value: "0034", type_name: "topic", description: "South Branch Number"},
+            "1" => {value: "0037", type_name: "topic", description: "North Branch Number"},
+            "2" => {value: "0040", type_name: "topic", description: "West Branch Number"} }}}
         },
         {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
             content_types_attributes: {
             "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
             content_type_opts_attributes: {
-            "0" => {value: "AdvCancel", description: "Advance Cancel" },
-            "1" => {value: "FutCancel", description: "Future Cancel" },
-            "2" => {value: "Cancel",    description: "Cancel" } }}
+            "0" => {value: "AdvCancel", type_name: "content", description: "Advance Cancel" },
+            "1" => {value: "FutCancel", type_name: "content", description: "Future Cancel" },
+            "2" => {value: "Cancel",    type_name: "content", description: "Cancel" } }}
           },
             topic_types_attributes: {
             "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "0" => {value: "1601", description: "All Branch Accounts"},
-            "1" => {value: "1602", description: "All Branch Accounts"} }}}
+            "0" => {value: "1601", type_name: "topic", description: "All Branch Accounts"},
+            "1" => {value: "1602", type_name: "topic", description: "All Branch Accounts"} }}}
         },
         {topic_value: [], content_value: [], description: 'Determine which States producer may operate in.',
             content_types_attributes: {
             "0" => {name: "Operations",   description: "Business Operational Metric", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "21", description: "Michigan"},
-            "1" => {value: "9",  description: "Ohio"},
-            "2" => {value: "23", description: "Illinois"} }}
+            "0" => {value: "21", type_name: "content", description: "Michigan"},
+            "1" => {value: "9",  type_name: "content", description: "Ohio"},
+            "2" => {value: "23", type_name: "content", description: "Illinois"} }}
           },
             topic_types_attributes: {
             "0" => {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "USA", description: "United States of America"} }}}
+            "0" => {value: "USA", type_name: "topic", description: "United States of America"} }}}
         }
       ]
 
       cpes = [
-        {topic_value: [],     content_value: [], description: 'Determine which branch documents can be seen',
+        {topic_value: [], content_value: [], description: 'Determine which branch documents can be seen',
             content_types_attributes: {
-            "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+            "0" => {name: "Commission", description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "*.pdf", description: "Document store Branch Experience Document Type ID"} }}
+            "0" => {value: "*.pdf", type_name: "content", description: "Document store Branch Experience Document Type ID"} }}
           },
             topic_types_attributes: {
-            "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
+            "0" => {name: "Branch", description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0037", description: "North Branch Number"}}}}
+            "0" => {value: "0037", type_name: "topic", description: "North Branch Number"}}}}
         },
         {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
             content_types_attributes: {
             "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
             content_type_opts_attributes: {
-            "0" => {value: "AdvCancel", description: "Advance Cancel" } }}
+            "0" => {value: "AdvCancel", type_name: "content", description: "Advance Cancel" } }}
           },
             topic_types_attributes: {
             "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "1" => {value: "1602",  description: "All Producer Accounts"} }}}
+            "1" => {value: "1602",  type_name: "topic", description: "All Producer Accounts"} }}}
         }
       ]
 
@@ -420,12 +420,12 @@ module Utility
             content_types_attributes: {
             "0" => {name: "Activity",   description: "Project Status Reports", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "*.pdf", description: "Document store Project Status Report Document Type ID"} }}
+            "0" => {value: "*.pdf", type_name: "content", description: "Document store Project Status Report Document Type ID"} }}
           },
             topic_types_attributes: {
-            "0" => {name: "Partner",  description: "This Corporate Account",  value_based_y_n: "Y",
+            "0" => {name: "Partner", description: "This Corporate Account",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0099", description: "Skoona Development Account"}}}}
+            "0" => {value: "0099", type_name: "topic", description: "Skoona Development Account"}}}}
         }
       ]
 
