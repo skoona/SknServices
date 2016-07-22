@@ -26,6 +26,7 @@ Dir.chdir APP_ROOT do
     "./controlled/projects/UserGroups/Developer/FileDownload",
     "./controlled/projects/UserGroups/EmployeePrimary/FileDownload",
     "./controlled/projects/UserGroups/Manager/FileDownload",
+    "./tmp",
     "./log"
   ], verbose: true)
 

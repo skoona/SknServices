@@ -30,10 +30,10 @@ class ProfileDataServices < ::Factory::DomainsBase
   end
   def destroy_content_profile(params)
     content_profile_object = find_content_profile_by_id(params[:id])
-    content_profile_object.destroy
+    content_profile_object.destroy unless content_profile_object.nil?
   end
   def get_content_profiles_entries_entry_info(existing_content_profile_object)
-    existing_content_profile_object.content_profile_entries.map(&:entry_info)
+    existing_content_profile_object.content_profile_entries.map(&:entry_info) if existing_content_profile_object
   end
   def get_unassigned_user_attributes
     results = []
@@ -50,7 +50,7 @@ class ProfileDataServices < ::Factory::DomainsBase
     results
   end
   def find_content_profile_by_id(rec_id)
-    ContentProfile.find(rec_id)  # Could raise a not found exception
+    ContentProfile.find(rec_id) rescue nil # Could raise a not found exception
   end
 
   def get_user_form_options

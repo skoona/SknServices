@@ -5,12 +5,13 @@
 #  id          :integer          not null, primary key
 #  value       :string(255)
 #  description :string(255)
+#  type_name   :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
 
 class ContentTypeOpt < ActiveRecord::Base
-  has_and_belongs_to_many :content_types, join_table: :content_options, inverse_of: :content_type_opts
+  belongs_to :content_type
 
   validates_presence_of :value, :description
 

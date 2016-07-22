@@ -5,12 +5,13 @@
 #  id          :integer          not null, primary key
 #  value       :string(255)
 #  description :string(255)
+#  type_name   :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
 
 class TopicTypeOpt < ActiveRecord::Base
-  has_and_belongs_to_many :topic_types, :join_table => :topic_options, reject_if: lambda {|attributes| attributes['value'].blank?}
+  belongs_to :topic_type
 
   validates_presence_of :value, :description
 

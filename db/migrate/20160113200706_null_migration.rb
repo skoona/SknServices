@@ -4,20 +4,14 @@ class NullMigration < ActiveRecord::Migration
     # These are extensions that must be enabled in order to support this database
     enable_extension "plpgsql"
 
-    create_table "content_options", force: :cascade do |t|
-      t.integer "content_type_id"
-      t.integer "content_type_opt_id"
-    end
-
-    add_index "content_options", ["content_type_id"], name: "index_content_options_on_content_type_id", using: :btree
-    add_index "content_options", ["content_type_opt_id"], name: "index_content_options_on_content_type_opt_id", using: :btree
-
     create_table "content_profile_entries", force: :cascade do |t|
       t.string   "topic_value",   limit: 255
+      t.string   "topic_type",    limit: 255
       t.string   "content_value", limit: 255
+      t.string   "content_type",  limit: 255
+      t.string   "description",   limit: 255
       t.datetime "created_at",                null: false
       t.datetime "updated_at",                null: false
-      t.string   "description",   limit: 255
     end
 
     create_table "content_profiles", force: :cascade do |t|
@@ -37,9 +31,11 @@ class NullMigration < ActiveRecord::Migration
     create_table "content_type_opts", force: :cascade do |t|
       t.string   "value",       limit: 255
       t.string   "description", limit: 255
+      t.integer  "content_type_id"
       t.datetime "created_at",              null: false
       t.datetime "updated_at",              null: false
     end
+    add_index "content_type_opts", ["content_type_id"], name: "index_content_types_on_content_type_id", using: :btree
 
     create_table "content_types", force: :cascade do |t|
       t.string   "name",            limit: 255
@@ -49,14 +45,6 @@ class NullMigration < ActiveRecord::Migration
       t.datetime "updated_at",                  null: false
     end
 
-    create_table "join_contents", force: :cascade do |t|
-      t.integer "content_profile_entry_id"
-      t.integer "content_type_id"
-    end
-
-    add_index "join_contents", ["content_profile_entry_id"], name: "index_join_contents_on_content_profile_entry_id", using: :btree
-    add_index "join_contents", ["content_type_id"], name: "index_join_contents_on_content_type_id", using: :btree
-
     create_table "join_entries", force: :cascade do |t|
       t.integer "content_profile_id"
       t.integer "content_profile_entry_id"
@@ -65,14 +53,6 @@ class NullMigration < ActiveRecord::Migration
     add_index "join_entries", ["content_profile_entry_id"], name: "index_join_entries_on_content_profile_entry_id", using: :btree
     add_index "join_entries", ["content_profile_id"], name: "index_join_entries_on_content_profile_id", using: :btree
 
-    create_table "join_topics", force: :cascade do |t|
-      t.integer "content_profile_entry_id"
-      t.integer "topic_type_id"
-    end
-
-    add_index "join_topics", ["content_profile_entry_id"], name: "index_join_topics_on_content_profile_entry_id", using: :btree
-    add_index "join_topics", ["topic_type_id"], name: "index_join_topics_on_topic_type_id", using: :btree
-
     create_table "profile_types", force: :cascade do |t|
       t.string   "name",        limit: 255
       t.string   "description", limit: 255
@@ -80,20 +60,15 @@ class NullMigration < ActiveRecord::Migration
       t.datetime "updated_at",              null: false
     end
 
-    create_table "topic_options", force: :cascade do |t|
-      t.integer "topic_type_id"
-      t.integer "topic_type_opt_id"
-    end
-
-    add_index "topic_options", ["topic_type_id"], name: "index_topic_options_on_topic_type_id", using: :btree
-    add_index "topic_options", ["topic_type_opt_id"], name: "index_topic_options_on_topic_type_opt_id", using: :btree
-
     create_table "topic_type_opts", force: :cascade do |t|
       t.string   "value",       limit: 255
       t.string   "description", limit: 255
+      t.string   "type_name",   limit: 255
+      t.integer "topic_type_id"
       t.datetime "created_at",              null: false
       t.datetime "updated_at",              null: false
     end
+    add_index "topic_type_opts", ["topic_type_id"], name: "index_topic_types_on_topic_type_id", using: :btree
 
     create_table "topic_types", force: :cascade do |t|
       t.string   "name",            limit: 255
@@ -154,17 +129,11 @@ class NullMigration < ActiveRecord::Migration
     add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
     add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
-    add_foreign_key "content_options", "content_type_opts"
-    add_foreign_key "content_options", "content_types"
+    add_foreign_key "content_type_opts", "content_types"
+    add_foreign_key "topic_type_opts", "topic_types"
     add_foreign_key "content_profiles", "profile_types"
-    add_foreign_key "join_contents", "content_profile_entries"
-    add_foreign_key "join_contents", "content_types"
     add_foreign_key "join_entries", "content_profile_entries"
     add_foreign_key "join_entries", "content_profiles"
-    add_foreign_key "join_topics", "content_profile_entries"
-    add_foreign_key "join_topics", "topic_types"
-    add_foreign_key "topic_options", "topic_type_opts"
-    add_foreign_key "topic_options", "topic_types"
     add_foreign_key "user_group_roles_user_roles", "user_group_roles"
     add_foreign_key "user_group_roles_user_roles", "user_roles"
 

@@ -11,8 +11,7 @@
 #
 
 class TopicType < ActiveRecord::Base
-  has_and_belongs_to_many :topic_type_opts, :join_table => :topic_options
-  has_and_belongs_to_many  :content_profile_entries, inverse_of: :topic_types, :join_table => :join_topics
+  has_many :topic_type_opts
 
   accepts_nested_attributes_for :topic_type_opts, allow_destroy: true, reject_if: lambda {|attributes| attributes['value'].blank?}
 
