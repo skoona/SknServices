@@ -1,33 +1,22 @@
 ##
-# lib/builder/file_system_adapter.rb
+# lib/builder/inline_values_adapter.rb
 #
-# Builds filelists
+# Parses ContentProfileEntries to extract inline values
 #
-# Presumes this Directory Layout
-# :./controlled/downloads/<topic_value>/content_values
-# Ideal Layout would be: ./controlled/TopicType/TopicValue/ContentType/ 'ContentValue::Pattern'
-# - where topic_value is in [:datafiles, :images, :pdf]
-# - where content_value is a file.glob pattern
 #
 
 module Builder
-  class FileSystemAdapter < ::Factory::ContentAdapterBase
+  class InlineValuesAdapter < ::Factory::ContentAdapterBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS = 'access'
 
     def initialize(params={})
       super(params)
-      @topic_values = {
-          datafiles: './controlled/downloads/datafiles/',
-          images: './controlled/downloads/images/',
-          pdf: './controlled/downloads/pdf/'
-      }
-      @file_system = Pathname('./controlled/projects')
     end
 
     def ready?
-      @file_system.exist?
+      true
     end
 
 
@@ -63,7 +52,6 @@ module Builder
     # Returns and array of {source: "", filename: "", created: "", size: ""}
     def available_content_list(cpe)
       result = []
-      base_path = cpe[:base_path] || @file_system.to_path
       topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
       content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
       topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
@@ -73,22 +61,19 @@ module Builder
       ##
       # This is another security check to see if user options include these topic ids
       ##
-      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") if user_options.include?(topic_id) }.compact
+      paths = topic_value.map {|topic_id| "#{topic_type}/#{topic_id}/#{content_type}" if user_options.include?(topic_id) }.compact
 
       paths.each do |path|
         content_values = content_value unless content_value.first.is_a?(Hash)
         content_values = content_value.map(&:values).flatten if content_value.first.is_a?(Hash)
 
         content_values.each do |cv|
-            Dir.glob(File.join(path.to_path, cv.to_s) ).collect {|f| Pathname.new(f) }.each do |pn|
-              next unless pn.exist?
-              result << { source: cpe["content_type_description"], # topic.to_s,
-                          filename: pn.basename.to_s,
-                          created: pn.ctime.strftime("%Y/%m/%d"),
-                          size: human_filesize(pn.size),
-                          mime: content_mime_type(pn.extname)
-                        }
-            end
+              result << { source: path,
+                          filename: cv.to_s,
+                          created: DateTime.now.strftime("%m/%d/%Y"),
+                          size: cpe["content_type_description"],
+                          mime: "N/A"
+              }
         end
       end
       Rails.logger.debug "#{self.class}##{__method__} Result: #{result}"
@@ -109,24 +94,6 @@ module Builder
     rescue Exception => e
       Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       []
-    end
-
-    # Composes a new path from the CPE
-    def create_new_content_entry_path(cpe={}, opts={}) # ContentProfileEntry Hash, { noop: true, mode: 0700, verbose: true }
-      base_path = cpe[:base_path] || @file_system.to_path
-      topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
-      content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
-      topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
-      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }
-      paths.each do |path|
-        FileUtils.mkpath(path.to_path, opts) unless path.exist?
-      end
-
-    Rails.logger.debug "#{self.class}##{__method__} result: #{paths.map(&:to_s)}"
-      true
-    rescue Exception => e
-      Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      false
     end
 
   end

@@ -119,6 +119,7 @@ class ContentProfileService < ::ProfilesDomain
     })
   end
 
+
   # Controller Entry Point
   def api_accessible_content(params)
     handle_accessible_content_api(params)

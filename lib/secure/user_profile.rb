@@ -32,7 +32,7 @@ module Secure
         instance_variable_set(k, nil)
         instance_variable_set(k, user.send(k.to_s[1..-1].to_sym) )
       end
-
+      @user_options ||= []
       setup_combined_user_roles()
     end
 

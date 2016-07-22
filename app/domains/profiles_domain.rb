@@ -18,7 +18,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     Secure::UserProfile.page_users(context).each do |u|
       usrs << {username: u.username,
                display_name: u.display_name,
-               user_options: u.user_options,
+               user_options: u.user_options || [],
                package: [ access_profile_package(u), content_profile_package(u) ]
       }
     end
@@ -62,7 +62,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     res = {
            success: true,
            message: "",
-           user_options: user_profile.user_options,
+           user_options: (user_profile.user_options || []),
            accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'access', format: :json}]),
            page_user: user_profile.username,
            access_profile: get_page_access_profile(user_profile)
@@ -95,7 +95,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     res = {
        success: true,
        message: "",
-       user_options: user_profile.user_options,
+       user_options: (user_profile.user_options || []),
        accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
        page_user: user_profile.username,
        content_profile: get_page_content_profile(user_profile)
@@ -188,8 +188,8 @@ class ProfilesDomain < ::Factory::DomainsBase
 
   # Returns an empty Array on Error, or Array of Hashes on Success
   def user_accessible_content(profile)
-    result = factory.content_adapter_file_system.available_content_list(profile)
-    Rails.logger.debug "#{self.class}##{__method__} results => #{profile}"
+    result = adapter_for_content_profile_entry(profile).available_content_list(profile)
+    Rails.logger.debug "#{self.class}##{__method__} results => #{result}"
     result
   end
 
@@ -236,12 +236,12 @@ class ProfilesDomain < ::Factory::DomainsBase
   end
 
   def get_page_access_profile(user_profile)
-    result = factory.profile_builder.access_profile(user_profile)
+    result = profile_builder.access_profile(user_profile)
     result
   end
 
   def get_page_content_profile(user_profile)
-    result = factory.profile_builder.content_profile(user_profile)
+    result = profile_builder.content_profile(user_profile)
     result
   end
 

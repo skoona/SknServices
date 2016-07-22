@@ -297,24 +297,24 @@ module Utility
       c_recs = ContentType.create!(primary_contents)
       t_recs = TopicType.create!(primary_topics)
       cpep_recs = ContentProfileEntry.create!(cpep)
-      cpep_recs.each {|rec| rec.content_value = c_recs.map {|ctn| ctn.content_type_opts.map(&:value)}.flatten }
-      cpep_recs.each {|rec| rec.topic_value = t_recs.map {|ctn| ctn.topic_type_opts.map(&:value)}.flatten }
+      cpep_recs.each_with_index {|rec,idx| rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
+      cpep_recs.each_with_index {|rec,idx| rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
 
       c_recs = ContentType.create!(secondary_contents)
       t_recs = TopicType.create!(secondary_topics)
       cpes_recs = ContentProfileEntry.create!(cpes)
-      cpes_recs.each {|rec| rec.content_value = c_recs.map {|ctn| ctn.content_type_opts.map(&:value)}.flatten }
-      cpes_recs.each {|rec| rec.topic_value = t_recs.map {|ctn| ctn.topic_type_opts.map(&:value)}.flatten }
+      cpes_recs.each_with_index {|rec,idx| rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
+      cpes_recs.each_with_index {|rec,idx| rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
 
       c_recs = ContentType.create!(vendor_contents)
       t_recs = TopicType.create!(vendor_topics)
       cpev_recs = ContentProfileEntry.create!(cpev)
-      cpev_recs.each {|rec| rec.content_value = c_recs.map {|ctn| ctn.content_type_opts.map(&:value)}.flatten }
-      cpev_recs.each {|rec| rec.topic_value = t_recs.map {|ctn| ctn.topic_type_opts.map(&:value)}.flatten }
+      cpev_recs.each_with_index {|rec,idx| rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
+      cpev_recs.each_with_index {|rec,idx| rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
 
       # loop thru users
       res = User.find_each do |u|
-        next if 'VendorSecondary'.eql?( u.assigned_groups.first )
+        next if u.user_options.empty? or 'VendorSecondary'.eql?( u.user_options.first )
         rec = ContentProfile.new
         rec.person_authentication_key = u.person_authenticated_key
         rec.authentication_provider = 'SknService::Bcrypt'
@@ -325,9 +325,9 @@ module Utility
         rec.reload
         rec.profile_type = ProfileType.find_by(name: u.assigned_groups.first)
         rec.content_profile_entries = case u.assigned_groups.first
-                                        when 'SSS-Developer'
-                                          cpep_rec
-                                        when 'SSS-EmployeePrimary'
+                                        when 'Developer'
+                                          cpep_recs
+                                        when 'EmployeePrimary'
                                           cpep_recs
                                         when 'EmployeeSecondary'
                                           cpes_recs

@@ -59,8 +59,8 @@ module Builder
             success: true,
             entries: (ctxp.content_profile_entries.map() {|cpe| build_db_context_profile_entry(cpe)}) || [],
             pak: ctxp.person_authentication_key,
-            profile_type: ctxp.profile_type.name,
-            profile_type_description: ctxp.profile_type.description,
+            profile_type: ctxp.profile_type.try(:name),
+            profile_type_description: ctxp.profile_type.try(:description),
             provider: ctxp.authentication_provider,
             username: ctxp.username,
             display_name: ctxp.display_name,
@@ -125,12 +125,12 @@ module Builder
       unless results[:entries].empty?
         results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      factory.update_storage_object(PREFIX_ACCESS + user_profile.person_authenticated_key, results)
+      update_storage_object(PREFIX_ACCESS + user_profile.person_authenticated_key, results)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      factory.delete_storage_object(PREFIX_ACCESS + user_profile.person_authenticated_key) unless user_profile.nil?
+      delete_storage_object(PREFIX_ACCESS + user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
           message: e.message,
@@ -146,7 +146,7 @@ module Builder
     def get_prebuilt_profile(pak, context)
       key = context + pak
       profile = nil
-      profile = factory.get_storage_object(key) if factory.is_object_stored?(key)
+      profile = get_storage_object(key) if is_object_stored?(key)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{profile}")
       profile
     end

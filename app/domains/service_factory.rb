@@ -48,6 +48,25 @@ class ServiceFactory < ::Factory::ServicesBase
     yield @sf_content_adapter_file_system if block_given?
     @sf_content_adapter_file_system
   end
+  def content_adapter_inline_values
+    @sf_content_adapter_inline_values ||= Builder::InlineValuesAdapter.new({factory: self})
+    yield @sf_content_adapter_inline_values if block_given?
+    @sf_content_adapter_inline_values
+  end
+
+  ##
+  # Adapter by Content
+  def adapter_for_content_profile_entry(content)
+    content_type = (content.kind_of?(String) ? content : content['content_type'])
+    case content_type
+      when "Commission", "Activity"
+        content_adapter_file_system
+      when "Notification", "Operations"
+        content_adapter_inline_values
+      else
+        content_adapter_file_system # default for now
+    end
+  end
 
 
   ##

@@ -31,8 +31,8 @@ class ContentProfileEntry < ActiveRecord::Base
 
   validates_presence_of :description, :content_type, :topic_type
 
-  def self.options_selects
-    self.all.map do |cpes|
+  def self.options_selects(content_name_filter)
+    self.where(content_type: content_name_filter).find_each do |cpes|
       [cpes.description, cpes.id, {data_description: "#{content_type}:#{topic_type}"}]
     end
   end
