@@ -43,7 +43,6 @@ You will need to install PostGreSQL, and add/edit PostgreSQL credentials:
 It might be helpful to set these environment params too:
     
     export COVERAGE=true
-    export JRUBY='--server --debug'
     export BUNDLE_PATH='vendor/bundle'     Note: use of rvm wipes out all these values, you may need to reset them
     
     
