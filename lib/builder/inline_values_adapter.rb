@@ -61,7 +61,9 @@ module Builder
       ##
       # This is another security check to see if user options include these topic ids
       ##
-      paths = topic_value.map {|topic_id| "#{topic_type}/#{topic_id}/#{content_type}" if user_options.include?(topic_id) }.compact
+      access_type = !!(cpe.key?(:uri) or cpe.key?("uri"))
+      paths = topic_value.map {|topic_id| "#{topic_type}/#{topic_id}/#{content_type}" if user_options.include?(topic_id) }.compact if access_type
+      paths = topic_value.map {|topic_id| "#{topic_type}/#{topic_id}/#{content_type}" }.compact unless access_type
 
       paths.each do |path|
         content_values = content_value unless content_value.first.is_a?(Hash)

@@ -71,9 +71,11 @@ module Builder
       user_options = cpe["user_options"] || [] # many times this value is nil
 
       ##
-      # This is another security check to see if user options include these topic ids
+      # This is another security check to see if user options include these topic ids for XML Entries only
       ##
-      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") if user_options.include?(topic_id) }.compact
+      access_type = !!(cpe.key?(:uri) or cpe.key?("uri"))
+      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") if user_options.include?(topic_id) }.compact if access_type
+      paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }.compact unless access_type
 
       paths.each do |path|
         content_values = content_value unless content_value.first.is_a?(Hash)

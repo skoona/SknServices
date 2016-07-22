@@ -247,20 +247,22 @@ module Secure
         end
 
         topic_value = opts.fetch(:role_opts,[])
-        topic_value.select! {|m| options.include?(m)} if options
-        results = {
-            uri: resource_uri.to_s,
-            resource_options: opts,
-            content_type: content_type,
-            content_value: bundle[:userdata].is_a?(Array) ? bundle[:userdata] : [bundle[:userdata]],
-            topic_type: topic_type,
-            topic_value: topic_value,   # role_opts are now required for use as Topic Options Values -- [topic_opts],
-            description: bundle[:description],
-            topic_type_description: bundle[:description],
-            content_type_description: bundle[:description]
-            # Todo: role options are considered Topic Option Values
-            # Todo: If user matches multiple CRUDs, then last set of role_option will be used
-        }
+        topic_value.select! {|m| options.include?(m)} if options.present?   #user_options are a primary filter for XML version of content profile
+        unless topic_value.empty?
+          results = {
+              uri: resource_uri.to_s,
+              resource_options: opts,
+              content_type: content_type,
+              content_value: bundle[:userdata].is_a?(Array) ? bundle[:userdata] : [bundle[:userdata]],
+              topic_type: topic_type,
+              topic_value: topic_value,   # role_opts are now required for use as Topic Options Values -- [topic_opts],
+              description: bundle[:description],
+              topic_type_description: bundle[:description],
+              content_type_description: bundle[:description]
+              # Todo: role options are considered Topic Option Values
+              # Todo: If user matches multiple CRUDs, then last set of role_option will be used
+          }
+        end
       else
         results = {}
       end

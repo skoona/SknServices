@@ -56,8 +56,9 @@ class ServiceFactory < ::Factory::ServicesBase
 
   ##
   # Adapter by Content
+  # Will accepts ResultBean, Hash, ot single string value
   def adapter_for_content_profile_entry(content)
-    content_type = (content.kind_of?(String) ? content : content['content_type'])
+    content_type = (content.respond_to?(:to_hash) ? content['content_type'] : content)
     case content_type
       when "Commission", "Activity"
         content_adapter_file_system

@@ -70,18 +70,18 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
     ## Expected Response
     # {:source=>"images", :filename=>"galaxy-man.png", :created=>"2016/02/14", :size=>"3.2 MB"}
     it "#available_content_list returns array of options with descriptions. " do
-      expect( @service.available_content_list({}) ).to be_a Array
-      expect( @service.available_content_list(cpe).first ).to be_a(Hash)
+      expect( @service.adapter_for_content_profile_entry(cpe).available_content_list({}) ).to be_a Array
+      expect( @service.adapter_for_content_profile_entry(cpe).available_content_list(cpe).first ).to be_a(Hash)
     end
 
     it "#retrieve_content_values returns content_value as is: Array, Hash, or String. " do
-      expect( @service.retrieve_content_values({}) ).to be_a Array
-      expect( @service.retrieve_content_values(cpe).first ).to be_a(String)
+      expect( @service.adapter_for_content_profile_entry(cpe).retrieve_content_values({}) ).to be_a Array
+      expect( @service.adapter_for_content_profile_entry(cpe).retrieve_content_values(cpe).first ).to be_a(String)
     end
 
     it "#create_new_content_entry_path returns true on success. " do
-      expect( @service.create_new_content_entry_path() ).to be false
-      expect( @service.create_new_content_entry_path(cpe, {noop: true}) ).to be true
+      expect( @service.adapter_for_content_profile_entry(cpe).create_new_content_entry_path() ).to be false
+      expect( @service.adapter_for_content_profile_entry(SknUtils::ResultBean.new(cpe)).create_new_content_entry_path(cpe, {noop: true}) ).to be true
     end
 
   end
