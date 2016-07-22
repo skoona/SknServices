@@ -5,6 +5,10 @@
 # - I was most interested in how to pass arguments from the command line.
 # - The follow are two methods for doing that.
 #
+#
+# Args are taken as a Hash: {:arg1=>"false"}
+#     task :xml_profiles, [:arg1] => :environment do |t, args|
+#     task :xml_profiles, [:arg1,:arg2] => :environment do |t, args|
 
 
 namespace :myspace do

@@ -53,7 +53,7 @@ module Builder
       return  cpobj if cpobj
 
       results = {}
-      ctxp = ContentProfile.find_by_person_authentication_key(user_profile.person_authenticated_key)
+      ctxp = ContentProfile.find_by( person_authentication_key: user_profile.person_authenticated_key)
       unless ctxp.nil? or ctxp.content_profile_entries.size == 0
         results =  {
             success: true,
@@ -92,17 +92,7 @@ module Builder
       }
     end
     def build_db_context_profile_entry(cpe)
-      ctv = cpe.content_types.map {|r| r.content_type_opts.map(&:value) }.flatten
-      ttv = cpe.topic_types.map {|r| r.topic_type_opts.map(&:value) }.flatten
-      {
-          content_value: ctv,
-          content_type: cpe.content_type_name,
-          content_type_description: cpe.content_types.first.try(:description) || "not assigned",
-          topic_value: ttv,
-          topic_type: cpe.topic_type_name,
-          topic_type_description: cpe.topic_types.first.try(:description) || "not assigned",
-          description: cpe.description
-      }
+      cpe.entry_info
     end
 
     ##

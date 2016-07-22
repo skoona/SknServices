@@ -4,10 +4,12 @@
 #
 #  id            :integer          not null, primary key
 #  topic_value   :string(255)
+#  topic_type    :string(255)
 #  content_value :string(255)
+#  content_type  :string(255)
+#  description   :string(255)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  description   :string(255)
 #
 
 FactoryGirl.define do

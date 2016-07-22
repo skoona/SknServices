@@ -4,12 +4,12 @@
 #
 #  id            :integer          not null, primary key
 #  topic_value   :string(255)
+#  topic_type    :string(255)
 #  content_value :string(255)
-#  topic_type   :string(255)
-#  content_type :string(255)
+#  content_type  :string(255)
+#  description   :string(255)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  description   :string(255)
 #
 
 class ContentProfileEntry < ActiveRecord::Base
@@ -38,8 +38,6 @@ class ContentProfileEntry < ActiveRecord::Base
   end
 
   def entry_info
-    # ctv = content_types.map {|r| r.content_type_opts.map(&:value) }.flatten
-    # ttv = topic_types.map {|r| r.topic_type_opts.map(&:value) }.flatten
     {
       content_value: content_value,
       content_type: content_type,

@@ -110,13 +110,7 @@ begin
   ##
   Rails.logger.info "Reloading ContentProfile process tables"
 
-  # {UUID/BranchOwner} => [
-  #     PAK/ProfileType    {Commission/Branch/0034 => "CommRptID,CommCsvID,ExperRptID"},
-  #                        {Notification/Account/99 => "AdvCancel,Cancel"},
-  #                        {Operations/LicensedStates/USA => "21,30,34,45"}
-  # ]                      ContentType/TopicType/TopicTypeOpts => ContentTypeOpts
-
-  Utility::ContentProfileTestDataLoader.new().refresh_full_data_model
+    Utility::ContentProfileTestDataLoader.new().refresh_content_profiles_data_model
 
   Rails.logger.info "Completed Creating ContentProfile Models"
 

@@ -11,7 +11,7 @@
 #
 
 class TopicType < ActiveRecord::Base
-  has_many :topic_type_opts
+  has_many :topic_type_opts, inverse_of: :topic_type, :dependent => :destroy
 
   accepts_nested_attributes_for :topic_type_opts, allow_destroy: true, reject_if: lambda {|attributes| attributes['value'].blank?}
 

@@ -25,7 +25,7 @@ module Utility
       Rails.logger.info "#{self.class.name}##{__method__} Ready to do good work."
     end
 
-    def refresh_full_data_model
+    def refresh_content_profiles_data_model
       results = true
 
       puts "[Start] Refreshing Full ContentProfile Data Model: "
@@ -125,6 +125,8 @@ module Utility
       results += "\t           TopicType: #{TopicType.count}\n"
       results += "\t        TopicTypeOpt: #{TopicTypeOpt.count}\n"
       results += "\n"
+      results += "\t        UserProfiles: #{User.count}\n"
+      results += "\n"
 
       puts results
       Rails.logger.info "#{self.class.name}##{__method__}(Results) #{results}"
@@ -151,9 +153,9 @@ module Utility
 
       ContentProfileEntry.destroy_all
       ContentType.destroy_all
-      ContentTypeOpt.destroy_all
+      # ContentTypeOpt.destroy_all
       TopicType.destroy_all
-      TopicTypeOpt.destroy_all
+      # TopicTypeOpt.destroy_all
 
       ## End Good Work
       puts "[Success!]"
@@ -193,151 +195,6 @@ module Utility
       false
     end
 
-    def create_content_types_and_options
-      print "[Start] Creating ContentType and ContentTypeOpts: "
-      Rails.logger.info "#{self.class.name}##{__method__}(START) Creating ContentType and ContentTypeOpts."
-      ## Begin Good Work
-
-      ct  = [
-          {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
-            content_type_opts_attributes: {
-              "0" => {value: "68601", description: "Document store Commision Document Type ID" },
-              "1" => {value: "68602", description: "Document store Commision CSV Document Type ID" },
-              "2" => {value: "68603", description: "Document store Branch Experience Document Type ID" }}
-          },
-          {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
-            content_type_opts_attributes: {
-              "0" => {value: "AdvCancel", description: "Advance Cancel" },
-              "1" => {value: "FutCancel", description: "Future Cancel" },
-              "2" => {value: "Cancel",    description: "Cancel" }}
-          },
-          {name: "Operations",   description: "Business Operational Metric", value_data_type: "Integer",
-            content_type_opts_attributes: {
-              "0" => {value: "21", description: "Michigan"},
-              "1" => {value: "9",  description: "Ohio"},
-              "2" => {value: "23", description: "Illinois"}}
-          }
-      ]
-
-      results = []
-      results = ContentType.create!(ct)
-
-      ## End Good Work
-      puts "[Success!]"
-      Rails.logger.info "#{self.class.name}##{__method__}(SUCCESS) Creating ContentType and ContentTypeOpts."
-      results
-    rescue Exception => e
-      Rails.logger.error "#{self.class.name}.#{__method__}(FAILED) Creating ContentType and ContentTypeOpts; Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      puts "[Failed!]"
-      false
-    end
-
-    def create_topic_types_and_options
-      print "[Start] Creating TopicType and TopicTypeOpts: "
-      Rails.logger.info "#{self.class.name}##{__method__}(START) Creating TopicType and TopicTypeOpts."
-      ## Begin Good Work
-
-      tt  = [
-          {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
-            topic_type_opts_attributes: {
-              "0" => {value: "0034", description: "Some Branch Number"},
-              "1" => {value: "1001", description: "Another Branch Number"},
-              "2" => {value: "0037", description: "More Agencies"} }
-          },
-          {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
-            topic_type_opts_attributes: {
-              "0" => {value: "Branch", description: "All Branch Accounts"},
-              "1" => {value: "Producer",  description: "All Producer Accounts"},
-              "2" => {value: "None",   description: "No Branch Producer Options"}}
-          },
-          {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
-            topic_type_opts_attributes: {
-              "0" => {value: "USA", description: "United States of America"},
-              "1" => {value: "CAN", description: "Canada"}}
-          }
-      ]
-
-      results = []
-      results = TopicType.create!(tt)
-
-      ## End Good Work
-      puts "[Success!]"
-      Rails.logger.info "#{self.class.name}##{__method__}(SUCCESS) Creating TopicType and TopicTypeOpts."
-      results
-    rescue Exception => e
-      Rails.logger.error "#{self.class.name}.#{__method__}(FAILED) Creating TopicType and TopicTypeOpts; Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      puts "[Failed!]"
-      false
-    end
-
-    def create_content_profile_entries
-      results = true
-
-      print "[Start] Creating ContentProfileEntries: "
-      Rails.logger.info "#{self.class.name}##{__method__}(START) Creating ContentProfileEntries."
-      ## Begin Good Work
-
-      cpe = [
-        {topic_value: [],     content_value: [], description: 'Determine which branch documents can be seen',
-              content_types_attributes: {
-                "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
-                content_type_opts_attributes: {
-                  "0" => {value: "68601", description: "Document store Commision Document Type ID" },
-                  "1" => {value: "68602", description: "Document store Commision CSV Document Type ID" },
-                  "2" => {value: "68603", description: "Document store Branch Experience Document Type ID"} }}
-            },
-              topic_types_attributes: {
-                "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
-                topic_type_opts_attributes: {
-                  "0" => {value: "0034", description: "Some Branch Number"},
-                  "1" => {value: "1001", description: "Another Branch Number"},
-                  "2" => {value: "0037", description: "More Agencies"} }}}
-        },
-        {topic_value: [],    content_value: [], description: 'Determine which accounts will have notification sent',
-              content_types_attributes: {
-                "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
-                content_type_opts_attributes: {
-                  "0" => {value: "AdvCancel", description: "Advance Cancel" },
-                  "1" => {value: "FutCancel", description: "Future Cancel" },
-                  "2" => {value: "Cancel",    description: "Cancel" } }}
-            },
-              topic_types_attributes: {
-                "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
-                topic_type_opts_attributes: {
-                  "0" => {value: "Branch", description: "All Branch Accounts"},
-                  "1" => {value: "Producer",  description: "All Producer Accounts"},
-                  "2" => {value: "None",   description: "No Branch Producer Options"} }}}
-        },
-        {topic_value: [], content_value: [], description: 'Determine which States producer may operate in.',
-              content_types_attributes: {
-                "0" => {name: "Operations",   description: "Business Operational Metric",          value_data_type: "Integer",
-                content_type_opts_attributes: {
-                  "0" => {value: "21", description: "Michigan"},
-                  "1" => {value: "9",  description: "Ohio"},
-                  "2" => {value: "23", description: "Illinois"} }}
-            },
-              topic_types_attributes: {
-                "0" => {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
-                topic_type_opts_attributes: {
-                  "0" => {value: "USA", description: "United States of America"},
-                  "1" => {value: "CAN", description: "Canada"} }}}
-        }
-      ]
-
-      results = []
-      results = ContentProfileEntry.create!(cpe)
-
-      ## End Good Work
-      puts "[Success!]"
-      Rails.logger.info "#{self.class.name}##{__method__}(SUCCESS) Creating ContentProfileEntries."
-      results
-    rescue Exception => e
-      Rails.logger.error "#{self.class.name}.#{__method__}(FAILED) Creating ContentProfileEntries; Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      puts "[Failed!]"
-      false
-    end
-
-
     def create_full_content_profile
       results = true
 
@@ -346,47 +203,47 @@ module Utility
       ## Begin Good Work
 
       cpep = [
-        {topic_value: [],     content_value: [], content_type: "Commission", topic_type: "Branch", description: 'Determine which branch documents can be seen',
-            content_types_attributes: {
-            "0" => {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
-            content_type_opts_attributes: {
-            "0" => {value: "*.pdf", type_name: "content", description: "Document store Commision Document Type ID" },
-            "1" => {value: "*.csv", type_name: "content", description: "Document store Commision CSV Document Type ID" },
-            "2" => {value: "*.log", type_name: "content", description: "Document store Branch Experience Document Type ID"} }}
-          },
-            topic_types_attributes: {
-            "0" => {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
+          {topic_value: [],  content_value: [], content_type: "Commission",   topic_type: "Branch", description: 'Determine which branch documents can be seen'},
+          {topic_value: [],  content_value: [], content_type: "Notification", topic_type: "Account", description: 'Determine which accounts will have notification sent'},
+          {topic_value: [],  content_value: [], content_type: "Operations",   topic_type: "LicensedStates", description: 'Determine which States producer may operate in.'}
+      ]
+
+      primary_contents = [
+          {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+                       content_type_opts_attributes: {
+                           "0" => {value: "*.pdf", description: "Document store Commision Document Type ID" },
+                           "1" => {value: "*.csv", description: "Document store Commision CSV Document Type ID" },
+                           "2" => {value: "*.log", description: "Document store Branch Experience Document Type ID"} }
+           },
+          {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
+                       content_type_opts_attributes: {
+                           "0" => {value: "AdvCancel", description: "Advance Cancel" },
+                           "1" => {value: "FutCancel", description: "Future Cancel" },
+                           "2" => {value: "Cancel",    description: "Cancel" } }
+           },
+           {name: "Operations",   description: "Business Operational Metric", value_data_type: "Integer",
+                       content_type_opts_attributes: {
+                           "0" => {value: "21", description: "Michigan"},
+                           "1" => {value: "9",  description: "Ohio"},
+                           "2" => {value: "23", description: "Illinois"} }
+           }
+      ]
+
+      primary_topics = [
+        {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "0034", type_name: "topic", description: "South Branch Number"},
-            "1" => {value: "0037", type_name: "topic", description: "North Branch Number"},
-            "2" => {value: "0040", type_name: "topic", description: "West Branch Number"} }}}
+            "0" => {value: "0034", description: "South Branch Number"},
+            "1" => {value: "0037", description: "North Branch Number"},
+            "2" => {value: "0040", description: "West Branch Number"} }
         },
-        {topic_value: [],    content_value: [], content_type: "Notification", topic_type: "Account", description: 'Determine which accounts will have notification sent',
-            content_types_attributes: {
-            "0" => {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
-            content_type_opts_attributes: {
-            "0" => {value: "AdvCancel", type_name: "content", description: "Advance Cancel" },
-            "1" => {value: "FutCancel", type_name: "content", description: "Future Cancel" },
-            "2" => {value: "Cancel",    type_name: "content", description: "Cancel" } }}
-          },
-            topic_types_attributes: {
-            "0" => {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+        {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "0" => {value: "1601", type_name: "topic", description: "All Branch Accounts"},
-            "1" => {value: "1602", type_name: "topic", description: "All Branch Accounts"} }}}
+            "0" => {value: "1601", description: "All Branch Accounts"},
+            "1" => {value: "1602", description: "All Branch Accounts"} }
         },
-        {topic_value: [], content_value: [], content_type: "Operations", topic_type: "LicensedStates", description: 'Determine which States producer may operate in.',
-            content_types_attributes: {
-            "0" => {name: "Operations",   description: "Business Operational Metric", value_data_type: "Integer",
-            content_type_opts_attributes: {
-            "0" => {value: "21", type_name: "content", description: "Michigan"},
-            "1" => {value: "9",  type_name: "content", description: "Ohio"},
-            "2" => {value: "23", type_name: "content", description: "Illinois"} }}
-          },
-            topic_types_attributes: {
-            "0" => {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
+        {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "USA", type_name: "topic", description: "United States of America"} }}}
+            "0" => {value: "USA", description: "United States of America"}}
         }
       ]
 
@@ -405,6 +262,7 @@ module Utility
             "0" => {value: "AdvCancel", description: "Advance Cancel" } }
           }
       ]
+
       secondary_topics = [
           {name: "Branch", description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
                   topic_type_opts_attributes: {
@@ -436,21 +294,23 @@ module Utility
       ]
 
 
-      # cpep_recs = ContentProfileEntry.create!(cpep)
-      # cpes_recs = ContentProfileEntry.create!(cpes)
+      c_recs = ContentType.create!(primary_contents)
+      t_recs = TopicType.create!(primary_topics)
+      cpep_recs = ContentProfileEntry.create!(cpep)
+      cpep_recs.each {|rec| rec.content_value = c_recs.map {|ctn| ctn.content_type_opts.map(&:value)}.flatten }
+      cpep_recs.each {|rec| rec.topic_value = t_recs.map {|ctn| ctn.topic_type_opts.map(&:value)}.flatten }
 
-      vc_recs = ContentType.create!(secondary_contents)
-      vt_recs = TopicType.create!(secondary_topics)
+      c_recs = ContentType.create!(secondary_contents)
+      t_recs = TopicType.create!(secondary_topics)
       cpes_recs = ContentProfileEntry.create!(cpes)
-      cpes_recs.each {|rec| rec.content_value = vc_recs.content_type_opts.map(&:value)}
-      cpes_recs.each {|rec| rec.topic_value = vt_recs.topic_type_opts.map(&:value)}
+      cpes_recs.each {|rec| rec.content_value = c_recs.map {|ctn| ctn.content_type_opts.map(&:value)}.flatten }
+      cpes_recs.each {|rec| rec.topic_value = t_recs.map {|ctn| ctn.topic_type_opts.map(&:value)}.flatten }
 
-
-      vc_recs = ContentType.create!(vendor_contents)
-      vt_recs = TopicType.create!(vendor_topics)
+      c_recs = ContentType.create!(vendor_contents)
+      t_recs = TopicType.create!(vendor_topics)
       cpev_recs = ContentProfileEntry.create!(cpev)
-      cpev_recs.each {|rec| rec.content_value = vc_recs.content_type_opts.map(&:value)}
-      cpev_recs.each {|rec| rec.topic_value = vt_recs.topic_type_opts.map(&:value)}
+      cpev_recs.each {|rec| rec.content_value = c_recs.map {|ctn| ctn.content_type_opts.map(&:value)}.flatten }
+      cpev_recs.each {|rec| rec.topic_value = t_recs.map {|ctn| ctn.topic_type_opts.map(&:value)}.flatten }
 
       # loop thru users
       res = User.find_each do |u|
@@ -466,7 +326,7 @@ module Utility
         rec.profile_type = ProfileType.find_by(name: u.assigned_groups.first)
         rec.content_profile_entries = case u.assigned_groups.first
                                         when 'SSS-Developer'
-                                          cpep_recs
+                                          cpep_rec
                                         when 'SSS-EmployeePrimary'
                                           cpep_recs
                                         when 'EmployeeSecondary'

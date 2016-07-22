@@ -35,8 +35,8 @@ class ProfilesDomain < ::Factory::DomainsBase
 
         entries = content_profile.content_profile_entries.map() do |cpe|
           entry = cpe.entry_info
-          entry.merge!(content_selects: cpe.content_types.map {|r| r.content_type_opts.options_selects}.flatten(1))
-          entry.merge!(topic_selects: cpe.topic_types.map {|r| r.topic_type_opts.options_selects }.flatten(1))
+          entry.merge!(content_selects: ContentType.find_by(name: cpe.content_type).options_selects )
+          entry.merge!(topic_selects: TopicType.find_by(name: cpe.topic_type).options_selects )
         end
       end
       usrs << {username: u.username,
