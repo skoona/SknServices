@@ -5,9 +5,11 @@
 #
 #
 module Secure
-  class UserProfile < Factory::ServicesBase
-
+  class UserProfile
+    include Factory::ObjectStorageService
     include Secure::UserAccessControl
+
+    @@object_storage_service_prefix = self.name
 
     attr_accessor :id, :person_authenticated_key, :last_access, :name, :user_options,
                   :assigned_groups, :assigned_roles, :username, :email, :roles
@@ -19,12 +21,10 @@ module Secure
     ##
     # Initialize with a user_object only
     def initialize(user)
-      raise(Utility::Errors::NotFound, "UserProfile Requires a instance from the Users model.") if user.nil?
+      raise(Utility::Errors::NotFound, "UserProfile Requires a instance from the Users model.") unless user
 
       @user_object = user
       @last_access = Time.now
-
-      # @id = user.id
 
       [:@id, :@person_authenticated_key, :@assigned_roles,
        :@name, :@user_options, :@assigned_groups, :@username,
@@ -76,6 +76,7 @@ module Secure
     def enable_authentication_controls(prepare_only=false)
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
+      self.proxy_u.active= true
       self.last_access = Time.now
       update_storage_object(person_authenticated_key.to_sym, self)
       true

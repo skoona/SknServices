@@ -1,5 +1,5 @@
 module TestProviders
-  class DocumentProvider < Factory::ServicesBase
+  class DocumentProvider < Factory::FactoriesBase
     attr_accessor :key, :obj
     def initialize
       @obj = SknUtils::ResultBean.new({samples: "samples", quanity: 3, values: [22, 16, 55]})
@@ -24,7 +24,7 @@ module TestProviders
 
   end
 
-  class ImageProvider < Factory::ServicesBase
+  class ImageProvider < Factory::FactoriesBase
     attr_accessor :key, :obj
     def initialize
       @obj = SknUtils::ResultBean.new({samples: "samples", quanity: 2, values: [55, 22]})

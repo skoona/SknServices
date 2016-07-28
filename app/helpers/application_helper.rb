@@ -1,14 +1,8 @@
 
 module ApplicationHelper
 
-  def flash_message(type, text)
-    if flash[type].present? and flash[type].is_a?(Array)
-      flash[type] << text
-    elsif flash[type].present? and flash[type].is_a?(String)
-      flash[type] = [flash[type], text]
-    else
-      flash[type] = [text]
-    end
+  def self.included(klass)
+    Rails.logger.debug("ApplicationHelper included By #{klass.name}, self: #{self.class.name}")
   end
 
   def menu_active?(menu_link)
@@ -64,42 +58,6 @@ module ApplicationHelper
     elsif @page_controls and @page_controls.page_actions?
       PageActionsBuilder.new(@page_controls.to_hash()[:page_actions], self, false).to_s
     end
-  end
-
-  ### Converts named routes to string
-  #  Basic '/some/hardcoded/string/path'
-  #        '[:named_route_path]'
-  #        '[:named_route_path, {options}]'
-  #        '[:named_route_path, {options}, '?query_string']'
-  #
-  # Advanced ==> {engine: :demo,
-  #               path: :demo_profiles_path,
-  #               options: {id: 111304},
-  #               query: '?query_string'
-  #              }
-  #              {engine: :sym, path: :sym , options: {}, query: ''}
-  def page_action_paths(paths)
-    case paths
-      when Array
-        case paths.size
-          when 1
-            send( paths[0] )
-          when 2
-            send( paths[0], paths[1] )
-          when 3
-            rstr = send( paths[0], paths[1] )
-            rstr + paths[2]
-        end
-
-      when Hash
-        rstr = send(paths[:engine]).send(paths[:path], paths.fetch(:options,{}) )
-        rstr + paths.fetch(:query, '')
-
-      when String
-        paths
-    end
-  rescue
-    '#page_action_error'
   end
 
   def string_to_currency(s, *opts)

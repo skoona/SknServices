@@ -46,20 +46,27 @@
 module Factory
   class DomainsBase
 
-    attr_accessor :factory
+    attr_accessor :user, :factory
 
     def initialize(params={})
-      @factory = params[:factory]
-      @user = @factory.current_user unless @factory.nil?
-      raise ArgumentError, "Factory::DomainsBase: for #{self.class.name}.  Missing required initialization param(factory)" if @factory.nil?
+      params.keys.each do |k|
+        instance_variable_set "@#{k.to_s}".to_sym, nil
+        instance_variable_set "@#{k.to_s}".to_sym, params[k]
+      end
+      raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
+      @user = @factory.current_user unless @user
     end
 
-    def self.inherited(klass)
-      Rails.logger.debug("Factory::DomainsBase inherited By #{klass.name}")
+    def controller
+      @factory
     end
 
     def current_user
       @user ||= @factory.current_user
+    end
+
+    def self.inherited(klass)
+      Rails.logger.debug("Factory::DomainsBase inherited By #{klass.name}")
     end
 
     protected
@@ -71,16 +78,31 @@ module Factory
       @factory.send(:respond_to?, method) || super(method,incl_private)
     end
 
+    # some_instance_var?
+    def attribute?(attr)
+      if attr.is_a? Symbol
+        send(attr).present?
+      else
+        send(attr.to_sym).present?
+      end
+    end
+
     # Easier to code than delegation, or forwarder
     # Allows domains, service, to access objects in service_factory and/or controller by name only
     def method_missing(method, *args, &block)
-      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: ##{method}")
+      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
       if @factory.respond_to?(method)
         block_given? ? @factory.send(method, *args, block) :
             (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))
       elsif @factory.respond_to?(:factory) and @factory.factory.respond_to?(method)
         block_given? ? @factory.factory.send(method, *args, block) :
             (args.size == 0 ?  @factory.factory.send(method) : @factory.factory.send(method, *args))
+      elsif method.to_s.end_with?('?')
+        if instance_variable_defined?("@#{method.to_s[0..-2]}")
+          attribute?(method.to_s[0..-2].to_sym)
+        else
+          false
+        end
       else
         super(method, *args, &block)
       end

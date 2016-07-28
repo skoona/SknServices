@@ -128,7 +128,8 @@ begin
       {name: "Services.Action.Developer", description: "Super User or Developer"},
       {name: "Test.Branch.Commission.Statement.PDF.Access", description: "Access Branch Commission Statements"},
       {name: "Test.Branch.Commission.Statement.CSV.Access", description: "Access Branch Commission Data Files"},
-      {name: "Test.Branch.Commission.Experience.PDF.Access", description: "Access Branch Experience Report"}]
+      {name: "Test.Branch.Commission.Experience.PDF.Access", description: "Access Branch Experience Report"},
+      {name: "Test.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
 
   all_users =
       {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}

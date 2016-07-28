@@ -1,13 +1,16 @@
 # spec/services/profile_builder_spec.rb
 #
 
-describe ApplicationController, "Service routines of Builder::ProfileBuilder.", :type => :controller  do
+describe Builder::ProfileBuilder, "Service routines of Builder::ProfileBuilder."  do
+  let(:user) {page_user_developer}
+
+  let(:mc) {ServiceFactoryMockController.new(user: user)}
+  let(:service_factory)  { ServiceFactory.new({factory: mc}) }
+
   before do
     Secure::ObjectStorageContainer.instance.test_reset!
-    @user = page_user_developer
-    sign_in(@user, scope: :access_profile)
-    @factory = controller.service_factory
-    @service = @factory.profile_builder
+    login_as(user, scope: :access_profile)
+    @service = service_factory.profile_builder
   end
 
   context "Initialization "  do
@@ -16,7 +19,7 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
       expect{ Builder::ProfileBuilder.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(Builder::ProfileBuilder.new({factory: @factory})).to be_a(Builder::ProfileBuilder)
+      expect(Builder::ProfileBuilder.new({factory: service_factory})).to be_a(Builder::ProfileBuilder)
     end
     it "#new fails when :factory is invalid." do
       expect{ Builder::ProfileBuilder.new({factory: nil}) }.to raise_error(ArgumentError)
@@ -26,8 +29,7 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
-      expect( @service.factory.factory ).to be_a ApplicationController
-      expect( @service.factory.controller ).to be_a ApplicationController
+      expect( @service.factory.factory ).to be_a ServiceFactoryMockController
     end
     it "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
@@ -43,40 +45,40 @@ describe ApplicationController, "Service routines of Builder::ProfileBuilder.", 
     end
 
     it "#combined_profiles returns hash" do
-      expect( @service.combined_profiles(@user) ).to be_a Array
-      expect( @service.combined_profiles(@user)[0] ).to be_a Hash
-      expect( @service.combined_profiles(@user)[1] ).to be_a Hash
+      expect( @service.combined_profiles(user) ).to be_a Array
+      expect( @service.combined_profiles(user)[0] ).to be_a Hash
+      expect( @service.combined_profiles(user)[1] ).to be_a Hash
     end
     it "#combined_profiles returns bean" do
-      expect( @service.combined_profiles(@user,true) ).to be_a Array
-      expect( @service.combined_profiles(@user,true)[0] ).to be_a Utility::ContentProfileBean
-      expect( @service.combined_profiles(@user,true)[1] ).to be_a Utility::ContentProfileBean
+      expect( @service.combined_profiles(user,true) ).to be_a Array
+      expect( @service.combined_profiles(user,true)[0] ).to be_a Utility::ContentProfileBean
+      expect( @service.combined_profiles(user,true)[1] ).to be_a Utility::ContentProfileBean
     end
     it "#content_profile returns hash" do
-      expect( @service.content_profile(@user) ).to be_a Hash
+      expect( @service.content_profile(user) ).to be_a Hash
     end
     it "#content_profile returns bean" do
-      expect( @service.content_profile(@user,true) ).to be_a Utility::ContentProfileBean
+      expect( @service.content_profile(user,true) ).to be_a Utility::ContentProfileBean
     end
     it "#access_profile returns hash" do
-      expect( @service.access_profile(@user) ).to be_a Hash
+      expect( @service.access_profile(user) ).to be_a Hash
     end
     it "#access_profile returns bean" do
-      expect( @service.access_profile(@user,true) ).to be_a Utility::ContentProfileBean
+      expect( @service.access_profile(user,true) ).to be_a Utility::ContentProfileBean
     end
     it "#get_existing_content_profile returns nil" do
       expect( @service.get_existing_content_profile(@auth) ).to be_nil
     end
     it "#get_existing_content_profile returns found object" do
-      expect( @service.content_profile(@user,true) ).to be_a Utility::ContentProfileBean
-      expect( @service.get_existing_content_profile(@user) ).to be_a Hash
+      expect( @service.content_profile(user,true) ).to be_a Utility::ContentProfileBean
+      expect( @service.get_existing_content_profile(user) ).to be_a Hash
     end
     it "#get_existing_access_profile returns nil" do
       expect( @service.get_existing_access_profile(@auth) ).to be_nil
     end
     it "#get_existing_access_profile returns found object" do
-      expect( @service.access_profile(@user,true) ).to be_a Utility::ContentProfileBean
-      expect( @service.get_existing_access_profile(@user) ).to be_a Hash
+      expect( @service.access_profile(user,true) ).to be_a Utility::ContentProfileBean
+      expect( @service.get_existing_access_profile(user) ).to be_a Hash
     end
   end
 

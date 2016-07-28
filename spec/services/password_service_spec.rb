@@ -1,10 +1,14 @@
 # spec/services/password_service_spec.rb
 #
 
-RSpec.describe ApplicationController, "Service routines for resetting forgotten passwords.", :type => :controller  do
-  let!(:user) {Secure::UserProfile.new( User.last )}
-  let!(:service) {controller.password_service}
-  before { sign_in(user, scope: :access_profile) }
+RSpec.describe PasswordService, "Service routines for resetting forgotten passwords." do
+  let!(:user) {user_bstester}
+
+  let(:mc) {ServiceFactoryMockController.new(user: user)}
+  let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
+
+  let(:service) {service_factory.password_service}
+  # before { sign_in(user, scope: :access_profile) }
 
   context "Initialization "  do
 
@@ -13,7 +17,7 @@ RSpec.describe ApplicationController, "Service routines for resetting forgotten 
     end
 
     it "succeeds when controller is valid." do
-      expect(PasswordService.new({factory: controller})).to be_a(PasswordService)
+      expect(PasswordService.new({factory: service_factory})).to be_a(PasswordService)
     end
 
     it "fails when controller is invalid." do
@@ -21,7 +25,7 @@ RSpec.describe ApplicationController, "Service routines for resetting forgotten 
     end
 
     it "#password_service return a proper service object." do
-      object = controller.password_service
+      object = service_factory.password_service
       expect(object).to be_a PasswordService
     end
   end

@@ -1,9 +1,9 @@
 # spec/controllers/password_resets_controller_spec.rb
 
-describe PasswordResetsController do
+describe PasswordResetsController, " Reset User Password Process" do
   let!(:user) {FactoryGirl.create(:user)}
   before :each do
-    login_as(user, scope: :access_profile)
+    sign_in(user, scope: :access_profile)
     @request.host = 'www.example.com'
   end
 
@@ -35,7 +35,7 @@ describe PasswordResetsController do
 
       # mock out the controller.password_service.reset_password(params)
       # - have it return the @page_controls object
-      allow(controller.password_service).to receive(:reset_password) {SknUtils::ResultBean.new(good)}
+      allow(controller.service_factory.password_service).to receive(:reset_password) {SknUtils::ResultBean.new(good)}
 
       put :update, id: user.id, user: {password: "somevalue", password_confirmation: "somevalue"}
       expect(response).to be_redirect
@@ -54,7 +54,7 @@ describe PasswordResetsController do
       user.valid?
       # mock out the controller.password_service.reset_password(params)
       # - have it return the @page_controls object
-      allow(controller.password_service).to receive(:reset_password) {SknUtils::ResultBean.new(bad)}
+      allow(controller.service_factory.password_service).to receive(:reset_password) {SknUtils::ResultBean.new(bad)}
 
       put :update, id: user.id, user: {password: "somevalue", password_confirmation: "value"}
       expect(assigns(:user)).to be_a(User)
@@ -73,7 +73,7 @@ describe PasswordResetsController do
       }
       # mock out the controller.password_service.reset_requested()
       # - have it return the @page_controls object
-      allow(controller.password_service).to receive(:reset_requested) {SknUtils::ResultBean.new(good)}
+      allow(controller.service_factory.password_service).to receive(:reset_requested) {SknUtils::ResultBean.new(good)}
 
       post :create, user: {username: "some-ignored-value"}
       expect(response).to be_redirect
@@ -89,7 +89,7 @@ describe PasswordResetsController do
       }
       # mock out the controller.password_service.reset_requested()
       # - have it return the @page_controls object
-      allow(controller.password_service).to receive(:reset_requested) {SknUtils::ResultBean.new(bad)}
+      allow(controller.service_factory.password_service).to receive(:reset_requested) {SknUtils::ResultBean.new(bad)}
 
       post :create, user: {username: "some-ignored-value"}
       expect(response).to be_redirect

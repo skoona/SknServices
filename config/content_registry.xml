@@ -9,7 +9,7 @@
     <!--================== Content RESOURCE REGISTRY  =============================== -->
     <!--============================================================================= -->
 
-    <!--============== Content Access Adaptation  ========== -->
+    <!--============== Content Profile Adaptation  ========== -->
     <resource secured="true" content="true">
         <uri>Commission/Branch/PDF</uri>
         <description>Branch Commission Statements</description>
@@ -44,12 +44,23 @@
     </resource>
 
     <resource secured="true" content="true">
-        <uri>Commission/Branch/99</uri>
+        <uri>Commission/Branch/BAD</uri>
         <description>Test where RoleName has no Options</description>
         <userdata>*.pdf</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="0099">Test.Branch.Commission.Branch.PDF.Access</authorizedRole>
+                <authorizedRole>Test.Branch.Commission.Branch.PDF.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true" content="true">
+        <uri>Operations/LicensedStates/USA</uri>
+        <description>Producer Licensed States</description>
+        <userdata>"21|9|23|"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="0037">Test.Branch.Operations.LicensedStates.USA</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>

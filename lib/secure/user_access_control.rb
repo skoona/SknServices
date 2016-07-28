@@ -13,13 +13,13 @@ module Secure
 
     module ClassMethods   # mostly called by Warden
       def security_session_time
-        minutes_from_now(Settings.security.session_expires)
+        minutes_from_now(Settings.security.session_expires.to_i)
       end
       def security_remember_time
-        minutes_from_now(Settings.security.remembered_for)
+        minutes_from_now(Settings.security.remembered_for.to_i)
       end
-      def minutes_from_now(val=1)
-        val.minutes.from_now
+      def minutes_from_now(val=20)
+        Time.now.advance(:minutes => val) # val.minutes.from_now
       end
 
       # AccessProfile will call this
@@ -53,7 +53,7 @@ module Secure
       def find_and_authenticate_user(uname, upass)
         raise ArgumentError, "Invalid Credentials!" unless uname.present? and upass.present?
         upp = nil
-        value = self.find_by(username: uname).authenticate(upass)
+        value = self.find_by(username: uname).try(:authenticate, upass)
         upp = self.new(value) if value.present?
         upp = nil unless upp
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
@@ -81,7 +81,8 @@ module Secure
       def fetch_cached_user(token)
         raise ArgumentError, "Invalid Credentials!" unless token.present?
         value = retrieve_storage_key(token)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
+        value.proxy_u.active = false if value.present? and last_login_time_expired?(value)
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, State: #{value.proxy_u.active ? 'Active': 'Not Active[Expired]' }, CachedKeys: #{count_storage_objects}")
         value
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")

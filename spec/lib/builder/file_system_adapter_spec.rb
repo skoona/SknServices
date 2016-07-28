@@ -3,17 +3,11 @@
 RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
 
   let(:user) { page_user_developer }
-
-  # Mocking methods SF or Service might call on Controller
-  def current_user
-    user
-  end
-  def controller
-    self
-  end
+  let(:mc) {ServiceFactoryMockController.new(user: user)}
+  let(:service_factory)  { ServiceFactory.new({factory: mc}) }
 
   before(:each) do
-    @factory = ServiceFactory.new(factory: self)
+    @factory = service_factory
     @service = @factory.content_adapter_file_system
   end
 
@@ -34,9 +28,9 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
-      expect( @service.factory.factory ).to be_a self.class
-      expect( @service.factory.controller ).to be_a self.class
-      expect( @service.controller ).to be_a self.class
+      expect( @service.factory.factory ).to be_a ServiceFactoryMockController
+      expect( @service.factory.controller ).to be_a ServiceFactoryMockController
+      expect( @service.controller ).to be_a ServiceFactory
     end
     it "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile

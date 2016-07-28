@@ -314,7 +314,7 @@ module Utility
 
       # loop thru users
       res = User.find_each do |u|
-        next if u.user_options.empty? or 'VendorSecondary'.eql?( u.user_options.first )
+        next if u.user_options.empty? or u.user_options.include?("VendorSecondary")
         rec = ContentProfile.new
         rec.person_authentication_key = u.person_authenticated_key
         rec.authentication_provider = 'SknService::Bcrypt'

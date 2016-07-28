@@ -8,15 +8,12 @@
 
 # self is factory
 # factory is the thing that initialized us: i.e. controller is really factory
-class ServiceFactory < ::Factory::ServicesBase
+class ServiceFactory < ::Factory::FactoriesBase
 
-  attr_accessor :factory
 
-  def initialize(params={})
-    @factory = params[:factory]
-    @user = @factory.current_user unless @factory.nil?
-    raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
-  end
+  ##
+  # Application Services used in Controller methods
+  ##
 
   def password_service
     @sf_password_service ||= ::PasswordService.new({factory: self})
@@ -43,6 +40,11 @@ class ServiceFactory < ::Factory::ServicesBase
     yield @sf_profile_builder if block_given?
     @sf_profile_builder
   end
+
+  ##
+  # Content Adapters
+  ##
+
   def content_adapter_file_system
     @sf_content_adapter_file_system ||= Builder::FileSystemAdapter.new({factory: self})
     yield @sf_content_adapter_file_system if block_given?
@@ -69,49 +71,5 @@ class ServiceFactory < ::Factory::ServicesBase
     end
   end
 
-
-  ##
-  # The controller knows itself as 'self'
-  # so we bridge to it for our Services
-  def controller
-    @factory
-  end
-
-  ##
-  # Same for current_user, a controller value
-  def current_user
-    @user ||= @factory.current_user
-  end
-
-  # User Session Handler
-  def get_session_param(key)
-    @factory.session[key]
-  end
-  def set_session_param(key, value)
-    @factory.session[key] = value
-  end
-
-  protected
-
-  # Support the regular respond_to? method by
-  # answering for any attr that user_object actually handles
-  #:nodoc:
-  def respond_to_missing?(method, incl_private=false)
-    @factory.send(:respond_to?, method) || super(method,incl_private)
-  end
-
-
-  private
-
-  # Easier to code than delegation, or forwarder; @factory assumed to equal @controller
-  def method_missing(method, *args, &block)
-    Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-    if @factory.respond_to?(method)
-      block_given? ? @factory.send(method, *args, block) :
-          (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))
-    else
-      super(method, *args, &block)
-    end
-  end
 
 end

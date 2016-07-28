@@ -225,20 +225,18 @@ Warden::Manager.on_request do |proxy|
 
     # If session has expired logout the user, unless remember cookie is still valid
     # Browser deletes cookies that have expired so remembered should be nil or false
-    if Secure::UserProfile.last_login_time_expired?(proxy.user())
+    # #fetch cached user will make it inactive if login timer expires
+    if proxy.user and !proxy.user.active?
       timeout_flag = true
-      proxy.logout() unless remembered
-      proxy.request.flash[:alert] = "Your Session has Expired! Warden#on_request" unless remembered
+      proxy.logout()
+      proxy.request.flash[:alert] = "Your Session has Expired! Warden#on_request"
     end
 
     # see if we can restore a session via API or RememberToken
-    if !proxy.user() and !timeout_flag
+    if !proxy.user and !timeout_flag
       attempted_remember_flag = true
       Rails.logger.debug " Warden::Manager.on_request(BeforeAuth)"
       proxy.authenticate(:api_auth, :remember_token)
-      unless proxy.authenticated? and remembered
-        proxy.cookies.delete(:remember_token, {domain: proxy.env["SERVER_NAME"]})
-      end
     end
 
   end # end bypass
@@ -269,16 +267,19 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   # force reload of navigation menu, which re-authorizes it too
   # auth.request.params["session"]["navigation_menu"] = nil
 
+  domain_part = ("." + auth.env["SERVER_NAME"].split('.')[1..2].join('.')).downcase
+  remembered_for = Secure::UserProfile.security_remember_time
+
   if remember
     if Rails.env.production?
-      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Secure::UserProfile.security_session_time, httponly: true, secure: true } # Settings.security.session_expires
+      auth.cookies.signed[:remember_token] = { value: remember, domain: domain_part, expires: Secure::UserProfile.security_session_time, httponly: true, secure: true }
     else
-      auth.cookies.permanent.signed[:remember_token] = { value: remember, domain: auth.env["SERVER_NAME"], expires: Secure::UserProfile.security_remember_time, httponly: true } # Settings.security.remembered_for
+      auth.cookies.signed[:remember_token] = { value: remember, domain: domain_part, expires: remembered_for , httponly: true }
     end
   else
-    auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
+    auth.cookies.delete :remember_token, domain: domain_part
   end
-  Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, session.id=#{auth.request.session_options[:id]} !
+  Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, RememberedFor=#{remembered_for} session.id=#{auth.request.session_options[:id]} !
   true
 end
 
@@ -307,6 +308,10 @@ end
 #
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
+  domain_part = ("." + env["SERVER_NAME"].split('.')[1..2].join('.')).downcase
+  env['warden'].cookies.delete( :remember_token, domain: domain_part )
+  env['warden'].cookies.delete( Rails.application.config.session_options[:key], domain: domain_part )
+  env['warden'].request.reset_session
   Rails.logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, session.id=#{env['warden'].request.session_options[:id]}"
   true
 end
@@ -317,10 +322,10 @@ end
 Warden::Manager.before_logout do |user,auth,opts|
   # puts "===============[DEBUG]:bl #{self.class}\##{__method__}"
   session_id_before_reset = auth.request.session_options[:id]
+  domain_part = ("." + auth.env["SERVER_NAME"].split('.')[1..2].join('.')).downcase
   user.disable_authentication_controls unless user.nil?
-  auth.cookies.delete '_SknServices_session'.to_sym, domain: auth.env["SERVER_NAME"]
-  auth.cookies.delete :remember_token, domain: auth.env["SERVER_NAME"]
-  auth.reset_session!
+  auth.cookies.delete( Rails.application.config.session_options[:key], domain: domain_part )
+  auth.request.reset_session
   auth.request.flash[:notice] = opts[:message] if opts[:message]
 
   Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, starting-session.id=#{session_id_before_reset}, ending-session.id=#{auth.request.session_options[:id]}"
