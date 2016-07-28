@@ -321,6 +321,7 @@ end
 # Logout the user object
 Warden::Manager.before_logout do |user,auth,opts|
   # puts "===============[DEBUG]:bl #{self.class}\##{__method__}"
+  user.proxy_u.active = true if user
   session_id_before_reset = auth.request.session_options[:id]
   domain_part = ("." + auth.env["SERVER_NAME"].split('.')[1..2].join('.')).downcase
   user.disable_authentication_controls unless user.nil?
