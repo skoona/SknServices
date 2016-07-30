@@ -124,16 +124,22 @@ module Secure
       @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:userdata] : ""
     end
     def self.get_resource_read_options(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["READ"] : []
+      return [] unless @@ar_permissions.key?(resource_uri)
+
+      result = []
+      CRUD_MODES.each do |crud|
+        result << @@ar_permissions[resource_uri][crud].values  if @@ar_permissions[resource_uri].key?(crud)
+      end
+
+      result.flatten
     end
     def self.get_resource_roles(resource_uri)
-      return [] unless @@ar_permissions.key?(resource_uri)
+      return {} unless @@ar_permissions.key?(resource_uri)
 
       result = {}
       CRUD_MODES.each do |crud|
         result.store(crud, @@ar_permissions[resource_uri][crud].keys) if @@ar_permissions[resource_uri].key?(crud)
       end
-
 
       result
     end

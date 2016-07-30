@@ -25,31 +25,75 @@ class ProfilesDomain < ::Factory::DomainsBase
     usrs
   end
 
+  # Returns:
+  # [
+  #  {:pak=>"6df717145082c39fc52027947411b66d",
+  #   :profile_type=>"Developer",
+  #   :profile_type_description=>"Open Source Independent Consultancy",
+  #   :provider=>"SknService::Bcrypt",
+  #   :username=>"developer",
+  #   :display_name=>"Skoona Developer",
+  #   :email=>"skoona@gmail.com",
+  #   :assigned_group=>["Developer", "EmployeePrimary"],
+  #   :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"],
+  #   :entries=>[
+  #       { :content_value=>["*.log", "*.csv", "*.pdf"],
+  #         :content_type=>"Commission",
+  #         :content_type_description=>"Branch Actions for a specific branch",
+  #         :topic_value=>["0040", "0037", "0034"],
+  #         :topic_type=>"Branch",
+  #         :topic_type_description=>"Branch Actions for a specific branch",
+  #         :description=>"Determine which branch documents can be seen",
+  #         :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}],
+  #                            ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]
+  #                           ],
+  #         :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}],
+  #                          ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}],
+  #                          ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}],
+  #                          ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}],
+  #                          ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]
+  #                         ]
+  #       },
+  #       {:content_value=>["Cancel", "FutCancel", "AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602", "1601"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]},
+  #       {:content_value=>["23", "9", "21"], :content_type=>"LicensedStates", :content_type_description=>"Branch Operations for a specific branch", :topic_value=>["0040", "0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Operations for a specific branch", :description=>"Determine which States branches are authorized to operate in.", :content_selects=>[["LicensedStates", 3, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}
+  #   ],
+  #   :profile_exist=>true
+  #  },
+  #  {:pak=>"fd53d41a6985eaac881b0f6ad4fbdc2f", :profile_type=>nil, :profile_type_description=>nil, :provider=>"SknService::Bcrypt", :username=>"eptester", :display_name=>"Employee Primary User", :email=>"appdev@localhost.com", :assigned_group=>["Manager", "EmployeePrimary"], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :entries=>[{:content_value=>["*.log", "*.csv", "*.pdf"], :content_type=>"Commission", :content_type_description=>"Branch Actions for a specific branch", :topic_value=>["0040", "0037", "0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Determine which branch documents can be seen", :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}], ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["Cancel", "FutCancel", "AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602", "1601"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["23", "9", "21"], :content_type=>"LicensedStates", :content_type_description=>"Branch Operations for a specific branch", :topic_value=>["0040", "0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Operations for a specific branch", :description=>"Determine which States branches are authorized to operate in.", :content_selects=>[["LicensedStates", 3, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}], :profile_exist=>true},
+  #  {:pak=>"0a83f6375675cb436beaec50387826d2", :profile_type=>"EmployeeSecondary", :profile_type_description=>"Corporate Staff", :provider=>"SknService::Bcrypt", :username=>"estester", :display_name=>"Employee Secondary User", :email=>"appdev1@localhost.com", :assigned_group=>["EmployeeSecondary"], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Commission", :content_type_description=>"Branch Actions for a specific branch", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Determine which branch documents can be seen", :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}], ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}], :profile_exist=>true},
+  #  {:pak=>"57c730e983e8ba70c79b88c153f3db87", :profile_type=>"BranchPrimary", :profile_type_description=>"Branch Manager", :provider=>"SknService::Bcrypt", :username=>"bptester", :display_name=>"Branch Primary User", :email=>"appdev2@localhost.com", :assigned_group=>["BranchPrimary"], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Commission", :content_type_description=>"Branch Actions for a specific branch", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Determine which branch documents can be seen", :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}], ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}], :profile_exist=>true},
+  #  {:pak=>"e3e2d2825c89586a62092473cbd7e4bb", :profile_type=>"BranchSecondary", :profile_type_description=>"Branch Staff", :provider=>"SknService::Bcrypt", :username=>"bstester", :display_name=>"Branch Secondary User", :email=>"appdev3@localhost.com", :assigned_group=>["BranchSecondary"], :user_options=>["BranchSecondary", "0037", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"This Corporate Account", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Relationship Activity Reports", :content_selects=>[["Activity", 6, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["Partner", 6, {:"data-description"=>"This Corporate Account"}]]}], :profile_exist=>true}, {:profile_exist=>false},
+  #  {:pak=>"54239b66782502bab08259e8dadb0b8c", :profile_type=>"VendorPrimary", :profile_type_description=>"Partner Manager", :provider=>"SknService::Bcrypt", :username=>"vptester", :display_name=>"Vendor Primary User", :email=>"appdev4@localhost.com", :assigned_group=>["VendorPrimary"], :user_options=>["VendorPrimary", "0099"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"This Corporate Account", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Relationship Activity Reports", :content_selects=>[["Activity", 6, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["Partner", 6, {:"data-description"=>"This Corporate Account"}]]}], :profile_exist=>true}, {:profile_exist=>false}
+  # ]
+
   def manageable_page_users(context=PROFILE_CONTEXT)
     usrs = []
+
     Secure::UserProfile.page_users(context).each do |u|
       entries = {none: true}
+      profile = {}
 
       content_profile = ContentProfile.find_by_person_authentication_key( u.person_authenticated_key)
-      unless content_profile.nil? or content_profile.content_profile_entries.empty?
 
-        entries = content_profile.content_profile_entries.map() do |cpe|
-          entry = cpe.entry_info
-          entry.merge!(content_selects: ContentType.find_by(name: cpe.content_type).try(:option_selects) || [] )
-          entry.merge!(topic_selects: TopicType.find_by(name: cpe.topic_type).try(:option_selects) || [] )
-        end
+      unless content_profile.nil?
+        profile = content_profile.entry_info_with_selects(u)
+      else
+        profile = {
+            username: u.username,
+            display_name: u.display_name,
+            email: u.email,
+            pak: u.person_authenticated_key,
+            authentication_provider: 'SknService::Bcrypt',
+            assigned_group: u.assigned_groups,
+            user_options: u.user_options,
+            profile_type_description: "",
+            entries: []
+        }
       end
-      usrs << {username: u.username,
-               display_name: u.display_name,
-               email: u.email,
-               pak: u.person_authenticated_key,
-               authentication_provider: 'SknService::Bcrypt',
-               assigned_group: u.assigned_groups,
-               user_options: u.user_options,
-               profile_exist: !content_profile.nil?,
-               profile_entries: entries
-      }
+      usrs <<  profile.merge(profile_exist: !content_profile.nil?)
     end
+    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{usrs}"
+
     usrs
   end
 
@@ -126,7 +170,8 @@ class ProfilesDomain < ::Factory::DomainsBase
   # Parameters: {"id"=>"content",
   #              "username"=>"aptester",
   #              "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
-  #              "content_type"=>"Commission", "content_value"=>["68613"],
+  #              "content_type"=>"Commission",
+  #              "content_value"=>["68613"],
   #              "topic_type"=>"Branch",
   #              "topic_value"=>["0038"],
   #              "description"=>"Determine which branch documents can be seen",

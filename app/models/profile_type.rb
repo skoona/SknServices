@@ -17,7 +17,7 @@ class ProfileType < ActiveRecord::Base
   def self.option_selects
     options = []
     self.find_each do |pts|
-      options << [pts.name, pts.id, {'data-description'.to_sym => pts.description}]
+      options << [pts.name, pts.id, {'data-description': pts.description}]
     end
     options
   end

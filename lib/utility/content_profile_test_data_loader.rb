@@ -174,7 +174,8 @@ module Utility
 
       pt = [
           {name: "Developer",         description: "Open Source Independent Consultancy"},
-          {name: "EmployeePrimary",   description: "Corporate Managers"},
+          {name: "Manager",           description: "Corporate Managers"},
+          {name: "EmployeePrimary",   description: "Department Managers"},
           {name: "EmployeeSecondary", description: "Corporate Staff"},
           {name: "BranchPrimary",     description: "Branch Manager"},
           {name: "BranchSecondary",   description: "Branch Staff"},
@@ -195,6 +196,9 @@ module Utility
       false
     end
 
+    # Does create the full content profile,
+    # however, it mocks the purposeful admin choice
+    # -- change to load data, then apply logical choices from that data
     def create_full_content_profile
       results = true
 

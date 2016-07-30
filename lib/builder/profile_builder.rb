@@ -54,19 +54,9 @@ module Builder
 
       results = {}
       ctxp = ContentProfile.find_by( person_authentication_key: user_profile.person_authenticated_key)
-      unless ctxp.nil? or ctxp.content_profile_entries.size == 0
-        results =  {
-            success: true,
-            entries: (ctxp.content_profile_entries.map() {|cpe| build_db_context_profile_entry(cpe)}) || [],
-            pak: ctxp.person_authentication_key,
-            profile_type: ctxp.profile_type.try(:name),
-            profile_type_description: ctxp.profile_type.try(:description),
-            provider: ctxp.authentication_provider,
-            username: ctxp.username,
-            display_name: ctxp.display_name,
-            email: ctxp.email
-        }
-      end
+
+      results =  ctxp.entry_info_with_selects(user_profile).merge({ success: true }) unless ctxp.nil?
+
       if  results.empty? or !results[:entries].present?
         results = {
             success: false,
@@ -75,10 +65,8 @@ module Builder
             entries:[]
         }
       end
-      unless results[:entries].empty?
-        results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
-      end
       factory.update_storage_object(PREFIX_CONTENT + user_profile.person_authenticated_key, results)
+
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
     rescue Exception => e
@@ -108,8 +96,8 @@ module Builder
           entries: build_ar_context_profile_entry(user_profile) || [],
           pak: user_profile.person_authenticated_key,
           profile_type: user_profile.assigned_groups.first || "not assigned",
-          profile_type_description: "",
-          provider: "UserProfile",
+          profile_type_description: user_profile.assigned_groups.first || "not assigned",
+          provider: "AccessRegistry",
           username: user_profile.username,
           display_name: user_profile.display_name,
           email: user_profile.email
@@ -125,6 +113,7 @@ module Builder
       unless results[:entries].empty?
         results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
+
       update_storage_object(PREFIX_ACCESS + user_profile.person_authenticated_key, results)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
@@ -146,7 +135,7 @@ module Builder
     def get_prebuilt_profile(pak, context)
       key = context + pak
       profile = nil
-      profile = get_storage_object(key) if is_object_stored?(key)
+      profile = get_storage_object(key)
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{profile}")
       profile
     end

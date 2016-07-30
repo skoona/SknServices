@@ -36,11 +36,29 @@ class ContentProfileEntry < ActiveRecord::Base
   def self.option_selects
     options = []
     self.find_each do |cpes|
-      options << [cpes.description, cpes.id, {data_description: "#{content_type}:#{topic_type}"}]
+      options << [cpes.description, cpes.id, {'data-description': "#{content_type}:#{topic_type}"}]
     end
     options
   end
 
+  def entry_contents
+    opts = []
+    content_value.collect do |v|
+      opts << [v,0, {'data-description': content_type_description}]
+    end
+    opts
+  end
+  def entry_topics
+    opts = []
+    topic_value.collect do |v|
+      opts << [v,0, {'data-description': topic_type_description}]
+    end
+    opts
+  end
+  def entry_info_with_selects(userp)
+    entry_info.merge({content_selects: entry_contents, topic_selects: entry_topics,
+                     user_options: userp.user_options, username: userp.username})
+  end
   def entry_info
     {
       content_value: content_value,

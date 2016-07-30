@@ -92,6 +92,9 @@ function profileTablesRequester(ev) {
     } else {
         accessibleUrl = $("#content-table tbody").data().accessibleUrl;
         profileType = "ContentProfile";
+      // remove content_selects and topic_selects for entries
+      dataPackage.content_selects = [];
+      dataPackage.topic_selects = [];
     }
 
     /*
@@ -334,7 +337,6 @@ function replaceTypesTableRows(dtTable, dataPackage) {
             trNode,
             trRow;
 
-
     try {
         dtTable.clear().draw();
         $.each(vList, function (index, row) {
@@ -364,7 +366,7 @@ function replaceTypesTableRows(dtTable, dataPackage) {
  * @param dataPackage
  */
 function replaceEntriesTableRows(dataPackage) {
-    var vList = dataPackage.profile_entries,
+    var vList = dataPackage.entries,
             newRow = [],
             counter = 0,
             trNode,
@@ -422,7 +424,7 @@ function replaceProfileTabInfo(event) {
         $('#authentication_provider').html(dataPackage.authentication_provider);
         $('#pak').html(dataPackage.pak);
         if (dataPackage.profile_exist) {
-            $('#profile_entries').html(dataPackage.profile_entries.length);
+            $('#profile_entries').html(dataPackage.entries.length);
         } else {
             $('#profile_entries').html('0');
         }
