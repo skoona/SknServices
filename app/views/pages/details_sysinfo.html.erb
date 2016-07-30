@@ -105,7 +105,7 @@
                     <th>Index</th>
                     <th>URI</th>
                     <th>Description</th>
-                    <th>UserData</th>
+                    <th>Roles</th>
                     </thead>
                     <tbody>
 
@@ -115,7 +115,7 @@
                             <td><%= '%05d' % index %></td>
                             <td><%= ar.to_s %></td>
                             <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
-                            <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
+                            <td><%= Secure::AccessRegistry.get_resource_roles(ar) %></td>
                         </tr>
                     <% end %>
                     </tbody>
@@ -140,6 +140,7 @@
                     <th>Index</th>
                     <th>URI</th>
                     <th>Description</th>
+                    <th>Options</th>
                     <th>UserData</th>
                     </thead>
                     <tbody>
@@ -150,6 +151,7 @@
                             <td><%= '%05d' % index %></td>
                             <td><%= ar.to_s %></td>
                             <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
+                            <td><%= Secure::AccessRegistry.get_resource_read_options(ar) %></td>
                             <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
                         </tr>
                     <% end %>
@@ -280,6 +282,15 @@
                     <% else %>
                         <div class="alert alert-warning" role="alert"><%= res.message if res.message? %></div>
                     <% end %>
+
+                <div class="well">
+                  <h3>User Options</h3>
+                  <ol>
+                    <% current_user.user_options.each do |item| -%>
+                        <li><%= item %></li>
+                    <% end -%>
+                  </ol>
+                </div>
 
                 <div class="well">
                     <h3>Assigned Groups</h3>

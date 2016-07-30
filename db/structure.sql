@@ -30,46 +30,20 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: content_options; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE content_options (
-    id integer NOT NULL,
-    content_type_id integer,
-    content_type_opt_id integer
-);
-
-
---
--- Name: content_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE content_options_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: content_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE content_options_id_seq OWNED BY content_options.id;
-
-
---
 -- Name: content_profile_entries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE content_profile_entries (
     id integer NOT NULL,
-    topic_value character varying(255),
-    content_value character varying(255),
+    topic_value character varying,
+    topic_type character varying(255),
+    topic_type_description character varying(255),
+    content_value character varying,
+    content_type character varying(255),
+    content_type_description character varying(255),
+    description character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    description character varying(255)
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -136,6 +110,8 @@ CREATE TABLE content_type_opts (
     id integer NOT NULL,
     value character varying(255),
     description character varying(255),
+    type_name character varying(255),
+    content_type_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -194,36 +170,6 @@ ALTER SEQUENCE content_types_id_seq OWNED BY content_types.id;
 
 
 --
--- Name: join_contents; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE join_contents (
-    id integer NOT NULL,
-    content_profile_entry_id integer,
-    content_type_id integer
-);
-
-
---
--- Name: join_contents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE join_contents_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: join_contents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE join_contents_id_seq OWNED BY join_contents.id;
-
-
---
 -- Name: join_entries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -251,36 +197,6 @@ CREATE SEQUENCE join_entries_id_seq
 --
 
 ALTER SEQUENCE join_entries_id_seq OWNED BY join_entries.id;
-
-
---
--- Name: join_topics; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE join_topics (
-    id integer NOT NULL,
-    content_profile_entry_id integer,
-    topic_type_id integer
-);
-
-
---
--- Name: join_topics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE join_topics_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: join_topics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE join_topics_id_seq OWNED BY join_topics.id;
 
 
 --
@@ -320,38 +236,8 @@ ALTER SEQUENCE profile_types_id_seq OWNED BY profile_types.id;
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
-
-
---
--- Name: topic_options; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE topic_options (
-    id integer NOT NULL,
-    topic_type_id integer,
-    topic_type_opt_id integer
-);
-
-
---
--- Name: topic_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE topic_options_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: topic_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE topic_options_id_seq OWNED BY topic_options.id;
 
 
 --
@@ -362,6 +248,8 @@ CREATE TABLE topic_type_opts (
     id integer NOT NULL,
     value character varying(255),
     description character varying(255),
+    type_name character varying(255),
+    topic_type_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -563,13 +451,6 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY content_options ALTER COLUMN id SET DEFAULT nextval('content_options_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY content_profile_entries ALTER COLUMN id SET DEFAULT nextval('content_profile_entries_id_seq'::regclass);
 
 
@@ -598,13 +479,6 @@ ALTER TABLE ONLY content_types ALTER COLUMN id SET DEFAULT nextval('content_type
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY join_contents ALTER COLUMN id SET DEFAULT nextval('join_contents_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY join_entries ALTER COLUMN id SET DEFAULT nextval('join_entries_id_seq'::regclass);
 
 
@@ -612,21 +486,7 @@ ALTER TABLE ONLY join_entries ALTER COLUMN id SET DEFAULT nextval('join_entries_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY join_topics ALTER COLUMN id SET DEFAULT nextval('join_topics_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY profile_types ALTER COLUMN id SET DEFAULT nextval('profile_types_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY topic_options ALTER COLUMN id SET DEFAULT nextval('topic_options_id_seq'::regclass);
 
 
 --
@@ -672,14 +532,6 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
--- Name: content_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY content_options
-    ADD CONSTRAINT content_options_pkey PRIMARY KEY (id);
-
-
---
 -- Name: content_profile_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -712,14 +564,6 @@ ALTER TABLE ONLY content_types
 
 
 --
--- Name: join_contents_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY join_contents
-    ADD CONSTRAINT join_contents_pkey PRIMARY KEY (id);
-
-
---
 -- Name: join_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -728,27 +572,11 @@ ALTER TABLE ONLY join_entries
 
 
 --
--- Name: join_topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY join_topics
-    ADD CONSTRAINT join_topics_pkey PRIMARY KEY (id);
-
-
---
 -- Name: profile_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY profile_types
     ADD CONSTRAINT profile_types_pkey PRIMARY KEY (id);
-
-
---
--- Name: topic_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY topic_options
-    ADD CONSTRAINT topic_options_pkey PRIMARY KEY (id);
 
 
 --
@@ -800,20 +628,6 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_content_options_on_content_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_content_options_on_content_type_id ON content_options USING btree (content_type_id);
-
-
---
--- Name: index_content_options_on_content_type_opt_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_content_options_on_content_type_opt_id ON content_options USING btree (content_type_opt_id);
-
-
---
 -- Name: index_content_profiles_on_person_authentication_key; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -828,17 +642,10 @@ CREATE INDEX index_content_profiles_on_profile_type_id ON content_profiles USING
 
 
 --
--- Name: index_join_contents_on_content_profile_entry_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_content_types_on_content_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_join_contents_on_content_profile_entry_id ON join_contents USING btree (content_profile_entry_id);
-
-
---
--- Name: index_join_contents_on_content_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_join_contents_on_content_type_id ON join_contents USING btree (content_type_id);
+CREATE INDEX index_content_types_on_content_type_id ON content_type_opts USING btree (content_type_id);
 
 
 --
@@ -856,31 +663,10 @@ CREATE INDEX index_join_entries_on_content_profile_id ON join_entries USING btre
 
 
 --
--- Name: index_join_topics_on_content_profile_entry_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_topic_types_on_topic_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_join_topics_on_content_profile_entry_id ON join_topics USING btree (content_profile_entry_id);
-
-
---
--- Name: index_join_topics_on_topic_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_join_topics_on_topic_type_id ON join_topics USING btree (topic_type_id);
-
-
---
--- Name: index_topic_options_on_topic_type_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_topic_options_on_topic_type_id ON topic_options USING btree (topic_type_id);
-
-
---
--- Name: index_topic_options_on_topic_type_opt_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_topic_options_on_topic_type_opt_id ON topic_options USING btree (topic_type_opt_id);
+CREATE INDEX index_topic_types_on_topic_type_id ON topic_type_opts USING btree (topic_type_id);
 
 
 --
@@ -956,14 +742,6 @@ ALTER TABLE ONLY join_entries
 
 
 --
--- Name: fk_rails_5a5f41d81f; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY join_topics
-    ADD CONSTRAINT fk_rails_5a5f41d81f FOREIGN KEY (content_profile_entry_id) REFERENCES content_profile_entries(id);
-
-
---
 -- Name: fk_rails_5ddd6208a6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -972,11 +750,11 @@ ALTER TABLE ONLY content_profiles
 
 
 --
--- Name: fk_rails_7207991aa8; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_7414f04fa1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY join_contents
-    ADD CONSTRAINT fk_rails_7207991aa8 FOREIGN KEY (content_profile_entry_id) REFERENCES content_profile_entries(id);
+ALTER TABLE ONLY content_type_opts
+    ADD CONSTRAINT fk_rails_7414f04fa1 FOREIGN KEY (content_type_id) REFERENCES content_types(id);
 
 
 --
@@ -988,35 +766,11 @@ ALTER TABLE ONLY user_group_roles_user_roles
 
 
 --
--- Name: fk_rails_94efe6d586; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_b4cea7337a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY topic_options
-    ADD CONSTRAINT fk_rails_94efe6d586 FOREIGN KEY (topic_type_opt_id) REFERENCES topic_type_opts(id);
-
-
---
--- Name: fk_rails_ae3fa92629; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY topic_options
-    ADD CONSTRAINT fk_rails_ae3fa92629 FOREIGN KEY (topic_type_id) REFERENCES topic_types(id);
-
-
---
--- Name: fk_rails_bc28dd584c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY content_options
-    ADD CONSTRAINT fk_rails_bc28dd584c FOREIGN KEY (content_type_opt_id) REFERENCES content_type_opts(id);
-
-
---
--- Name: fk_rails_ca0493a174; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY join_contents
-    ADD CONSTRAINT fk_rails_ca0493a174 FOREIGN KEY (content_type_id) REFERENCES content_types(id);
+ALTER TABLE ONLY topic_type_opts
+    ADD CONSTRAINT fk_rails_b4cea7337a FOREIGN KEY (topic_type_id) REFERENCES topic_types(id);
 
 
 --
@@ -1025,22 +779,6 @@ ALTER TABLE ONLY join_contents
 
 ALTER TABLE ONLY join_entries
     ADD CONSTRAINT fk_rails_dd6a020dd5 FOREIGN KEY (content_profile_entry_id) REFERENCES content_profile_entries(id);
-
-
---
--- Name: fk_rails_ddec8e0316; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY join_topics
-    ADD CONSTRAINT fk_rails_ddec8e0316 FOREIGN KEY (topic_type_id) REFERENCES topic_types(id);
-
-
---
--- Name: fk_rails_e7238fdd67; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY content_options
-    ADD CONSTRAINT fk_rails_e7238fdd67 FOREIGN KEY (content_type_id) REFERENCES content_types(id);
 
 
 --

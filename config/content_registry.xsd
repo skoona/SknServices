@@ -67,10 +67,7 @@
       <xs:attribute name="type" use="required">
         <xs:simpleType>
           <xs:restriction base="xs:string">
-            <xs:enumeration value="CREATE" />
             <xs:enumeration value="READ" />
-            <xs:enumeration value="UPDATE" />
-            <xs:enumeration value="DELETE" />
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>

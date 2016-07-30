@@ -203,92 +203,93 @@ module Utility
       ## Begin Good Work
 
       cpep = [
-          {topic_value: [],  content_value: [], content_type: "Commission",   topic_type: "Branch", description: 'Determine which branch documents can be seen'},
-          {topic_value: [],  content_value: [], content_type: "Notification", topic_type: "Account", description: 'Determine which accounts will have notification sent'},
-          {topic_value: [],  content_value: [], content_type: "Operations",   topic_type: "LicensedStates", description: 'Determine which States producer may operate in.'}
+          {topic_value: [],  content_value: [], content_type: "Commission",     topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which branch documents can be seen'},
+          {topic_value: [],  content_value: [], content_type: "Notification",   topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which branch accounts will have notification sent'},
+          {topic_value: [],  content_value: [], content_type: "LicensedStates", topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which States branches are authorized to operate in.'}
       ]
 
       primary_contents = [
           {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
                        content_type_opts_attributes: {
-                           "0" => {value: "*.pdf", description: "Document store Commision Document Type ID" },
-                           "1" => {value: "*.csv", description: "Document store Commision CSV Document Type ID" },
-                           "2" => {value: "*.log", description: "Document store Branch Experience Document Type ID"} }
+                           "0" => {value: "*.pdf", type_name: "Commission", description: "Document store Commision Document Type ID" },
+                           "1" => {value: "*.csv", type_name: "Commission", description: "Document store Commision CSV Document Type ID" },
+                           "2" => {value: "*.log", type_name: "Commission", description: "Document store Branch Experience Document Type ID"} }
            },
           {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
                        content_type_opts_attributes: {
-                           "0" => {value: "AdvCancel", description: "Advance Cancel" },
-                           "1" => {value: "FutCancel", description: "Future Cancel" },
-                           "2" => {value: "Cancel",    description: "Cancel" } }
+                           "0" => {value: "AdvCancel", type_name: "Notification", description: "Advance Cancel" },
+                           "1" => {value: "FutCancel", type_name: "Notification", description: "Future Cancel" },
+                           "2" => {value: "Cancel",    type_name: "Notification", description: "Cancel" } }
            },
-           {name: "Operations",   description: "Business Operational Metric", value_data_type: "Integer",
+           {name: "LicensedStates",   description: "Business Operational Metric", value_data_type: "Integer",
                        content_type_opts_attributes: {
-                           "0" => {value: "21", description: "Michigan"},
-                           "1" => {value: "9",  description: "Ohio"},
-                           "2" => {value: "23", description: "Illinois"} }
+                           "0" => {value: "21", type_name: "LicensedStates", description: "Michigan"},
+                           "1" => {value: "9",  type_name: "LicensedStates",  description: "Ohio"},
+                           "2" => {value: "23", type_name: "LicensedStates", description: "Illinois"} }
            }
       ]
 
       primary_topics = [
-        {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
+        {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "N",
             topic_type_opts_attributes: {
-            "0" => {value: "0034", description: "South Branch Number"},
-            "1" => {value: "0037", description: "North Branch Number"},
-            "2" => {value: "0040", description: "West Branch Number"} }
+            "0" => {value: "0034", type_name: "Branch", description: "South Branch Number"},
+            "1" => {value: "0037", type_name: "Branch", description: "North Branch Number"},
+            "2" => {value: "0040", type_name: "Branch", description: "West Branch Number"} }
         },
-        {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+        {name: "Branch", description: "Account Actions for a specific branch", value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "1601", description: "All Branch Accounts"},
-            "1" => {value: "1602", description: "All Branch Accounts"} }
+            "0" => {value: "1601", type_name: "Branch", description: "Branch Account"},
+            "1" => {value: "1602", type_name: "Branch", description: "Branch Account"} }
         },
-        {name: "LicensedStates", description: "Producer Actions", value_based_y_n: "Y",
+        {name: "Branch",  description: "Branch Operations for a specific branch",  value_based_y_n: "Y",
             topic_type_opts_attributes: {
-            "0" => {value: "USA", description: "United States of America"}}
+                "0" => {value: "0037", type_name: "Branch", description: "North Branch Number"},
+                "1" => {value: "0040", type_name: "Branch", description: "West Branch Number"} }
         }
       ]
 
       cpes = [
-          {topic_value: [], content_value: [], content_type: "Commission", topic_type: "Branch", description: 'Determine which branch documents can be seen'},
-          {topic_value: [], content_value: [], content_type: "Notification", topic_type: "Account", description: 'Determine which accounts will have notification sent'}
+          {topic_value: [], content_value: [], content_type: "Commission",   topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which branch documents can be seen'},
+          {topic_value: [], content_value: [], content_type: "Notification", topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which branch accounts will have notification sent'}
       ]
 
       secondary_contents = [
         {name: "Commission", description: "Monthly Commission Reports and Files", value_data_type: "Integer",
             content_type_opts_attributes: {
-            "0" => {value: "*.pdf",  description: "Document store Branch Experience Document Type ID"} }
+            "0" => {value: "*.pdf", type_name: "Commission", description: "Document store Branch Experience Document Type ID"} }
           },
         {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
             content_type_opts_attributes: {
-            "0" => {value: "AdvCancel", description: "Advance Cancel" } }
+            "0" => {value: "AdvCancel", type_name: "Notification", description: "Advance Cancel" } }
           }
       ]
 
       secondary_topics = [
-          {name: "Branch", description: "Branch Actions for a specific branch",  value_based_y_n: "Y",
+          {name: "Branch", description: "Branch Actions for a specific branch",  value_based_y_n: "N",
                   topic_type_opts_attributes: {
-                      "0" => {value: "0037", description: "North Branch Number"}}
+                      "0" => {value: "0037", type_name: "Branch", description: "North Branch Number"}}
           },
-          {name: "Account", description: "Account Action again for a specific set of account", value_based_y_n: "N",
+          {name: "Branch", description: "Account Actions for a specific branch", value_based_y_n: "Y",
                  topic_type_opts_attributes: {
-                     "0" => {value: "1602",  description: "All Producer Accounts"} }
+                     "0" => {value: "1602", type_name: "Branch", description: "All Producer Accounts"} }
           }
       ]
 
       cpev = [
-          {topic_value: [], content_value: [], content_type: "Activity", topic_type: "Partner", description: 'Relationship Activity Reports'}
+          {topic_value: [], content_value: [], content_type: "Activity", topic_type: "Partner", topic_type_description: "", content_type_description: "", description: 'Relationship Activity Reports'}
       ]
 
       vendor_contents = [
         {name: "Activity",   description: "Project Status Reports", value_data_type: "Integer",
                 content_type_opts_attributes: {
-                "0" => {value: "*.pdf", description: "Document store Project Status Report Document Type ID"}
+                "0" => {value: "*.pdf", type_name: "Activity", description: "Document store Project Status Report Document Type ID"}
               }
         }
       ]
       vendor_topics = [
-          {name: "Partner", description: "This Corporate Account",  value_based_y_n: "Y",
+          {name: "Partner", description: "This Corporate Account",  value_based_y_n: "N",
                        topic_type_opts_attributes: {
-                           "0" => {value: "0099", description: "Skoona Development Account"}
+                           "0" => {value: "0099", type_name: "Partner", description: "Skoona Development Account"}
                        }
           }
       ]
@@ -297,20 +298,21 @@ module Utility
       c_recs = ContentType.create!(primary_contents)
       t_recs = TopicType.create!(primary_topics)
       cpep_recs = ContentProfileEntry.create!(cpep)
-      cpep_recs.each_with_index {|rec,idx| rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
-      cpep_recs.each_with_index {|rec,idx| rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
+      cpep_recs.each_with_index {|rec,idx| rec.topic_type_description = t_recs[idx].description;   rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
+      cpep_recs.each_with_index {|rec,idx| rec.content_type_description = t_recs[idx].description; rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
 
       c_recs = ContentType.create!(secondary_contents)
       t_recs = TopicType.create!(secondary_topics)
       cpes_recs = ContentProfileEntry.create!(cpes)
-      cpes_recs.each_with_index {|rec,idx| rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
-      cpes_recs.each_with_index {|rec,idx| rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
+      cpes_recs.each_with_index {|rec,idx| rec.topic_type_description = t_recs[idx].description;   rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
+      cpes_recs.each_with_index {|rec,idx| rec.content_type_description = t_recs[idx].description; rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
 
       c_recs = ContentType.create!(vendor_contents)
       t_recs = TopicType.create!(vendor_topics)
       cpev_recs = ContentProfileEntry.create!(cpev)
-      cpev_recs.each_with_index {|rec,idx| rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
-      cpev_recs.each_with_index {|rec,idx| rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
+      cpev_recs.each_with_index {|rec,idx| rec.topic_type_description = t_recs[idx].description;   rec.topic_value = t_recs[idx].topic_type_opts.map(&:value).flatten }
+      cpev_recs.each_with_index {|rec,idx| rec.content_type_description = t_recs[idx].description; rec.content_value = c_recs[idx].content_type_opts.map(&:value).flatten }
+
 
       # loop thru users
       res = User.find_each do |u|
@@ -325,7 +327,7 @@ module Utility
         rec.reload
         rec.profile_type = ProfileType.find_by(name: u.assigned_groups.first)
         rec.content_profile_entries = case u.assigned_groups.first
-                                        when 'Developer'
+                                        when 'Developer', 'Manager'
                                           cpep_recs
                                         when 'EmployeePrimary'
                                           cpep_recs

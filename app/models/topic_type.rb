@@ -17,14 +17,16 @@ class TopicType < ActiveRecord::Base
 
   validates_presence_of :name, :description
 
-  def self.options_selects
-    self.all.map do |tts|
-      [tts.name, tts.id, {'data-description'.to_sym => tts.description}]
+  def self.option_selects
+    options = []
+    self.find_each do |tts|
+      options << [tts.name, tts.id, {'data-description'.to_sym => tts.description}]
     end
+    options
   end
 
-  # options_for_select(tt_instance.options_selects, selected)  -- single selection
-  def options_selects
+  # options_for_select(tt_instance.option_selects, selected)  -- single selection
+  def option_selects
     topic_type_opts.map do |opts|
       [opts.value, opts.id, {'data-description'.to_sym => opts.description}]
     end

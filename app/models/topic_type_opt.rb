@@ -12,7 +12,7 @@
 #
 
 class TopicTypeOpt < ActiveRecord::Base
-  belongs_to :topic_type
+  belongs_to :topic_type, inverse_of: :topic_type_opts
 
   validates_presence_of :value, :description
 
@@ -20,10 +20,12 @@ class TopicTypeOpt < ActiveRecord::Base
     opts.value.gsub!(/\s+/,'')
   }
 
-  def self.options_selects
-    self.all.map do |r|
-      [r.value, r.id, {'data-description'.to_sym => r.description}]
+  def self.option_selects(name)
+    options = []
+    self.where(type_name: name).find_each do |r|
+      options << [r.value, r.id, {'data-description'.to_sym => r.description}]
     end
+    options
   end
 
 end

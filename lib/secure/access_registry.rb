@@ -11,8 +11,8 @@
 # The intentions of this module is to control permissions for all of the app in the following ways.
 # - 1. Global Action (Clickables) Permissions
 # - 2. Page Access
-# - 3. Page Action Permission
-# - 4. Content Access Permissions
+# - 3. Page Action Permission:     see access_registry.xml
+# - 4. Content Access Permissions: see content_registry.xml
 #
 # A possible Role Scheme could be:
 #  Role: 1. 'Global.<actionName>'
@@ -30,31 +30,31 @@
 #     <resource secured="true" content="true">
 #       <uri>Commission/Branch/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
 #       <description>Branch Commission Statements</description>
-#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
+#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content: ContentValues
 #       <permission type="READ">'
-#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
+#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies: TopicValues
 #           <authorizedRole options="0034,0037,0040">Branch.Commission.Access</authorizedRole>
 #         </authorizedRoles>
 #       </permission>'
 #     </resource>
 #
 #     <resource secured="true" content="true">
-#       <uri>Commission/Branch/CSV</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <uri>Commission/Branch/CSV</uri>'                     Todo: ContentType/TopicType/HumanLabel
 #       <description>Branch Commission CSV Datafiles</description>
-#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
+#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: ContentValues keys to the content: ContentValues
 #       <permission type="READ">'
-#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
+#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies: TopicValues
 #           <authorizedRole options="0034,0037,0040">Branch.Commission.Access</authorizedRole>
 #         </authorizedRoles>
 #       </permission>'
 #     </resource>
 #
 #     <resource secured="true" content="true">
-#       <uri>Experience/Branch/PDF</uri>'                     Todo: ContentType/TopicType/AssetType
+#       <uri>Experience/Branch/PDF</uri>'                     Todo: ContentType/TopicType/HumanLabel
 #       <description>Branch Experience Statements</description>
-#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: keys to the content
+#       <userdata>string, array, or hash content_value_opts</userdata>'   Todo: ContentValues keys to the content: ContentValues
 #       <permission type="READ">'
-#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies
+#         <authorizedRoles>         Todo: options contain comma-separated list of all agencies: TopicValues
 #           <authorizedRole options="0034,0037,0040">Branch.Commission.Access</authorizedRole>
 #         </authorizedRoles>
 #       </permission>'
@@ -122,6 +122,20 @@ module Secure
     end
     def self.get_resource_userdata(resource_uri)
       @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:userdata] : ""
+    end
+    def self.get_resource_read_options(resource_uri)
+      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri]["READ"] : []
+    end
+    def self.get_resource_roles(resource_uri)
+      return [] unless @@ar_permissions.key?(resource_uri)
+
+      result = {}
+      CRUD_MODES.each do |crud|
+        result.store(crud, @@ar_permissions[resource_uri][crud].keys) if @@ar_permissions[resource_uri].key?(crud)
+      end
+
+
+      result
     end
 
     def self.get_ar_resource_keys
@@ -232,10 +246,11 @@ module Secure
       Rails.logger.info("#{self.name}.#{__method__}() opts=#{options}") if Rails.logger.present?
       results
     end
+
     def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
       bundle = @@ar_permissions[resource_uri]
       results = {}
-      if check_access_permissions?(user_roles, resource_uri, options) and bundle.present? and bundle[:content]
+      if bundle.present? and bundle[:content] and check_access_permissions?(user_roles, resource_uri, options)
         content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
 
         opts = {}
@@ -248,7 +263,7 @@ module Secure
 
         topic_value = opts.fetch(:role_opts,[])
         topic_value.select! {|m| options.include?(m)} if options.present?   #user_options are a primary filter for XML version of content profile
-        unless topic_value.empty?
+        unless topic_value.empty?                                           # if there are no options remaining DO NOT return this entry
           results = {
               uri: resource_uri.to_s,
               resource_options: opts,
@@ -260,7 +275,7 @@ module Secure
               topic_type_description: bundle[:description],
               content_type_description: bundle[:description]
               # Todo: role options are considered Topic Option Values
-              # Todo: If user matches multiple CRUDs, then last set of role_option will be used
+              # Todo: Only READ is supported and present in Content Entries
           }
         end
       else

@@ -17,14 +17,16 @@ class ContentType < ActiveRecord::Base
 
   validates_presence_of :name, :description
 
-  def self.options_selects
-    self.all.map do |cts|
-      [cts.name, cts.id, {'data-description'.to_sym => cts.description}]
+  def self.option_selects
+    options = []
+    self.find_each do |cts|
+      options << [cts.name, cts.id, {'data-description'.to_sym => cts.description}]
     end
+    options
   end
 
-  # options_for_select(ct_instance.options_selects, selected)   -- multi selections
-  def options_selects
+  # options_for_select(ct_instance.option_selects, selected)   -- multi selections
+  def option_selects
     content_type_opts.map do |opts|
       [opts.value, opts.id, {'data-description'.to_sym => opts.description}]
     end

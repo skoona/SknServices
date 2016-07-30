@@ -21,10 +21,12 @@ class ContentProfile < ActiveRecord::Base
 
   validates :person_authentication_key, uniqueness: true, on: [:create, :update]
 
-  def self.cp_options_selects
-    self.all.map do |cps|
-      [cps.username, cps.id, {data_description: "#{cps.display_name} <#{cps.email}>"}]
+  def self.option_selects
+    options
+    self.find_each do |cps|
+      options << [cps.username, cps.id, {data_description: "#{cps.display_name} <#{cps.email}>"}]
     end
+    options
   end
 
   def profile_type_name
@@ -34,8 +36,8 @@ class ContentProfile < ActiveRecord::Base
     profile_type.try(:description)
   end
 
-  # options_for_select(tt_instance.options_selects, selected)  -- single selection
-  def cpe_options_selects
+  # options_for_select(tt_instance.option_selects, selected)  -- single selection
+  def option_selects
     content_profile_entries.map do |cpe|
       [cpe.description, cpe.id, {'data-description'.to_sym => "#{cpe.content_type.name}:#{cpe.topic_type.name}"} ]
     end

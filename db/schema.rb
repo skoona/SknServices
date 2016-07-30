@@ -17,10 +17,12 @@ ActiveRecord::Schema.define(version: 20160113200706) do
   enable_extension "plpgsql"
 
   create_table "content_profile_entries", force: :cascade do |t|
-    t.string   "topic_value",   limit: 255
+    t.string   "topic_value"
     t.string   "topic_type",    limit: 255
-    t.string   "content_value", limit: 255
-    t.string   "content_type",  limit: 255
+    t.string   "topic_type_description",   limit: 255
+    t.string   "content_value"
+    t.string   "content_type",   limit: 255
+    t.string   "content_type_description",   limit: 255
     t.string   "description",   limit: 255
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
@@ -43,6 +45,7 @@ ActiveRecord::Schema.define(version: 20160113200706) do
   create_table "content_type_opts", force: :cascade do |t|
     t.string   "value",           limit: 255
     t.string   "description",     limit: 255
+    t.string   "type_name",     limit: 255
     t.integer  "content_type_id"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false

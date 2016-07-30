@@ -8,6 +8,28 @@
     <!--============================================================================= -->
     <!--================== Content RESOURCE REGISTRY  =============================== -->
     <!--============================================================================= -->
+    <!--
+      =============================================================================
+      A possible Content Access scheme could be:
+         <resource secured="true" content="true">
+                                       Todo: ContentType/TopicType/AssetType
+           <uri>Commission/Branch/PDF</uri>'
+           <description>Branch Commission Statements</description>
+                                       Todo: keys to the content: ContentValues
+           <userdata>string, array, or hash content_value_opts</userdata>'
+           <permission type="READ">'   Todo: Only READ is supported
+             <authorizedRoles>         Todo: options contain comma-separated list of all agencies: TopicValues
+               <authorizedRole options="0034,0037,0040">Branch.Commission.Access</authorizedRole>
+             </authorizedRoles>
+           </permission>'
+         </resource>
+      =============================================================================
+      ContentProfile      = UserProfile(user_name)
+      ContentProfileEntry = UserProfile(#roles, #user_options) ->
+                                ContentRegistry(#roles) ->
+                                        Select user_options = authorizedRole(options)
+      =============================================================================
+      -->
 
     <!--============== Content Profile Adaptation  ========== -->
     <resource secured="true" content="true">
@@ -55,7 +77,7 @@
     </resource>
 
     <resource secured="true" content="true">
-        <uri>Operations/LicensedStates/USA</uri>
+        <uri>LicensedStates/Branch/Operations</uri>
         <description>Producer Licensed States</description>
         <userdata>"21|9|23|"</userdata>
         <permission type="READ">
@@ -83,10 +105,6 @@
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
-            </authorizedRoles>
-        </permission>
-        <permission type="DELETE">
-            <authorizedRoles>
                 <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -99,10 +117,6 @@
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
-            </authorizedRoles>
-        </permission>
-        <permission type="DELETE">
-            <authorizedRoles>
                 <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -115,10 +129,6 @@
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Image</authorizedRole>
-            </authorizedRoles>
-        </permission>
-        <permission type="DELETE">
-            <authorizedRoles>
                 <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Image</authorizedRole>
             </authorizedRoles>
         </permission>

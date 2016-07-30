@@ -112,6 +112,9 @@ module Secure
               name = authorized.text
               role = []
               role = authorized[@@ar_options_keyword].squish.split(",").collect {|item| item.squish } if authorized.has_attribute?(@@ar_options_keyword)
+
+              next if resource_hash[resource_uri]["content"] and (!authorized.key?(@@ar_options_keyword) || authorized[@@ar_options_keyword].nil? ) # options are required for content xmls
+
               resource_hash[resource_uri][key].store(name,role)
             end # end authorized role
           else # of permission
@@ -119,6 +122,19 @@ module Secure
           end
 
         end # of sibling
+
+        #
+        # Filter out Content entries without options
+        empty_index = 0
+        indexes = 0
+        Secure::AccessRegistry::CRUD_MODES.each_with_index do |crud, index|
+          empty_index += 1 if !resource_hash[resource_uri].key?(crud) || resource_hash[resource_uri][crud].empty?
+          indexes += 1
+        end
+        if resource_hash[resource_uri]["content"] and (empty_index == indexes)
+          Rails.logger.debug( " --:Rejecting Invalid Content Entry: #{resource_uri}: #{ resource_hash.delete(resource_uri) }" )
+        end
+
       end # of node_set
 
       resource_hash

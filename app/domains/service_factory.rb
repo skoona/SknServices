@@ -62,9 +62,9 @@ class ServiceFactory < ::Factory::FactoriesBase
   def adapter_for_content_profile_entry(content)
     content_type = (content.respond_to?(:to_hash) ? content['content_type'] : content)
     case content_type
-      when "Commission", "Activity"
+      when "Commission", "Activity", "FileDownload"
         content_adapter_file_system
-      when "Notification", "Operations"
+      when "Notification", "LicensedStates", "Operations"
         content_adapter_inline_values
       else
         content_adapter_file_system # default for now
