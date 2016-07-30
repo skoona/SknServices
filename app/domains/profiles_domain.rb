@@ -281,12 +281,12 @@ class ProfilesDomain < ::Factory::DomainsBase
   end
 
   def get_page_access_profile(user_profile)
-    result = profile_builder.access_profile(user_profile)
+    result = profile_provider.access_profile(user_profile)
     result
   end
 
   def get_page_content_profile(user_profile)
-    result = profile_builder.content_profile(user_profile)
+    result = profile_provider.content_profile(user_profile)
     result
   end
 

@@ -85,7 +85,7 @@ module Builder
         content_values.each do |cv|
             Dir.glob(File.join(path.to_path, cv.to_s) ).collect {|f| Pathname.new(f) }.each do |pn|
               next unless pn.exist?
-              result << { source: path.to_path.split("/")[3..-1].join("/"), #cpe["content_type_description"], # topic.to_s,
+              result << { source: path.to_path.split("/")[3..-1].join("/"),
                           filename: pn.basename.to_s,
                           created: pn.ctime.strftime("%Y/%m/%d"),
                           size: human_filesize(pn.size),

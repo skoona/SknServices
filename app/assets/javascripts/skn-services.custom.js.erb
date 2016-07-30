@@ -93,8 +93,8 @@ function profileTablesRequester(ev) {
         accessibleUrl = $("#content-table tbody").data().accessibleUrl;
         profileType = "ContentProfile";
       // remove content_selects and topic_selects for entries
-      dataPackage.content_selects = [];
-      dataPackage.topic_selects = [];
+      delete dataPackage['content_selects'];
+      delete dataPackage['topic_selects'];
     }
 
     /*

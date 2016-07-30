@@ -35,8 +35,8 @@ class ServiceFactory < ::Factory::FactoriesBase
     yield @sf_content_profile_service if block_given?
     @sf_content_profile_service
   end
-  def profile_builder
-    @sf_profile_builder ||= Builder::ProfileBuilder.new({factory: self})
+  def profile_provider
+    @sf_profile_builder ||= Builder::ProfileProvider.new({factory: self})
     yield @sf_profile_builder if block_given?
     @sf_profile_builder
   end

@@ -1,12 +1,12 @@
 ##
-# lib/builder/profile_builder.rb
+# lib/builder/profile_provider.rb
 #
 # ContentProfile & AccessProfile Builder
 #
 # Storage thru Factory
 
 module Builder
-  class ProfileBuilder < ::Factory::DomainsBase
+  class ProfileProvider < ::Factory::DomainsBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS = 'access'
@@ -55,9 +55,9 @@ module Builder
       results = {}
       ctxp = ContentProfile.find_by( person_authentication_key: user_profile.person_authenticated_key)
 
-      results =  ctxp.entry_info_with_selects(user_profile).merge({ success: true }) unless ctxp.nil?
-
-      if  results.empty? or !results[:entries].present?
+      unless ctxp.nil?
+        results =  ctxp.entry_info_with_selects(user_profile).merge({ success: true })
+      else
         results = {
             success: false,
             message: "No content profile data available for #{user_profile.display_name}",
@@ -79,9 +79,6 @@ module Builder
           entries:[]
       }
     end
-    def build_db_context_profile_entry(cpe)
-      cpe.entry_info
-    end
 
     ##
     # AccessProfile
@@ -99,6 +96,8 @@ module Builder
           profile_type_description: user_profile.assigned_groups.first || "not assigned",
           provider: "AccessRegistry",
           username: user_profile.username,
+          assigned_group: user_profile.assigned_groups,
+          user_options: user_profile.user_options,
           display_name: user_profile.display_name,
           email: user_profile.email
       }
@@ -127,11 +126,13 @@ module Builder
           entries:[]
       }
     end
+
+    private
+
     def build_ar_context_profile_entry(usrp)
       Secure::AccessRegistry.get_resource_content_entries(usrp.combined_access_roles, usrp.user_options)
     end
 
-  private
     def get_prebuilt_profile(pak, context)
       key = context + pak
       profile = nil

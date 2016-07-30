@@ -1,6 +1,6 @@
 # Repository Investigations
 
-The collection of files in 'lib/repo' represent my scratchpad of initial ideals around the application of the Repository Pattern.  
+The collection of files in 'lib/repository' represent my scratchpad of initial ideals around the application of the Repository Pattern.  
 So far I've collected a few examples of other implementation, which I'm likely to drop.  
 
 What I'm after is a consolidated interface to the external world outside of the core domain model.  The repository pattern may be able to let me use
