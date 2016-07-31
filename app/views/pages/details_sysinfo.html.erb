@@ -173,7 +173,7 @@
             <div class="panel-body">
 
             <% if authenticated? %>
-                    <% res = service_factory.profile_provider.access_profile(current_user, true) %>
+                    <% res = service_factory.xml_profile_provider.content_profile_for_user(current_user, true) %>
                     <% if res.present? and res.success %>
                     <h3>Access Profile</h3>
                         <div class="table-responsive">
@@ -230,7 +230,7 @@
                         <div class="alert alert-warning" role="alert"><%= res.message if res.message? %></div>
                     <% end %>
 
-                    <% res = service_factory.profile_provider.content_profile(current_user, true) %>
+                    <% res = service_factory.db_profile_provider.content_profile_for_user(current_user, true) %>
                     <% if res.present? and res.success %>
                         <h3>Content Profile</h3>
                         <div class="table-responsive">

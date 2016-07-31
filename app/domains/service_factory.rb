@@ -35,10 +35,20 @@ class ServiceFactory < ::Factory::FactoriesBase
     yield @sf_content_profile_service if block_given?
     @sf_content_profile_service
   end
-  def profile_provider
-    @sf_profile_builder ||= Builder::ProfileProvider.new({factory: self})
-    yield @sf_profile_builder if block_given?
-    @sf_profile_builder
+
+  ##
+  # Content Providers
+  ##
+
+  def xml_profile_provider
+    @sf_xml_profile_builder ||= Builder::XMLProfileProvider.new({factory: self})
+    yield @sf_xml_profile_builder if block_given?
+    @sf_xml_profile_builder
+  end
+  def db_profile_provider
+    @sf_db_profile_builder ||= Builder::DBProfileProvider.new({factory: self})
+    yield @sf_db_profile_builder if block_given?
+    @sf_db_profile_builder
   end
 
   ##

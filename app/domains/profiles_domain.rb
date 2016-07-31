@@ -66,7 +66,7 @@ class ProfilesDomain < ::Factory::DomainsBase
   #  {:pak=>"54239b66782502bab08259e8dadb0b8c", :profile_type=>"VendorPrimary", :profile_type_description=>"Partner Manager", :provider=>"SknService::Bcrypt", :username=>"vptester", :display_name=>"Vendor Primary User", :email=>"appdev4@localhost.com", :assigned_group=>["VendorPrimary"], :user_options=>["VendorPrimary", "0099"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"This Corporate Account", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Relationship Activity Reports", :content_selects=>[["Activity", 6, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["Partner", 6, {:"data-description"=>"This Corporate Account"}]]}], :profile_exist=>true}, {:profile_exist=>false}
   # ]
 
-  def manageable_page_users(context=PROFILE_CONTEXT)
+  def management_page_users_package(context=PROFILE_CONTEXT)
     usrs = []
 
     Secure::UserProfile.page_users(context).each do |u|
@@ -109,7 +109,7 @@ class ProfilesDomain < ::Factory::DomainsBase
            user_options: (user_profile.user_options || []),
            accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'access', format: :json}]),
            page_user: user_profile.username,
-           access_profile: get_page_access_profile(user_profile)
+           access_profile: factory.xml_profile_provider.content_profile_for_user(user_profile)
     }
     res[:success] = res[:access_profile][:entries].empty? ? false : true
     unless res[:success]
@@ -142,7 +142,7 @@ class ProfilesDomain < ::Factory::DomainsBase
        user_options: (user_profile.user_options || []),
        accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
        page_user: user_profile.username,
-       content_profile: get_page_content_profile(user_profile)
+       content_profile: factory.db_profile_provider.content_profile_for_user(user_profile)
     }
     res[:success] = res[:content_profile][:entries].empty? ? false : true
     unless res[:success]
@@ -196,53 +196,23 @@ class ProfilesDomain < ::Factory::DomainsBase
   #              "content_type_description"=>"Branch Commission Statements"
   # }
   def handle_accessible_content_api(params) # :access, :username, :profile
-    @accessible_type = params[:id]          # [:access, :content]
-    cpe = params # [:access=role, :content=content]
-    pg_u = get_page_user(params[:username], @accessible_type)
+    cpe = HashWithIndifferentAccess.new(params) # [:access=role, :content=content]
+    pg_u = get_page_user(cpe[:username] , cpe[:id])
       raise(Utility::Errors::NotFound, "No profile data available for user") unless pg_u.present?
 
     cpe[:profile] = cpe[:id]
     cpe[:id] = pg_u.id
     Rails.logger.debug "#{self.class}##{__method__} results => #{cpe}"
 
-    results = case @accessible_type
-                when 'access'
-                  {package: {
-                      success: true, message: params[:content_type_description], content: 'access',
-                      username: pg_u.username, display_name: pg_u.display_name,
-                      payload: user_accessible_content(cpe)
-                    }
-                  }
-                when 'content'
-                  {package: {
-                      success: true, message: params[:content_type_description], content: 'content',
-                      username: pg_u.username, display_name: pg_u.display_name,
-                      payload: user_accessible_content(cpe)
-                    }
-                  }
-                else
-                  {package: {
-                      success: false, message: "not found", content: 'error',
-                      username: pg_u.username, display_name: pg_u.display_name ,
-                      payload: []
-                    }
-                  }
-              end
-    SknUtils::PageControls.new(results)
+    # Returns an empty Array on Error, or Array of Hashes on Success
+    [adapter_for_content_profile_entry(cpe).available_content_list(cpe), pg_u.display_name]
   end
 
-  # Returns an empty Array on Error, or Array of Hashes on Success
-  def user_accessible_content(profile)
-    result = adapter_for_content_profile_entry(profile).available_content_list(profile)
-    Rails.logger.debug "#{self.class}##{__method__} results => #{result}"
-    result
-  end
-
-  def handle_profiles_management(params)
+  def management_profiles(params)
     {
         success: false,
         message: 'Page Not Implemented!',
-        user_package: manageable_page_users,
+        user_package: management_page_users_package,
         page_actions: [{
            id: "test-action",
            path: :manage_content_profiles_profiles_path,
@@ -260,7 +230,7 @@ class ProfilesDomain < ::Factory::DomainsBase
     }
   end
 
-  def handle_content_profiles_api(params)
+  def api_profiles(params)
     {
         success: false,
         message: 'Api Not Implemented!',
@@ -275,19 +245,10 @@ class ProfilesDomain < ::Factory::DomainsBase
     }
   end
 
+  # private
 
   def get_page_user(uname, context=PROFILE_CONTEXT)
     page_user = Secure::UserProfile.page_user(uname, context)
-  end
-
-  def get_page_access_profile(user_profile)
-    result = profile_provider.access_profile(user_profile)
-    result
-  end
-
-  def get_page_content_profile(user_profile)
-    result = profile_provider.content_profile(user_profile)
-    result
   end
 
 

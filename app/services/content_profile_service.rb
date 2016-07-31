@@ -122,15 +122,24 @@ class ContentProfileService < ::ProfilesDomain
 
   # Controller Entry Point
   def api_accessible_content(params)
-    handle_accessible_content_api(params)
-
+    payload = handle_accessible_content_api(params)
+    SknUtils::PageControls.new({
+      package: {
+        success: true,
+        message: params[:content_type_description],
+        content: params[:id],
+        username: params[:username],
+        display_name: payload[1],
+        payload: payload[0]
+      }
+    })
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     SknUtils::PageControls.new({package: {
         success: false,
         message: e.message,
         username: "", display_name: "" ,
-        content: @accessible_type,
+        content: params[:id],
         payload: []
     }})
   end
@@ -140,7 +149,7 @@ class ContentProfileService < ::ProfilesDomain
     res = SknUtils::PageControls.new({
        success: true,
        message: "",
-       package: handle_profiles_management(params)
+       package: management_profiles(params)
     })
     res.success = res.package.success
     res.message = res.package.message
@@ -159,7 +168,7 @@ class ContentProfileService < ::ProfilesDomain
     res = SknUtils::PageControls.new({
        success: true,
        message: "",
-       package: handle_content_profiles_api(params)
+       package: api_profiles(params)
     })
     res.success = res.package.success
     res.message = res.package.message
