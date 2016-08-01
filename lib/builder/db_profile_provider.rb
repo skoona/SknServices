@@ -194,14 +194,14 @@ module Builder
     #      :opts=>[{"value"=>"9", "description"=>"Ohio", "type_name"=>"LicensedStates"},
     #              {"value"=>"21", "description"=>"Michigan", "type_name"=>"LicensedStates"}]
     #     }]
-    #
+    # topic_choice,content_choice expect one hash; apply first if needed
     def create_content_profile_entry_for(cpe_desc, topic_choice, content_choice)
       package = {
           description: cpe_desc,
-          content_value: content_choice[:opts].map(&:value),
+          content_value: content_choice[:opts].map {|v| v["value"] },
           content_type: content_choice[:type]["name"],
           content_type_description: content_choice[:type]["description"],
-          topic_value: topic_choice[:opts].map(&:value),
+          topic_value: topic_choice[:opts].map {|v| v["value"] },
           topic_type: topic_choice[:type]["name"],
           topic_type_description: topic_choice[:type]["description"]
       }
