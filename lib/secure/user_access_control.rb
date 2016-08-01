@@ -63,6 +63,7 @@ module Secure
         # puts e.backtrace
         nil
       end
+
       # Warden calls this
       def fetch_remembered_user (token=nil)
         raise ArgumentError, "Invalid Credentials!" unless token.present?
@@ -77,6 +78,7 @@ module Secure
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
         nil
       end
+
       # Warden calls this
       def fetch_cached_user(token)
         raise ArgumentError, "Invalid Credentials!" unless token.present?

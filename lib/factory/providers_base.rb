@@ -1,17 +1,17 @@
-# lib/factory/factories_base.rb
+# lib/factory/providers_base.rb
 #
 # Common Base for all Services oriented Classes, without Domains
 #
 
 module Factory
-  class FactoriesBase
+  class ProvidersBase
     include Factory::ObjectStorageService
 
     attr_accessor :user, :factory
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Factory::FactoriesBase inherited By #{klass.name}")
+      Rails.logger.debug("Factory::ProvidersBase inherited By #{klass.name}")
     end
 
     def initialize(params={})
@@ -19,16 +19,8 @@ module Factory
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
+      raise ArgumentError, "Providers: Missing required initialization param!" if @factory.nil?
       @user = @factory.current_user unless @user
-    end
-
-
-    ##
-    # The controller knows itself as 'self'
-    # so we bridge to it for our Services
-    def controller
-      @factory
     end
 
     ##
@@ -37,12 +29,13 @@ module Factory
       @user ||= @factory.current_user
     end
 
-    # User Session Handler
-    def get_session_param(key)
-      @factory.session[key]
-    end
-    def set_session_param(key, value)
-      @factory.session[key] = value
+    ##
+    # Retrieves Existing ContentProfile for ContentProviders
+    def get_prebuilt_profile(pak)
+      profile = nil
+      profile = get_storage_object(pak)
+      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{profile}")
+      profile
     end
 
     protected
@@ -57,6 +50,15 @@ module Factory
 
     private
 
+    # some_instance_var?
+    def attribute?(attr)
+      if attr.is_a? Symbol
+        send(attr).present?
+      else
+        send(attr.to_sym).present?
+      end
+    end
+
     # Easier to code than delegation, or forwarder; @factory assumed to equal @controller
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
@@ -67,6 +69,12 @@ module Factory
         elsif @factory.respond_to?(:factory) and @factory.factory.respond_to?(method)
           block_given? ? @factory.factory.send(method, *args, block) :
               (args.size == 0 ?  @factory.factory.send(method) : @factory.factory.send(method, *args))
+        elsif method.to_s.end_with?('?')
+          if instance_variable_defined?("@#{method.to_s[0..-2]}")
+            attribute?(method.to_s[0..-2].to_sym)
+          else
+            false
+          end
         else
           super(method, *args, &block)
         end

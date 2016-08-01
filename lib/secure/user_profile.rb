@@ -58,8 +58,8 @@ module Secure
     # Authenticate returns self, we need to override that return value to return us instead
     #   user.authenticate('notright')      # => false
     #   user.authenticate('mUc3m00RsqyRe') # => user
-    def authenticate(unencrypted_password)
-        proxy_u.authenticate(unencrypted_password) && self
+    def authenticate(encrypted_password)
+        proxy_u.authenticate(encrypted_password) && self
     end
 
     # Warden will call this methods

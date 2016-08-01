@@ -36,7 +36,7 @@ class ContentProfileEntry < ActiveRecord::Base
   def self.option_selects
     options = []
     self.find_each do |cpes|
-      options << [cpes.description, cpes.id, {'data-description': "#{content_type}:#{topic_type}"}]
+      options << [cpes.description, cpes.id, {'data-description': "#{cpes.content_type_description} / #{cpes.topic_type_description}"}]
     end
     options
   end

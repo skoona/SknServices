@@ -356,6 +356,56 @@ module Utility
     end
 
 
+    # Create ContentType, TopicType, and ContentProfileEntries
+    # Wire up ContentProfileEntries and create ContentProfile
+    def rework_thingies
+      cpep = [
+          {topic_value: [],  content_value: [], content_type: "Commission",     topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which branch documents can be seen'},
+          {topic_value: [],  content_value: [], content_type: "Notification",   topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which branch accounts will have notification sent'},
+          {topic_value: [],  content_value: [], content_type: "LicensedStates", topic_type: "Branch", topic_type_description: "", content_type_description: "", description: 'Determine which States branches are authorized to operate in.'},
+          {topic_value: [],  content_value: [], content_type: "Activity",       topic_type: "Partner",topic_type_description: "", content_type_description: "", description: 'Relationship Activity Reports'}
+      ]
+
+      primary_contents = [
+          {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "Integer",
+           content_type_opts_attributes: {
+               "0" => {value: "*.pdf", type_name: "Commission", description: "Document store Commision Document Type ID" },
+               "1" => {value: "*.csv", type_name: "Commission", description: "Document store Commision CSV Document Type ID" },
+               "2" => {value: "*.log", type_name: "Commission", description: "Document store Branch Experience Document Type ID"} }
+          },
+          {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
+           content_type_opts_attributes: {
+               "0" => {value: "AdvCancel", type_name: "Notification", description: "Advance Cancel" },
+               "1" => {value: "FutCancel", type_name: "Notification", description: "Future Cancel" },
+               "2" => {value: "Cancel",    type_name: "Notification", description: "Cancel" } }
+          },
+          {name: "LicensedStates",   description: "Business Operational Metric", value_data_type: "Integer",
+           content_type_opts_attributes: {
+               "0" => {value: "21", type_name: "LicensedStates", description: "Michigan"},
+               "1" => {value: "9",  type_name: "LicensedStates",  description: "Ohio"},
+               "2" => {value: "23", type_name: "LicensedStates", description: "Illinois"} }
+          },
+          {name: "Activity",   description: "Project Status Reports", value_data_type: "Integer",
+           content_type_opts_attributes: {
+               "0" => {value: "*.pdf", type_name: "Activity", description: "Document store Project Status Report Document Type ID"}
+           }
+          }
+      ]
+
+      primary_topics = [
+          {name: "Branch",  description: "Branch Actions for a specific branch",  value_based_y_n: "N",
+           topic_type_opts_attributes: {
+               "0" => {value: "0034", type_name: "Branch", description: "South Branch Number"},
+               "1" => {value: "0037", type_name: "Branch", description: "North Branch Number"},
+               "2" => {value: "0040", type_name: "Branch", description: "West Branch Number"} }
+          },
+          {name: "Partner", description: "This Corporate Account",  value_based_y_n: "N",
+           topic_type_opts_attributes: {
+               "0" => {value: "0099", type_name: "Partner", description: "Skoona Development Account"}}
+          }
+      ]
+
+    end
 
   end # ContentDataLoader
 end # Utility

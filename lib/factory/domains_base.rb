@@ -71,16 +71,6 @@ module Factory
 
     protected
 
-    ##
-    # Retrieves Existing ContentProfile for ContentProviders
-    def get_prebuilt_profile(pak, context)
-      key = context + pak
-      profile = nil
-      profile = factory.get_storage_object(key)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{profile}")
-      profile
-    end
-
     # Support the regular respond_to? method by
     # answering for any attr that user_object actually handles
     #:nodoc:

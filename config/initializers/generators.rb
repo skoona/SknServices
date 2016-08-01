@@ -11,8 +11,8 @@ Rails.application.config.generators do |g|
   g.test_framework :rspec,
                    :fixtures => true,
                    :model_specs => false,
-                   :view_specs => false,
-                   :helper_specs => false,
+                   :view_specs => true,
+                   :helper_specs => true,
                    :routing_specs => false,
                    :controller_specs => false,
                    :request_specs => true

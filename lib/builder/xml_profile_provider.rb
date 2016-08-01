@@ -6,12 +6,16 @@
 # Storage thru Factory
 
 module Builder
-  class XMLProfileProvider < ::Factory::DomainsBase
+  class XMLProfileProvider < ::Factory::ProvidersBase
 
     PROVIDER_PREFIX = self.name
 
     def initialize(params={})
       super(params)
+    end
+
+    def self.provider_type
+      PROVIDER_PREFIX
     end
 
     def provider_type
@@ -29,7 +33,7 @@ module Builder
     # Not ment to be public, it is for testing reason
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
-      get_prebuilt_profile(usr_prf.person_authenticated_key, PROVIDER_PREFIX)
+      get_prebuilt_profile(usr_prf.person_authenticated_key)
     end
 
     protected
@@ -65,14 +69,14 @@ module Builder
       unless results[:entries].empty?
         results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      update_storage_object(PROVIDER_PREFIX + user_profile.person_authenticated_key, results)
+      update_storage_object(user_profile.person_authenticated_key, results)
       
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results
       
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      delete_storage_object(PROVIDER_PREFIX + user_profile.person_authenticated_key) unless user_profile.nil?
+      delete_storage_object(user_profile.person_authenticated_key) unless user_profile.nil?
       results = {
           success: false,
           message: e.message,
