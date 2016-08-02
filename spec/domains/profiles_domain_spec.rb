@@ -56,8 +56,8 @@ RSpec.describe ProfilesDomain, "Service routines of ProfilesDomain." do
       expect(result).to be_a(Hash)
       expect(result[:success]).to be false
     end
-    scenario "#api_profiles" do
-      result = @service.api_profiles({})
+    scenario "#get_content_object_api" do
+      result = @service.get_content_object_api({})
       expect(result).to be_a(Hash)
       expect(result[:success]).to be false
     end

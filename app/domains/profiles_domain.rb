@@ -19,6 +19,7 @@ class ProfilesDomain < ::Factory::DomainsBase
       usrs << {username: u.username,
                display_name: u.display_name,
                user_options: u.user_options || [],
+               get_content_object_url: factory.page_action_paths([:api_get_content_object_profiles_path]),
                package: [ access_profile_package(u), content_profile_package(u) ]
       }
     end
@@ -348,19 +349,11 @@ class ProfilesDomain < ::Factory::DomainsBase
     [adapter_for_content_profile_entry(cpe).available_content_list(cpe), pg_u.display_name]
   end
 
-  def api_profiles(params)
-    {
-        success: false,
-        message: 'Api Not Implemented!',
-        package: []
-    }
+  def get_content_object_api(params)
+     adapter_for_content_profile_entry(params).retrieve_content_object(params)
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    {
-       success: false,
-       message: e.message,
-       package: []
-    }
+    {}
   end
 
 end

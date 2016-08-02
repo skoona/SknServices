@@ -80,7 +80,7 @@ RSpec.describe ContentProfileService, "Service routines of ContentProfileService
       expect(result.success).to be false
       expect(result.message).to include('Page Not Implemented!')
     end
-    scenario "#api_content_profiles" do
+    scenario "#api_get_content_object" do
     end
   end
 

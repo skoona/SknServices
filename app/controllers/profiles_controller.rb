@@ -3,6 +3,7 @@
 
 class ProfilesController < ApplicationController
 
+  before_action :login_required, except: :api_get_content_object
 
   def content_profile_demo
     @page_controls = content_profile_service.handle_demo_page(params)
@@ -28,9 +29,13 @@ class ProfilesController < ApplicationController
   end
 
   # POST
-  def api_content_profiles
-    @page_controls = content_profile_service.api_content_profiles(params)
-    render(json: @page_controls.to_hash, status: (@page_controls.success ? :accepted : :not_found), layout: false, content_type: :json) and return
+  def api_get_content_object
+    @page_controls = content_profile_service.api_get_content_object(params)
+    send_file(@page_controls.package.package.source,
+                filename: @page_controls.package.package.filename,
+                type: @page_controls.package.package.mime,
+                disposition: :inline
+    ) and return
   end
 
 end

@@ -74,6 +74,31 @@ function handleRailsInfo(ev) {
  * ********************************************************
  */
 
+/**
+ * AccessableTable GetObject from Selection
+ * - Build URL
+ * - Open alternate Window
+ */
+function profileTablesGetObject(ev) {
+  var dataPackage = $(ev.currentTarget).data().package,
+      dataResponse,
+      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "/?id=" + dataPackage.id + ";username=" + dataPackage.username;
+
+  /*
+   * flag selected in related table */
+  $("table.profile tbody tr").removeClass('success');
+  $(ev.currentTarget).addClass('success');
+
+  if (objectUrl){
+    window.open(objectUrl);
+  }
+
+//    headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+     consoleLog( "profileTablesGetObject("+ dataPackage.id + ")" );
+
+  return false;
+}
+
 
 /**
  * Content/Access Profile Table Selection
@@ -235,7 +260,7 @@ function replaceAccessibleTableRows(dataPackage) {
             trRow = $('<tr>').append(newRow.join());
 
             trNode = accessibleTable.row.add(trRow).draw().node();
-            $(trNode).data('package', row); // .on( "click", profileTablesRequester);
+            $(trNode).data('package', row).on( "click", profileTablesGetObject);
             counter = index + 1;
         });
     } else {

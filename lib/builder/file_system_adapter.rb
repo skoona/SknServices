@@ -74,6 +74,7 @@ module Builder
       result = []
       paths = []
       catalog = {}
+
       base_path = cpe[:base_path] || @file_system.to_path
       topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
       content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
@@ -101,6 +102,7 @@ module Builder
                           created: pn.ctime.strftime("%Y/%m/%d"),
                           size: human_filesize(pn.size),
                           mime: content_mime_type(pn.extname),
+                          username: cpe["username"] || cpe[:username],
                           id: "#{pidx}:#{cidx}:#{idx}"
                         }
               catalog.store("#{pidx}:#{cidx}:#{idx}", { source: pn, filename: pn.basename.to_s, mime: content_mime_type(pn.extname)} )
@@ -128,17 +130,24 @@ module Builder
       []
     end
 
-    def retrieve_content_object(params={}) # Hash entry result from available_content_list method
-      page_user = get_page_user(params["username"] || params[:username])
+    # {"id"=>"0:0:1", "username"=>"developer", "controller"=>"profiles", "action"=>"api_get_content_object"}
+    def retrieve_content_object(params, user_p=nil) # Hash entry result from available_content_list method
+      page_user = user_p || (get_page_user(params["username"] || params[:username]))
+
       catalog = factory.get_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}")
-      {
-          success: catalog.try(:key?, params[:id]),
-          entry: catalog.try(:id) || {}              # { source:, filename: , mime: }
+      result = {
+          success: true,
+          package: catalog.try(:[], params[:id]) || {}              # { source:, filename: , mime: }  key should be :id but prior method flipped value to :profile
       }
-    rescue
+      Rails.logger.debug "#{self.class}##{__method__}() Catalog: #{catalog}, Result: #{result}"
+
+      result
+
+    rescue Exception => e
+      Rails.logger.warn "#{self.class.name}.#{__method__}(catalog: #{catalog}) Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       {
           success: false,
-          entry: {}
+          package: {}
       }
     end
 

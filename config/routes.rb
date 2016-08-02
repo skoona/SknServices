@@ -29,7 +29,7 @@ Rails.application.routes.draw do
       get :content_profile_demo
       get :api_accessible_content
       get :manage_content_profiles
-      get :api_content_profiles
+      get :api_get_content_object
     end
   end
 
