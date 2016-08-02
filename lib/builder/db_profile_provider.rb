@@ -196,28 +196,28 @@ module Builder
     #     }]
     # topic_choice,content_choice expect one hash; apply first if needed
     def create_content_profile_entry_for(cpe_desc, topic_choice, content_choice)
-      package = {
+      cvs = content_choice.is_a?(Hash) ? content_choice : content_choice.first
+      tvs = topic_choice.is_a?(Hash) ? topic_choice : topic_choice.first
+      ContentProfileEntry.create!({
           description: cpe_desc,
-          content_value: content_choice[:opts].map {|v| v["value"] },
-          content_type: content_choice[:type]["name"],
-          content_type_description: content_choice[:type]["description"],
-          topic_value: topic_choice[:opts].map {|v| v["value"] },
-          topic_type: topic_choice[:type]["name"],
-          topic_type_description: topic_choice[:type]["description"]
-      }
-      ContentProfileEntry.create!(package)
+          content_value: cvs[:opts].map {|v| v["value"] }.flatten,
+          content_type: cvs[:type]["name"],
+          content_type_description: cvs[:type]["description"],
+          topic_value: tvs[:opts].map {|v| v["value"] }.flatten,
+          topic_type: tvs[:type]["name"],
+          topic_type_description: tvs[:type]["description"]
+      })
     end
 
     def create_content_profile_for(user_p, profile_type_name )
-      package = {
-       person_authentication_key: user_p.id,
-       profile_type_id: ProfileType.find_by(name: profile_type_name).try(:id),
-       authentication_provider: "SknService::Bcrypt",
-       username: user_p.username,
-       display_name: user_p.display_name,
-       email: user_p.email
-       }
-      ContentProfile.create!(packge)
+      ContentProfile.create!({
+         person_authentication_key: user_p.id,
+         profile_type_id: ProfileType.find_by(name: profile_type_name).try(:id),
+         authentication_provider: "SknService::Bcrypt",
+         username: user_p.username,
+         display_name: user_p.display_name,
+         email: user_p.email
+      })
     end
 
     def assign_content_profile_entry_to(profile_obj, profile_entry_obj)
@@ -256,12 +256,11 @@ module Builder
 
     # Retrieves users content profile in ResultBean
     def collect_content_profile_bean(user_profile)
-      raise Utility::Errors::NotFound, "Invalid User Object!" unless user_profile.present?
       cpobj = get_existing_profile(user_profile)
       return  cpobj if cpobj
 
       results = {}
-      ctxp = ContentProfile.find_by( person_authentication_key: user_profile.person_authenticated_key)
+      ctxp = ContentProfile.includes(:content_profile_entries).find_by( person_authentication_key: user_profile.person_authenticated_key)
 
       unless ctxp.nil?
         results =  ctxp.entry_info_with_selects(user_profile).merge({ success: true })
@@ -273,7 +272,7 @@ module Builder
             entries:[]
         }
       end
-      update_storage_object(user_profile.person_authenticated_key, results)
+      update_storage_object(user_profile.person_authenticated_key, results) unless ctxp.nil?
 
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results

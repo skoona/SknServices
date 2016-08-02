@@ -52,7 +52,7 @@ RSpec.describe ProfilesDomain, "Service routines of ProfilesDomain." do
       expect(result).to be_a(Secure::UserProfile)
     end
     scenario "#management_profiles" do
-      result = @service.management_profiles({})
+      result = @service.management_page_users_package('content')
       expect(result).to be_a(Hash)
       expect(result[:success]).to be false
     end

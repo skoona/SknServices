@@ -56,7 +56,7 @@ module Builder
       content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
       topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
       content_value = cpe[:content_value] || cpe["content_value"]  # should always be an array
-      user_options = cpe["user_options"] || [] # many times this value is nil
+      user_options = cpe[:user_options] || cpe["user_options"] || [] # many times this value is nil
 
       ##
       # This is another security check to see if user options include these topic ids

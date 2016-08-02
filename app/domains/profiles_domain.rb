@@ -25,60 +25,70 @@ class ProfilesDomain < ::Factory::DomainsBase
     usrs
   end
 
+  def get_page_user(uname, context=PROFILE_CONTEXT)
+    page_user = Secure::UserProfile.page_user(uname, context)
+  end
+
+
   # Returns:
   # [
-  #  {:pak=>"6df717145082c39fc52027947411b66d",
-  #   :profile_type=>"Developer",
-  #   :profile_type_description=>"Open Source Independent Consultancy",
-  #   :provider=>"SknService::Bcrypt",
-  #   :username=>"developer",
-  #   :display_name=>"Skoona Developer",
-  #   :email=>"skoona@gmail.com",
-  #   :assigned_group=>["Developer", "EmployeePrimary"],
-  #   :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"],
-  #   :entries=>[
-  #       { :content_value=>["*.log", "*.csv", "*.pdf"],
-  #         :content_type=>"Commission",
-  #         :content_type_description=>"Branch Actions for a specific branch",
-  #         :topic_value=>["0040", "0037", "0034"],
-  #         :topic_type=>"Branch",
-  #         :topic_type_description=>"Branch Actions for a specific branch",
-  #         :description=>"Determine which branch documents can be seen",
-  #         :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}],
-  #                            ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]
-  #                           ],
-  #         :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}],
-  #                          ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}],
-  #                          ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}],
-  #                          ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}],
-  #                          ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]
-  #                         ]
-  #       },
-  #       {:content_value=>["Cancel", "FutCancel", "AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602", "1601"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]},
-  #       {:content_value=>["23", "9", "21"], :content_type=>"LicensedStates", :content_type_description=>"Branch Operations for a specific branch", :topic_value=>["0040", "0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Operations for a specific branch", :description=>"Determine which States branches are authorized to operate in.", :content_selects=>[["LicensedStates", 3, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}
-  #   ],
-  #   :profile_exist=>true
-  #  },
-  #  {:pak=>"fd53d41a6985eaac881b0f6ad4fbdc2f", :profile_type=>nil, :profile_type_description=>nil, :provider=>"SknService::Bcrypt", :username=>"eptester", :display_name=>"Employee Primary User", :email=>"appdev@localhost.com", :assigned_group=>["Manager", "EmployeePrimary"], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :entries=>[{:content_value=>["*.log", "*.csv", "*.pdf"], :content_type=>"Commission", :content_type_description=>"Branch Actions for a specific branch", :topic_value=>["0040", "0037", "0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Determine which branch documents can be seen", :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}], ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["Cancel", "FutCancel", "AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602", "1601"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["23", "9", "21"], :content_type=>"LicensedStates", :content_type_description=>"Branch Operations for a specific branch", :topic_value=>["0040", "0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Operations for a specific branch", :description=>"Determine which States branches are authorized to operate in.", :content_selects=>[["LicensedStates", 3, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}], :profile_exist=>true},
-  #  {:pak=>"0a83f6375675cb436beaec50387826d2", :profile_type=>"EmployeeSecondary", :profile_type_description=>"Corporate Staff", :provider=>"SknService::Bcrypt", :username=>"estester", :display_name=>"Employee Secondary User", :email=>"appdev1@localhost.com", :assigned_group=>["EmployeeSecondary"], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Commission", :content_type_description=>"Branch Actions for a specific branch", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Determine which branch documents can be seen", :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}], ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}], :profile_exist=>true},
-  #  {:pak=>"57c730e983e8ba70c79b88c153f3db87", :profile_type=>"BranchPrimary", :profile_type_description=>"Branch Manager", :provider=>"SknService::Bcrypt", :username=>"bptester", :display_name=>"Branch Primary User", :email=>"appdev2@localhost.com", :assigned_group=>["BranchPrimary"], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Commission", :content_type_description=>"Branch Actions for a specific branch", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Determine which branch documents can be seen", :content_selects=>[["Commission", 1, {:"data-description"=>"Monthly Commission Reports and Files"}], ["Commission", 4, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}, {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Account Actions for a specific branch", :topic_value=>["1602"], :topic_type=>"Branch", :topic_type_description=>"Account Actions for a specific branch", :description=>"Determine which branch accounts will have notification sent", :content_selects=>[["Notification", 2, {:"data-description"=>"Email Notification of Related Events"}], ["Notification", 5, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["Branch", 1, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 2, {:"data-description"=>"Account Actions for a specific branch"}], ["Branch", 3, {:"data-description"=>"Branch Operations for a specific branch"}], ["Branch", 4, {:"data-description"=>"Branch Actions for a specific branch"}], ["Branch", 5, {:"data-description"=>"Account Actions for a specific branch"}]]}], :profile_exist=>true},
-  #  {:pak=>"e3e2d2825c89586a62092473cbd7e4bb", :profile_type=>"BranchSecondary", :profile_type_description=>"Branch Staff", :provider=>"SknService::Bcrypt", :username=>"bstester", :display_name=>"Branch Secondary User", :email=>"appdev3@localhost.com", :assigned_group=>["BranchSecondary"], :user_options=>["BranchSecondary", "0037", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"This Corporate Account", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Relationship Activity Reports", :content_selects=>[["Activity", 6, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["Partner", 6, {:"data-description"=>"This Corporate Account"}]]}], :profile_exist=>true}, {:profile_exist=>false},
-  #  {:pak=>"54239b66782502bab08259e8dadb0b8c", :profile_type=>"VendorPrimary", :profile_type_description=>"Partner Manager", :provider=>"SknService::Bcrypt", :username=>"vptester", :display_name=>"Vendor Primary User", :email=>"appdev4@localhost.com", :assigned_group=>["VendorPrimary"], :user_options=>["VendorPrimary", "0099"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"This Corporate Account", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Relationship Activity Reports", :content_selects=>[["Activity", 6, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["Partner", 6, {:"data-description"=>"This Corporate Account"}]]}], :profile_exist=>true}, {:profile_exist=>false}
+  #   {:pak=>"5f7d8a3fdfff5961deefac65851b77c6",
+  #    :profile_type=>"Developer",
+  #    :profile_type_description=>"Open Source Independent Consultancy",
+  #    :provider=>"SknService::Bcrypt",
+  #    :username=>"developer",
+  #    :display_name=>"Skoona Developer",
+  #    :email=>"skoona@gmail.com",
+  #    :assigned_group=>["Developer", "EmployeePrimary"],
+  #    :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"],
+  #    :entries=>[
+  #      {:content_value=>["*.pdf"],
+  #       :content_type=>"Commission",
+  #       :content_type_description=>"Monthly Commission Reports and Files",
+  #       :topic_value=>["0034"],
+  #       :topic_type=>"Branch",
+  #       :topic_type_description=>"Branch Actions for a specific branch",
+  #       :description=>"Access Branch Commission PDF Files",
+  #       :content_selects=>[["*.pdf", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]],
+  #       :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]],
+  #       :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"],
+  #       :username=>"developer"
+  #      },
+  #      {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["AdvCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["21"], :content_type=>"LicensedStates", :content_type_description=>"Business Operational Metric", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Licensed to operate in state", :content_selects=>[["21", 0, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"Project Status Reports", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Access Relationship Documents", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["0099", 0, {:"data-description"=>"This Corporate Account"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["*.csv"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission CSV Files", :content_selects=>[["*.csv", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0037", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["Cancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["Cancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0037", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["23"], :content_type=>"LicensedStates", :content_type_description=>"Business Operational Metric", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Licensed to operate in state", :content_selects=>[["23", 0, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["0037", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["*.log"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission LOG Files", :content_selects=>[["*.log", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["FutCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["FutCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"},
+  #      {:content_value=>["*.pdf", "*.jpg", "*.png"], :content_type=>"FileDownload", :content_type_description=>"Project Related Images", :topic_value=>["Developer", "EmployeePrimary", "Manager"], :topic_type=>"UserGroups", :topic_type_description=>"Shared access to project working files", :description=>"Shared access to project working files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Related Images"}], ["*.jpg", 0, {:"data-description"=>"Project Related Images"}], ["*.png", 0, {:"data-description"=>"Project Related Images"}]], :topic_selects=>[["Developer", 0, {:"data-description"=>"Shared access to project working files"}], ["EmployeePrimary", 0, {:"data-description"=>"Shared access to project working files"}], ["Manager", 0, {:"data-description"=>"Shared access to project working files"}]], :user_options=>["Developer", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "USA"], :username=>"developer"}
+  #    ],
+  #    :success=>true,
+  #    :profile_exist=>true
+  #   },
+  #
+  #   {:pak=>"872ec0538fa33a8f31995bf813864334", :profile_type=>"Manager", :profile_type_description=>"Corporate Managers", :provider=>"SknService::Bcrypt", :username=>"eptester", :display_name=>"Employee Primary User", :email=>"appdev@localhost.com", :assigned_group=>["Manager", "EmployeePrimary"], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission PDF Files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["AdvCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["21"], :content_type=>"LicensedStates", :content_type_description=>"Business Operational Metric", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Licensed to operate in state", :content_selects=>[["21", 0, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"Project Status Reports", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Access Relationship Documents", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["0099", 0, {:"data-description"=>"This Corporate Account"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["*.csv"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission CSV Files", :content_selects=>[["*.csv", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0037", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["Cancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["Cancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0037", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["23"], :content_type=>"LicensedStates", :content_type_description=>"Business Operational Metric", :topic_value=>["0037"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Licensed to operate in state", :content_selects=>[["23", 0, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["0037", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["*.log"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission LOG Files", :content_selects=>[["*.log", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["FutCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["FutCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}, {:content_value=>["*.pdf", "*.jpg", "*.png"], :content_type=>"FileDownload", :content_type_description=>"Project Related Images", :topic_value=>["Developer", "EmployeePrimary", "Manager"], :topic_type=>"UserGroups", :topic_type_description=>"Shared access to project working files", :description=>"Shared access to project working files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Related Images"}], ["*.jpg", 0, {:"data-description"=>"Project Related Images"}], ["*.png", 0, {:"data-description"=>"Project Related Images"}]], :topic_selects=>[["Developer", 0, {:"data-description"=>"Shared access to project working files"}], ["EmployeePrimary", 0, {:"data-description"=>"Shared access to project working files"}], ["Manager", 0, {:"data-description"=>"Shared access to project working files"}]], :user_options=>["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"], :username=>"eptester"}], :success=>true, :profile_exist=>true},
+  #   {:pak=>"6d882142dd0011f6058facdbaa6e5624", :profile_type=>"EmployeeSecondary", :profile_type_description=>"Corporate Staff", :provider=>"SknService::Bcrypt", :username=>"estester", :display_name=>"Employee Secondary User", :email=>"appdev1@localhost.com", :assigned_group=>["EmployeeSecondary"], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission PDF Files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :username=>"estester"}, {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["AdvCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :username=>"estester"}, {:content_value=>["21"], :content_type=>"LicensedStates", :content_type_description=>"Business Operational Metric", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Licensed to operate in state", :content_selects=>[["21", 0, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :username=>"estester"}, {:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"Project Status Reports", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Access Relationship Documents", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["0099", 0, {:"data-description"=>"This Corporate Account"}]], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :username=>"estester"}, {:content_value=>["*.log"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission LOG Files", :content_selects=>[["*.log", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :username=>"estester"}, {:content_value=>["FutCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["FutCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["EmployeeSecondary", "0037", "0099", "1602", "USA"], :username=>"estester"}], :success=>true, :profile_exist=>true},
+  #   {:pak=>"7c29758d7134bad832c5c0277bb61263", :profile_type=>"BranchPrimary", :profile_type_description=>"Branch Manager", :provider=>"SknService::Bcrypt", :username=>"bptester", :display_name=>"Branch Primary User", :email=>"appdev2@localhost.com", :assigned_group=>["BranchPrimary"], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission PDF Files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :username=>"bptester"}, {:content_value=>["AdvCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["AdvCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :username=>"bptester"}, {:content_value=>["21"], :content_type=>"LicensedStates", :content_type_description=>"Business Operational Metric", :topic_value=>["0034"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Licensed to operate in state", :content_selects=>[["21", 0, {:"data-description"=>"Business Operational Metric"}]], :topic_selects=>[["0034", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :username=>"bptester"}, {:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"Project Status Reports", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Access Relationship Documents", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["0099", 0, {:"data-description"=>"This Corporate Account"}]], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :username=>"bptester"}, {:content_value=>["*.log"], :content_type=>"Commission", :content_type_description=>"Monthly Commission Reports and Files", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Access Branch Commission LOG Files", :content_selects=>[["*.log", 0, {:"data-description"=>"Monthly Commission Reports and Files"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :username=>"bptester"}, {:content_value=>["FutCancel"], :content_type=>"Notification", :content_type_description=>"Email Notification of Related Events", :topic_value=>["0040"], :topic_type=>"Branch", :topic_type_description=>"Branch Actions for a specific branch", :description=>"Notify Branch of Policy Events", :content_selects=>[["FutCancel", 0, {:"data-description"=>"Email Notification of Related Events"}]], :topic_selects=>[["0040", 0, {:"data-description"=>"Branch Actions for a specific branch"}]], :user_options=>["BranchPrimary", "0034", "0037", "0040", "USA"], :username=>"bptester"}], :success=>true, :profile_exist=>true},
+  #   {:pak=>"4d353db63899aee32988677c89602d98", :profile_type=>"BranchSecondary", :profile_type_description=>"Branch Staff", :provider=>"SknService::Bcrypt", :username=>"bstester", :display_name=>"Branch Secondary User", :email=>"appdev3@localhost.com", :assigned_group=>["BranchSecondary"], :user_options=>["BranchSecondary", "0037", "USA"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"Project Status Reports", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Access Relationship Documents", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["0099", 0, {:"data-description"=>"This Corporate Account"}]], :user_options=>["BranchSecondary", "0037", "USA"], :username=>"bstester"}, {:content_value=>["*.pdf"], :content_type=>"FileDownload", :content_type_description=>"Project Related Images", :topic_value=>["VendorPrimary"], :topic_type=>"UserGroups", :topic_type_description=>"Shared access to project working files", :description=>"Shared access to project working files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Related Images"}]], :topic_selects=>[["VendorPrimary", 0, {:"data-description"=>"Shared access to project working files"}]], :user_options=>["BranchSecondary", "0037", "USA"], :username=>"bstester"}], :success=>true, :profile_exist=>true},
+  #   {:success=>false, :username=>"bnptester", :display_name=>"Branch No Privileges User", :email=>"appdev6@localhost.com", :pak=>"6bb71298617a319a03ba85553fa461d6", :authentication_provider=>"SknService::Bcrypt", :assigned_group=>["BranchSecondary"], :user_options=>[], :profile_type_description=>"", :entries=>[], :profile_exist=>false},
+  #   {:pak=>"0c3d2ff173f9600f2b7efb07bfada939", :profile_type=>"VendorPrimary", :profile_type_description=>"Partner Manager", :provider=>"SknService::Bcrypt", :username=>"vptester", :display_name=>"Vendor Primary User", :email=>"appdev4@localhost.com", :assigned_group=>["VendorPrimary"], :user_options=>["VendorPrimary", "0099"], :entries=>[{:content_value=>["*.pdf"], :content_type=>"Activity", :content_type_description=>"Project Status Reports", :topic_value=>["0099"], :topic_type=>"Partner", :topic_type_description=>"This Corporate Account", :description=>"Access Relationship Documents", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Status Reports"}]], :topic_selects=>[["0099", 0, {:"data-description"=>"This Corporate Account"}]], :user_options=>["VendorPrimary", "0099"], :username=>"vptester"}, {:content_value=>["*.pdf"], :content_type=>"FileDownload", :content_type_description=>"Project Related Images", :topic_value=>["VendorPrimary"], :topic_type=>"UserGroups", :topic_type_description=>"Shared access to project working files", :description=>"Shared access to project working files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Related Images"}]], :topic_selects=>[["VendorPrimary", 0, {:"data-description"=>"Shared access to project working files"}]], :user_options=>["VendorPrimary", "0099"], :username=>"vptester"}], :success=>true, :profile_exist=>true},
+  #   {:success=>false, :username=>"vstester", :display_name=>"Vendor Secondary User", :email=>"appdev5@localhost.com", :pak=>"2061b7eba6e6b3419e89c6b9b293ff9a", :authentication_provider=>"SknService::Bcrypt", :assigned_group=>["VendorSecondary"], :user_options=>["VendorSecondary", "0099"], :profile_type_description=>"", :entries=>[], :profile_exist=>false}
   # ]
 
   def management_page_users_package(context=PROFILE_CONTEXT)
     usrs = []
 
     Secure::UserProfile.page_users(context).each do |u|
-      entries = {none: true}
-      profile = {}
 
-      content_profile = ContentProfile.find_by_person_authentication_key( u.person_authenticated_key)
+      content_profile = nil
 
-      unless content_profile.nil?
-        profile = content_profile.entry_info_with_selects(u)
-      else
-        profile = {
+      content_profile = factory.db_profile_provider.content_profile_for_user(u)
+
+      unless content_profile and content_profile[:success]
+        content_profile = {
+            success: false,
             username: u.username,
             display_name: u.display_name,
             email: u.email,
@@ -90,15 +100,92 @@ class ProfilesDomain < ::Factory::DomainsBase
             entries: []
         }
       end
-      usrs <<  profile.merge(profile_exist: !content_profile.nil?)
-    end
-    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{usrs}"
 
-    usrs
+      usrs <<  content_profile.merge(profile_exist: content_profile[:success])
+    end
+
+    results = {
+        success: false,
+        message: 'Page Not Implemented!',
+        user_package: usrs,
+        page_actions: [{
+                           id: "test-action",
+                           path: :manage_content_profiles_profiles_path,
+                           text: "Refresh",
+                           icon: 'glyphicon-refresh',
+                       }],
+        package: []
+    }
+    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{results}"
+
+    results
+  rescue Exception => e
+    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    {
+        success: false,
+        message: e.message,
+        package: []
+    }
   end
+
 
   ##
   # Builds display package for a single username
+  # Returns:
+  # {
+  #   :success=>false,
+  #   :message=>"No access profile data available for Branch No Privileges User",
+  #   :user_options=>[],
+  #   :accessible_content_url=>"/profiles/api_accessible_content.json?id=access",
+  #   :page_user=>"bnptester",
+  #   :access_profile=>{
+  #     :success=>false,
+  #     :message=>"No access profile data available for Branch No Privileges User",
+  #     :username=>"bnptester",
+  #     :entries=>[]
+  #   }
+  # }
+  #
+  # -- OR --
+  #
+  # {
+  #   :success=>true,
+  #   :message=>"AccessProfile Entries for vptester:Vendor Primary User Options=VendorPrimary,0099",
+  #   :user_options=>["VendorPrimary", "0099"],
+  #   :accessible_content_url=>"/profiles/api_accessible_content.json?id=access",
+  #   :page_user=>"vptester",
+  #   :access_profile=>{:
+  #     :success=>true,
+  #     :pak=>"0c3d2ff173f9600f2b7efb07bfada939",
+  #     :profile_type=>"VendorPrimary",
+  #     :profile_type_description=>"VendorPrimary",
+  #     :provider=>"AccessRegistry",
+  #     :username=>"vptester",
+  #     :assigned_group=>["VendorPrimary"],
+  #     :user_options=>["VendorPrimary", "0099"],
+  #     :display_name=>"Vendor Primary User",
+  #     :email=>"appdev4@localhost.com",
+  #     :entries=>[
+  #       { :uri=>"Activity/Partner/0099",
+  #         :resource_options=>{
+  #           :uri=>"Activity/Partner/0099",
+  #           :role=>"Services.Action.Use.FileDownload.Pdf",
+  #           :role_opts=>["0099"]
+  #         },
+  #         :content_type=>"Activity",
+  #         :content_value=>["*.pdf"],
+  #         :topic_type=>"Partner",
+  #         :topic_value=>["0099"],
+  #         :description=>"Partner Relationship Reports",
+  #         :topic_type_description=>"Partner Relationship Reports",
+  #         :content_type_description=>"Partner Relationship Reports",
+  #         :username=>"vptester",
+  #         :user_options=>["VendorPrimary", "0099"]
+  #       }
+  #     ]
+  #   }
+  # }
+  #
   def access_profile_package(user_profile=nil)
     @accessible_type = "access" # [:access, :content]
       raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
@@ -117,6 +204,8 @@ class ProfilesDomain < ::Factory::DomainsBase
     else
       res[:message] = "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}"
     end
+    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
+
     res
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
@@ -132,6 +221,55 @@ class ProfilesDomain < ::Factory::DomainsBase
 
   ##
   # Builds display package for a single username
+  # returns:
+  # {:success=>false,
+  #  :message=>"No content profile data available for Vendor Secondary User",
+  #  :user_options=>["VendorSecondary", "0099"],
+  #  :accessible_content_url=>"/profiles/api_accessible_content.json?id=content",
+  #  :page_user=>"vstester",
+  #  :content_profile=>{
+  #     :success=>false,
+  #     :message=>"No content profile data available for Vendor Secondary User",
+  #     :username=>"vstester", :entries=>[]
+  #     }
+  # }
+  #
+  # -- OR --
+  #
+  # {:success=>true,
+  #  :message=>"ContentProfile Entry for vptester, VendorPrimary:Partner Manager, Options=VendorPrimary,0099",
+  #  :user_options=>["VendorPrimary", "0099"],
+  #  :accessible_content_url=>"/profiles/api_accessible_content.json?id=content",
+  #  :page_user=>"vptester",
+  #  :content_profile=>{
+  #    :pak=>"0c3d2ff173f9600f2b7efb07bfada939",
+  #    :profile_type=>"VendorPrimary",
+  #    :profile_type_description=>"Partner Manager",
+  #    :provider=>"SknService::Bcrypt",
+  #    :username=>"vptester",
+  #    :display_name=>"Vendor Primary User",
+  #    :email=>"appdev4@localhost.com",
+  #    :assigned_group=>["VendorPrimary"],
+  #    :user_options=>["VendorPrimary", "0099"],
+  #    :entries=>[
+  #      {:content_value=>["*.pdf"],
+  #       :content_type=>"Activity",
+  #       :content_type_description=>"Project Status Reports",
+  #       :topic_value=>["0099"],
+  #       :topic_type=>"Partner",
+  #       :topic_type_description=>"This Corporate Account",
+  #       :description=>"Access Relationship Documents",
+  #       :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Status Reports"}]],
+  #       :topic_selects=>[["0099", 0, {:"data-description"=>"This Corporate Account"}]],
+  #       :user_options=>["VendorPrimary", "0099"],
+  #       :username=>"vptester"
+  #      },
+  #      {:content_value=>["*.pdf"], :content_type=>"FileDownload", :content_type_description=>"Project Related Images", :topic_value=>["VendorPrimary"], :topic_type=>"UserGroups", :topic_type_description=>"Shared access to project working files", :description=>"Shared access to project working files", :content_selects=>[["*.pdf", 0, {:"data-description"=>"Project Related Images"}]], :topic_selects=>[["VendorPrimary", 0, {:"data-description"=>"Shared access to project working files"}]], :user_options=>["VendorPrimary", "0099"], :username=>"vptester"}
+  #    ],
+  #    :success=>true
+  #  }
+  # }
+  #
   def content_profile_package(user_profile=nil)
     @accessible_type = "content" # [:access, :content]
       raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
@@ -150,6 +288,8 @@ class ProfilesDomain < ::Factory::DomainsBase
     else
       res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}, Options=#{user_profile.user_options.join(',')}"
     end
+    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
+
     res
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
@@ -208,28 +348,6 @@ class ProfilesDomain < ::Factory::DomainsBase
     [adapter_for_content_profile_entry(cpe).available_content_list(cpe), pg_u.display_name]
   end
 
-  def management_profiles(params)
-    {
-        success: false,
-        message: 'Page Not Implemented!',
-        user_package: management_page_users_package,
-        page_actions: [{
-           id: "test-action",
-           path: :manage_content_profiles_profiles_path,
-           text: "Refresh",
-           icon: 'glyphicon-refresh',
-        }],
-        package: []
-    }
-  rescue Exception => e
-    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    {
-        success: false,
-        message: e.message,
-        package: []
-    }
-  end
-
   def api_profiles(params)
     {
         success: false,
@@ -244,12 +362,5 @@ class ProfilesDomain < ::Factory::DomainsBase
        package: []
     }
   end
-
-  # private
-
-  def get_page_user(uname, context=PROFILE_CONTEXT)
-    page_user = Secure::UserProfile.page_user(uname, context)
-  end
-
 
 end

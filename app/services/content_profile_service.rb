@@ -149,7 +149,7 @@ class ContentProfileService < ::ProfilesDomain
     res = SknUtils::PageControls.new({
        success: true,
        message: "",
-       package: management_profiles(params)
+       package: management_page_users_package(PROFILE_CONTEXT)
     })
     res.success = res.package.success
     res.message = res.package.message

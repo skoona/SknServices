@@ -233,7 +233,7 @@ Warden::Manager.on_request do |proxy|
     end
 
     # see if we can restore a session via API or RememberToken
-    if !proxy.user and !timeout_flag
+    unless proxy.authenticated?
       attempted_remember_flag = true
       Rails.logger.debug " Warden::Manager.on_request(BeforeAuth)"
       proxy.authenticate(:api_auth, :remember_token)

@@ -8,7 +8,7 @@
 
 class ServiceFactoryMockController
 
-  attr_accessor :factory, :controller_name, :action_name
+  attr_accessor :factory, :controller_name, :action_name, :params
 
   def initialize(params)
     params.keys.each do |k|
@@ -34,7 +34,10 @@ class ServiceFactoryMockController
     @sess ||= {}
   end
   def page_action_paths(paths)
-    "/profiles/api_accessible_content.json?id=content"
+    @paths ||= "/profiles/api_accessible_content.json?id=content"
+  end
+  def page_action_paths=(paths)
+    @paths = paths
   end
 
 

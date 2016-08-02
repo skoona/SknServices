@@ -102,19 +102,6 @@ begin
   urecs = User.create!(users)
   Rails.logger.info "Users Created #{urecs.size}"
 
-
-  ##
-  #
-  # Authorization Content Profile Initialization
-  #
-  ##
-  Rails.logger.info "Reloading ContentProfile process tables"
-
-    Utility::ContentProfileTestDataLoader.new().refresh_content_profiles_data_model
-
-  Rails.logger.info "Completed Creating ContentProfile Models"
-
-
   ##
   #
   # Authorization Group and User level Roles
@@ -238,6 +225,18 @@ begin
     grp.user_role_ids = role_ids
     grp.save!
   end
-
   Rails.logger.info "Completed creating UserGroup Management process model"
+
+
+  ##
+  #
+  # Authorization Content Profile Initialization
+  #
+  ##
+  Rails.logger.info "Reloading ContentProfile process tables"
+
+  Utility::ContentProfileTestDataLoader.new().refresh_content_profiles_data_model
+
+  Rails.logger.info "Completed Creating ContentProfile Models"
+
 end

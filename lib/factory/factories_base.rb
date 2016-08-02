@@ -27,6 +27,9 @@ module Factory
     ##
     # The controller knows itself as 'self'
     # so we bridge to it for our Services
+    def service
+      @factory
+    end
     def controller
       @factory
     end

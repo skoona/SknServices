@@ -1,11 +1,17 @@
 # spec/services/access_services_spec.rb
 #
 
-RSpec.describe ApplicationController, "Service routines of AccessProfile.", :type => :controller  do
+RSpec.describe ProfileDataServices, "Service routines of AccessProfile."  do
+  let!(:user) {user_bstester}
+
+  let(:mc) {ServiceFactoryMockController.new(user: user)}
+  let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
+
+  let(:service) {service_factory.profile_data_services}
+
   before do
-    @user = Secure::UserProfile.new( User.first )
-    sign_in(@user, scope: :access_profile)
-    @factory = controller.service_factory
+    @user = user
+    @factory = service_factory
     @service = @factory.profile_data_services
   end
 
@@ -15,7 +21,7 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
       expect{ ProfileDataServices.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(ProfileDataServices.new({factory: @factory})).to be_a(ProfileDataServices)
+      expect(ProfileDataServices.new({factory: service_factory})).to be_a(ProfileDataServices)
     end
     it "#new fails when :factory is invalid." do
       expect{ ProfileDataServices.new({factory: nil}) }.to raise_error(ArgumentError)
@@ -25,8 +31,8 @@ RSpec.describe ApplicationController, "Service routines of AccessProfile.", :typ
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
-      expect( @service.factory.factory ).to be_a ApplicationController
-      expect( @service.factory.controller ).to be_a ApplicationController
+      expect( @service.service.factory ).to be_a ServiceFactoryMockController
+      expect( @service.factory.controller ).to be_a ServiceFactoryMockController
     end
     it "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile

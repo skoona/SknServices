@@ -57,6 +57,10 @@ module Factory
       @user = @factory.current_user unless @user
     end
 
+    def service
+      @factory
+    end
+
     def controller
       @factory
     end

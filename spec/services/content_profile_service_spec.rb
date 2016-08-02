@@ -1,11 +1,17 @@
 # spec/services/content_profile_service_spec.rb
 #
 
-RSpec.describe ApplicationController, "Service routines of ContentProfileService.", :type => :controller  do
+RSpec.describe ContentProfileService, "Service routines of ContentProfileService." do
+  let!(:user) {user_bstester}
+
+  let(:mc) {ServiceFactoryMockController.new(user: user)}
+  let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
+
+  let(:service) {service_factory.content_profile_service}
+
   before do
-    @user = Secure::UserProfile.new( User.first )
-    sign_in(@user, scope: :access_profile)
-    @factory = controller.service_factory
+    @user = user
+    @factory = service_factory
     @service = @factory.content_profile_service
   end
 
@@ -16,7 +22,7 @@ RSpec.describe ApplicationController, "Service routines of ContentProfileService
     end
 
     scenario "#new succeeds when :factory is valid value." do
-      expect(ContentProfileService.new({factory: @factory})).to be_a(ContentProfileService)
+      expect(ContentProfileService.new({factory: service_factory})).to be_a(ContentProfileService)
     end
     scenario "#new fails when :factory is invalid value." do
       expect{ ContentProfileService.new({factory: nil}) }.to raise_error(ArgumentError)
@@ -27,7 +33,7 @@ RSpec.describe ApplicationController, "Service routines of ContentProfileService
     end
     scenario "#service #factory objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
-      expect( @service.factory.factory ).to be_a ApplicationController
+      expect( @service.service.factory ).to be_a ServiceFactoryMockController
     end
     scenario "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
