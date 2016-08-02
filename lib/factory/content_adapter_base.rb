@@ -36,6 +36,10 @@ module Factory
 
     protected
 
+    def get_page_user(uname, context=nil)
+      page_user = Secure::UserProfile.page_user(uname, context)
+    end
+
     def sanitize(filename)
       value = filename
       # Remove any leading navigation

@@ -46,7 +46,7 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
   context "Core methods delivery as designed." do
     let(:cpe) {
            {"id"=>"content",
-                   "username"=>"aptester",
+                   "username"=>"bptester",
                    "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
                    "content_type"=>"Commission",
                    "content_value"=>["*.pdf"],
