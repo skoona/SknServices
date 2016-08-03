@@ -13,6 +13,7 @@
 //= require jquery2
 //= require jquery_ujs
 //= require jquery-ui
+//= require jquery-binary-transport
 //= require bootstrap-sprockets
 //= require dataTables.bootstrap
 //= require jquery.dataTables

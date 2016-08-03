@@ -21,18 +21,20 @@ if "true".eql?ENV["COVERAGE"] and "test".eql?ENV["RAILS_ENV"]
     add_filter '/spec/'
     add_filter '/vendor/'
 
-    add_group 'Utilities' do |src_file|
+    add_group 'Utility' do |src_file|
         src_file.filename.include? 'lib/utility'
     end
-    add_group 'DomainServices' do |src_file|
+    add_group 'Services Strategy' do |src_file|
       ['app/domains','app/services',
        'lib/factory','lib/builder',
        'app/beans'].any? do |item|
         src_file.filename.include? item
       end
     end
-    add_group 'SecurityServices' do |src_file|
-        src_file.filename.include? 'lib/secure'
+    add_group 'Security Services' do |src_file|
+      ['lib/secure'].any? do |item|
+        src_file.filename.include? item
+      end
     end
     add_group 'Models' do |src_file|
       ['app/models'].any? do |item|

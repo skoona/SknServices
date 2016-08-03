@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   resources :users
   resources :user_group_roles
-  resources :content_profiles
   resources :password_resets, only: [:new, :create, :edit, :update]
 
   resources :sessions, only:  [:new, :create, :destroy] do

@@ -2,6 +2,7 @@
 
 describe ProfilesController, "Verify the basic API is working." do
   let!(:user) { user_eptester()}
+
   before :each do
     sign_in(user, scope: :access_profile)
     # @request.host = 'www.example.com'

@@ -20,11 +20,6 @@ class ServiceFactory < ::Factory::FactoriesBase
     yield @sf_password_service if block_given?
     @sf_password_service
   end
-  def profile_data_services
-    @sf_profile_data_services ||= ::ProfileDataServices.new({factory: self})
-    yield @ctprofile_data_services if block_given?
-    @sf_profile_data_services
-  end
   def access_profile_service
     @sf_access_profile_service ||= ::AccessProfileService.new({factory: self})
     yield @sf_access_profile_service if block_given?
@@ -34,6 +29,11 @@ class ServiceFactory < ::Factory::FactoriesBase
     @sf_content_profile_service ||= ::ContentProfileService.new({factory: self})
     yield @sf_content_profile_service if block_given?
     @sf_content_profile_service
+  end
+  def profile_service
+    @sf_profile_service ||= ::ProfileService.new({factory: self})
+    yield @sf_profile_service if block_given?
+    @sf_profile_service
   end
 
   ##

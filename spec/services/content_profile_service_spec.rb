@@ -9,11 +9,6 @@ RSpec.describe ContentProfileService, "Service routines of ContentProfileService
 
   let(:service) {service_factory.content_profile_service}
 
-  before do
-    @user = user
-    @factory = service_factory
-    @service = @factory.content_profile_service
-  end
 
   context "Initialization "  do
 
@@ -29,59 +24,50 @@ RSpec.describe ContentProfileService, "Service routines of ContentProfileService
     end
 
     scenario "#factory.content_profile_service returns a proper service object." do
-      expect( @service ).to be_a ContentProfileService
+      expect( service ).to be_a ContentProfileService
     end
     scenario "#service #factory objects to be different." do
-      expect( @service.factory ).to be_a ServiceFactory
-      expect( @service.service.factory ).to be_a ServiceFactoryMockController
+      expect( service.factory ).to be_a ServiceFactory
+      expect( service.service.factory ).to be_a ServiceFactoryMockController
     end
     scenario "#current_user returns a UserProfile object." do
-      expect( @service.factory.current_user ).to be_a Secure::UserProfile
-      expect( @service.current_user ).to be_a Secure::UserProfile
+      expect( service.factory.current_user ).to be_a Secure::UserProfile
+      expect( service.current_user ).to be_a Secure::UserProfile
     end
   end
 
   context "Provided methods return proper results. " do
 
     scenario "#handle_content_profile_destroy" do
-      result = @service.handle_content_profile_destroy({id: 2})
+      result = service.handle_content_profile_destroy({id: 2})
       expect(result).to be_a(SknUtils::ResultBean)
       expect(result.success).to be true
     end
+
     scenario "#handle_content_profile_update" do
     end
+
     scenario "#handle_content_profile_creations" do
     end
+
     scenario "#handle_content_profile_index" do
-      result = @service.handle_content_profile_index({})
+      result = service.handle_content_profile_index({})
       expect(result).to be_a(SknUtils::ResultBean)
       expect(result.success).to be true
     end
+
     scenario "#handle_content_profile_show_or_edit" do
-      result = @service.handle_content_profile_show_or_edit({id: 2})
+      result = service.handle_content_profile_show_or_edit({id: 2})
       expect(result).to be_a(SknUtils::PageControls)
       expect(result.success).to be true
     end
+
     scenario "#handle_content_profile_new" do
-      result = @service.handle_content_profile_new()
+      result = service.handle_content_profile_new()
       expect(result).to be_a(SknUtils::ResultBean)
       expect(result.success).to be true
     end
-    scenario "#handle_demo_page" do
-      result = @service.handle_demo_page({})
-      expect(result).to be_a(SknUtils::PageControls)
-      expect(result.success).to be true
-    end
-    scenario "#api_accessible_content" do
-    end
-    scenario "#handle_content_profile_management prepares a page package of all users" do
-      result = @service.handle_content_profile_management({})
-      expect(result).to be_a(SknUtils::PageControls)
-      expect(result.success).to be false
-      expect(result.message).to include('Page Not Implemented!')
-    end
-    scenario "#api_get_content_object" do
-    end
+
   end
 
 

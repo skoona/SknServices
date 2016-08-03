@@ -1,10 +1,11 @@
 # spec/controllers/password_resets_controller_spec.rb
 
 describe PasswordResetsController, " Reset User Password Process" do
-  let!(:user) {FactoryGirl.create(:user)}
+  let!(:user) {FactoryGirl.create(:user)} # let!(:user) { user_eptester()}
+
   before :each do
     sign_in(user, scope: :access_profile)
-    @request.host = 'www.example.com'
+    # @request.host = 'www.example.com'
   end
 
   describe "#new requests the username" do

@@ -12,7 +12,8 @@ module Factory
     # Ruby only Alternate: MIME::Types.type_for(full_filename), using mime.gem
     def content_mime_type(extension)
       extname = extension.gsub(/^\./,'')
-      Mime::Type.lookup_by_extension(extname).to_str rescue nil
+      return 'text/plain' if extname.downcase.include?('log')
+      Mime::Type.lookup_by_extension(extname).to_str rescue 'application/octet-stream'
     end
     def available_content_list(params={})  # ContentProfileEntry Hash
       raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"

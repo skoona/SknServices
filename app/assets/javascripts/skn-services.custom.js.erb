@@ -17,10 +17,7 @@ var logEnabled = <%= Rails.env.development? %>,
     contentTable,
     accessibleTable,
     mcUserTable,
-    mcEntriesTable,
-    mcTopicTable,
-    mcContentTable;
-
+    mcEntriesTable;
 
 /**
  * Prevents debuging messages from going to console none development mode
@@ -31,7 +28,6 @@ function consoleLog(message) {
         console.log(message);
     }
 }
-
 
 /* ********************************************************
  * System Info Page: :details_sysinfo
@@ -78,6 +74,7 @@ function handleRailsInfo(ev) {
  * AccessableTable GetObject from Selection
  * - Build URL
  * - Open alternate Window
+ * - REQUIRES JQuery-Binary-Transport.js
  */
 function profileTablesGetObject(ev) {
   var dataPackage = $(ev.currentTarget).data().package,
@@ -89,12 +86,22 @@ function profileTablesGetObject(ev) {
   $("table.profile tbody tr").removeClass('success');
   $(ev.currentTarget).addClass('success');
 
-  if (objectUrl){
-    window.open(objectUrl);
-  }
 
-//    headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
-     consoleLog( "profileTablesGetObject("+ dataPackage.id + ")" );
+  $.ajax({
+    headers: {'Content-Type': dataPackage.mime, 'X-Requested-With':'XMLHttpRequest', 'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+    method: "GET",
+    dataType: 'binary',
+    url: objectUrl,
+    processData: false
+  }).done(function(data,textStatus) {
+    window.open( URL.createObjectURL(data) );
+    consoleLog( "profileTablesGetObject("+ dataPackage.username + ":" + dataPackage.id + ") success: " + textStatus );
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+    accessibleTable.clear().draw();
+    consoleLog( "profileTablesGetObject("+ dataPackage.username + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
+  });
+
+  consoleLog( "profileTablesGetObject(completed)" );
 
   return false;
 }
@@ -351,40 +358,6 @@ function handleDemoPages() {
  * ManageContentProfiles Page: :manage_content_profiles
  * ********************************************************
  */
-/**
- * Reloads the table with supplied rows from a
- * @param dataPackage ["LicensedStates",3,{"data-description":"Producer Actions"}]
- */
-function replaceTypesTableRows(dtTable, dataPackage) {
-    var vList = dataPackage,
-            newRow = [],
-            counter = 0,
-            trNode,
-            trRow;
-
-    try {
-        dtTable.clear().draw();
-        $.each(vList, function (index, row) {
-            newRow = [];
-            newRow.push('<td>' + row[0] + '</td>');
-            newRow.push('<td>' + row[2]['data-description'] + '</td>');
-            trRow = $('<tr>').append(newRow.join());
-
-            trNode = dtTable.row.add(trRow).draw().node();
-            $(trNode).data('package', row); // .on( "click", profileTablesRequester);
-            counter = index + 1;
-        });
-        dtTable.draw();
-    } catch(e) {
-        consoleLog("replaceTypesTableRows()" + e);
-        consoleLog("dataPackage=" + JSON.stringify(dataPackage));
-        dtTable.clear().draw();
-    }
-
-
-    consoleLog('replaceTypesTableRows(rowsAdded=' + counter + ')');
-    return false;
-}
 
 /**
  * Reloads the mc-entries-table with supplied rows from a
@@ -415,8 +388,6 @@ function replaceEntriesTableRows(dataPackage) {
             $(trNode).data('package', row).on( "click", function(ev) {
                 var pkg = $(ev.currentTarget).data().package;
 
-                replaceTypesTableRows(mcContentTable, pkg.content_selects);
-                replaceTypesTableRows(mcTopicTable, pkg.topic_selects);
                 /*
                  * flag selected in related table */
                 $("#mc-entries-table tbody tr").removeClass('success');
@@ -434,44 +405,6 @@ function replaceEntriesTableRows(dataPackage) {
     return false;
 }
 
-/*
- * Updates the ContentProfile Tab
-*/
-function replaceProfileTabInfo(event) {
-    var dataPackage = $(event.currentTarget).data().package;
-
-    /* Initialize Titles on ContentProfile Tab */
-    try {
-        $('#username').html(dataPackage.username);
-        $('#display_name').html(dataPackage.display_name);
-        $('#assigned_group').html(dataPackage.assigned_group);
-        $('#email').html(dataPackage.email);
-        $('#authentication_provider').html(dataPackage.authentication_provider);
-        $('#pak').html(dataPackage.pak);
-        if (dataPackage.profile_exist) {
-            $('#profile_entries').html(dataPackage.entries.length);
-        } else {
-            $('#profile_entries').html('0');
-        }
-    } catch(e) {
-        consoleLog("replaceProfileTabInfo()" + e);
-        consoleLog("dataPackage=" + JSON.stringify(dataPackage));
-    }
-
-    /* maintain selected item on users table */
-    $('#mc-users-table tbody tr').removeClass('success');
-    $(event.currentTarget).addClass('success');
-
-    /* reset content/topic table views */
-    mcContentTable.clear().draw();
-    mcTopicTable.clear().draw();
-
-    /* update content profile entries table */
-    replaceEntriesTableRows(dataPackage);
-
-    consoleLog(dataPackage.username + " Selected."); // + JSON.stringify(dataPackage));
-    return true;
-}
 
 /**
  * Initialization Routine for ContentProfile Management Pages
@@ -493,29 +426,23 @@ function handleManagementPages() {
         }
     });
 
-    mcTopicTable = $('#mc-topic-table').DataTable({
-        scrollY: "620px",
-        language: {
-            emptyTable: "No User Available!"
-        }
-    });
-
-    mcContentTable = $('#mc-content-table').DataTable({
-        scrollY: "620px",
-        language: {
-            emptyTable: "No User Available!"
-        }
-    });
-
     /**
-     *  Activate the UI, Track clicks from UsersTable to control both pages
-     */
-    $('#mc-users-table tbody tr').on('click', replaceProfileTabInfo);
+     *  Activate the UI, Track clicks from UsersTable
+     * choose first one to start things off
+    */
+    $('#mc-users-table tbody tr').on('click', function (event) {
+      var dataPackage = $(event.currentTarget).data().package;
 
-    /*
-     * choose first one to start things off */
+      /* maintain selected item on users table */
+      $('#mc-users-table tbody tr').removeClass('success');
+      $(event.currentTarget).addClass('success');
+
+      /* update content profile entries table */
+      replaceEntriesTableRows(dataPackage);
+
+    });
+
     $('#mc-users-table tbody tr').first().click();
-
 
     /* Watch the Tabs change, dataTable header don't align when invisible
      * then try to update the DataTable on that page.

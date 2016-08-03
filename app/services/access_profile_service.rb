@@ -4,4 +4,5 @@
 # Manages
 
 class AccessProfileService < ::AccessProfileDomain
+
 end
