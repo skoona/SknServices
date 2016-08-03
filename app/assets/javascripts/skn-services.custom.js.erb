@@ -79,16 +79,23 @@ function handleRailsInfo(ev) {
 function profileTablesGetObject(ev) {
   var dataPackage = $(ev.currentTarget).data().package,
       dataResponse,
-      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "/?id=" + dataPackage.id + ";username=" + dataPackage.username;
+      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username;
 
   /*
    * flag selected in related table */
   $("table.profile tbody tr").removeClass('success');
   $(ev.currentTarget).addClass('success');
 
+  ev.preventDefault();
 
-  $.ajax({
-    headers: {'Content-Type': dataPackage.mime, 'X-Requested-With':'XMLHttpRequest', 'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+  window.open(objectUrl, dataPackage.filename);
+    consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+
+
+  /**  Worked but user could not detach
+
+   $.ajax({
+    headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
     method: "GET",
     dataType: 'binary',
     url: objectUrl,
@@ -101,11 +108,12 @@ function profileTablesGetObject(ev) {
     consoleLog( "profileTablesGetObject("+ dataPackage.username + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
   });
 
-  consoleLog( "profileTablesGetObject(completed)" );
+  */
+
+  consoleLog("profileTablesGetObject(completed)");
 
   return false;
 }
-
 
 /**
  * Content/Access Profile Table Selection
@@ -422,7 +430,7 @@ function handleManagementPages() {
     mcEntriesTable = $('#mc-entries-table').DataTable({
         scrollY: "620px",
         language: {
-            emptyTable: "No User Available!"
+            emptyTable: "No Entries Available!"
         }
     });
 
