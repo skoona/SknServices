@@ -9,18 +9,13 @@
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#home" data-dttable="#mc-users-table">Users</a></li>
         <li><a data-toggle="tab" href="#menu2" data-dttable="#mc-entries-table">Entries</a></li>
-      <!--
-        <li><a data-toggle="tab" href="#menu3" data-dttable="#mc-topic-table">Topics</a></li>
-        <li><a data-toggle="tab" href="#menu4" data-dttable="#mc-content-table">Contents</a></li>
-      -->
     </ul>
 
     <div class="tab-content" data-user-package="<%= @page_controls.package.user_package.map(&:to_hash).to_json %>">
         <div id="home" class="tab-pane fade in active">
-            <h3>UserProfiles</h3>
-            <p>User profiles are the basis of this content management strategy.  Select the
-                user this ContentProfile will be used for, then follow the Tabs left to right
-                to compose a workable ContentProfile for this user.</p>
+            <h3>ContentProfile</h3>
+            <p>Content profiles are the basis of this authorization strategy.  Select a
+                user's ContentProfile from the list below, then click on the Entries tab to review their current content access permissions.</p>
             <div class="table-responsive">
                 <table id="mc-users-table" class="table table-hover table-striped table-bordered display" cellspacing="0" width="100%">
                     <thead>
@@ -49,9 +44,10 @@
         <div id="menu2" class="tab-pane fade">
             <h3>ContentProfileEntries</h3>
             <p>Content profile entries make the association between the type of protected resources, or content, and
-                the entities those resources are related to, or Topic.  Both content and topic are meant to be specific.
-                So you might find it prudent to move onto the Topics or Contents first, to ensure those specific records exist
-                before creating a entry here.</p>
+                the entities those resources are related to, or Topic.  Both content and topic are meant to be specific.</p>
+            <p>It is considered <em>Best Practice</em> to choose one topic identifies and one content type identifier per entry.  While
+              multiple identifiers can be chosen, it will make adding or removing one in the future frustrating.  By only including one
+              identifier per entry, you can easily delete, or add new entries as needed.</p>
             <p>A user may have as many content profile entries as necessary to meet their needs.</p>
             <div class="table-responsive">
                 <table id="mc-entries-table" class="table table-hover table-striped table-bordered display" cellspacing="0" width="100%">

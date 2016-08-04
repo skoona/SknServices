@@ -20,8 +20,9 @@ class PagesController < ApplicationController
   def about
   end
 
+  # overloaded method: display page, and act on registry
   def details_sysinfo
-    Secure::AccessRegistry.ar_reload_configuration_file() if 'xml'.eql?( params[:id] )
+    access_service.reload_access_registry if 'xml'.eql?( params[:id] )
   end
 
 

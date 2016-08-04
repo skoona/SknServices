@@ -263,7 +263,7 @@ module Builder
       ctxp = ContentProfile.includes(:content_profile_entries).find_by( person_authentication_key: user_profile.person_authenticated_key)
 
       unless ctxp.nil?
-        results =  ctxp.entry_info_with_selects(user_profile).merge({ success: true })
+        results =  ctxp.entry_info_with_username(user_profile).merge({ success: true })
       else
         results = {
             success: false,

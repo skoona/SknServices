@@ -55,6 +55,10 @@ class ContentProfileEntry < ActiveRecord::Base
     end
     opts
   end
+
+  def entry_info_with_username(userp)
+    entry_info.merge({user_options: userp.user_options, username: userp.username})
+  end
   def entry_info_with_selects(userp)
     entry_info.merge({content_selects: entry_contents, topic_selects: entry_topics,
                      user_options: userp.user_options, username: userp.username})

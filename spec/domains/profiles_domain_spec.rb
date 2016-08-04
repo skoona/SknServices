@@ -170,28 +170,6 @@ RSpec.describe ProfilesDomain, "Service routines of ProfilesDomain." do
       expect(result.length).to be > 0
       expect(result[0][2][:data]).to be
     end
-    scenario "#get_user_form_options() returns a PageControls object with two methods containing array of arrays." do
-      result = @service.get_user_form_options()
-      expect(result).to be_a(SknUtils::PageControls)
-      expect(result.to_hash().keys.size).to be > 1
-    end
-
-  end
-
-  context "Profile Data Services methods delivery as designed." do
-
-    scenario "#get_user_form_options returns array of options with descriptions. " do
-      expect( @service.get_user_form_options ).to be_a SknUtils::PageControls
-      expect( @service.get_user_form_options.groups.first.last['data-description'.to_sym] ).to be_a String
-    end
-    scenario "#group_select_options returns array of options with descriptions. " do
-      expect( @service.group_select_options ).to be_a Array
-      expect( @service.group_select_options.first.last['data-description'.to_sym] ).to be
-    end
-    scenario "#role_select_options returns array of options with descriptions. " do
-      expect( @service.role_select_options ).to be_a Array
-      expect( @service.role_select_options.first.last['data-description'.to_sym] ).to be
-    end
 
   end
 

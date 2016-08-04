@@ -5,7 +5,7 @@ class PasswordResetsController < ApplicationController
   end
 
   def create
-		@page_controls = password_service.reset_requested(params)
+		@page_controls = access_service.reset_requested(params)
 		redirect_to home_pages_url, notice: @page_controls.message
   end
 
@@ -14,7 +14,7 @@ class PasswordResetsController < ApplicationController
   end
 
   def update
-		@page_controls = password_service.reset_password(params)
+		@page_controls = access_service.reset_password(params)
 		if @page_controls.success
 			redirect_to signin_url, notice: @page_controls.message
 		else

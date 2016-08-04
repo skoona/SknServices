@@ -1,42 +1,43 @@
 <div class="<%= action_name.eql?('show') ? 'col-md-push-3 col-md-6' : 'col-md-6' %>">
 
-<div class="well">
-    <div class="media">
-        <div class="media-left">
-            <%= link_to user do %>
-                <span class="media-object">
-                     <div class="form-control-static pull-left" style="padding-right: 6px;">
-                         <%= gravatar_for(user, size: 96, class: "img-responsive", alt: user.username) %>
-                     </div>
-                    <%# <span style="font-size:4.5em;" class="glyphicon glyphicon-th-list" aria-hidden="true"></span> %>
-                </span>
-            <% end %>
-        </div>
-        <div class="media-body">
-            <h4 class="media-heading">Username: &nbsp;<%= user.username %></h4>
-            <p>Email: <%= user.email %></p>
-            <p>Options: <%= user.user_options.join(',') %></p>
-            <p>State: <%= user.active ? "Active" : "inActive" %></p>
-            <p>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></p>
-            <p>
-                <% if current_user_has_read?('users/show') and action_name.eql?('index') %>
-                    <%= link_to user_path(user)  do %>
-                        <span class="badge">Show</span>
-                    <% end %> |
-                <% end %>
-                <% if current_user_has_update?('users/edit') %>
-                    <%= link_to edit_user_path(user) do %>
-                            <span class="badge">Edit</span>
-                    <% end %> |
-                <% end %>
-                <% if current_user_has_delete?('users/destroy') and action_name.eql?('show') %>
-                    <%= link_to user_path(user), method: :delete, data: {confirm: "Deleting cannot be undone! Delete anyway?"}  do %>
-                        <span class="badge">Delete</span>
-                    <% end %> |
-                <% end %>
-                <%= link_to :back, users_path, class: "btn btn-default" %>
-            </p>
-        </div>
-    </div>
-</div>
+  <div class="well">
+      <div class="media">
+          <div class="media-left">
+              <%= link_to user do %>
+                  <span class="media-object">
+                       <div class="form-control-static pull-left" style="padding-right: 6px;">
+                           <%= gravatar_for(user, size: 96, class: "img-responsive", alt: user.username) %>
+                       </div>
+                      <%# <span style="font-size:4.5em;" class="glyphicon glyphicon-th-list" aria-hidden="true"></span> %>
+                  </span>
+              <% end %>
+          </div>
+          <div class="media-body">
+              <h4 class="media-heading">Username: &nbsp;<%= user.username %></h4>
+              <p>Email: <%= user.email %></p>
+              <p>Options: <%= user.user_options.join(',') %></p>
+              <p>State: <%= user.active ? "Active" : "inActive" %></p>
+              <p>Last password reset:&nbsp; <%= user.password_reset_date? ? user.password_reset_date.to_formatted_s(:long_ordinal) : "Never" %></p>
+              <p>
+                  <% if current_user_has_read?('users/show') and action_name.eql?('index') %>
+                      <%= link_to user_path(user)  do %>
+                          <span class="badge">Show</span>
+                      <% end %> |
+                  <% end %>
+                  <% if current_user_has_update?('users/edit') %>
+                      <%= link_to edit_user_path(user) do %>
+                              <span class="badge">Edit</span>
+                      <% end %> |
+                  <% end %>
+                  <% if current_user_has_delete?('users/destroy') and action_name.eql?('show') %>
+                      <%= link_to user_path(user), method: :delete, data: {confirm: "Deleting cannot be undone! Delete anyway?"}  do %>
+                          <span class="badge">Delete</span>
+                      <% end %> |
+                  <% end %>
+                  <%= link_to :back, users_path, class: "btn btn-default" %>
+              </p>
+          </div>
+      </div>
+  </div>
+
 </div>

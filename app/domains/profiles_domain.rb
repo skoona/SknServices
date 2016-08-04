@@ -397,18 +397,4 @@ class ProfilesDomain < ::Factory::DomainsBase
     ContentProfile.find(rec_id) rescue nil # Could raise a not found exception
   end
 
-  def get_user_form_options
-    SknUtils::PageControls.new({
-                                   groups: group_select_options,
-                                   roles: role_select_options
-                               })
-  end
-  def group_select_options
-    UserGroupRole.select_options
-  end
-  def role_select_options
-    UserRole.select_options
-  end
-
-
 end

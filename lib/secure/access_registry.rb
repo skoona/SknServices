@@ -123,7 +123,7 @@ module Secure
     def self.get_resource_userdata(resource_uri)
       @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:userdata] : ""
     end
-    def self.get_resource_read_options(resource_uri)
+    def self.get_resource_options(resource_uri)
       return [] unless @@ar_permissions.key?(resource_uri)
 
       result = []
@@ -206,7 +206,7 @@ module Secure
          end # end catch
        else
          # TODO: Enable logging of all unregistered
-         Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
+         Rails.logger.info("#{self.name}.#{__method__}() Not Secured: #{resource_uri} with opts=#{options}") if Rails.logger.present?
 
          result = @@ar_strict_mode
        end

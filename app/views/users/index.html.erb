@@ -1,17 +1,18 @@
 <% provide(:title, accessed_page_name) %>
 
-<header class="page-header">
-    <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
-
 <article>
-    <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
-    <div class="row">
-        <%= render @users %>
-    </div>
-    <%= will_paginate class: "pagination col-md-3 col-md-push-9 pull-right" %>
+  <header class="page-header">
+    <h1 class="text-center"><%= accessed_page_name %></h1>
+  </header>
+  <section>
+    <%= do_page_actions %>
+  </section>
+  <section>
+    <%= will_paginate @page_controls.users, class: "pagination col-md-offset-4 col-md-8" %>
+    <section>
+      <%= render @page_controls.users %>
+    </section>
+    <%= will_paginate @page_controls.users, class: "pagination col-md-offset-4 col-md-8" %>
+  </section>
 
-    <% if current_user_has_create?('users/new') %>
-        <%= link_to 'New UserProfile', new_user_path %>
-    <% end %>
 </article>

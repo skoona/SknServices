@@ -539,17 +539,18 @@
     </resource>
 
     <!--=========================  DEVELOPMENT RESOURCES  ============================ -->
-  <resource secured="false">
-      <uri>pages/details_sysinfo</uri>
-      <description>System Information</description>
-      <userdata>drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955</userdata>
-      <permission type="READ">
-          <authorizedRoles>
-              <authorizedRole>Services.Action.Admin</authorizedRole>
-              <authorizedRole>Services.Action.Developer</authorizedRole>
-          </authorizedRoles>
-      </permission>
-  </resource>
+    <resource secured="false">
+        <uri>pages/details_sysinfo</uri>
+        <description>System Information</description>
+        <userdata>drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
     <resource secured="false">
         <uri>/rails/info/routes</uri>
         <description>Rails Routes</description>

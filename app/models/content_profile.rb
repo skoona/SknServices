@@ -43,6 +43,21 @@ class ContentProfile < ActiveRecord::Base
     end
   end
 
+  def entry_info_with_username(userp)
+    {
+        pak: person_authentication_key,
+        profile_type: profile_type_name,
+        profile_type_description: profile_type_description,
+        provider: authentication_provider,
+        username: username,
+        display_name: display_name,
+        email: email,
+        assigned_group: userp.assigned_groups,
+        user_options: userp.user_options,
+        entries: content_profile_entries.collect {|cpe| cpe.entry_info_with_username(userp)}
+    }
+  end
+
   def entry_info_with_selects(userp)
     {
         pak: person_authentication_key,

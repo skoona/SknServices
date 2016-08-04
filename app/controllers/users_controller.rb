@@ -26,8 +26,7 @@ class UsersController < ApplicationController
   before_filter :target_object, only: [:show, :edit, :update, :destroy]
 
   def index
-    @counter = 0
-    @users = User.paginate(page: params[:page], :per_page => 12)
+    @page_controls = service_factory.access_service.handle_index
   end
 
   def show
@@ -35,7 +34,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @page_controls = profile_data_services.get_user_form_options
+    @page_controls = access_service.get_user_form_options
   end
 
   def create
@@ -48,7 +47,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @page_controls = profile_data_services.get_user_form_options
+    @page_controls = access_service.get_user_form_options
   end
 
   # Parameters: {

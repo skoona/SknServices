@@ -1,33 +1,59 @@
-# spec/services/password_service_spec.rb
+# spec/services/access_services_spec.rb
 #
 
-RSpec.describe PasswordService, "Service routines for resetting forgotten passwords." do
+RSpec.describe AccessService, "Service routines of AccessProfile and AccessProfileDomain."  do
   let!(:user) {user_bstester}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
   let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
 
-  let(:service) {service_factory.password_service}
-  # before { sign_in(user, scope: :access_profile) }
+  let(:service) {service_factory.access_service}
 
   context "Initialization "  do
 
-    it "throws an Exception without params." do
-      expect { PasswordService.new }.to raise_error(ArgumentError)
+    scenario "#new throws an Exception without params." do
+      expect{ AccessService.new }.to raise_error(ArgumentError)
+    end
+    scenario "#new succeeds with only :factory as init param." do
+      expect(AccessService.new({factory: service_factory})).to be_a(AccessService)
+    end
+    scenario "#new fails when :factory is invalid." do
+      expect{ AccessService.new({factory: nil}) }.to raise_error(ArgumentError)
+    end
+    scenario "#factory.profile_data_services returns a proper service object." do
+      expect( service ).to be_a AccessService
+    end
+    scenario "#service #factory and #controller objects to be different." do
+      expect( service.factory ).to be_a ServiceFactory
+      expect( service.service.factory ).to be_a ServiceFactoryMockController
+      expect( service.factory.controller ).to be_a ServiceFactoryMockController
+    end
+    scenario "#current_user returns a UserProfile object." do
+      expect( service.factory.current_user ).to be_a Secure::UserProfile
+      expect( service.current_user ).to be_a Secure::UserProfile
+    end
+  end
+
+  context "Services methods delivery as designed." do
+
+    scenario "#get_user_form_options returns array of options with descriptions. " do
+      expect( service.get_user_form_options ).to be_a SknUtils::PageControls
+      expect( service.get_user_form_options.groups.first.last['data-description'.to_sym] ).to be_a String
+    end
+    scenario "#group_select_options returns array of options with descriptions. " do
+      expect( service.group_select_options ).to be_a Array
+      expect( service.group_select_options.first.last['data-description'.to_sym] ).to be
+    end
+    scenario "#role_select_options returns array of options with descriptions. " do
+      expect( service.role_select_options ).to be_a Array
+      expect( service.role_select_options.first.last['data-description'.to_sym] ).to be
+    end
+    scenario "#get_user_form_options() returns a PageControls object with two methods containing array of arrays." do
+      result = service.get_user_form_options()
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.to_hash().keys.size).to be > 1
     end
 
-    it "succeeds when controller is valid." do
-      expect(PasswordService.new({factory: service_factory})).to be_a(PasswordService)
-    end
-
-    it "fails when controller is invalid." do
-      expect { PasswordService.new({factory: nil}) }.to raise_error(ArgumentError)
-    end
-
-    it "#password_service return a proper service object." do
-      object = service_factory.password_service
-      expect(object).to be_a PasswordService
-    end
   end
 
   context "Reset Password Operations" do
@@ -119,5 +145,6 @@ RSpec.describe PasswordService, "Service routines for resetting forgotten passwo
     end
 
   end
+
 
 end

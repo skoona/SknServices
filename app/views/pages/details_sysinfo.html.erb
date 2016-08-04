@@ -151,7 +151,7 @@
                             <td><%= '%05d' % index %></td>
                             <td><%= ar.to_s %></td>
                             <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
-                            <td><%= Secure::AccessRegistry.get_resource_read_options(ar) %></td>
+                            <td><%= Secure::AccessRegistry.get_resource_options(ar) %></td>
                             <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
                         </tr>
                     <% end %>

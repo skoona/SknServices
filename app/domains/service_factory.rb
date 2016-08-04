@@ -15,15 +15,10 @@ class ServiceFactory < ::Factory::FactoriesBase
   # Application Services used in Controller methods
   ##
 
-  def password_service
-    @sf_password_service ||= ::PasswordService.new({factory: self})
-    yield @sf_password_service if block_given?
-    @sf_password_service
-  end
-  def access_profile_service
-    @sf_access_profile_service ||= ::AccessProfileService.new({factory: self})
-    yield @sf_access_profile_service if block_given?
-    @sf_access_profile_service
+  def access_service
+    @sf_access_service ||= ::AccessService.new({factory: self})
+    yield @sf_access_service if block_given?
+    @sf_access_service
   end
   def content_profile_service
     @sf_content_profile_service ||= ::ContentProfileService.new({factory: self})
