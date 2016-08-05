@@ -44,6 +44,69 @@ The Readme.md file is more like documentation; outside of the app itself.
 ```
 
 
+=== Controller Layout
+                                  Service               Role                Inherts from
+                                  ----------------      ----------------    -----------------------
+sessions_controller                None                  Login/Out           ActionController::Base
+application_controller             service_factory       App/Security        ActionController::Base/Secure::ControllerAccessControl
+users_controller                   access_service        Admin               ApplicationController
+user_group_roles_controller        access_service        Admin               ApplicationController
+password_resets_controller         access_service        Admin               ApplicationController
+pages_controller                   access_service        Public Info         ApplicationController
+profiles_controller                content_service       Features Demo       ApplicationController
+
+
+=== Services Strategy Components Layout
+
+ServiceFactory
+    Factory::FactoriesBase
+        +Factory::ObjectStorageService
+
+ContentService
+ProfilesService
+    ContentProfileDomain
+        Factory::DomainsBase
+
+AccessService
+    AccessProfileDomain
+        Factory::DomainsBase
+
+Providers::DBProfileProvider
+Providers::XMLProfileProvider
+    Factory::ProvidersBase
+        +Factory::ObjectStorageService
+
+Providers::InlineValuesAdapter
+Providers::FileSystemAdapter
+    Factory::ContentAdaptersBase
+        Factory::DomainsBase
+
+Secure::UserProfile
+    +Factory::ObjectStorageService
+    +Secure::UserAccessControl
+    (proxy)User
+        +Secure::UserProfileHelper
+
+Secure::AccessRegistry
+    Secure::AccessRegistryUtility
+        +config/access_registry.xml
+        +config/access_registry.xsd
+        +config/content_registry.xml
+        +config/content_registry.xsd
+
+Secure::ControllerAccessControl
+Secure::ObjectStorageContainer
+
+Utility::ContentProfileBean
+    SknUtils::PageControls
+
+
+==== Special Helpers
+    PageActionsBuilder
+    Secure::ControllerAccessControl#page_action_paths
+    ApplicationHelper#do_page_actions
+
+
 
 === Model Templates
 

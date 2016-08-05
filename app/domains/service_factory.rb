@@ -1,8 +1,8 @@
 ## app/domains/service_factory.rb
 #
-# Replace factory helpers with Factory Object for DomainsBase
+# Replace factory helpers with Factory Object from DomainsBase
 # - Domain services live for one request cycle and are expensive to create, this object memorizes them
-# - This factory should be passed around like "factory"
+# - This factory should be passed around like "factory" or "service"
 # - Should make testing easier
 #
 
@@ -20,15 +20,10 @@ class ServiceFactory < ::Factory::FactoriesBase
     yield @sf_access_service if block_given?
     @sf_access_service
   end
-  def content_profile_service
-    @sf_content_profile_service ||= ::ContentProfileService.new({factory: self})
-    yield @sf_content_profile_service if block_given?
-    @sf_content_profile_service
-  end
-  def profile_service
-    @sf_profile_service ||= ::ProfileService.new({factory: self})
-    yield @sf_profile_service if block_given?
-    @sf_profile_service
+  def content_service
+    @sf_content_service ||= ::ContentService.new({factory: self})
+    yield @sf_content_service if block_given?
+    @sf_content_service
   end
 
   ##
@@ -36,12 +31,12 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def xml_profile_provider
-    @sf_xml_profile_builder ||= Builder::XMLProfileProvider.new({factory: self})
+    @sf_xml_profile_builder ||= Providers::XMLProfileProvider.new({factory: self})
     yield @sf_xml_profile_builder if block_given?
     @sf_xml_profile_builder
   end
   def db_profile_provider
-    @sf_db_profile_builder ||= Builder::DBProfileProvider.new({factory: self})
+    @sf_db_profile_builder ||= Providers::DBProfileProvider.new({factory: self})
     yield @sf_db_profile_builder if block_given?
     @sf_db_profile_builder
   end
@@ -51,12 +46,12 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def content_adapter_file_system
-    @sf_content_adapter_file_system ||= Builder::FileSystemAdapter.new({factory: self})
+    @sf_content_adapter_file_system ||= Providers::FileSystemAdapter.new({factory: self})
     yield @sf_content_adapter_file_system if block_given?
     @sf_content_adapter_file_system
   end
   def content_adapter_inline_values
-    @sf_content_adapter_inline_values ||= Builder::InlineValuesAdapter.new({factory: self})
+    @sf_content_adapter_inline_values ||= Providers::InlineValuesAdapter.new({factory: self})
     yield @sf_content_adapter_inline_values if block_given?
     @sf_content_adapter_inline_values
   end

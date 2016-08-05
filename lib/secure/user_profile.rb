@@ -11,8 +11,7 @@ module Secure
 
     @@object_storage_service_prefix = self.name
 
-    attr_accessor :id, :person_authenticated_key, :last_access, :name, :user_options,
-                  :assigned_groups, :assigned_roles, :username, :email, :roles
+    attr_accessor :id, :person_authenticated_key, :last_access, :name, :username, :email
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
     singleton_class.send :delegate, :find_by, :find_each, :where, :to => ::User
@@ -54,6 +53,37 @@ module Secure
     def remember_token
       proxy_u.remember_token
     end
+
+    # Prevent Modification
+    def user_options
+      dup_string_array(@user_options)
+    end
+    def assigned_groups
+      dup_string_array(@assigned_groups)
+    end
+    def roles
+      dup_string_array(@roles)
+    end
+    def assigned_roles
+      dup_string_array(@assigned_roles)
+    end
+
+    def user_options=(v)
+      @user_options = dup_string_array(v)
+    end
+    def assigned_groups=(v)
+      @assigned_groups = dup_string_array(v)
+    end
+    def roles=(v)
+      @roles = dup_string_array(v)
+    end
+    def assigned_roles=(v)
+      @assigned_roles = dup_string_array(v)
+    end
+    def dup_string_array(str_ary)
+      [str_ary].flatten.reject(&:blank?).map() {|s| "#{s}"}
+    end
+
 
     # Authenticate returns self, we need to override that return value to return us instead
     #   user.authenticate('notright')      # => false

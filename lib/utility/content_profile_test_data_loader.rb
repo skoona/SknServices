@@ -224,16 +224,17 @@ module Utility
                "1" => {value: "9",  type_name: "LicensedStates",  description: "Ohio"},
                "2" => {value: "23", type_name: "LicensedStates", description: "Illinois"} }
           },
-          {name: "Activity",   description: "Project Status Reports", value_data_type: "String",
+          {name: "Activity",   description: "Partner Relationship Reports", value_data_type: "String",
            content_type_opts_attributes: {
                "0" => {value: "*.pdf", type_name: "Activity", description: "Document store Project Status Report Document Type ID"}
            }
           },
           {name: "FileDownload",   description: "Project Related Images", value_data_type: "String",
            content_type_opts_attributes: {
-               "0" => {value: "*.png", type_name: "FileDownload", description: "Project Related Images by Document Type PNG"},
-               "1" => {value: "*.jpg", type_name: "FileDownload", description: "Project Related Images by Document Type JPEG"},
-               "2" => {value: "*.pdf", type_name: "FileDownload", description: "Project Related Images by Document Type PDF"}
+               "0" => {value: "*.png", type_name: "FileDownload", description: "Project Related by Document Type PNG"},
+               "1" => {value: "*.jpg", type_name: "FileDownload", description: "Project Related by Document Type JPEG"},
+               "2" => {value: "*.pdf", type_name: "FileDownload", description: "Project Related by Document Type PDF"},
+               "3" => {value: "*.log", type_name: "FileDownload", description: "Project Related by Document Type LOG"}
            }
           }
       ])
@@ -256,7 +257,8 @@ module Utility
                "2" => {value: "EmployeeSecondary", type_name: "UserGroups", description: "Project Workfiles"},
                "3" => {value: "VendorPrimary",     type_name: "UserGroups", description: "Project Workfiles"},
                "4" => {value: "VendorSecondary",   type_name: "UserGroups", description: "Project Workfiles"},
-               "5" => {value: "Developer",         type_name: "UserGroups", description: "Project Workfiles"}
+               "5" => {value: "BranchPrimary",     type_name: "UserGroups", description: "Project Workfiles"},
+               "6" => {value: "Developer",         type_name: "UserGroups", description: "Project Workfiles"}
            }
           }
       ])
@@ -265,8 +267,8 @@ module Utility
       [
        ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
        ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
-       ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
-       ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Access Relationship Documents'],
+       ['LicensedStates', ['21','9','23'], 'Branch',  ['0034'], 'Licensed to operate in state'],
+       ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
        ['Commission',     ['*.csv'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
        ['Notification',   ['Cancel'],    'Branch',  ['0037'], 'Notify Branch of Policy Events'],
@@ -275,7 +277,10 @@ module Utility
        ['Commission',     ['*.log'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
        ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
-       ['FileDownload',   ['*.pdf','*.png','*.jpg'], 'UserGroups',  ['Manager','Developer','EmployeePrimary'], 'Shared access to project working files']
+       ['FileDownload',   ['*.pdf'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files'],
+       ['FileDownload',   ['*.png'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files'],
+       ['FileDownload',   ['*.jpg'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files'],
+       ['FileDownload',   ['*.log'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files']
 
       ].each do |req|
         cchoice = selections_choose_for(req[1], selections_for_content_type(req[0], true))
@@ -288,10 +293,13 @@ module Utility
           ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
           ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
-          ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Access Relationship Documents'],
+          ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
           ['Commission',     ['*.log'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
-          ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events']
+          ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
+
+          ['FileDownload',   ['*.pdf'], 'UserGroups',  ['EmployeeSecondary'], 'Shared access to project working files'],
+          ['FileDownload',   ['*.pdf'], 'UserGroups',  ['BranchPrimary'], 'Shared access to project working files']
 
       ].each do |req|
         cchoice = selections_choose_for(req[1], selections_for_content_type(req[0], true))
@@ -301,8 +309,8 @@ module Utility
 
       cpe_vendor = []
       [
-          ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Access Relationship Documents'],
-          ['FileDownload',   ['*.pdf'],  'UserGroups',  ['VendorPrimary'], 'Shared access to project working files']
+          ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
+          ['FileDownload',   ['*.log'],  'UserGroups',  ['VendorPrimary'], 'Shared access to project working files']
 
       ].each do |req|
         cchoice = selections_choose_for(req[1], selections_for_content_type(req[0], true))

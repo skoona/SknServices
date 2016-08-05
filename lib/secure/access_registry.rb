@@ -156,17 +156,18 @@ module Secure
     # User Role MUST match CRUD Role AND
     # User options MUST match Resource Options if Resource Options are present
     def self.check_role_permissions? (user_roles, resource_uri, crud_mode="READ", options=nil)
-      user_roles = [user_roles] unless user_roles.kind_of?(Array)
+      uopts = [options].flatten.reject(&:blank?).map() {|s| "#{s}"}
+      roles = [user_roles].flatten.reject(&:blank?).map() {|s| "#{s}"}
       result = false
 
       if is_secured? resource_uri then
         result = catch :found do
-          user_roles.each do |user_role|
+          roles.each do |user_role|
             result  = role_in_resource_crud?(user_role, resource_uri, crud_mode)
             #puts "\tCHECK_ROLE_PERMISSIONS?(#{user_role}->#{crud_mode}) returned=#{result}"
             next unless result
             opts    = has_options_ary?(user_role,resource_uri,crud_mode)
-            result  = role_in_resource_crud_with_option?(user_role,resource_uri,crud_mode,options) if opts
+            result  = role_in_resource_crud_with_option?(user_role,resource_uri,crud_mode,uopts) if opts
             #puts "\t\tCHECK_ROLE_PERMISSIONS?(#{crud_mode}) returned=#{result}"
             throw :found, true if result
           end # end user roles
@@ -174,7 +175,7 @@ module Secure
         end # end catch
       else
         # TODO: Enable logging of all unregistered
-        Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{options}") if Rails.logger.present?
+        Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{uopts}") if Rails.logger.present?
         result = @@ar_strict_mode
       end
 
@@ -186,18 +187,19 @@ module Secure
     # User Role MUST match CRUD Role AND
     # User options MUST match Resource Options if Resource Options are present
     def self.check_access_permissions? (user_roles, resource_uri, options=nil)
-      user_roles = [user_roles] unless user_roles.kind_of?(Array)
+      uopts = [options].flatten.reject(&:blank?).map() {|s| "#{s}"}
+      roles = [user_roles].flatten.reject(&:blank?).map() {|s| "#{s}"}
       result = false
       value = false
        if is_secured? resource_uri then
          result = catch :found do
-           user_roles.each do |user_role|
+           roles.each do |user_role|
               CRUD_MODES.each do |crud_mode|
                 value  = role_in_resource_crud?(user_role,resource_uri, crud_mode)
                 #puts "\tCHECK_ACCESS_PERMISSIONS?(#{user_role}->#{crud_mode}) returned=#{value}"
                 next unless value
                 opts    = has_options_ary?(user_role,resource_uri,crud_mode)
-                value  = role_in_resource_crud_with_option?(user_role,resource_uri,crud_mode,options) if value and opts
+                value  = role_in_resource_crud_with_option?(user_role,resource_uri,crud_mode,uopts) if value and opts
                 #puts "\t\tCHECK_ACCESS_PERMISSIONS?(#{crud_mode}) returned=#{value}"
                 throw :found, true if value
               end # end crud modes
@@ -206,7 +208,7 @@ module Secure
          end # end catch
        else
          # TODO: Enable logging of all unregistered
-         Rails.logger.info("#{self.name}.#{__method__}() Not Secured: #{resource_uri} with opts=#{options}") if Rails.logger.present?
+         Rails.logger.info("#{self.name}.#{__method__}() Not Secured: #{resource_uri} with opts=#{uopts}") if Rails.logger.present?
 
          result = @@ar_strict_mode
        end
@@ -244,31 +246,37 @@ module Secure
     ##
     def self.get_resource_content_entries(user_roles, options=nil)
       results = []
+      opts = [options].flatten.reject(&:blank?).map() {|s| "#{s}"}
+      roles = [user_roles].flatten.reject(&:blank?).map() {|s| "#{s}"}
+
       @@ar_permissions.each_pair do |uri, bundle|
         next unless bundle[:content]
-        result = get_resource_content_entry(user_roles, uri, options)
+        result = get_resource_content_entry(roles, uri, opts)
         results << result unless result.empty?
       end
-      Rails.logger.info("#{self.name}.#{__method__}() opts=#{options}") if Rails.logger.present?
+      Rails.logger.info("#{self.name}.#{__method__}() opts=#{opts}, roles=#{roles}, result=#{results}") if Rails.logger.present?
       results
     end
 
     def self.get_resource_content_entry(user_roles, resource_uri, options=nil)
       bundle = @@ar_permissions[resource_uri]
       results = {}
-      if bundle.present? and bundle[:content] and check_access_permissions?(user_roles, resource_uri, options)
+      permission = check_access_permissions?(user_roles, resource_uri, options)
+
+      if bundle.present? and bundle[:content] and permission
         content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
 
         opts = {}
         user_roles.map do |user_role|
           CRUD_MODES.map do |crud_mode|
-            next unless bundle.key?(crud_mode)
-            opts.merge!({uri: resource_uri, role: user_role, role_opts: bundle[crud_mode][user_role]}) if has_options_ary?(user_role,resource_uri,crud_mode)
+            next unless bundle.key?(crud_mode)                          #  copy the string array else it might be deleted
+            opts.merge!({uri: resource_uri, role: user_role, role_opts: bundle[crud_mode][user_role].map(&:to_s)}) if has_options_ary?(user_role,resource_uri,crud_mode)
           end
         end
 
         topic_value = opts.fetch(:role_opts,[])
         topic_value.select! {|m| options.include?(m)} if options.present?   #user_options are a primary filter for XML version of content profile
+
         unless topic_value.empty?                                           # if there are no options remaining DO NOT return this entry
           results = {
               uri: resource_uri.to_s,

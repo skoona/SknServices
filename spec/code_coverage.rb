@@ -26,7 +26,7 @@ if "true".eql?ENV["COVERAGE"] and "test".eql?ENV["RAILS_ENV"]
     end
     add_group 'Services Strategy' do |src_file|
       ['app/domains','app/services',
-       'lib/factory','lib/builder',
+       'lib/factory','lib/providers',
        'app/beans'].any? do |item|
         src_file.filename.include? item
       end

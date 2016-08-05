@@ -1,11 +1,11 @@
 ##
-# lib/builder/db_profile_provider.rb
+# lib/providers/db_profile_provider.rb
 #
 # ContentProfile from DB
 #
 # Storage thru Factory
 
-module Builder
+module Providers
   class DBProfileProvider < ::Factory::ProvidersBase
 
     PROVIDER_PREFIX = self.name

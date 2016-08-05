@@ -1,5 +1,5 @@
 ##
-# lib/builder/file_system_adapter.rb
+# lib/providers/file_system_adapter.rb
 #
 # Builds filelists
 #
@@ -18,8 +18,8 @@
 #             type: "application/pdf")
 # end
 
-module Builder
-  class FileSystemAdapter < ::Factory::ContentAdapterBase
+module Providers
+  class FileSystemAdapter < ::Factory::ContentAdaptersBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS  = 'access'

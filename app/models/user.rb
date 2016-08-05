@@ -31,17 +31,20 @@ class User < ActiveRecord::Base
     user.generate_unique_token(:person_authenticated_key)   # Never Changes
     user.regenerate_remember_token!   # :remember_token Change by reset or any update
     user.active = true
-    user.user_options = [user.user_options] unless user.user_options.is_a?(Array)
+    user.user_options = [user.user_options].flatten.reject(&:blank?)
+    user.roles = [user.roles].flatten.reject(&:blank?)
+    user.assigned_roles = [user.assigned_roles].flatten.reject(&:blank?)
+    user.assigned_groups = [user.assigned_groups].flatten.reject(&:blank?)
   }
 
 
   before_save { |user|
-    user.roles = [user.roles].flatten unless user.roles.is_a?(Array)
-    user.assigned_roles = [user.assigned_roles].flatten unless user.assigned_roles.is_a?(Array)
-    user.assigned_groups = [user.assigned_groups].flatten unless user.assigned_groups.is_a?(Array)
+    user.roles = [user.roles].flatten.reject(&:blank?)
+    user.assigned_roles = [user.assigned_roles].flatten.reject(&:blank?)
+    user.assigned_groups = [user.assigned_groups].flatten.reject(&:blank?)
     user.email = user.email.downcase
     user.username = user.username.downcase
-    user.user_options = [user.user_options] unless user.user_options.is_a?(Array)
+    user.user_options = [user.user_options].flatten.reject(&:blank?)
   }
 
   serialize :roles, Array

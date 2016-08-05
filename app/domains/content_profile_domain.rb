@@ -1,10 +1,10 @@
 ##
 #
-# Inherited by: ContentProfileService
+# Inherited by: ContentService
 #
 #
 
-class ProfilesDomain < ::Factory::DomainsBase
+class ContentProfileDomain < ::Factory::DomainsBase
 
 
 
@@ -388,7 +388,7 @@ class ProfilesDomain < ::Factory::DomainsBase
           display_name: rec.display_name,
           email: rec.email,
           authentication_provider: 'SknService::Bcrypt',
-          profile_type: rec.user_options.delete_if(&:blank?) }.to_json }}
+          profile_type: rec.user_options }.to_json }}
       ]
     end
     results

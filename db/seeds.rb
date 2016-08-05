@@ -5,102 +5,6 @@
 #
 #
 begin
-  Rails.logger.info "Defining  Users"
-  users =[ {
-      username:              "developer",
-      name:                  "Skoona Developer",
-      email:                 "skoona@gmail.com",
-      password:                "developer99",
-      password_confirmation:   "developer99",
-      user_options:            ["Developer","EmployeePrimary", "0034", "0037", "0040","0099", "1601", "USA"],
-      assigned_groups:         ["Developer","EmployeePrimary"],
-      assigned_roles:          ["Services.Action.Developer"]
-  },
-  {
-      username:              "eptester",
-      name:                  "Employee Primary User",
-      email:                 "appdev@localhost.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602", "USA"],
-      assigned_groups:         ["Manager", "EmployeePrimary"],
-      assigned_roles:          ["Services.Action.Admin"]
-  },
-  {
-      username:              "estester",
-      name:                  "Employee Secondary User",
-      email:                 "appdev1@localhost.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["EmployeeSecondary", "0037","0099", "1602", "USA"],
-      assigned_groups:         ["EmployeeSecondary"],
-      assigned_roles:          ["Services.Action.Primary",
-                                "Test.Branch.Commission.Experience.PDF.Access",
-                                "Test.Branch.Commission.Statement.PDF.Access",
-                                "Test.Branch.Commission.Statement.CSV.Access"]
-  },
-  {
-      username:              "bptester",
-      name:                  "Branch Primary User",
-      email:                 "appdev2@localhost.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["BranchPrimary", "0034", "0037", "0040", "USA"],
-      assigned_groups:         ["BranchPrimary"],
-      assigned_roles:          ["Services.Action.Primary",
-                                "Services.Action.ResetPassword",
-                                "Test.Branch.Commission.Experience.PDF.Access",
-                                "Test.Branch.Commission.Statement.PDF.Access",
-                                "Test.Branch.Commission.Statement.CSV.Access"]
-  },
-  {
-      username:              "bstester",
-      name:                  "Branch Secondary User",
-      email:                 "appdev3@localhost.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["BranchSecondary", "0037", "USA"],
-      assigned_groups:         ["BranchSecondary"],
-      assigned_roles:          ["Services.Action.ResetPassword",
-                                "Test.Branch.Commission.Statement.CSV.Access"]
-  },
-   {
-       username:              "bnptester",
-       name:                  "Branch No Privileges User",
-       email:                 "appdev6@localhost.com",
-       password:                "nobugs",
-       password_confirmation:   "nobugs",
-       user_options:            [],
-       assigned_groups:         ["BranchSecondary"],
-       assigned_roles:          ["Services.Action.ResetPassword" ]
-   },
-  {
-      username:              "vptester",
-      name:                  "Vendor Primary User",
-      email:                 "appdev4@localhost.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["VendorPrimary", "0099"],
-      assigned_groups:         ["VendorPrimary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
-  },
-  {
-      username:              "vstester",
-      name:                  "Vendor Secondary User",
-      email:                 "appdev5@localhost.com",
-      password:                "nobugs",
-      password_confirmation:   "nobugs",
-      user_options:            ["VendorSecondary", "0099"],
-      assigned_groups:         ["VendorSecondary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
-  }
-  ]
-
-  Rails.logger.info "Clear existing User Table"
-  User.delete_all
-
-  urecs = User.create!(users)
-  Rails.logger.info "Users Created #{urecs.size}"
 
   ##
   #
@@ -127,8 +31,9 @@ begin
   content_profile_s =
       {name: "Services.Action.Use.ContentProfile", description: "Consumer of Authorization Content Profile"}
 
-  group_manage_p =
-      {name: "Services.Action.Admin.UserAuthorizationGroups",   description: "Administer Authorization Group"}
+  group_manage_p = [
+      {name: "Services.Action.Admin.UserAuthorizationGroups",   description: "Administer Authorization Group"},
+      {name: "Test.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
 
   group_manage_s =
       {name: "Services.Action.Use.UserAuthorizationGroups", description: "Consumer of Authorization Groups"}
@@ -180,7 +85,8 @@ begin
       all_users ,
       user_manage_p ,
       group_manage_p ,
-      content_profile_s
+      content_profile_s,
+      file_manage_s
   ].flatten.uniq
 
   limited_collection = [
@@ -198,13 +104,13 @@ begin
 
 
   control = {
-       "Skoona Development" => all_roles,
-       "Corporate Admin" => admin_collection,
-       "Corporate Staff" => limited_collection,
-       "Branch Staff"    => public_collection,
-       "Partner Admin"    => public_collection,
-       "Partner Staff"    => public_collection,
-       "Branch Admin"    => branch_admin_collection
+      "Skoona Development" => all_roles,
+      "Corporate Admin" => admin_collection,
+      "Corporate Staff" => limited_collection,
+      "Branch Staff"    => public_collection,
+      "Partner Admin"    => public_collection,
+      "Partner Staff"    => public_collection,
+      "Branch Admin"    => branch_admin_collection
   }
 
   # Remove Current Stuf
@@ -226,6 +132,103 @@ begin
     grp.save!
   end
   Rails.logger.info "Completed creating UserGroup Management process model"
+
+  Rails.logger.info "Defining  Users"
+  users =[ {
+      username:              "developer",
+      name:                  "Skoona Developer",
+      email:                 "skoona@gmail.com",
+      password:                "developer99",
+      password_confirmation:   "developer99",
+      user_options:            ["Developer","EmployeePrimary", "0034", "0037", "0040","0099", "1601"],
+      assigned_groups:         ["Developer","EmployeePrimary"],
+      assigned_roles:          ["Services.Action.Developer"]
+  },
+  {
+      username:              "eptester",
+      name:                  "Employee Primary User",
+      email:                 "appdev@localhost.com",
+      password:                "nobugs",
+      password_confirmation:   "nobugs",
+      user_options:            ["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602"],
+      assigned_groups:         ["Manager", "EmployeePrimary"],
+      assigned_roles:          ["Services.Action.Admin"]
+  },
+  {
+      username:              "estester",
+      name:                  "Employee Secondary User",
+      email:                 "appdev1@localhost.com",
+      password:                "nobugs",
+      password_confirmation:   "nobugs",
+      user_options:            ["EmployeeSecondary", "0037","0099", "1602"],
+      assigned_groups:         ["EmployeeSecondary"],
+      assigned_roles:          ["Services.Action.Primary",
+                                "Test.Branch.Commission.Experience.PDF.Access",
+                                "Test.Branch.Commission.Statement.PDF.Access",
+                                "Test.Branch.Commission.Statement.CSV.Access"]
+  },
+  {
+      username:              "bptester",
+      name:                  "Branch Primary User",
+      email:                 "appdev2@localhost.com",
+      password:                "nobugs",
+      password_confirmation:   "nobugs",
+      user_options:            ["BranchPrimary", "0034", "0037", "0040"],
+      assigned_groups:         ["BranchPrimary"],
+      assigned_roles:          ["Services.Action.Primary",
+                                "Services.Action.ResetPassword",
+                                "Test.Branch.Commission.Experience.PDF.Access",
+                                "Test.Branch.Commission.Statement.PDF.Access",
+                                "Test.Branch.Commission.Statement.CSV.Access"]
+  },
+  {
+      username:              "bstester",
+      name:                  "Branch Secondary User",
+      email:                 "appdev3@localhost.com",
+      password:                "nobugs",
+      password_confirmation:   "nobugs",
+      user_options:            ["BranchSecondary", "0037"],
+      assigned_groups:         ["BranchSecondary"],
+      assigned_roles:          ["Services.Action.ResetPassword",
+                                "Test.Branch.Commission.Statement.CSV.Access"]
+  },
+   {
+       username:              "bnptester",
+       name:                  "Branch No Privileges User",
+       email:                 "appdev6@localhost.com",
+       password:                "nobugs",
+       password_confirmation:   "nobugs",
+       user_options:            [],
+       assigned_groups:         ["BranchSecondary"],
+       assigned_roles:          ["Services.Action.ResetPassword" ]
+   },
+  {
+      username:              "vptester",
+      name:                  "Vendor Primary User",
+      email:                 "appdev4@localhost.com",
+      password:                "nobugs",
+      password_confirmation:   "nobugs",
+      user_options:            ["VendorPrimary", "0099"],
+      assigned_groups:         ["VendorPrimary"],
+      assigned_roles:          ["Services.Action.ResetPassword"]
+  },
+  {
+      username:              "vstester",
+      name:                  "Vendor Secondary User",
+      email:                 "appdev5@localhost.com",
+      password:                "nobugs",
+      password_confirmation:   "nobugs",
+      user_options:            ["VendorSecondary", "0099"],
+      assigned_groups:         ["VendorSecondary"],
+      assigned_roles:          ["Services.Action.ResetPassword"]
+  }
+  ]
+
+  Rails.logger.info "Clear existing User Table"
+  User.delete_all
+
+  urecs = User.create!(users)
+  Rails.logger.info "Completed creating Users model: Users Created #{urecs.size}"
 
 
   ##

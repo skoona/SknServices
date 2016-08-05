@@ -59,14 +59,14 @@ class ProfilesController < ApplicationController
 
   # HTML only response
   def content_profile_demo
-    @page_controls = content_profile_service.handle_demo_page(params)
+    @page_controls = content_service.handle_demo_page(params)
     flash.notice.now = @page_controls.message if @page_controls.message.present?
     # unless were CRUDing the view will handle any errors, so no redirects needed here.
   end
 
   # JSON only response
   def content_profile_api
-    @page_controls = content_profile_service.handle_content_api(params)
+    @page_controls = content_service.handle_content_api(params)
     render json: @page_controls.to_hash, status: @page_controls.success ? :accepted : :not_found, layout: false, content_type: :json and return
   end
 
@@ -273,10 +273,10 @@ end
                                 to those assets into the session just before the controller exits back to the browser.  The ServiceFactory is lightwieght and would derive no real benefit from being
                                 serialized into a session.  So it is simply created anew with each request/response cycle.</p>
                             <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
-                                To instantiate a ContentProfileService use: <code>service_factory.content_profile_service.some_method_name(params)</code>.</p>
+                                To instantiate a ContentService use: <code>service_factory.content_service.some_method_name(params)</code>.</p>
                             <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all service/domain objects in the application. And to additionally
                                 provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
-                            <p>Inside of services, like ContentProfileService or ContentProfileBuilder, reference the service_factory as <code>:factory</code>, as in: <code>factory.content_profile_service.some_method</code> .</p>
+                            <p>Inside of services, like ContentService or ContentProfileBuilder, reference the service_factory as <code>:factory</code>, as in: <code>factory.content_service.some_method</code> .</p>
                         </dd>
                         <dt>Inheritance</dt>
                         <dd><p>ServiceFactory, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
@@ -337,7 +337,7 @@ end
                             </dl>
                         </dd>
                     </dl>
-                    <p>All Services, like ContentProfileBuilder, ProfileDataServicess or ContentProfileService, should be instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
+                    <p>All Services, like ContentProfileBuilder, ProfileDataServicess or ContentService, should be instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
                 </div>
             </div>
             <p>Container, and Provider of Business Object Services!</p>
@@ -361,7 +361,7 @@ end
                             <p>The intended use of this services object methods is to handle all IO related operations for Profile Data. It should not interact directly with ApplicationController entry points.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>ProfileDataServices, inherits common instantiation service from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
+                        <dd><p>ProfileDataServices, inherits common instantiation service from the <code>ContentProfileDomain</code> class.  The ContentProfileDomain class inherits from the <code>::Factory::DomainsBase</code>,
                             which yields common initialization services, like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
                             object storage services and session storage services through its inheritance chain.</p></dd>
                         <dt>Provides</dt>
@@ -376,14 +376,14 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#ContentProfileService" aria-expanded="false" aria-controls="collapseTwo">
-                        ContentProfileService
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#ContentService" aria-expanded="false" aria-controls="collapseTwo">
+                        ContentService
                     </a>
                 </h4>
             </div>
-            <div id="ContentProfileService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div id="ContentService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
-                    <h5>ContentProfileService</h5>
+                    <h5>ContentService</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
@@ -392,11 +392,11 @@ end
                                 on the <code>SknUtils::PageControls</code> group of result bean containers.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>ContentProfileService, inherits io routines and common business logic from the <code>ProfilesDomain</code> class.  The ProfilesDomain class inherits from the <code>::Factory::DomainsBase</code>,
+                        <dd><p>ContentService, inherits io routines and common business logic from the <code>ContentProfileDomain</code> class.  The ContentProfileDomain class inherits from the <code>::Factory::DomainsBase</code>,
                             which yields common initialization services of like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
                             object storage services and session storage services through its inheritance chain.</p>
                         <dt>Provides</dt>
-                        <dd><p>ContentProfileService provides customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
+                        <dd><p>ContentService provides customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
                             in a <code>@page_controls</code> bean container, and all exceptions are trapped by its top level method.   PageControl bean containers are required to include
                             <code>success: true|false, and message: error_message|success_message|empty</code> values at a minimum.</p>
                             <p>JSON Api methods are hosted by this service.</p>
@@ -426,7 +426,7 @@ end
                             <p>The intended use of content profile builder methods is to offer a business logic control of accessible content available to each authenticated user.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>Builder::ProfileBuilder, like the <code>ProfilesDomain</code>, inherits directly from the <code>::Factory::DomainsBase</code> class, and yield business logic methods to higher level service objects.
+                        <dd><p>Builder::ProfileBuilder, like the <code>ContentProfileDomain</code>, inherits directly from the <code>::Factory::DomainsBase</code> class, and yield business logic methods to higher level service objects.
                             Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
                         <dt>Provides</dt>
                         <dd><p>ProfileBuilder provides logical access to the service factory and all other peer services the factory manages.  It directly provides methods to produce Content Profiles.</p>
@@ -465,7 +465,7 @@ end
                             <p>The intended use of domain services classes methods is to offer a business logic control of a single business domain.  It is the starting point for all business domains objects and process services.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>DomainServices, like the <code>ProfilesDomain</code>, inherit directly from the <code>::Factory::DomainsBase</code> class, and yield business logic methods to higher level service objects.
+                        <dd><p>DomainServices, like the <code>ContentProfileDomain</code>, inherit directly from the <code>::Factory::DomainsBase</code> class, and yield business logic methods to higher level service objects.
                             Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
                         <dt>Provides</dt>
                         <dd><p>DomainServices provide logical access to the service factory and all other peer services the factory manages.  Typically you would find two to three levels of methods in a DomainServices class.</p>
@@ -484,7 +484,7 @@ end
                 </div>
                 <p>The Business Process Interface is here.</p>
             </div>
-            <p>Inherited by: <code>ContentProfileService, ProfileDataServices, ...</code></p>
+            <p>Inherited by: <code>ContentService, ProfileDataServices, ...</code></p>
         </div>
 
         <div class="panel panel-info">

@@ -6,6 +6,8 @@
 class AccessProfileDomain < ::Factory::DomainsBase
 
   def reload_access_registry
+    # hash = Secure::AccessRegistry.get_ar_permissions_hash
+    # puts generate_xml_from_hash(hash, 'my_stuff', 'FileDownload/UserGroups/Pdf')
     Secure::AccessRegistry.ar_reload_configuration_file()
   end
 
@@ -21,5 +23,27 @@ class AccessProfileDomain < ::Factory::DomainsBase
   def role_select_options
     UserRole.select_options
   end
+
+
+  ##
+  # generate xml from a hash of hashes or array of hashes
+  # generate xml from a regular hash, with/out arrays
+  def generate_xml_from_hash(hash, base_type, collection_key)
+    builder = Nokogiri::XML::Builder.new do |xml|
+      xml.send(base_type) { process_simple_array(collection_key, hash, xml) }
+    end
+
+    builder.to_xml
+  end
+  # support for #generate_xml_from_hash
+  def process_simple_array(label,array,xml)
+    array.each do |hash|
+      kids,attrs = hash.partition{ |k,v| v.is_a?(Array) }
+      xml.send(label,Hash[attrs]) do
+        kids.each{ |k,v| process_array(k,v,xml) }
+      end
+    end
+  end
+
 
 end

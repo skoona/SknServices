@@ -46,7 +46,7 @@
     <resource secured="true" content="true">
         <uri>Commission/Branch/CSV</uri>
         <description>Branch Commission CSV Datafiles</description>
-        <userdata>*.log|*.csv</userdata>
+        <userdata>*.log</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="0034,0037,0040">Test.Branch.Commission.Statement.CSV.Access</authorizedRole>
@@ -82,7 +82,7 @@
         <userdata>"21|9|23|"</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="0037">Test.Branch.Operations.LicensedStates.USA</authorizedRole>
+                <authorizedRole options="0034">Test.Branch.Operations.LicensedStates.USA</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -113,7 +113,7 @@
     <resource secured="true" content="true">
         <uri>FileDownload/UserGroups/Datafiles</uri>
         <description>Permission to Download Data Files</description>
-        <userdata>data:*.dat|csv:*.csv|log:*.log</userdata>
+        <userdata>*.log</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Datafile</authorizedRole>

@@ -7,13 +7,13 @@ class AccessService < ::AccessProfileDomain
 
 
   # Users Controller Methods
-  def handle_index
+  def handle_users_index
     result = { counter: 0,
                users: User.paginate(page: params[:page], :per_page => 16)
     }
 
     if current_user_has_create?('users/new')
-      result.store(:package, {page_actions: [{ id: "new-user", path: :new_user_url, text: "User", icon: 'glyphicon-plus'}]})
+      result.store(:package, {page_actions: [{ id: "new-user", path: new_user_path, text: "User", icon: 'glyphicon-plus'}]})
     end
     @page_controls = SknUtils::PageControls.new(result)
   end

@@ -1,12 +1,12 @@
 ##
-# lib/builder/inline_values_adapter.rb
+# lib/providers/inline_values_adapter.rb
 #
 # Parses ContentProfileEntries to extract inline values
 #
 #
 
-module Builder
-  class InlineValuesAdapter < ::Factory::ContentAdapterBase
+module Providers
+  class InlineValuesAdapter < ::Factory::ContentAdaptersBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS = 'access'

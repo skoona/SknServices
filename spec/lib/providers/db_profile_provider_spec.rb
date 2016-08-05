@@ -1,7 +1,7 @@
 # spec/services/profile_builder_spec.rb
 #
 
-describe Builder::DBProfileProvider, "Service routines of Builder::DBProfileProvider."  do
+describe Providers::DBProfileProvider, "Service routines of Provider::DBProfileProvider."  do
   let(:user) {page_user_developer}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
@@ -18,16 +18,16 @@ describe Builder::DBProfileProvider, "Service routines of Builder::DBProfileProv
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Builder::DBProfileProvider.new }.to raise_error(ArgumentError)
+      expect{ Providers::DBProfileProvider.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(Builder::DBProfileProvider.new({factory: service_factory})).to be_a(Builder::DBProfileProvider)
+      expect(Providers::DBProfileProvider.new({factory: service_factory})).to be_a(Providers::DBProfileProvider)
     end
     it "#new fails when :factory is invalid." do
-      expect{ Builder::DBProfileProvider.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Providers::DBProfileProvider.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     it "#factory.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Builder::DBProfileProvider
+      expect( @service ).to be_a Providers::DBProfileProvider
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
@@ -38,7 +38,7 @@ describe Builder::DBProfileProvider, "Service routines of Builder::DBProfileProv
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
     it "#provider_type returns a Content as type." do
-      expect( @service.provider_type ).to eq("Builder::DBProfileProvider")
+      expect( @service.provider_type ).to eq("Providers::DBProfileProvider")
     end
   end
 

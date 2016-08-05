@@ -1,10 +1,10 @@
 ##
-# File: <root>/lib/factory/content_adapter_base.rb
+# File: <root>/lib/factory/content_adapters_base.rb
 #
 # Retrieves content for target system
 
 module Factory
-  class ContentAdapterBase < DomainsBase
+  class ContentAdaptersBase < DomainsBase
 
     def ready?
       raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"

@@ -2,7 +2,7 @@
 module ApplicationHelper
 
   def self.included(klass)
-    Rails.logger.debug("ApplicationHelper included By #{klass.name}|#{klass.to_s} self: #{self.class.name}")
+    Rails.logger.debug("ApplicationHelper included By #{klass.class.name}|#{klass.class.to_s} self: #{self.class.name}")
   end
 
   def menu_active?(menu_link)

@@ -36,15 +36,16 @@ security:
 
   ! user_options:
    - Manager
-   - Staff
-   - Employee
+   - Developer
    - EmployeePrimary
    - EmployeeSecondary
-   - VendorPrimary
-   - VendorSecondary
    - BranchPrimary
    - BranchSecondary
+   - VendorPrimary
+   - VendorSecondary
    - '0034'
    - '0037'
    - '0040'
-   - '9999'
+   - '1601'
+   - '1602'
+   - '0099'

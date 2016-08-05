@@ -1,6 +1,6 @@
 
 
-RSpec.describe Builder::InlineValuesAdapter, 'Content Adapter for XML Based AccessRegistry' do
+RSpec.describe Providers::InlineValuesAdapter, 'Content Adapter for XML Based AccessRegistry' do
 
   let(:user) { page_user_developer }
   let(:mc) {ServiceFactoryMockController.new(user: user)}
@@ -15,16 +15,16 @@ RSpec.describe Builder::InlineValuesAdapter, 'Content Adapter for XML Based Acce
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Builder::InlineValuesAdapter.new }.to raise_error(ArgumentError)
+      expect{ Providers::InlineValuesAdapter.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(Builder::InlineValuesAdapter.new({factory: @factory})).to be_a(Builder::InlineValuesAdapter)
+      expect(Providers::InlineValuesAdapter.new({factory: @factory})).to be_a(Providers::InlineValuesAdapter)
     end
     it "#new fails when :factory is invalid." do
-      expect{ Builder::InlineValuesAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Providers::InlineValuesAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     it "#factory.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Builder::InlineValuesAdapter
+      expect( @service ).to be_a Providers::InlineValuesAdapter
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory

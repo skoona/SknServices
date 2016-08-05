@@ -1,7 +1,7 @@
 # spec/services/profile_builder_spec.rb
 #
 
-describe Builder::XMLProfileProvider, "Service routines of Builder::XMLProfileProvider."  do
+describe Providers::XMLProfileProvider, "Service routines of Providers::XMLProfileProvider."  do
   let(:user) {page_user_developer}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
@@ -18,16 +18,16 @@ describe Builder::XMLProfileProvider, "Service routines of Builder::XMLProfilePr
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Builder::XMLProfileProvider.new }.to raise_error(ArgumentError)
+      expect{ Providers::XMLProfileProvider.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(Builder::XMLProfileProvider.new({factory: service_factory})).to be_a(Builder::XMLProfileProvider)
+      expect(Providers::XMLProfileProvider.new({factory: service_factory})).to be_a(Providers::XMLProfileProvider)
     end
     it "#new fails when :factory is invalid." do
-      expect{ Builder::XMLProfileProvider.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Providers::XMLProfileProvider.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     it "#factory.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Builder::XMLProfileProvider
+      expect( @service ).to be_a Providers::XMLProfileProvider
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
@@ -38,7 +38,7 @@ describe Builder::XMLProfileProvider, "Service routines of Builder::XMLProfilePr
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
     it "#provider_type returns a Access as type." do
-      expect( @service.provider_type ).to eq("Builder::XMLProfileProvider")
+      expect( @service.provider_type ).to eq("Providers::XMLProfileProvider")
     end
   end
 

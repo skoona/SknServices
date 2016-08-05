@@ -1,6 +1,6 @@
 
 
-RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
+RSpec.describe Providers::FileSystemAdapter, 'Content Adapter for File Systems' do
 
   let(:user) { page_user_developer }
   let(:mc) {ServiceFactoryMockController.new(user: user)}
@@ -15,16 +15,16 @@ RSpec.describe Builder::FileSystemAdapter, 'Content Adapter for File Systems' do
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Builder::FileSystemAdapter.new }.to raise_error(ArgumentError)
+      expect{ Providers::FileSystemAdapter.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(Builder::FileSystemAdapter.new({factory: @factory})).to be_a(Builder::FileSystemAdapter)
+      expect(Providers::FileSystemAdapter.new({factory: @factory})).to be_a(Providers::FileSystemAdapter)
     end
     it "#new fails when :factory is invalid." do
-      expect{ Builder::FileSystemAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Providers::FileSystemAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     it "#factory.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Builder::FileSystemAdapter
+      expect( @service ).to be_a Providers::FileSystemAdapter
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
