@@ -22,7 +22,14 @@ class PagesController < ApplicationController
 
   # overloaded method: display page, and act on registry
   def details_sysinfo
-    access_service.reload_access_registry if 'xml'.eql?( params[:id] )
+    flash.now[:notice] = case params[:id]
+                       when 'xml'
+                         access_service.reload_access_registry
+                         "AccessRegistry Reloaded"
+                       when 'purge'
+                         count = service_factory.purge_storage_objects((Time.now - 10.minutes).to_i)
+                         "ObjectStorageContainer Purged #{count} Items"
+                     end
   end
 
 

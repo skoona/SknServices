@@ -84,7 +84,7 @@ module Secure
         raise ArgumentError, "Invalid Credentials!" unless token.present?
         value = retrieve_storage_key(token)
         value.proxy_u.active = false if value.present? and last_login_time_expired?(value)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, State: #{value.proxy_u.active ? 'Active': 'Not Active[Expired]' }, CachedKeys: #{count_storage_objects}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, State: #{(value && value.proxy_u.active) ? 'Active': 'Not Active[Expired]' }, CachedKeys: #{count_storage_objects}")
         value
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")

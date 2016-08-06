@@ -340,15 +340,65 @@
                     <% end -%>
                 </ol>
             </div>
-            </div>
         </div>
+          <% if authenticated? and current_user_has_access?('#Management') %>
+              <div class="well">
+                <%= link_to "Reload AccessRegistry",  details_sysinfo_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
+              </div>
+          <% else %>
+              <div class="alert alert-warning" role="alert">No Authorized User</div>
+          <% end %>
+    </div>
     </div>
 
-    <% if authenticated? and current_user_has_access?('#Management') %>
-        <div class="well">
-            <%= link_to "Reload AccessRegistry",  details_sysinfo_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
+    <div class="panel panel-success">
+      <div class="panel-heading" role="tab" id="headingSix">
+        <h4 class="panel-title">
+          <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+            Secure::ObjectStorageContainer
+          </a>
+        </h4>
+      </div>
+      <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+        <div class="panel-body">
+          <% if authenticated? and current_user_has_access?('#Management') %>
+              <div class="table-responsive">
+                <table id="storage-table" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                  <caption><h4>Storage Size: <%= Secure::ObjectStorageContainer.instance.size_of_store('Admin') %></h4></caption>
+                  <thead class="bg-primary">
+                    <th>Client Class</th>
+                    <th>Key</th>
+                    <th>Value Class</th>
+                    <th>Reference/Username</th>
+                    <th>Create Time</th>
+                  </thead>
+                  <tbody>
+                  <% Secure::ObjectStorageContainer.instance.list_storage_keys_and_value_class.each do |item| -%>
+                      <% item.each_pair do |k,v| -%>
+                        <% parts = k.to_s.split('.') -%>
+                        <tr>
+                          <td><%= parts[0] %></td>
+                          <td><%= parts[1] %></td>
+                          <td><%= v[0] %></td>
+                          <td><%= v[1] %></td>
+                          <td><%= Time.at(v[2]).strftime("%Y-%m-%d %H:%M:%S %p") %></td>
+                        </tr>
+                      <% end -%>
+                  <% end -%>
+                  </tbody>
+                </table>
+              </div>
+          <% else %>
+              <div class="alert alert-warning" role="alert">No Authorized User</div>
+          <% end %>
         </div>
-    <% end %>
+        <% if authenticated? and current_user_has_access?('#Management') %>
+          <div class="well">
+            <%= link_to "Purge Object Storage items older than 10 minutes",  details_sysinfo_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
 
 </article>
 

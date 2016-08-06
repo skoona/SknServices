@@ -272,7 +272,7 @@ module Providers
             entries:[]
         }
       end
-      update_storage_object(user_profile.person_authenticated_key, results) unless ctxp.nil?
+      update_storage_object(user_profile.person_authenticated_key, results) unless results[:entries].empty?
 
       Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
       results

@@ -101,6 +101,18 @@ module Secure
       results
     end
 
+    #
+    # Returns array of arrays where [[key-without-context, username],...]
+    def list_storage_keys_and_value_class()
+      results = []
+      @objects_storage_container.each_pair do |k,v|
+        name = v.first.try(:username) || v.first.try(:[], :username) || v.first.values[0].try(:[], :filename) || "not found"
+          results << { k => [v.first.class.name, name, v.last ] }
+      end
+      Rails.logger.debug "#{self.class.name}.#{__method__}() Results=#{results.count}"
+      results
+    end
+
     ##
     # Test Support -- Clear without delay
     def test_reset!

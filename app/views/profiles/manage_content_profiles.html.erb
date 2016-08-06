@@ -24,7 +24,7 @@
                     <th>Email</th>
                     <th>Profile Role</th>
                     <th>Provider</th>
-                    <th>Exiting Profile</th>
+                    <th>Actions</th>
                     </thead>
                     <tbody class="" data-package="<%= @page_controls.to_hash().to_json %>">
                     <% @page_controls.package.user_package.each do |u| %>
@@ -34,7 +34,13 @@
                             <td><%= u.email %></td>
                             <td><%= u.try(:profile_type_description) %></td>
                             <td><%= u.try(:provider) %></td>
-                            <td class="text-center"><%= u.profile_exist ? 'Yes': 'No' %></td>
+                            <td class="text-center">
+                              <% if u.profile_exist %>
+                                  <i class="fa fa-pencil-square-o fa-lg" title="Edit Profile" aria-hidden="true"></i>
+                              <% else %>
+                                  <i class="fa fa-plus-square-o fa-lg" title="Create Profile" aria-hidden="true"></i>
+                              <% end %>
+                            </td>
                         </tr>
                     <% end  %>
                     </tbody>

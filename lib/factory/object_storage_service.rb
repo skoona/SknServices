@@ -123,6 +123,12 @@ module Factory
       rc
     end
 
+    def purge_storage_objects(seconds=nil)
+      rc = singleton_class.purge_older_than_two_days(seconds)
+      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() purged #{rc} items from storage.")
+      rc
+    end
+
   end # end ObjectStorageService namespace
 
 end # end factory namespace

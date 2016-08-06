@@ -86,7 +86,7 @@ module Providers
       ##
       # This is another security check to see if user options include these topic ids for XML Entries only
       ##
-      access_type = !!(cpe.key?(:resource_options) or cpe.key?("resource_options"))
+      access_type = (cpe.key?(:resource_options) or cpe.key?("resource_options"))
       paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") if user_options.include?(topic_id) }.compact if access_type
       paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }.compact unless access_type
 

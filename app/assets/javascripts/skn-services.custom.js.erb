@@ -558,6 +558,14 @@ $(function() {
              *     target: <div id="route-content" style="display: none"></div>
              */
             $('h2 > a.btn-lg').on('click', handleRailsInfo);
+
+
+          $('#storage-table').DataTable({
+//            scrollY: "620px",
+            language: {
+              emptyTable: "ObjectStorage is Empty!"
+            }
+          });
             break;
         case 'manage_content_profiles':
             handleManagementPages();

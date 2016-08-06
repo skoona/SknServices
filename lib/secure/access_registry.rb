@@ -266,16 +266,27 @@ module Secure
       if bundle.present? and bundle[:content] and permission
         content_type, topic_type, topic_opts = resource_uri.to_s.split('/')
 
-        opts = {}
-        user_roles.map do |user_role|
-          CRUD_MODES.map do |crud_mode|
+        opts = []
+        user_roles.each do |user_role|
+          CRUD_MODES.each do |crud_mode|
             next unless bundle.key?(crud_mode)                          #  copy the string array else it might be deleted
-            opts.merge!({uri: resource_uri, role: user_role, role_opts: bundle[crud_mode][user_role].map(&:to_s)}) if has_options_ary?(user_role,resource_uri,crud_mode)
+                                                                        # notice merge! overwrites prior role, please only READ
+            opts << {uri: resource_uri, role: user_role, role_opts: bundle[crud_mode][user_role].map {|s| "#{s}"}} if has_options_ary?(user_role,resource_uri,crud_mode)
           end
         end
 
-        topic_value = opts.fetch(:role_opts,[])
-        topic_value.select! {|m| options.include?(m)} if options.present?   #user_options are a primary filter for XML version of content profile
+        #
+        # user_options are a primary filter for XML version of content profile
+        # Multiple Roles per CRUD are collected and verified against :user_options
+        topic_value = []
+        opts.each do |choice|
+          topics = choice.fetch(:role_opts,[])
+          if options.present?
+            chosen = topics.select {|m| options.include?(m)}
+            topic_value << chosen unless chosen.empty?
+          end
+        end
+        topic_value.flatten!
 
         unless topic_value.empty?                                           # if there are no options remaining DO NOT return this entry
           results = {
