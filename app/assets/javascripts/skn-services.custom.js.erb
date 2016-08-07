@@ -435,14 +435,35 @@ function handleManagementPages() {
     });
 
     /**
-     *  Activate the UI, Track clicks from UsersTable
-     * choose first one to start things off
+     *  Activate the UI, Track Actions from UsersTable
     */
-    $('#mc-users-table tbody tr').on('click', function (event) {
+    $('#mc-users-table tbody tr a.btn').on('click', function (event) {
+      var dataPackage = $(event.currentTarget).closest('tr').data().package;
+      var title = $(event.currentTarget).find('i').attr('title');
+      var targetPak = $(event.currentTarget).data().url;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      $('#content-profile-modal input[name="username"]').val(dataPackage.username);
+      $('#content-profile-modal input[name="id"]').val(dataPackage.pak);
+      $('#content-profile-modal form').attr('action', targetPak); // sets new value
+      $('#content-profile-label').text(title);
+
+      console.log( "Selected Icon() title: " + title +", url: " + targetPak + " data: " + dataPackage.username);
+
+      $('#content-profile-modal').modal('show');
+
+    });
+
+  /*
+   * Enable Row selection to preload Entries Table
+   */
+    $('#mc-users-table tbody tr.profile').on('click', function (event) {
       var dataPackage = $(event.currentTarget).data().package;
 
       /* maintain selected item on users table */
-      $('#mc-users-table tbody tr').removeClass('success');
+      $('#mc-users-table tbody tr.profile').removeClass('success');
       $(event.currentTarget).addClass('success');
 
       /* update content profile entries table */
@@ -450,7 +471,6 @@ function handleManagementPages() {
 
     });
 
-    $('#mc-users-table tbody tr').first().click();
 
     /* Watch the Tabs change, dataTable header don't align when invisible
      * then try to update the DataTable on that page.

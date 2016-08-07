@@ -54,6 +54,24 @@ class ContentService < ::ContentProfileDomain
   end
 
   # Controller Entry Point
+  def api_get_content_object(params)
+    res = SknUtils::PageControls.new({
+                                         success: true,
+                                         message: "",
+                                         package: get_content_object_api(params)
+                                     })
+    res.success = res.package.success
+    res
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+                                   success: false,
+                                   message: e.message,
+                                   package: {}
+                               })
+  end
+
+  # Controller Entry Point
   def handle_content_profile_management(params)
     res = SknUtils::PageControls.new({
                                          success: true,
@@ -72,92 +90,49 @@ class ContentService < ::ContentProfileDomain
                                })
   end
 
-  # Controller Entry Point
-  def api_get_content_object(params)
-    res = SknUtils::PageControls.new({
-                                         success: true,
-                                         message: "",
-                                         package: get_content_object_api(params)
-                                     })
-    res.success = res.package.success
-    res
+  def handle_content_profile_create(params)
+    SknUtils::PageControls.new({
+                                 success: create_content_profile_with_profile_type_id(params),
+                                 message: 'Content Profile was successfully created.'
+                             })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     SknUtils::PageControls.new({
-                                   success: false,
-                                   message: e.message,
-                                   package: {}
-                               })
+                                 success: false,
+                                 message: "create ContentProfile failed. Msg: #{e.class.name}"
+                             })
   end
 
+  def handle_content_profile_update(params)
+    SknUtils::PageControls.new({
+                                 success: update_content_profile_with_profile_type_id(params),
+                                 message: 'Content profile was successfully updated.'
+                             })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+                                 success: false,
+                                 message: e.message
+                             })
+  end
 
   def handle_content_profile_destroy(params)
-    SknUtils::ResultBean.new({
-                                 success: true,
-                                 message: 'Content profile was successfully destroyed.',
-                                 content_profile: destroy_content_profile(params)
-                             })
-  rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::ResultBean.new({
-                                 success: false,
-                                 message: e.message,
-                                 content_profile: nil
-                             })
-  end
-
-  def handle_content_profile_update(permitted_params)
-    SknUtils::ResultBean.new({
-                                 success: true,
-                                 message: 'Content profile was successfully updated.',
-                                 content_profile: update_content_profile_from_permitted_params(permitted_params)
-                             })
-  rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::ResultBean.new({
-                                 success: false,
-                                 message: e.message,
-                                 content_profile: nil
-                             })
-  end
-
-  def handle_content_profile_creations(permitted_params)
-    SknUtils::ResultBean.new({
-                                 success: true,
-                                 message: 'Content profile was successfully created.',
-                                 content_profile: create_content_profile_from_permitted_params(permitted_params)
-                             })
-  rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::ResultBean.new({
-                                 success: false,
-                                 message: e.message,
-                                 content_profile: nil
-                             })
-  end
-
-  def handle_content_profile_index(params)
-    SknUtils::ResultBean.new({
-                                  success: true,
-                                  message: "",
-                                  content_profiles: get_page_pagination_for_content_profile_index(params)
-                               })
-  rescue Exception => e
-    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::ResultBean.new({
-                                   success: false,
-                                   message: e.message,
-                                   content_profiles: []
-                               })
-  end
-
-  def handle_content_profile_show_or_edit(params)
-    content_profile_object = find_content_profile_by_id(params[:id])
     SknUtils::PageControls.new({
-                                success: true,
-                                message: "",
-                                content_profile: content_profile_object,
-                                content_profile_entries: get_content_profiles_entries_entry_info(content_profile_object)
+                                 success: destroy_content_profile_by_pak(params),
+                                 message: 'Content profile was successfully destroyed.'
+                             })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+                                 success: false,
+                                 message: e.message
+                             })
+  end
+
+  def handle_content_profile_entries_create(params)
+    SknUtils::PageControls.new({
+                                success: create_content_profile_entries(params),
+                                message: 'Content profile entry was successfully created.'
                              })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
@@ -167,20 +142,17 @@ class ContentService < ::ContentProfileDomain
                                })
   end
 
-  def handle_content_profile_new
-    SknUtils::ResultBean.new({  # because we don't need deep nesting, or leave array hashes alone
-       success: true,
-       message: "",
-       pak_user_choices: get_unassigned_user_attributes(),
-       content_profile: get_empty_new_content_profile()
-    })
+  def handle_content_profile_entry_destroy(params)
+    SknUtils::PageControls.new({
+                                 success: destroy_content_profile_entry(params),
+                                 message: 'Content profile entry was successfully destroyed.'
+                             })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     SknUtils::PageControls.new({
-       success: false,
-       message: e.message
-   })
+                                 success: false,
+                                 message: e.message
+                             })
   end
-
 
 end

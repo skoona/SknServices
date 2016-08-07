@@ -1,13 +1,14 @@
-# spec/domains/profile_domain_spec.rb
+# spec/domains/content_profile_domain_spec.rb
 #
-# By replacing ApplicationController and type: :controlle, with ContentProfileDomain
+# By replacing ApplicationController and type: :controller, with ContentProfileDomain
 # we are able to run test faster and without overhead of a test contoller.
 # this will work for Domain(s) that don't require a full controller
 #
 
 RSpec.describe ContentProfileDomain, "Service routines of ContentProfileDomain." do
 
-  let(:user) { user_eptester }
+  let!(:user) { page_user_eptester }
+  let!(:userp) { page_user_bnptester }
   let!(:mc) {ServiceFactoryMockController.new(user: user)}
   let!(:service_factory)  { ServiceFactory.new({factory: mc}) }
 
@@ -131,39 +132,44 @@ RSpec.describe ContentProfileDomain, "Service routines of ContentProfileDomain."
   context "Profile Data Services methods return proper results. " do
 
     # purposely exercise #method_missing in Factory::DomainsBase, via @service.params method request
-    scenario "#update_content_profile_from_permitted_params" do
-      @service.service.factory.params =  ActionController::Parameters.new({"content_profile"=>{"person_authentication_key"=>"3d2e3339fa6d4555dcf55269b27eb1b9", "profile_type_id"=>"6", "authentication_provider"=>"SknService::Bcrypt", "username"=>"noprofileuser", "email"=>"noprofileuser@example.com"}})
-      parms = @service.params.require(:content_profile).permit(:person_authentication_key, :profile_type_id, :authentication_provider, :username, :display_name, :email)
-      result = @service.update_content_profile_from_permitted_params(parms.merge(id: 2))
-      expect(result).to be_a ContentProfile
+    scenario "#update_content_profile_with_profile_type_id" do
+      parms = {"profile_type_id"=>"6",
+               "button"=>"content-profile-modal",
+               "username"=>user.username,
+               "id"=>user.person_authenticated_key
+      }
+      expect(@service.update_content_profile_with_profile_type_id(parms)).to be true
     end
-    scenario "#create_content_profile_from_permitted_params" do
-      @service.service.factory.params =  ActionController::Parameters.new({"content_profile"=>{"person_authentication_key"=>"3d2e3339fa6d4555dcf55269b27eb1b9", "profile_type_id"=>"6", "authentication_provider"=>"SknService::Bcrypt", "username"=>"noprofileuser", "email"=>"noprofileuser@example.com"}})
-      parms = @service.params.require(:content_profile).permit(:person_authentication_key, :profile_type_id, :authentication_provider, :username, :display_name, :email)
-      result = @service.create_content_profile_from_permitted_params(parms)
-      expect(result).to be_a ContentProfile
+    scenario "#create_content_profile_with_profile_type_id" do
+      parms = {"profile_type_id"=>"5",
+       "button"=>"content-profile-modal",
+               "username"=>userp.username,
+               "id"=>userp.person_authenticated_key
+      }
+      expect(@service.create_content_profile_with_profile_type_id(parms)).to be true
     end
-    scenario "#get_page_pagination_for_content_profile_index" do
-      result = @service.get_page_pagination_for_content_profile_index({})
-      expect(result.length).to be > 4
-      expect(result.first).to be_a ContentProfile
+    scenario "#destroy_content_profile_by_pak" do
+      parms = {"profile_type_id"=>"5",
+               "button"=>"content-profile-modal",
+               "username"=>user.username,
+               "id"=>user.person_authenticated_key
+      }
+      expect(@service.destroy_content_profile_by_pak(parms)).to be true
     end
-    scenario "#get_empty_new_content_profile" do
-      result = @service.get_empty_new_content_profile
-      expect(result).to be_a ContentProfile
+
+    scenario "#create_content_profile_entries" do
+      parms = {
+               "id"=>ContentProfileEntry.first.id.to_s
+      }
+      expect(@service.create_content_profile_entries(parms)).to be true
     end
-    scenario "#destroy_content_profile" do
-      obj = ContentProfile.first
-      result = @service.destroy_content_profile({id: obj.id})
-      expect(result.id).to eq obj.id
+    scenario "#destroy_content_profile_entry" do
+      parms = {
+               "id"=>ContentProfileEntry.first.id.to_s
+      }
+      expect(@service.destroy_content_profile_entry(parms)).to be true
     end
-    scenario "#get_content_profiles_entries_entry_info" do
-      obj = ContentProfile.first
-      result = @service.get_content_profiles_entries_entry_info(obj)
-      expect(result).to be_a(Array)
-      expect(result.length).to be > 0
-      expect(result[0][:content_value]).to be
-    end
+
     scenario "#get_unassigned_user_attributes" do
       result = @service.get_unassigned_user_attributes()
       expect(result).to be_a(Array)

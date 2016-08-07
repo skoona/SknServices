@@ -10,12 +10,6 @@ class ProfilesController < ApplicationController
     flash.notice.now = @page_controls.message if @page_controls.message.present?
   end
 
-  # GET
-  def manage_content_profiles
-    @page_controls = content_service.handle_content_profile_management(params)
-    flash[:notice] = @page_controls.message if @page_controls.message?
-  end
-
   # json api, requires :username and access: [:access, :content]
   # - returns Accessible Content
   # GET
@@ -28,10 +22,62 @@ class ProfilesController < ApplicationController
     render(json: @page_controls.to_hash, status: (@page_controls.package.success ? :accepted : :not_found), layout: false, content_type: :json) and return
   end
 
-  # POST
+  # get
   def api_get_content_object
     @page_controls = content_service.api_get_content_object(params)
     send_file(@page_controls.package.package.source, filename: @page_controls.package.package.filename, type: @page_controls.package.package.mime, disposition: :inline) and return
+  end
+
+  ##
+  # Manage Content Profiles Page
+
+  # GET
+  def manage_content_profiles
+    @page_controls = content_service.handle_content_profile_management(params)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+  end
+
+  # POST
+  # Requires userName and ProfileTypeName
+  # Parameters:
+  # {"profile_type_id"=>"5",
+  #  "button"=>"content-profile-modal",
+  #  "username"=>"bnptester",
+  #  "id"=>"55da964b58249094b2c65959faf9e559"
+  # }
+  def create_profile_for_user
+      @page_controls = content_service.handle_content_profile_create(params)
+      flash[:notice] = @page_controls.message if @page_controls.message?
+      redirect_to manage_content_profiles_profiles_url
+  end
+  # POST
+  # Requires userName and ProfileTypeName
+  def update_profile_for_user
+    @page_controls = content_service.handle_content_profile_update(params)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+    redirect_to manage_content_profiles_profiles_url
+  end
+  # DELETE
+  # Requires Entry
+  def delete_profile_for_user
+    @page_controls = content_service.handle_content_profile_destroy(params)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+    redirect_to manage_content_profiles_profiles_url
+  end
+
+  # POST
+  # Requires Entry Description, and topic_value with content choices
+  def create_entries_for_user
+    @page_controls = content_service.handle_content_profile_entries_create(params)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+    redirect_to manage_content_profiles_profiles_url
+  end
+  # DELETE
+  # Requires Entry
+  def delete_entry_for_user
+    @page_controls = content_service.handle_content_profile_entry_destroy(params)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+    redirect_to manage_content_profiles_profiles_url
   end
 
 end

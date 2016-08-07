@@ -211,7 +211,7 @@ module Providers
 
     def create_content_profile_for(user_p, profile_type_name )
       ContentProfile.create!({
-         person_authentication_key: user_p.id,
+         person_authentication_key: user_p.person_authenticated_key,
          profile_type_id: ProfileType.find_by(name: profile_type_name).try(:id),
          authentication_provider: "SknService::Bcrypt",
          username: user_p.username,
@@ -219,7 +219,12 @@ module Providers
          email: user_p.email
       })
     end
-
+    def update_content_profile_for(pak, profile_type_id )
+      ContentProfile.where(person_authentication_key: pak).first.update!(profile_type_id: profile_type_id)
+    end
+    def destroy_content_profile_by_pak(pak)
+      ContentProfile.where(person_authentication_key: pak).first.destroy!
+    end
     def assign_content_profile_entry_to(profile_obj, profile_entry_obj)
       profile_obj.content_profile_entries << profile_entry_obj
       profile_obj.save!

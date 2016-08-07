@@ -256,6 +256,62 @@
         </permission>
     </resource>
 
+    <resource secured="true">
+        <uri>profiles/create_profile_for_user</uri>
+        <description>Create Content Profile</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>profiles/update_profile_for_user</uri>
+        <description>Update Content Profile</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>profiles/delete_profile_for_user</uri>
+        <description>Delete Content Profile</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>profiles/create_entries_for_user</uri>
+        <description>Create Content Profile Entry</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>profiles/delete_entry_for_user</uri>
+        <description>Delete Content Profile Entry</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
     <!--============== Public Pages  ========== -->
     <resource secured="false">
         <uri>/signout</uri>

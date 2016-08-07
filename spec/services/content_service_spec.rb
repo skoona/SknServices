@@ -3,6 +3,7 @@
 
 RSpec.describe ContentService, "Service routines of ContentService." do
   let!(:user) {user_bstester}
+  let!(:userp) {page_user_bnptester}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
   let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
@@ -36,41 +37,59 @@ RSpec.describe ContentService, "Service routines of ContentService." do
     end
   end
 
-  context "Provided methods return proper results. " do
+  context "Management methods return proper results. " do
 
-    scenario "#handle_content_profile_destroy" do
-      result = service.handle_content_profile_destroy({id: 2})
-      expect(result).to be_a(SknUtils::ResultBean)
-      expect(result.success).to be true
+    scenario "#handle_content_profile_management prepares a page package of all users" do
+      result = service.handle_content_profile_management({})
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.success).to be false
+      expect(result.message).to be_blank
+    end
+
+    scenario "#handle_content_profile_create" do
+      parms = {"profile_type_id"=>"6",
+               "button"=>"content-profile-modal",
+               "username"=>userp.username,
+               "id"=>userp.person_authenticated_key
+      }
+      expect(service.handle_content_profile_create(parms).success).to be true
     end
 
     scenario "#handle_content_profile_update" do
+      parms = {"profile_type_id"=>"6",
+               "button"=>"content-profile-modal",
+               "username"=>user.username,
+               "id"=>user.person_authenticated_key
+      }
+      expect(service.handle_content_profile_update(parms).success).to be true
     end
 
-    scenario "#handle_content_profile_creations" do
+    scenario "#handle_content_profile_destroy" do
+      parms = {"profile_type_id"=>"6",
+               "button"=>"content-profile-modal",
+               "username"=>"bptester",
+               "id"=>ContentProfile.first.person_authentication_key.to_s
+      }
+      expect(service.handle_content_profile_destroy(parms).success).to be true
     end
 
-    scenario "#handle_content_profile_index" do
-      result = service.handle_content_profile_index({})
-      expect(result).to be_a(SknUtils::ResultBean)
-      expect(result.success).to be true
+    scenario "#handle_content_profile_entries_create" do
+      parms = {
+               "id"=>"6"
+      }
+      expect(service.handle_content_profile_entries_create(parms).success).to be true
     end
 
-    scenario "#handle_content_profile_show_or_edit" do
-      result = service.handle_content_profile_show_or_edit({id: 2})
-      expect(result).to be_a(SknUtils::PageControls)
-      expect(result.success).to be true
-    end
-
-    scenario "#handle_content_profile_new" do
-      result = service.handle_content_profile_new()
-      expect(result).to be_a(SknUtils::ResultBean)
-      expect(result.success).to be true
+    scenario "#handle_content_profile_entry_destroy" do
+      parms = {
+               "id"=>"6"
+      }
+      expect(service.handle_content_profile_entry_destroy(parms).success).to be true
     end
 
   end
 
-  context "Provided methods return proper results. " do
+  context "Demo methods return proper results. " do
 
     scenario "#handle_demo_page" do
       result = service.handle_demo_page({})
@@ -79,13 +98,6 @@ RSpec.describe ContentService, "Service routines of ContentService." do
     end
 
     scenario "#handle_api_accessible_content" do
-    end
-
-    scenario "#handle_content_profile_management prepares a page package of all users" do
-      result = service.handle_content_profile_management({})
-      expect(result).to be_a(SknUtils::PageControls)
-      expect(result.success).to be false
-      expect(result.message).to be_blank
     end
 
     scenario "#api_get_content_object" do

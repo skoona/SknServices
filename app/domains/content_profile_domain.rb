@@ -359,27 +359,30 @@ class ContentProfileDomain < ::Factory::DomainsBase
 
   ##
   # Supporting ContentProfilesController Actions
-  def get_page_pagination_for_content_profile_index(params)
-    ContentProfile.paginate(page: params[:page], :per_page => 12)
+  def create_content_profile_with_profile_type_id(params)
+    pt = ProfileType.find_by(id: params['profile_type_id'])
+    u = get_page_user(params['username'])
+    cp = service.db_profile_provider.create_content_profile_for(u, pt.name)
+    cp.present?
   end
-  def update_content_profile_from_permitted_params(permitted_params)
-    content_profile_object = find_content_profile_by_id(permitted_params[:id])
-    content_profile_object.update!(permitted_params)
-    content_profile_object
+  def update_content_profile_with_profile_type_id(params)
+    cp = service.db_profile_provider.update_content_profile_for(params['id'], params['profile_type_id'].to_i)
+    cp.present?
   end
-  def get_empty_new_content_profile
-    ContentProfile.new
+  def destroy_content_profile_by_pak(params)
+    cp = service.db_profile_provider.destroy_content_profile_by_pak(params['id'])
+    cp.present?
   end
-  def create_content_profile_from_permitted_params(permitted_params)
-    ContentProfile.create!(permitted_params)
+  def create_content_profile_entries(params)
+    true
   end
-  def destroy_content_profile(params)
-    content_profile_object = find_content_profile_by_id(params[:id])
-    content_profile_object.destroy unless content_profile_object.nil?
+  def destroy_content_profile_entry(params)
+    true
   end
   def get_content_profiles_entries_entry_info(existing_content_profile_object)
     existing_content_profile_object.content_profile_entries.map(&:entry_info) if existing_content_profile_object
   end
+
   def get_unassigned_user_attributes
     results = []
     User.where.not(person_authenticated_key: ContentProfile.select(:person_authentication_key)).find_each do |rec|
@@ -393,9 +396,6 @@ class ContentProfileDomain < ::Factory::DomainsBase
       ]
     end
     results
-  end
-  def find_content_profile_by_id(rec_id)
-    ContentProfile.find(rec_id) rescue nil # Could raise a not found exception
   end
 
 end

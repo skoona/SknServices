@@ -10,7 +10,7 @@ namespace :access_registry do
   namespace :admin do
 
     desc 'Resets test data in all Content Profile related Models.'
-    task :refresh_content_profiles => :environment do
+    task :refresh_content_profiles, [:db_profiles] => :environment do
       Utility::ContentProfileTestDataLoader.new().refresh_content_profiles_data_model
     end
 

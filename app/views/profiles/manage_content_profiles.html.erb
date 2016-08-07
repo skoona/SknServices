@@ -28,7 +28,7 @@
                     </thead>
                     <tbody class="" data-package="<%= @page_controls.to_hash().to_json %>">
                     <% @page_controls.package.user_package.each do |u| %>
-                        <tr data-package="<%= u.to_hash.to_json %>">
+                        <tr class="profile" data-package="<%= u.to_hash.to_json %>">
                             <td><%= u.username %></td>
                             <td><%= u.display_name %></td>
                             <td><%= u.email %></td>
@@ -36,9 +36,13 @@
                             <td><%= u.try(:provider) %></td>
                             <td class="text-center">
                               <% if u.profile_exist %>
-                                  <i class="fa fa-pencil-square-o fa-lg" title="Edit Profile" aria-hidden="true"></i>
+                                  <%= link_to( "#content-profile-modal", {class: "btn edit", data: {url: update_profile_for_user_profiles_path }}) do %>
+                                    <i class="fa fa-pencil-square-o fa-lg" title="Edit Content Profile" aria-hidden="true"></i>
+                                  <% end %>
                               <% else %>
-                                  <i class="fa fa-plus-square-o fa-lg" title="Create Profile" aria-hidden="true"></i>
+                                <%= link_to( "#content-profile-modal", {class: "btn create", data: {url: create_profile_for_user_profiles_path }}) do %>
+                                    <i class="fa fa-plus-square-o fa-lg" title="Create Content Profile" aria-hidden="true"></i>
+                                <% end %>
                               <% end %>
                             </td>
                         </tr>
@@ -72,6 +76,114 @@
             </div>
         </div>
     </div>
+
+  <!-- Profile Modals -->
+  <div class="modal fade" id="content-profile-modal" tabindex="-1" role="dialog" aria-labelledby="content-profile-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <%= form_tag create_profile_for_user_profiles_path,
+                     :class => "modal-form form-horizontal novalidate", :novalidate => false, :remote => false, :method => :post do %>
+            <input name="id" type="hidden" value="replace with id"/>
+            <input name="username" type="hidden" value="replace with userName"/>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title text-center" id="content-profile-label">Modal title</h4>
+        </div>
+        <div class="modal-body" id="content-profile-body">
+          <p id="profile-message">Content Profiles are system objects, and as a result only have one admin specified
+            value: Profile Type.  This value documents a person's role or relationship to the business.</p>
+          <fieldset>
+            <div class="form-group">
+              <label class="col-sm-4 control-label" for="profile-type-id"><abbr class="text-error" title="required">*</abbr> Profile Type</label>
+              <div class="col-sm-6">
+                <select class="form-control"
+                        id="profile-type-id"
+                        name="profile_type_id"
+                        type="select"
+                        placeholder="Select business role"
+                        required>
+                  <%= options_for_select( ProfileType.option_selects ) %>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-6">
+              <%= button_tag "Save", type: :submit, value: "content-profile-modal", class: "btn btn-primary", id: "create-button" %>
+              <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <!-- Entry Modals -->
+  <div class="modal fade" id="content-entry-modal" tabindex="-1" role="dialog" aria-labelledby="content-entry-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <%= form_tag create_entries_for_user_profiles_path(id: 'pak' ),
+                     :class => "modal-form form-horizontal novalidate", :novalidate => false, :remote => false, :method => :post do %>
+            <input name="username" type="hidden" value="replace with userName"/>
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title text-center" id="content-entry-label">Modal title</h4>
+            </div>
+            <div class="modal-body" id="content-entry-body">
+              <p id="entry-message">Content Profile Entries are permission objects, create as many as needed to express authorizations.  Please enter a description for this new entry
+                and choose one topic and topic value type; also choose one content type and content value.</p>
+              <fieldset>
+                <div class="control-group">
+                  <label class="control-label" for="profile-type-id"><abbr class="text-error" title="required">*</abbr> Description</label>
+                  <div class="controls">
+                    <input class="input" id="description-id" name="description_id" type="input" placeholder="describe permission being granted" required></input>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="topic-type-id"><abbr class="text-error" title="required">*</abbr> Topic Type</label>
+                  <div class="controls">
+                    <select class="select" id="topic-type-id" name="topic_type_id" type="select" placeholder="Select business entity" required>
+                      <%= options_for_select( TopicType.option_selects ) %>
+                    </select>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="topic-type-value-id"><abbr class="text-error" title="required">*</abbr> Topic Type Value</label>
+                  <div class="controls">
+                    <select class="select" id="topic-type-value-id" name="topic_type_value_id" type="select" placeholder="Select business role" required>
+                      <%= options_for_select( TopicTypeOpt.option_selects('Branch') ) %>
+                    </select>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="content-type-id"><abbr class="text-error" title="required">*</abbr> Content Type</label>
+                  <div class="controls">
+                    <select class="select" id="content-type-id" name="content_type_id" type="select" placeholder="Select business role" required>
+                      <%= options_for_select( ContentType.option_selects ) %>
+                    </select>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="content-type-value-id"><abbr class="text-error" title="required">*</abbr> Content Type Value</label>
+                  <div class="controls">
+                    <select class="select" id="profile-type-value-id" name="content_type_value_id" type="select" placeholder="Select business role" required>
+                      <%= options_for_select( ContentTypeOpt.option_selects('Commission') ) %>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="modal-footer">
+              <%= button_tag "Save", type: :submit, value: "content-entry-modal", class: "btn btn-primary", id: "create-button" %>
+              <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="row">
