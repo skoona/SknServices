@@ -20,14 +20,14 @@ class TopicType < ActiveRecord::Base
   def self.option_selects
     options = []
     self.find_each do |tts|
-      options << [tts.name, tts.id, {'data-description': tts.description}]
+      options << [tts.name, tts.id, {data: {description: tts.description, opts: tts.option_selects.to_json}}]
     end
     options
   end
   def self.option_selects_by_type(name)
     options = []
     self.where(name: name).find_each do |tts|
-      options << [tts.name, tts.id, {'data-description': tts.description}]
+      options << [tts.name, tts.id, {data: {description: tts.description, opts: tts.option_selects}}]
     end
     options
   end
@@ -35,7 +35,7 @@ class TopicType < ActiveRecord::Base
   # options_for_select(tt_instance.option_selects, selected)  -- single selection
   def option_selects
     topic_type_opts.map do |opts|
-      [opts.value, opts.id, {'data-description': opts.description}]
+      [opts.value, opts.id, {data: {description: opts.description}}]
     end
   end
 

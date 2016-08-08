@@ -20,14 +20,14 @@ class ContentType < ActiveRecord::Base
   def self.option_selects
     options = []
     self.find_each do |cts|
-      options << [cts.name, cts.id, {'data-description': cts.description}]
+      options << [cts.name, cts.id, {data: {description: cts.description, opts: cts.option_selects.to_json}}]
     end
     options
   end
   def self.option_selects_by_type(name)
     options = []
     self.where(name: name).find_each do |cts|
-      options << [cts.name, cts.id, {'data-description': cts.description}]
+      options << [cts.name, cts.id, {data: {description: cts.description, opts: cts.option_selects}}]
     end
     options
   end
@@ -35,7 +35,7 @@ class ContentType < ActiveRecord::Base
   # options_for_select(ct_instance.option_selects, selected)   -- multi selections
   def option_selects
     content_type_opts.map do |opts|
-      [opts.value, opts.id, {'data-description': opts.description}]
+      [opts.value, opts.id, {data: {description: opts.description}}]
     end
   end
 

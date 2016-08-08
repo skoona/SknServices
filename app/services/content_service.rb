@@ -76,6 +76,11 @@ class ContentService < ::ContentProfileDomain
     res = SknUtils::PageControls.new({
                                          success: true,
                                          message: "",
+                                         profile_type_options: ProfileType.option_selects,
+                                         content_type_options: ContentType.option_selects,
+                                         content_type_opts_options: ContentTypeOpt.option_selects('Commission'),
+                                         topic_type_options: TopicType.option_selects,
+                                         topic_type_opts_options: TopicTypeOpt.option_selects('Branch'),
                                          package: management_page_users_package(PROFILE_CONTEXT)
                                      })
     res.success = res.package.success
@@ -129,6 +134,19 @@ class ContentService < ::ContentProfileDomain
                              })
   end
 
+  # Parameters: {"utf8"=>"✓",
+  #   "id"=>"profile entry id",
+  #   "pak"=>"72930134e6222904010dd4d6fb5f1887",
+  #   "username"=>"bptester",
+  #   "description_id"=>"Samples",
+  #   "topic_type_id"=>"1",
+  #   "topic_type_value"=>["1"],
+  #   "content_type_id"=>"3",
+  #   "content_type_value"=>["9", "8", "7"],
+  #   "button"=>"content-entry-modal"
+  # }
+  #
+  # POST
   def handle_content_profile_entries_create(params)
     SknUtils::PageControls.new({
                                 success: create_content_profile_entries(params),
