@@ -375,6 +375,7 @@ function replaceEntriesTableRows(dataPackage) {
     var vList = dataPackage.entries,
             newRow = [],
             counter = 0,
+            excl,
             trNode,
             trRow,
             deleteUrla = '<td><a class="btn delete" data-confirm="Are you sure?" data-method="delete" href="/profiles/delete_entry_for_user?id=',
@@ -402,23 +403,25 @@ function replaceEntriesTableRows(dataPackage) {
 
           counter = index + 1;
         });
-      $('#create-entry-btn').show();
+      $('#create-entry-action').enable();
 
-      $('#mc-entries-table tbody tr:not(a.delete)').on( "click", function(ev) {
-
-        ev.preventDefault();
-        ev.stopPropagation();
-        /*
-         * flag selected in related table */
-        $("#mc-entries-table tbody  tr.entry").removeClass('success');
-        $(ev.currentTarget).addClass('success');
-
-        console.log( "Entry Row Selected Icon()");
-
-      });
+//      excl = $('#mc-entries-table tbody a.btn');
+//      $('#mc-entries-table tbody tr.entry').not(excl).on( "click", function(ev) {
+//        var dataPackage = $(ev.currentTarget).data().package;
+//
+//        ev.preventDefault();
+//        ev.stopPropagation();
+//        /*
+//         * flag selected in related table */
+//        $("#mc-entries-table tbody  tr.entry").removeClass('success');
+//        $(ev.currentTarget).addClass('success');
+//
+//        console.log( "Entry Row Selected Icon() for: "+ dataPackage.username);
+//
+//      });
 
     } else {
-      $('#create-entry-btn').hide();
+      $('#create-entry-action').disable();
         mcEntriesTable.clear().draw();
     }
   $('#content-entry-modal input[name="username"]').val(dataPackage.username);

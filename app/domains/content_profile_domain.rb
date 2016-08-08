@@ -110,10 +110,26 @@ class ContentProfileDomain < ::Factory::DomainsBase
         message: '',
         user_package: usrs,
         page_actions: [{
-                           id: "test-action",
+                           id: "refresh-action",
                            path: :manage_content_profiles_profiles_path,
                            text: "Refresh",
                            icon: 'glyphicon-refresh',
+                           html_options: {
+                               class: 'refresh'
+                           }
+                       },
+                       {
+                           id: "create-entry-action",
+                           text: "New Entry",
+                           icon: 'glyphicon-plus',
+                           html_options: {
+                              href: "#content-entry-modal",
+                             class: 'create',
+                             title: "Create Content Profile Entry",
+                              data: {url: "/profiles/create_entries_for_user",
+                                     toggle: "modal",
+                                     target: "#content-entry-modal"}
+                           }
                        }],
         package: []
     }

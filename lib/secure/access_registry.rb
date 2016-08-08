@@ -270,7 +270,6 @@ module Secure
         user_roles.each do |user_role|
           CRUD_MODES.each do |crud_mode|
             next unless bundle.key?(crud_mode)                          #  copy the string array else it might be deleted
-                                                                        # notice merge! overwrites prior role, please only READ
             opts << {uri: resource_uri, role: user_role, role_opts: bundle[crud_mode][user_role].map {|s| "#{s}"}} if has_options_ary?(user_role,resource_uri,crud_mode)
           end
         end

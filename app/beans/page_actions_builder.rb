@@ -164,7 +164,7 @@ class PageActionsBuilder
         html = link_to("#", {id: 'dLabel', role: 'button',
                                      data: {toggle: 'dropdown', target: '#'},
                                      class: 'btn btn-primary'}) do
-              stuffs = content_tag(:span, 'Actions')
+              stuffs = content_tag(:span, 'Actions ')
               stuffs += tag(:span, class: 'caret')
               stuffs.html_safe
         end
