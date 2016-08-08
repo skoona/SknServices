@@ -377,7 +377,9 @@ function replaceEntriesTableRows(dataPackage) {
             counter = 0,
             trNode,
             trRow,
-            deleteLink = '<td><a class="btn delete" data-url="/profiles/delete_entry_for_user" href="#"><i class="fa fa-trash-o fa-lg" title="Delete Content Profile Entry" aria-hidden="true"></i></a></td>';
+            deleteUrla = '<td><a class="btn delete" data-confirm="Are you sure?" data-method="delete" href="/profiles/delete_entry_for_user?id=',
+            deleteUrlb = '" rel="nofollow"><i class="fa fa-trash-o fa-lg" title="Delete Content Profile Entry" aria-hidden="true"></i></a></td>',
+            deleteLink;
 
     if (dataPackage.profile_exist) {
         mcEntriesTable.clear().draw();
@@ -391,38 +393,29 @@ function replaceEntriesTableRows(dataPackage) {
             newRow.push('<td>' + row.topic_type_description  + '</td>');
             newRow.push('<td>' + row.topic_value.join(',')  + '</td>');
             newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
+            deleteLink = deleteUrla + row.id + deleteUrlb;
             newRow.push(deleteLink);
             trRow = $('<tr class="entry">').append(newRow.join());
 
             trNode = mcEntriesTable.row.add(trRow).draw().node();
+            $(trNode).data('package', row);
 
-          $("#mc-entries-table tbody tr.entry a.delete").on('click', function(ev) {
-            var pkg = $(ev.currentTarget).closest('tr').data().package;
-            var title = $(ev.currentTarget).find('i').attr('title');
-            var targetPak = $(event.currentTarget).data().url;
-
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            console.log( "Delete Entry Icon Selected title: " + title +", url: " + targetPak + ", data: " + JSON.stringify(pkg));
-
-          });
-          $(trNode).data('package', row).on( "click", function(ev) {
-                var pkg = $(ev.currentTarget).data().package;
-
-              ev.preventDefault();
-              ev.stopPropagation();
-                /*
-                 * flag selected in related table */
-                $("#mc-entries-table tbody tr").removeClass('success');
-                $(ev.currentTarget).addClass('success');
-
-              console.log( "Entry Row Selected Icon() data: " + JSON.stringify(pkg));
-
-            });
-            counter = index + 1;
+          counter = index + 1;
         });
       $('#create-entry-btn').show();
+
+      $('#mc-entries-table tbody tr:not(a.delete)').on( "click", function(ev) {
+
+        ev.preventDefault();
+        ev.stopPropagation();
+        /*
+         * flag selected in related table */
+        $("#mc-entries-table tbody  tr.entry").removeClass('success');
+        $(ev.currentTarget).addClass('success');
+
+        console.log( "Entry Row Selected Icon()");
+
+      });
 
     } else {
       $('#create-entry-btn').hide();
