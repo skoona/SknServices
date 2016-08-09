@@ -136,13 +136,6 @@ class ContentProfileDomain < ::Factory::DomainsBase
     Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{results}"
 
     results
-  rescue Exception => e
-    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    {
-        success: false,
-        message: e.message,
-        package: []
-    }
   end
 
 
@@ -225,16 +218,6 @@ class ContentProfileDomain < ::Factory::DomainsBase
     Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
 
     res
-  rescue Exception => e
-    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    {
-       success: false,
-       user_options: [],
-       message: e.message,
-       accessible_content_url: nil,
-       page_user: "",
-       access_profile: []
-    }
   end
 
   ##
@@ -309,16 +292,6 @@ class ContentProfileDomain < ::Factory::DomainsBase
     Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
 
     res
-  rescue Exception => e
-    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    {
-       success: false,
-       message: e.message,
-       user_options: [],
-       accessible_content_url: nil,
-       page_user: "",
-       content_profile: []
-    }
   end
 
 
@@ -394,9 +367,6 @@ class ContentProfileDomain < ::Factory::DomainsBase
   end
   def destroy_content_profile_entry(params)
     true
-  end
-  def get_content_profiles_entries_entry_info(existing_content_profile_object)
-    existing_content_profile_object.content_profile_entries.map(&:entry_info) if existing_content_profile_object
   end
 
   def get_unassigned_user_attributes
