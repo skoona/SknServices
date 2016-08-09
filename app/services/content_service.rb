@@ -145,7 +145,6 @@ class ContentService < ::ContentProfileDomain
   #   "content_type_value"=>["9", "8", "7"],
   #   "button"=>"content-entry-modal"
   # }
-  #
   # POST
   def handle_content_profile_entries_create(params)
     SknUtils::PageControls.new({
@@ -160,10 +159,17 @@ class ContentService < ::ContentProfileDomain
                                })
   end
 
+  # Parameters: {"utf8"=>"✓",
+  #   "id"=>"profile entry id",
+  #   "pak"=>"72930134e6222904010dd4d6fb5f1887"
+  # }
   def handle_content_profile_entry_destroy(params)
+    result = destroy_content_profile_entry(params)
     SknUtils::PageControls.new({
-                                 success: destroy_content_profile_entry(params),
-                                 message: 'Content profile entry was successfully destroyed.'
+                                 success: result,
+                                 message: result ?
+                                     'Destroy Content profile entry was successfully' :
+                                     'Destroy Content profile entry failed!'
                              })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"

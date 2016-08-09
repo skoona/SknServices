@@ -136,40 +136,39 @@
             </div>
             <div class="modal-body" id="content-entry-body">
               <p class="lead">Content Profile Entries are permission objects, create as many as needed to express authorizations.</p>
-              <p>Please enter a description for this new entry and choose one topic and topic value type; also choose one content type and content value.</p>
               <fieldset>
                 <div class="form-group">
-                  <label class="col-sm-2 control-label" for="description-id"><abbr class="text-error" title="required">*</abbr> Description</label>
+                  <label class="col-sm-2 control-label" for="description"><abbr class="text-error" title="required">*</abbr> Description</label>
                   <div class="col-sm-10 controls">
-                    <textarea rows="3" class="form-control" id="description-id" name="description_id" type="textarea" placeholder="describe permission being granted" required></textarea>
+                    <textarea rows="3" class="form-control" id="description" name="description" type="textarea" placeholder="describe permission being granted" required></textarea>
                   </div>
                 </div>
-                </fieldset>
-                <fieldset>
+              </fieldset>
+              <fieldset>
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="topic-type-id"><abbr class="text-error" title="required">*</abbr> Topic Type</label>
                   <div class="col-sm-4 controls">
-                    <select class="form-control" id="topic-type-id" name="topic_type_id" type="select" placeholder="Select business entity" required>
+                    <select class="form-control" id="topic-type-id" name="topic_type_id" type="select" prompt="Select business entity" required>
                       <%= options_for_select( @page_controls.topic_type_options ) %>
                     </select>
                   </div>
                   <div class="col-sm-6 controls">
-                    <select multiple class="form-control" id="topic-type-value-id" name="topic_type_value[]" type="select" placeholder="Select business role" required>
+                    <select multiple class="form-control" id="topic-type-value-id" name="topic_type_value[]" type="select" placeholder="Select " required>
                       <%#= options_for_select( @page_controls.topic_type_opts_options ) %>
                     </select>
                   </div>
                 </div>
-                </fieldset>
-                <fieldset>
+              </fieldset>
+              <fieldset>
                 <div class="form-group">
                   <label class="col-sm-2 control-label" for="content-type-id"><abbr class="text-error" title="required">*</abbr> Content Type</label>
                   <div class="col-sm-4 controls">
-                    <select class="form-control" id="content-type-id" name="content_type_id" type="select" placeholder="Select business role" required>
+                    <select class="form-control" id="content-type-id" name="content_type_id" type="select" prompt="Select Business Document" required>
                       <%= options_for_select( @page_controls.content_type_options ) %>
                     </select>
                   </div>
                   <div class="col-sm-6 controls">
-                    <select multiple class="form-control" id="content-type-value-id" name="content_type_value[]" type="select" placeholder="Select business role" required>
+                    <select multiple class="form-control" id="content-type-value-id" name="content_type_value[]" type="select" placeholder="Select" required>
                       <%#= options_for_select( @page_controls.content_type_opts_options ) %>
                     </select>
                   </div>

@@ -375,9 +375,9 @@ function replaceEntriesTableRows(dataPackage) {
     var vList = dataPackage.entries,
             newRow = [],
             counter = 0,
-            excl,
             trNode,
             trRow,
+            pak,
             deleteUrla = '<td><a class="btn delete" data-confirm="Are you sure?" data-method="delete" href="/profiles/delete_entry_for_user?id=',
             deleteUrlb = '" rel="nofollow"><i class="fa fa-trash-o fa-lg" title="Delete Content Profile Entry" aria-hidden="true"></i></a></td>',
             deleteLink;
@@ -394,7 +394,7 @@ function replaceEntriesTableRows(dataPackage) {
             newRow.push('<td>' + row.topic_type_description  + '</td>');
             newRow.push('<td>' + row.topic_value.join(',')  + '</td>');
             newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
-            deleteLink = deleteUrla + row.id + deleteUrlb;
+            deleteLink = deleteUrla + row.id + '"&amp;pak="' + dataPackage.pak + deleteUrlb;
             newRow.push(deleteLink);
             trRow = $('<tr class="entry">').append(newRow.join());
 
@@ -403,25 +403,15 @@ function replaceEntriesTableRows(dataPackage) {
 
           counter = index + 1;
         });
-      $('#create-entry-action').enable();
 
-//      excl = $('#mc-entries-table tbody a.btn');
-//      $('#mc-entries-table tbody tr.entry').not(excl).on( "click", function(ev) {
-//        var dataPackage = $(ev.currentTarget).data().package;
-//
-//        ev.preventDefault();
-//        ev.stopPropagation();
-//        /*
-//         * flag selected in related table */
-//        $("#mc-entries-table tbody  tr.entry").removeClass('success');
-//        $(ev.currentTarget).addClass('success');
-//
-//        console.log( "Entry Row Selected Icon() for: "+ dataPackage.username);
-//
-//      });
+      if (counter == 0) {
+        $('#create-entry-action').attr('disabled', 'disabled');
+      } else {
+        $('#create-entry-action').removeAttr('disabled');
+      }
 
     } else {
-      $('#create-entry-action').disable();
+      $('#create-entry-action').attr('disabled', 'disabled');
         mcEntriesTable.clear().draw();
     }
   $('#content-entry-modal input[name="username"]').val(dataPackage.username);
@@ -487,6 +477,8 @@ function handleManagementPages() {
       /* update content profile entries table */
       replaceEntriesTableRows(dataPackage);
 
+      $('.nav-tabs a:last').tab('show');
+
     });
 
     /**
@@ -507,6 +499,8 @@ function handleManagementPages() {
       console.log( "Topic Selected: topic: " + $(event.currentTarget).val() + ", data.opts: " + JSON.stringify(pkg.opts));
 
     });
+    /* make initial selection */
+    $('#content-entry-modal select:not([multiple])').click();
 
     /* Watch the Tabs change, dataTable header don't align when invisible
      * then try to update the DataTable on that page.
@@ -519,46 +513,14 @@ function handleManagementPages() {
         return true;
     });
 
+//    $('#mc-users-table tbody tr.profile').first().click();
+    $('#create-entry-action').attr('disabled', 'disabled');
+
     consoleLog("handleManagementPages() Enabled!");
 
     return true;
 } // end function
 
-/**
- * Handle new interaction for ContentProfile Creation Page
- * @returns {boolean}
- */
-function handleNewContentProfile() {
-    if ( !controllerName.startsWith('content_profiles') )
-    return false;
-
-    $('#content_profile_person_authentication_key').change(function (event) {
-        var obj = $('#content_profile_person_authentication_key option:selected').data().user;
-
-        if (null != obj ) {
-            consoleLog("handleNewContentProfile() Handled for: " + obj.display_name);
-            $('#content_profile_authentication_provider').val(obj.authentication_provider);
-            $('#content_profile_username').val(obj.username);
-            $('#content_profile_display_name').val(obj.display_name);
-            $('#content_profile_email').val(obj.email);
-            $("#content_profile_profile_type_id option:selected").prop("selected",false);
-            $("#content_profile_profile_type_id option:Contains('" + obj.profile_type[0] + "')").prop("selected", true);
-        } else {
-            consoleLog("handleNewContentProfile() No Selection to Handle.");
-            $('#content_profile_authentication_provider').val("");
-            $('#content_profile_username').val("");
-            $('#content_profile_display_name').val("");
-            $('#content_profile_email').val("");
-            $("#content_profile_profile_type_id option:selected").prop("selected", false);
-        }
-
-        return false;
-    });
-
-    consoleLog("handleNewContentProfile() Enabled!");
-
-    return false;
-}
 
 /* ********************************************************
  * JQuery Enabled Processing
@@ -617,7 +579,7 @@ $(function() {
 
 
           $('#storage-table').DataTable({
-//            scrollY: "620px",
+            scrollY: "420px",
             language: {
               emptyTable: "ObjectStorage is Empty!"
             }
@@ -628,9 +590,6 @@ $(function() {
             break;
         case 'content_profile_demo':
             handleDemoPages();
-            break;
-        case 'new':
-            handleNewContentProfile();
             break;
         default:
             consoleLog("Current Page (" + controllerAction + ") has no custom Javascripts enabled.");
