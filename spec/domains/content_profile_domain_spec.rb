@@ -158,23 +158,26 @@ RSpec.describe ContentProfileDomain, "Service routines of ContentProfileDomain."
     end
 
     scenario "#create_content_profile_entries" do
+      cp = ContentProfile.where(username: 'bptester').first
       parms = {
-               "id"=>ContentProfileEntry.first.id.to_s
+            "pak"=> cp.person_authentication_key,
+            "username"=>"bptester",
+            "description"=>"Samples",
+            "topic_type_id"=>"1",
+            "topic_type_value"=>["1"],
+            "content_type_id"=>"3",
+            "content_type_value"=>["9", "8", "7"],
+            "button"=>"content-entry-modal"
       }
       expect(@service.create_content_profile_entries(parms)).to be true
     end
     scenario "#destroy_content_profile_entry" do
+      id = ContentProfile.where(person_authentication_key: user.person_authenticated_key).first.content_profile_entries.first.id
       parms = {
-               "id"=>ContentProfileEntry.first.id.to_s
+          "id"=>id,
+          'pak' => user.person_authenticated_key
       }
       expect(@service.destroy_content_profile_entry(parms)).to be true
-    end
-
-    scenario "#get_unassigned_user_attributes" do
-      result = @service.get_unassigned_user_attributes()
-      expect(result).to be_a(Array)
-      expect(result.length).to be > 0
-      expect(result[0][2][:data]).to be
     end
 
   end

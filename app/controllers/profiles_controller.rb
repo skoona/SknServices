@@ -76,8 +76,7 @@ class ProfilesController < ApplicationController
   # Requires Entry
   def delete_entry_for_user
     @page_controls = content_service.handle_content_profile_entry_destroy(params)
-    flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to manage_content_profiles_profiles_url
+    redirect_to manage_content_profiles_profiles_url, notice: @page_controls.message?
   end
 
 end

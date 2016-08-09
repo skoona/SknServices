@@ -67,10 +67,10 @@ describe Providers::DBProfileProvider, "Service routines of Provider::DBProfileP
     it "#content_profile_for_user should handle :not_found user object" do
       expect( @service.content_profile_for_user(@auth,true).success ).to be false
     end
-     it "#content_profile_for_user should handle nil user object" do
-       expect( @service.content_profile_for_user(nil,true).success ).to be false
+     it "#content_profile_for_user should raise error on nil user object" do
+       expect{ @service.content_profile_for_user(nil,true) }.to raise_error(Utility::Errors::NotFound)
      end
-     it "#get_existing_profile should handle nil user." do
+     it "#get_existing_profile should raise error on nil user." do
        expect{ @service.get_existing_profile(nil) }.to raise_error(Utility::Errors::NotFound)
      end
   end

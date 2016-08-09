@@ -7,7 +7,6 @@
 class ContentProfileDomain < ::Factory::DomainsBase
 
 
-
   PROFILE_CONTEXT=""  # override in service
 
   ##
@@ -341,9 +340,6 @@ class ContentProfileDomain < ::Factory::DomainsBase
 
   def get_content_object_api(params)
      adapter_for_content_profile_entry(params).retrieve_content_object(params)
-  rescue Exception => e
-    Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    {}
   end
 
   ##
@@ -370,21 +366,6 @@ class ContentProfileDomain < ::Factory::DomainsBase
   def destroy_content_profile_entry(params)
     cp = service.db_profile_provider.destroy_content_profile_entry_with_pak_and_id(params['pak'], params['id'])
     cp.present?
-  end
-
-  def get_unassigned_user_attributes
-    results = []
-    User.where.not(person_authenticated_key: ContentProfile.select(:person_authentication_key)).find_each do |rec|
-      results << [ "#{rec.username} : #{rec.name}", rec.person_authenticated_key, { data: {user: {
-          username: rec.username,
-          person_authentication_key: rec.person_authenticated_key,
-          display_name: rec.display_name,
-          email: rec.email,
-          authentication_provider: 'SknService::Bcrypt',
-          profile_type: rec.user_options }.to_json }}
-      ]
-    end
-    results
   end
 
 end

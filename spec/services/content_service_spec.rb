@@ -74,15 +74,25 @@ RSpec.describe ContentService, "Service routines of ContentService." do
     end
 
     scenario "#handle_content_profile_entries_create" do
+      pak = ContentProfile.where(username: 'bptester').first.person_authentication_key
       parms = {
-               "id"=>"6"
+            "pak"=> pak,
+            "username"=>"bptester",
+            "description"=>"Samples",
+            "topic_type_id"=>"1",
+            "topic_type_value"=>["1"],
+            "content_type_id"=>"3",
+            "content_type_value"=>["9", "8", "7"],
+            "button"=>"content-entry-modal"
       }
       expect(service.handle_content_profile_entries_create(parms).success).to be true
     end
 
     scenario "#handle_content_profile_entry_destroy" do
+      id = ContentProfile.where(person_authentication_key: user.person_authenticated_key).first.content_profile_entries.first.id
       parms = {
-               "id"=>"6"
+               "id"=>id,
+               'pak' => user.person_authenticated_key
       }
       expect(service.handle_content_profile_entry_destroy(parms).success).to be true
     end
