@@ -110,25 +110,25 @@ class ContentProfileDomain < ::Factory::DomainsBase
         message: '',
         user_package: usrs,
         page_actions: [{
-                           id: "refresh-action",
                            path: :manage_content_profiles_profiles_path,
                            text: "Refresh",
-                           icon: 'glyphicon-refresh',
+                           icon: 'fa fa-refresh fa-lg',
                            html_options: {
+                               id: "refresh-action",
                                class: 'refresh'
                            }
                        },
                        {
-                           id: "create-entry-action",
-                           text: "New Entry",
-                           icon: 'glyphicon-plus',
+                           path: '#content-entry-modal',
+                           text: 'New Entry',
+                           icon: 'fa fa-plus-square-o fa-lg',
                            html_options: {
-                              href: "#content-entry-modal",
+                               id: 'create-entry-action',
                              class: 'create',
-                             title: "Create Content Profile Entry",
-                              data: {url: "/profiles/create_entries_for_user",
-                                     toggle: "modal",
-                                     target: "#content-entry-modal"}
+                             title: 'Create Content Profile Entry',
+                              data: {url: '/profiles/create_entries_for_user',
+                                     toggle: 'modal',
+                                     target: '#content-entry-modal'}
                            }
                        }],
         package: []
@@ -362,11 +362,14 @@ class ContentProfileDomain < ::Factory::DomainsBase
     cp = service.db_profile_provider.destroy_content_profile_by_pak(params['id'])
     cp.present?
   end
+
   def create_content_profile_entries(params)
-    true
+    cp = service.db_profile_provider.create_content_profile_entry_by_ids(params)
+    cp.present?
   end
   def destroy_content_profile_entry(params)
-    true
+    cp = service.db_profile_provider.destroy_content_profile_entry_with_pak_and_id(params['pak'], params['id'])
+    cp.present?
   end
 
   def get_unassigned_user_attributes

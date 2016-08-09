@@ -7,6 +7,14 @@
 # link_to macro takes three params(hashes), path, text, html_options_hash
 # link_to(text, path, html_options_hash, &block)
 #         p1,   p2,   p3
+##
+#  link_to(options = {}, html_options = {}) do
+#     # name
+#   end
+#
+#   link_to(url, html_options = {}) do
+#     # name
+#   end
 #
 # [{},{}]          #=> Two Items in dropdown
 # [{},{},[{},{}]]  #=> Two items in dropdown, two in second level dropdown
@@ -30,11 +38,11 @@
 #     },
 #     { // Fully Dressed Entry
 #         divider: any_true_value,       # appears after :li entry
-#         id: "test-action",
 #         path: :home_pages_path,
 #         text: "Refresh",
 #         icon: 'glyphicon-refresh',     # icons appear before text with seperating space
 #         html_options: {                # applied to :link_to
+#                id: "test-action",
 #             class: 'something',
 #             method: 'get',
 #             data: {
@@ -125,11 +133,11 @@ class PageActionsBuilder
   def build_single(params=[])
     opts = prepare_options(params.first)
     html_options = (opts[:html_options].nil? ? {class: "btn btn-primary"} : opts[:html_options].merge(class: "btn #{opts[:html_options][:class]}") )
-    content_tag(:div, class: left_align ? "pull-left" : "pull-right" ) do
+    content_tag(:div, class: (left_align ? "btn-group pull-left" : "btn-group pull-right"),  role: "group" ) do
       content_tag(:div, {class: 'dropdown', role: 'group'}) do
         link_to( opts[:path], html_options )  do
           stuffs = ""
-          stuffs += (tag(:span,class:"glyphicon #{opts[:icon]}" ) + "&nbsp;".html_safe) if opts.key?(:icon)
+          stuffs += (tag(:span,class: opts[:icon])  + "&nbsp;".html_safe) if opts.key?(:icon)
           stuffs += content_tag(:span, opts[:text])
           stuffs.html_safe
         end
@@ -159,7 +167,7 @@ class PageActionsBuilder
   end
 
   def build_menu(params=[])
-    content_tag(:div, class: left_align ? "pull-left" : "pull-right" ) do
+    content_tag(:div, class: (left_align ? "btn-group pull-left" : "btn-group pull-right"), role: "group" ) do
       content_tag(:div, {class: 'dropdown', role: 'group'}) do
         html = link_to("#", {id: 'dLabel', role: 'button',
                                      data: {toggle: 'dropdown', target: '#'},
@@ -200,7 +208,7 @@ class PageActionsBuilder
         html = content_tag(:li ) do
           link_to(opts[:path], opts[:html_options] ) do
             stuffs = ""
-            stuffs += (content_tag(:span, nil, class:"glyphicon #{opts[:icon]}" ) + "&nbsp;".html_safe) if opts.key?(:icon)
+            stuffs += (content_tag(:span, nil, class: opts[:icon] ) + "&nbsp;".html_safe) if opts.key?(:icon)
             stuffs += content_tag(:span, opts[:text])
             stuffs.html_safe
           end
@@ -218,7 +226,7 @@ end
 #
 # No Dropdown, just one action button
 #
-#<div class="pull-left">
+#<div class="btn-group pull-left" role: "group">
 #   <div class="dropdown" role="group">
 #     <a data-samples="test data" class="btn btn-primary " href="/profiles/manage_content_profiles">
 #       <span class="glyphicon glyphicon-refresh" />&nbsp;
@@ -230,7 +238,7 @@ end
 #
 # Single Level Dropdown (Single)
 #
-#<div class="pull-left">
+#<div class="btn-group pull-left" role: "group">
 #   <div class="dropdown" role="group">
 #     <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" class="btn btn-primary" href="#">
 #       <span>Actions</span>

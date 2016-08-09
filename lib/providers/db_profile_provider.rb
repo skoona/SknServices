@@ -75,7 +75,7 @@ module Providers
         {type: recs.attributes,
          opts: recs.content_type_opts.map(&:attributes)}
       end
-      clean ? remove_dates_and_ids_from_choices(choices) : choices
+      clean ? remove_dates_and_ids_from_choices(choices) : remove_dates_from_choices(choices)
     end
 
     # Returns when clean is true
@@ -91,7 +91,7 @@ module Providers
         {type: recs.attributes,
          opts: recs.topic_type_opts.map(&:attributes)}
       end
-      clean ? remove_dates_and_ids_from_choices(choices) : choices
+      clean ? remove_dates_and_ids_from_choices(choices) : remove_dates_from_choices(choices)
     end
 
     # [{:type=>
@@ -108,7 +108,7 @@ module Providers
       choices = ContentProfileEntry.where(content_type: content_type).map do |recs|
         {type: recs.attributes, opts: []}
       end
-      clean ? remove_dates_and_ids_from_choices(choices) : choices
+      clean ? remove_dates_and_ids_from_choices(choices) : choices #remove_dates_from_choices(choices)
     end
 
     # [64] pry(main)> choices = dpp.selections_for_content_type("LicensedStates")
@@ -130,7 +130,7 @@ module Providers
         chosen = atv[:opts].select {|opt| opt["value"].in?(a_choices)}.flatten
         choices << {type: atv[:type], opts: chosen} if chosen.present?
       end
-      clean ? remove_dates_and_ids_from_choices(choices) : choices
+      clean ? remove_dates_and_ids_from_choices(choices) : remove_dates_from_choices(choices)
     end
 
     ##
@@ -185,6 +185,29 @@ module Providers
       TopicType.create!(package)
     end
 
+    #   "id"=>"profile entry id",
+    #   "pak"=>"72930134e6222904010dd4d6fb5f1887",
+    #   "username"=>"bptester",
+    #   "description"=>"Samples",
+    #   "topic_type_id"=>"1",
+    #   "topic_type_value"=>["1"],
+    #   "content_type_id"=>"3",
+    #   "content_type_value"=>["9", "8", "7"],
+    #   "button"=>"content-entry-modal"
+    # }
+    def create_content_profile_entry_by_ids(params)
+      tchoices = TopicType.where(id: params['topic_type_id'].to_i).includes(:topic_type_opts).map do |rec|
+        {type: rec.attributes,
+         opts: rec.topic_type_opts.where(id: params['topic_type_value'].collect(&:to_i)).map(&:attributes)}
+      end
+      cchoices = ContentType.where(id: params['content_type_id'].to_i).includes(:content_type_opts).map do |rec|
+        {type: rec.attributes,
+         opts: rec.content_type_opts.where(id: params['content_type_value'].collect(&:to_i)).map(&:attributes)}
+      end
+      cpe = create_content_profile_entry_for(params['description'], tchoices, cchoices)
+      assign_content_profile_entry_to(ContentProfile.where(person_authentication_key: params['pak']).first, cpe)
+    end
+
     # {topic_value: [],  content_value: [], content_type: "LicensedStates", topic_type: "Branch",
     #  topic_type_description: "", content_type_description: "",
     #  description: 'Determine which States branches are authorized to operate in.'
@@ -208,7 +231,6 @@ module Providers
           topic_type_description: tvs[:type]["description"]
       })
     end
-
     def create_content_profile_for(user_p, profile_type_name )
       ContentProfile.create!({
          person_authentication_key: user_p.person_authenticated_key,
@@ -225,10 +247,18 @@ module Providers
     def destroy_content_profile_by_pak(pak)
       ContentProfile.where(person_authentication_key: pak).first.destroy!
     end
+
+    def destroy_content_profile_entry_with_pak_and_id(pak, cpe_id)
+      cp = ContentProfile.where(person_authentication_key: pak).first
+      cpe = ContentProfileEntry.find(cpe_id)
+      remove_content_profile_entry_from(cp, cpe)
+    end
+
     def assign_content_profile_entry_to(profile_obj, profile_entry_obj)
       profile_obj.content_profile_entries << profile_entry_obj
       profile_obj.save!
       profile_obj.content_profile_entries.reload
+      release_storage_key(profile_obj.person_authentication_key)
       profile_obj
     end
 
@@ -236,6 +266,7 @@ module Providers
       profile_obj.content_profile_entries.destroy(profile_entry_obj)
       profile_obj.save!
       profile_obj.content_profile_entries.reload
+      release_storage_key(profile_obj.person_authentication_key)
       profile_obj
     end
 
@@ -252,6 +283,14 @@ module Providers
 
     def remove_dates_and_ids_from_choices(choices)
       targets = ["id", "created_at", "updated_at", "content_type_id", "topic_type_id"]
+      choices.each do |choice|
+        choice[:type].delete_if {|k,v| k.in?(targets) }
+        choice[:opts].each {|opt| opt.delete_if {|k,v| k.in?(targets)}}
+      end
+      choices
+    end
+    def remove_dates_from_choices(choices)
+      targets = ["created_at", "updated_at"]
       choices.each do |choice|
         choice[:type].delete_if {|k,v| k.in?(targets) }
         choice[:opts].each {|opt| opt.delete_if {|k,v| k.in?(targets)}}
