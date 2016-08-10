@@ -45,6 +45,17 @@ class AccessProfileDomain < ::Factory::DomainsBase
     end
   end
 
+  def system_actions_api(params)
+    case params['id']
+      when 'xml'
+        reload_access_registry
+        "AccessRegistry Reloaded"
+      when 'purge'
+        count = service.purge_storage_objects((Time.now - 10.minutes).to_i)
+        "ObjectStorageContainer Purged #{count} Items"
+    end
+  end
+
   def generate_system_info_bundle
     ar_resource_type = ar_data_type = 0
     resource_entries = []

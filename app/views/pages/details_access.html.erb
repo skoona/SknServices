@@ -14,8 +14,8 @@
             application resources that should be both secured and un-secured. This file is pre-processed
             by the class Secure::AccessRegistryUtility to enable the Access Authorization capability.
         </p>
-        <p>Generally every resource in your application would establish an entry in the access registry xml file.
-            That entry would be composed of these elements: This association is fixed at compile time.</p>
+        <p>Generally every resource in your application would have an unique label and establish an entry in the access registry xml file, using that label as it's URI.
+            The entry would be composed of these elements: The association of URI to authorizedRole is fixed at compile time.</p>
         <div class="row">
           <div class="col-md-push-1 col-md-4">
             <ul>
@@ -34,57 +34,57 @@
             </ul>
           </div>
         </div>
-        <p>Typically three general types of URIs will be defined.</p>
+        <p>Typically three general types of URIs will be defined or used.</p>
         <dl class="dl-horizontal">
             <dt>Page Entry</dt>
             <dd>
-                URI: &lt;controller_name&gt;/&lt;action_name&gt;, example: "pages/home"
+                URI: &lt;controller_name&gt;/&lt;action_name&gt;, example: <code>pages/home</code>
             </dd>
             <dt>Clickable Entry</dt>
             <dd>
                 URI: &lt;Any-String&gt; you choose to represent a click-able resource.
                 For a task link on a accounts page visually labeled 'Print' you might define
-                URI='tasklink-accounts-print'. Use that URI to represent exclusively this
+                URI=<code>tasklink-accounts-print</code>. Use that URI to represent exclusively this
                 click-able resource in your application.  The value might even work as the html id
-                of the element.
+                for the element.
             </dd>
             <dt>Resource Entry</dt>
             <dd>
-                URI: &lt;#ResourceName&gt; composed to represent access to a information element, or internal program action.  There is no practical limit or constraint for how these general entries are used.
-              Anything that needs to be secured can use this type of general entry.
+                URI: <code>&lt;#ResourceName&gt;</code> composed to represent access to a information element, or internal program action.  There is no practical limit or constraint for how these general entries are used.
+              Anything that needs to be secured can use this type of general entry, example: <code>#AdministrationProcessess</code>
             </dd>
        </dl>
         <p>
           <strong>Page Entries</strong> are automatically validated by a security filter provided to the ApplicationController
-            as a part of the ControllerAccessProfile#login_required() functionality.  If the user does not have
-            a matching role for the current controller_name/action_name then they are redirected to SessionsController#not_authorized method and given
+            as a part of the <code>ControllerAccessControl#login_required()</code> functionality.  If the user does not have
+            a matching role for the current controller_name/action_name then they are redirected to <code>SessionsController#not_authorized</code> method and given
             a 'not authorized' warning; otherwise they pass through to the desired page.
         </p>
         <p>
-          <strong>Clickable Entries</strong> are coded and implemented by you.  You decide on an URI syntax to composed a uri and then you
+          <strong>Clickable Entries</strong> are implemented by you.  You decide on an URI syntax to composed a uri and then you
             use that name to verify access to a particular clickable before making it visible or allowing the user
             to take that action.  The UserProfile class includes a method called 'has_access?(uri, options)' which returns
             true if the user's permissions/roles are included in the URI's CRUD access list; otherwise false is returned. An
-            example syntax might be "&lt;Context&gt;.&lt;PageName&gt;.&lt;ActionName&gt;" or "&lt;Context&gt;.&lt;ProcessName&gt;.&lt;ActionName&gt;"; where
-            an example uri from the latter would be "User.PasswordReset.RequestReset", or "Client.FileUpload.Upload".
-            Basically, your trying to authorize that a user "Can do a thing or action, and must give that action a uri!"
+            example syntax might be <code>&lt;Context&gt;.&lt;PageName&gt;.&lt;ActionName&gt;" or "&lt;Context&gt;.&lt;ProcessName&gt;.&lt;ActionName&gt;</code>; where
+            an example uri from the latter would be <code>User.PasswordReset.RequestReset</code>, or <code>Client.FileUpload.Upload</code>.
+            Basically, your trying to authorize that a user "Can do a thing or action, and must give that action target a uri!"
         </p>
         <p>
             <strong>Resource Entries</strong> there is no practical limit or constraint for how these general entries are used,
             anything that needs to be secured can use this type of general entry.
-            Resource entries can also be adapted the ContentProfile content-authorization model using the syntax of the AccessRegistry.  While it is possible to
+            Resource entries can also be adapted to the ContentProfile content-authorization model using the syntax of the AccessRegistry.  While it is possible to
             implement this adaptation, it will require significant maintenance as content type authorization are typically dynamic and change frequently.
         </p>
 
         <h2>Authorization</h2>
         <p>
           <strong>Authorization</strong> is accomplished by first declaring URIs for all Pages, then all Resources that need to be secured.
-            URI's are plain text strings which contain the label of the thing to be secured.  On the surrounding &lt;resource&gt;
+            URI's are plain text strings which contain the unique label of the thing to be secured.  On the surrounding &lt;resource&gt;
             statement is a 'secured' attribute which indicates if this resource record is secure or not.  If its not, the
             record is considered documentation and will always return true to the #has_access?() api.
         </p>
         <p>
-            Should a #has_access? request be made with a uri not recorded in the access registry, the default return is TRUE.
+            Should a <code>#has_access?</code> request be made with a uri not recorded in the access registry, the default return is TRUE.
             Effectively granting access to any undocumented resources, there is a system settings to change this default to false.
         </p>
         <p>
@@ -96,8 +96,8 @@
         </p>
         <p>
             Each authorized role in a resource statement may have one additional attribute named options.  An options
-            attribute is composed of a string with one or more comma separated values; ex. options="OWNER,SCHEDULER,MANAGER".
-            These entries if present must be matched by user's provided option value and the correct role, for the users
+            attribute is composed of a string with one or more comma separated values; ex. <code>options="OWNER,SCHEDULER,MANAGER"</code>.
+            These entries <b>if present</b> must be matched by user's provided option value and the correct role, for the users
             authorization request to be granted.  Having the correct authorized role and the wrong or missing option, will
             cause the request to be denied.  If an authorized role is defined with options present, it must be matched.
             The possibility of a authorization request occurring against a authorized role that was not defined with the
@@ -112,7 +112,7 @@
         </p>
 
         <p>
-            "Services.Action.Developer" has been implemented to bypass every defined resource.  Please be careful who
+          <code>Services.Action.Developer</code> has been implemented to bypass every defined resource.  Please be careful who
             you assign it too.
         </p>
 
@@ -143,7 +143,7 @@
             &lt;permission type="CREATE|READ|UPDATE|DELETE"&gt;
                 &lt;authorizedRoles&gt;
                     &lt;authorizedRole options="anyOption"&gt;security-role-name&lt;/authorizedRole&gt;
-                    &lt;authorizedRole&gt;security-user-group-name&lt;/authorizedRole&gt;
+                    &lt;authorizedRole&gt;security-user-role-name&lt;/authorizedRole&gt;
                     &lt;authorizedRole&gt;All Authorized Users&lt;/authorizedRole&gt;
                 &lt;/authorizedRoles&gt;
             &lt;/permission&gt;

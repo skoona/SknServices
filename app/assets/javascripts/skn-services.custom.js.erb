@@ -419,6 +419,7 @@ function replaceEntriesTableRows(dataPackage) {
     }
   $('#content-entry-modal input[name="username"]').val(dataPackage.username);
   $('#content-entry-modal input[name="pak"]').val(dataPackage.pak);
+  $('#content-entry-label').text('Create Content Profile Entry for ' + dataPackage.username);
 
     consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ') ' + JSON.stringify(dataPackage));
     return false;
@@ -445,6 +446,7 @@ function handleManagementPages() {
         }
     });
 
+
     /**
      *  Activate the UI, Track Actions from UsersTable
     */
@@ -464,7 +466,7 @@ function handleManagementPages() {
       console.log( "Selected Icon() title: " + title +", url: " + targetPak + " data: " + dataPackage.username);
 
       $('#content-profile-modal').modal('show');
-
+      return false;
     });
 
   /*
@@ -479,7 +481,7 @@ function handleManagementPages() {
 
       /* update content profile entries table */
       replaceEntriesTableRows(dataPackage);
-
+      return false;
     });
 
     /**
@@ -498,10 +500,10 @@ function handleManagementPages() {
       });
 
       console.log( "Topic Selected: topic: " + $(event.currentTarget).val() + ", data.opts: " + JSON.stringify(pkg.opts));
-
+      return false;
     });
     /* make initial selection */
-    $('#content-entry-modal select:not([multiple])').click();
+    $('#content-entry-modal select:not([multiple])').change();
 
     /* Watch the Tabs change, dataTable header don't align when invisible
      * then try to update the DataTable on that page.
@@ -515,7 +517,6 @@ function handleManagementPages() {
     });
 
     $('#mc-users-table tbody tr.profile').first().click();
-    $('#create-entry-action').attr('disabled', 'disabled');
 
     consoleLog("handleManagementPages() Enabled!");
 

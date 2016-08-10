@@ -10,7 +10,7 @@
                 this application.
             </p>
             <p>
-                <a class="btn btn-primary btn-lg" href="<%= learn_more_pages_path %>" role="button">Learn more</a>
+                <a class="btn btn-primary btn-lg" href="<%= about_pages_path %>" role="button">Learn more</a>
             </p>
     </div>
 
@@ -37,14 +37,14 @@
             <p>
                 The UserProfile object renders the pre-assigned access roles for a authenticated user. Roles which were mapped, by
                 an administrator, to compile time application resources.  AccessProfile methods, inherited by the UserProfile, enforce access privileges
-                to navigation, click-ables, and all viewable elements.
+                to navigation, click-ables, and all viewable page containers.
             </p>
             <p>
-                The AccessProfile encodes these access privileges in an XML file known as the access registry, a static data component of the AccessProfile process.  This process was strongly influenced by principles used in the <em>Java Access Controller</em>.
+                The AccessProfile encodes these access privileges in an XML file known as the access registry, a static data component of the AccessProfile process.  This process was strongly influenced by principles used in the <a  href="https://docs.oracle.com/javase/7/docs/api/java/security/AccessController.html">Java Access Controller</a>.
             </p>
             <p>
                 If access is not allowed, typically that element is not shown on screen.
-                Unauthorized attempts to access restricted pages, result in a redirect to the NotAuthorized page with an appropriate message.
+                Unauthorized attempts to access restricted pages via bookmarks or direct URLs, result in a redirect to the NotAuthorized page with an appropriate message.
             </p>
             <p><a class="btn btn-default" href="<%= details_access_pages_path()  %>" role="button">View details &raquo;</a></p>
         </div>
@@ -58,13 +58,14 @@
                 Using a a data driven approach the ContentProfile encodes its structure by describing the item to be secured or protected.
                 Protected resources are organized by the operational business information type, related business entity type, and the identifier for that entity;
                 <ul>
+                    <li><small>&lt;ProtectedContent&gt;/&lt;BusinessEntity&gt;/&lt;BE-Identifier&gt;</small></li>
                     <li><em>Commissions/Branch/0034</em></li>
                     <li><em>Notifications/Account/99</em></li>
-                    <li><em>Operations/LicensedStates/USA</em></li>
+                    <li><em>LicensedStates/Operations/USA</em></li>
                 </ul>
             </p>
             <p>
-                Given this input the ContentProfile would render the content values or specific identifiers used to retrieve the content, in our case those might be document store document ids for a commission statement.
+                Using this input the service could retrieve the items registered for the protected content identifers, in my case those might be document store ids for a commission statement.
             </p>
             <p><a class="btn btn-default" href="<%= details_content_pages_path()  %>" role="button">View details &raquo;</a></p>
         </div>

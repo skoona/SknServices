@@ -85,23 +85,10 @@ class ContentService < ::ContentProfileDomain
                                          page_actions: [{
                                                             path: :manage_content_profiles_profiles_path,
                                                             text: "Refresh",
-                                                            icon: 'fa fa-refresh fa-lg',
+                                                            icon: 'fa fa-refresh',
                                                             html_options: {
                                                                 id: "refresh-action",
-                                                                class: 'refresh'
-                                                            }
-                                                        },
-                                                        {
-                                                            path: '#content-entry-modal',
-                                                            text: 'New Entry',
-                                                            icon: 'fa fa-plus-square-o fa-lg',
-                                                            html_options: {
-                                                                id: 'create-entry-action',
-                                                                class: 'create',
-                                                                title: 'Create Content Profile Entry',
-                                                                data: {url: '/profiles/create_entries_for_user',
-                                                                       toggle: 'modal',
-                                                                       target: '#content-entry-modal'}
+                                                                class: ' refresh'
                                                             }
                                                         }]
                                      })

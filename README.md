@@ -24,8 +24,7 @@ types of content that user is authorized to interact with on behalf of business 
 After having proven my point, I've decided to share the body of this work and complete it by implementing Corporate and Branch Office domain model.  The initial context of the application 
 was to provide protection of important business documents like commission statements, and capturing operational attributes like, which states is a branch licensed to quote new business.
 
-Again, I've not started the DDD yet, nor finished all the UI.  This I will complete over the next few months.  However, the basic
-security and authorization features are fully completed and I think quite usable as a secure starter application.
+The basic security and authorization features are fully implemented and I think quite usable as a secure starter application.
   
 
 James,
@@ -45,6 +44,8 @@ It might be helpful to set these environment params too:
     export COVERAGE=true
     export BUNDLE_PATH='vendor/bundle'     Note: use of rvm wipes out all these values, you may need to reset them
     
+	note: demo userids are documented in the seeds.rb file.
+	
     
 The default Ruby for this package is 2.3.1  If you want to use a different version of ruby; Edit
 
@@ -104,25 +105,6 @@ user's collection would have many of these specialized entries, and that some en
 are themselves assigned to a wrapper object called a Content Profile which maintains a users unique collection.
 
 Content Profiles are the anchor back to the User Profile, via the person authentication key(PAK) or UUID they rely on as THE primary identifier.
-
-
-##Todos
----
-
-1. Create ContentProfile Creation Screen
-    * Allow creation of full profiles, or components as needed.
-2. Write AccessRegistry XML Class to CRUD xml entries
-3. Roll application into a Rails Engine for delivery
-4. Upgrade to Rails 5.0
-5. Implement Warble War for Tomcat Execution
-6. Consider a Rack UnAuthenticated Application for repeated violations.
-7. Build a Registration Feature to enroll user locally.
-    * Presume user does not exist
-    * Capture or generate a PAK
-    * Assign default Public Groups
-    * Assign default ContentProfile
-    * Create Local User record
-    * Email user a ChangePassword to complete registration
 
     
     
