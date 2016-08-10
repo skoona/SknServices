@@ -32,19 +32,7 @@ if "true".eql?ENV["COVERAGE"] and "test".eql?ENV["RAILS_ENV"]
       end
     end
     add_group 'Security Services' do |src_file|
-      ['lib/secure'].any? do |item|
-        src_file.filename.include? item
-      end
-    end
-    add_group 'Models' do |src_file|
-      ['app/models'].any? do |item|
-        src_file.filename.include? item
-      end
-    end
-    add_group 'Views' do |src_file|
-      ['app/views', 'app/helpers', 'app/mailers'].any? do |item|
-        src_file.filename.include? item
-      end
+      src_file.filename.include? 'lib/secure'
     end
     add_group "Controllers" do |src_file|
       src_file.filename.include?  "app/controllers"

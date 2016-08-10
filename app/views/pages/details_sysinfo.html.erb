@@ -356,7 +356,7 @@
           <% if @page_controls.apis_enabled %>
               <div class="table-responsive">
                 <table id="storage-table" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                  <caption><h4>Storage Size: <%= page_controls.storage_size %></h4></caption>
+                  <caption><h4>Storage Size: <%= @page_controls.storage_size %></h4></caption>
                   <thead class="bg-primary">
                     <th>Client Class</th>
                     <th>Key</th>
@@ -366,16 +366,13 @@
                   </thead>
                   <tbody>
                   <% @page_controls.storage_keys.each do |item| -%>
-                      <% item.to_hash().each_pair do |k,v| -%>
-                        <% parts = k.to_s.split('.') -%>
                         <tr>
-                          <td><%= parts[0] %></td>
-                          <td><%= parts[1] %></td>
-                          <td><%= v[0] %></td>
-                          <td><%= v[1] %></td>
-                          <td><%= Time.at(v[2]).strftime("%Y-%m-%d %H:%M:%S %p") %></td>
+                          <td><%= item.klass %></td>
+                          <td><%= item.key %></td>
+                          <td><%= item.vklass %></td>
+                          <td><%= item.ref %></td>
+                          <td><%= item.time %></td>
                         </tr>
-                      <% end -%>
                   <% end -%>
                   </tbody>
                 </table>

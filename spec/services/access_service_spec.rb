@@ -146,5 +146,17 @@ RSpec.describe AccessService, "Service routines of AccessProfile and AccessProfi
 
   end
 
+  context "System Information methods work as designed" do
 
-end
+    it "#handle_system_information_api performs action requested" do
+      expect(service.handle_system_information_api({id: 'xml'}).success).to be true
+      expect(service.handle_system_information_api({id: 'purge'}).success).to be true
+    end
+
+    it "#handle_system_information returns information bundle." do
+      expect(service.handle_system_information({}).success).to be true
+    end
+  end
+
+
+  end

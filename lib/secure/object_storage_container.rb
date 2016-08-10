@@ -107,7 +107,14 @@ module Secure
       results = []
       @objects_storage_container.each_pair do |k,v|
         name = v.first.try(:username) || v.first.try(:[], :username) || v.first.values[0].try(:[], :filename) || "not found"
-          results << { k => [v.first.class.name, name, v.last ] }
+        parts = k.to_s.split('.')
+          results << {
+              klass: parts[0],
+              key: parts[1],
+              vklass: v.first.class.name,
+              ref: name,
+              time: Time.at(v.last).strftime("%Y-%m-%d %H:%M:%S %p")
+          }
       end
       Rails.logger.debug "#{self.class.name}.#{__method__}() Results=#{results.count}"
       results

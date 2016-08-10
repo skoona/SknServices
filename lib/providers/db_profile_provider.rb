@@ -156,6 +156,7 @@ module Providers
 
     # Retrieves users content profile in ResultBean
     def collect_content_profile_bean(user_profile)
+      raise Utility::Errors::NotFound, "Invalid User Object!" unless user_profile.present?
       cpobj = get_existing_profile(user_profile)
       return  cpobj if cpobj
 
@@ -179,8 +180,13 @@ module Providers
       
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      delete_storage_object(user_profile.person_authenticated_key) unless user_profile.nil?
-      raise
+      delete_storage_object(user_profile.person_authenticated_key) if user_profile.present?
+      {
+        success: false,
+        message: e.message,
+        username: 'unknown',
+        entries:[]
+      }
     end
 
   end

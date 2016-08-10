@@ -203,7 +203,7 @@ module Providers
       
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      delete_storage_object(user_profile.person_authenticated_key) unless user_profile.nil?
+      delete_storage_object(user_profile.person_authenticated_key) if user_profile.present?
       results = {
           success: false,
           message: e.message,

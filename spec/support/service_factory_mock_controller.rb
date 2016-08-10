@@ -39,7 +39,10 @@ class ServiceFactoryMockController
   def page_action_paths=(paths)
     @paths = paths
   end
-
+  def current_user_has_access?(uri, options=nil)
+    Rails.logger.debug "#{self.class.name}#{}#{__method__}(#{uri})"
+    true
+  end
 
   private
   def method_missing(method, *args, &block)
