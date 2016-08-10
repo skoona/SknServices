@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       get :details_auth
       get :details_content
       get :details_sysinfo
+      get :api_sysinfo_actions
     end
   end
 

@@ -14,8 +14,8 @@
     </div>
 
 
-    <% if authenticated? %>
-        <h3 class="text-center">Welcome <%= current_user.name %><br/><small>SknService home#details_sysinfo</small></h3>
+    <% if @page_controls.authenticated_user %>
+        <h3 class="text-center">Welcome <%= @page_controls.username %><br/><small>SknService home#details_sysinfo</small></h3>
     <% else %>
         <h3 class="text-center">Welcome<br/><small>SknService home#details_sysinfo</small></h3>
     <% end %>
@@ -83,39 +83,34 @@
             </div>
         </div>
 
-        <% ar_resource_type = ar_data_type = 0 -%>
-        <% Secure::AccessRegistry.get_ar_resource_keys.each do |ar| %>
-            <% Secure::AccessRegistry.get_resource_type(ar) ? (ar_data_type += 1) : (ar_resource_type += 1) -%>
-        <% end %>
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
                         AccessRegistry AccessXML
-                        <span class="badge"><%= ar_resource_type %></span>
+                        <span class="badge"><%= @page_controls.ar_resource_type %></span>
                     </a>
                 </h4>
             </div>
             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
-                    <h2 id="access">Summary Listing </h2>
+                    <h4 id="access">XML AccessRegistry Resource Listing </h4>
                 </div>
                 <table class="table table-striped table-hover">
-                    <thead>
-                    <th>Index</th>
-                    <th>URI</th>
-                    <th>Description</th>
-                    <th>Roles</th>
+                    <thead class="bg-primary">
+                      <th>Index</th>
+                      <th>URI</th>
+                      <th>Description</th>
+                      <th>Roles</th>
                     </thead>
                     <tbody>
 
-                    <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
-                        <% next if Secure::AccessRegistry.get_resource_type(ar) %>
+                    <% @page_controls.resource_entries.each do |rec| %>
                         <tr>
-                            <td><%= '%05d' % index %></td>
-                            <td><%= ar.to_s %></td>
-                            <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
-                            <td><%= Secure::AccessRegistry.get_resource_roles(ar) %></td>
+                            <td><%= rec.index %></td>
+                            <td><%= rec.uri %></td>
+                            <td><%= rec.description %></td>
+                            <td><%= rec.roles.to_hash %></td>
                         </tr>
                     <% end %>
                     </tbody>
@@ -127,32 +122,31 @@
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
                         AccessRegistry ContentXML
-                        <span class="badge"><%= ar_data_type %></span>
+                        <span class="badge"><%= @page_controls.ar_data_type %></span>
                     </a>
                 </h4>
             </div>
             <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
-                    <h2 id="access">Summary Listing </h2>
+                    <h4 id="access">XML AccessRegistry Content Listing </h4>
                 </div>
                 <table class="table table-striped table-hover">
-                    <thead>
-                    <th>Index</th>
-                    <th>URI</th>
-                    <th>Description</th>
-                    <th>Options</th>
-                    <th>UserData</th>
+                    <thead class="bg-primary">
+                      <th>Index</th>
+                      <th>URI</th>
+                      <th>Description</th>
+                      <th>Options</th>
+                      <th>UserData</th>
                     </thead>
                     <tbody>
 
-                    <% Secure::AccessRegistry.get_ar_resource_keys.each_with_index do |ar,index| %>
-                        <% next unless Secure::AccessRegistry.get_resource_type(ar) %>
+                    <% @page_controls.content_entries.each do |rec| %>
                         <tr>
-                            <td><%= '%05d' % index %></td>
-                            <td><%= ar.to_s %></td>
-                            <td><%= Secure::AccessRegistry.get_resource_description(ar) %></td>
-                            <td><%= Secure::AccessRegistry.get_resource_options(ar) %></td>
-                            <td><%= Secure::AccessRegistry.get_resource_userdata(ar) %></td>
+                          <td><%= rec.index %></td>
+                          <td><%= rec.uri %></td>
+                          <td><%= rec.description %></td>
+                          <td><%= rec.options %></td>
+                          <td><%= rec.userdata %></td>
                         </tr>
                     <% end %>
                     </tbody>
@@ -172,13 +166,12 @@
         <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
             <div class="panel-body">
 
-            <% if authenticated? %>
-                    <% res = service_factory.xml_profile_provider.content_profile_for_user(current_user, true) %>
-                    <% if res.present? and res.success %>
+            <% if @page_controls.authenticated_user %>
+                    <% if @page_controls.xprofile.success %>
                     <h3>Access Profile</h3>
                         <div class="table-responsive">
                             <table id="access-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                <caption><h4><%= res.display_name if res.display_name? %> at <%= res.email if res.email? %></h4></caption>
+                                <caption><h4><%= @page_controls.xprofile.display_name %> at <%= @page_controls.xprofile.email %></h4></caption>
                                 <thead class="bg-primary">
                                     <th>Profile Type</th>
                                     <th>Description</th>
@@ -188,15 +181,15 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><%= res.profile_type %></td>
-                                    <td><%= res.profile_type_description %></td>
-                                    <td><%= res.provider %></td>
-                                    <td><%= res.pak %></td>
-                                    <td><%= res.username %></td>
+                                    <td><%= @page_controls.xprofile.profile_type %></td>
+                                    <td><%= @page_controls.xprofile.profile_type_description %></td>
+                                    <td><%= @page_controls.xprofile.provider %></td>
+                                    <td><%= @page_controls.xprofile.pak %></td>
+                                    <td><%= @page_controls.xprofile.username %></td>
                                 </tr>
                                 <tr>
                                     <table id="access-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                        <caption>Content Profile Entries</caption>
+                                        <caption><h4>Content Profile Entries</h4></caption>
                                         <thead class="bg-primary">
                                             <th>Entry Description</th>
                                             <th>Content</th>
@@ -206,7 +199,7 @@
                                             <th>Content Value</th>
                                         </thead>
                                         <tbody>
-                                        <% res.entries.each do |row| %>
+                                        <% @page_controls.xprofile.entries.each do |row| %>
                                             <tr>
                                                 <td><%= row.description %></td>
                                                 <td><%= row.content_type %></td>
@@ -227,15 +220,14 @@
                             </table>
                         </div>
                     <% else %>
-                        <div class="alert alert-warning" role="alert"><%= res.message if res.message? %></div>
+                        <div class="alert alert-warning" role="alert"><%= @page_controls.xprofile.message %></div>
                     <% end %>
 
-                    <% res = service_factory.db_profile_provider.content_profile_for_user(current_user, true) %>
-                    <% if res.present? and res.success %>
+                    <% if @page_controls.cprofile.success %>
                         <h3>Content Profile</h3>
                         <div class="table-responsive">
                             <table id="content-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                <caption><h4><%= res.display_name %> at <%= res.email %></h4></caption>
+                                <caption><h4><%= @page_controls.cprofile.display_name %> at <%= @page_controls.cprofile.email %></h4></caption>
                                 <thead class="bg-primary">
                                     <th>Profile Type</th>
                                     <th>Description</th>
@@ -245,15 +237,15 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><%= res.profile_type %></td>
-                                        <td><%= res.profile_type_description %></td>
-                                        <td><%= res.provider %></td>
-                                        <td><%= res.pak %></td>
-                                        <td><%= res.username %></td>
+                                        <td><%= @page_controls.cprofile.profile_type %></td>
+                                        <td><%= @page_controls.cprofile.profile_type_description %></td>
+                                        <td><%= @page_controls.cprofile.provider %></td>
+                                        <td><%= @page_controls.cprofile.pak %></td>
+                                        <td><%= @page_controls.cprofile.username %></td>
                                     </tr>
                                     <tr>
                                         <table id="content-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                            <caption>Content Profile Entries</caption>
+                                            <caption><h4>Content Profile Entries</h4></caption>
                                             <thead class="bg-primary">
                                                 <th>Entry Description</th>
                                                 <th>Content</th>
@@ -263,7 +255,7 @@
                                                 <th>Content Value</th>
                                             </thead>
                                             <tbody>
-                                            <% res.entries.each do |row| %>
+                                            <% @page_controls.cprofile.entries.each do |row| %>
                                                 <tr>
                                                     <td><%= row.description %></td>
                                                     <td><%= row.content_type %></td>
@@ -280,7 +272,7 @@
                             </table>
                         </div>
                     <% else %>
-                        <div class="alert alert-warning" role="alert"><%= res.message if res.message? %></div>
+                        <div class="alert alert-warning" role="alert"><%= @page_controls.cprofile.message %></div>
                     <% end %>
 
                 <div class="well">
@@ -341,9 +333,9 @@
                 </ol>
             </div>
         </div>
-          <% if authenticated? and current_user_has_access?('#Management') %>
+          <% if @page_controls.authenticated_user and @page_controls.apis_enabled %>
               <div class="well">
-                <%= link_to "Reload AccessRegistry",  details_sysinfo_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
+                <%= link_to "Reload AccessRegistry",  api_sysinfo_actions_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
               </div>
           <% else %>
               <div class="alert alert-warning" role="alert">No Authorized User</div>
@@ -351,7 +343,7 @@
     </div>
     </div>
 
-    <div class="panel panel-success">
+    <div class="panel panel-success" id="obs-panel">
       <div class="panel-heading" role="tab" id="headingSix">
         <h4 class="panel-title">
           <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
@@ -361,10 +353,10 @@
       </div>
       <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
         <div class="panel-body">
-          <% if authenticated? and current_user_has_access?('#Management') %>
+          <% if @page_controls.apis_enabled %>
               <div class="table-responsive">
                 <table id="storage-table" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                  <caption><h4>Storage Size: <%= Secure::ObjectStorageContainer.instance.size_of_store('Admin') %></h4></caption>
+                  <caption><h4>Storage Size: <%= page_controls.storage_size %></h4></caption>
                   <thead class="bg-primary">
                     <th>Client Class</th>
                     <th>Key</th>
@@ -373,8 +365,8 @@
                     <th>Create Time</th>
                   </thead>
                   <tbody>
-                  <% Secure::ObjectStorageContainer.instance.list_storage_keys_and_value_class.each do |item| -%>
-                      <% item.each_pair do |k,v| -%>
+                  <% @page_controls.storage_keys.each do |item| -%>
+                      <% item.to_hash().each_pair do |k,v| -%>
                         <% parts = k.to_s.split('.') -%>
                         <tr>
                           <td><%= parts[0] %></td>
@@ -392,9 +384,9 @@
               <div class="alert alert-warning" role="alert">No Authorized User</div>
           <% end %>
         </div>
-        <% if authenticated? and current_user_has_access?('#Management') %>
+        <% if @page_controls.apis_enabled %>
           <div class="well">
-            <%= link_to "Purge Object Storage items older than 10 minutes",  details_sysinfo_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
+            <%= link_to "Purge Object Storage items older than 10 minutes",  api_sysinfo_actions_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
           </div>
         <% end %>
       </div>

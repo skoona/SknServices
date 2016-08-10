@@ -17,7 +17,8 @@ var logEnabled = <%= Rails.env.development? %>,
     contentTable,
     accessibleTable,
     mcUserTable,
-    mcEntriesTable;
+    mcEntriesTable,
+    siStorageTable;
 
 /**
  * Prevents debuging messages from going to console none development mode
@@ -479,8 +480,6 @@ function handleManagementPages() {
       /* update content profile entries table */
       replaceEntriesTableRows(dataPackage);
 
-//      $('.nav-tabs a:last').tab('show');
-
     });
 
     /**
@@ -580,12 +579,17 @@ $(function() {
             $('h2 > a.btn-lg').on('click', handleRailsInfo);
 
 
-          $('#storage-table').DataTable({
+          siStorageTable = $('#storage-table').DataTable({
             scrollY: "420px",
             language: {
               emptyTable: "ObjectStorage is Empty!"
             }
           });
+
+          $('#obs-panel').on('shown.bs.collapse', function () {
+            siStorageTable.draw();
+          });
+
             break;
         case 'manage_content_profiles':
             handleManagementPages();

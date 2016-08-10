@@ -202,6 +202,7 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -599,6 +600,16 @@
         <uri>pages/details_sysinfo</uri>
         <description>System Information</description>
         <userdata>drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="false">
+        <uri>pages/api_sysinfo_actions</uri>
+        <description>System Information API</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>

@@ -3,6 +3,8 @@
 
 class PagesController < ApplicationController
 
+
+
   def home
   end
 
@@ -20,19 +22,16 @@ class PagesController < ApplicationController
   def about
   end
 
-  # overloaded method: display page, and act on registry
-  def details_sysinfo
-    flash.now[:notice] = case params[:id]
-                       when 'xml'
-                         access_service.reload_access_registry
-                         "AccessRegistry Reloaded"
-                       when 'purge'
-                         count = service_factory.purge_storage_objects((Time.now - 10.minutes).to_i)
-                         "ObjectStorageContainer Purged #{count} Items"
-                     end
+  # GET
+  def api_sysinfo_actions
+    @page_controls = service_factory.access_service.handle_system_information_api(params)
+    redirect_to details_sysinfo_pages_path, notice: @page_controls.message and return
   end
 
+  def details_sysinfo
+    @page_controls = service_factory.access_service.handle_system_information(params)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+  end
 
-private
 
 end

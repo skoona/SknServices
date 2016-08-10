@@ -15,8 +15,8 @@
 //= require jquery-ui
 //= require jquery-binary-transport
 //= require bootstrap-sprockets
-//= require dataTables.bootstrap
 //= require jquery.dataTables
+//= require dataTables.bootstrap
 //= require skn-services.custom.js.erb
 //= require prettify
 //= require_tree .
