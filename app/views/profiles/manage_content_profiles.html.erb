@@ -11,11 +11,11 @@
         <li><a data-toggle="tab" href="#menu2" data-dttable="#mc-entries-table">Entries</a></li>
     </ul>
 
-    <div class="tab-content" data-user-package="<%= @page_controls.package.user_package.map(&:to_hash).to_json %>">
+    <div class="tab-content" data-user-package="<%= @page_controls.package.map(&:to_hash).to_json %>">
         <div id="home" class="tab-pane fade in active">
             <h3>ContentProfile</h3>
-            <p>Content profiles are the basis of this authorization strategy.  Select a
-                user's ContentProfile from the list below, then click on the Entries tab to review their current content access permissions.</p>
+            <p class="lead">Content profiles are the basis of this authorization strategy.  Select a
+                user's ContentProfile from the list below, then click on the Entries tab to review their current authorizations.</p>
             <div class="table-responsive">
                 <table id="mc-users-table" class="table table-hover table-striped table-bordered display" cellspacing="0" width="100%">
                     <thead class="bg-primary">
@@ -27,7 +27,7 @@
                     <th>Actions</th>
                     </thead>
                     <tbody class="" data-package="<%= @page_controls.to_hash().to_json %>">
-                    <% @page_controls.package.user_package.each do |u| %>
+                    <% @page_controls.package.each do |u| %>
                         <tr class="profile" data-package="<%= u.to_hash.to_json %>">
                             <td><%= u.username %></td>
                             <td><%= u.display_name %></td>
@@ -53,7 +53,7 @@
         </div>
         <div id="menu2" class="tab-pane fade">
             <h3>ContentProfileEntries</h3>
-            <p>Content profile entries make the association between the type of protected resources, or content, and
+            <p class="lead">Content profile entries make the association between the type of protected resources, or content, and
                 the entities those resources are related to, or Topic.  Both content and topic are meant to be specific.</p>
             <p>It is considered <em>Best Practice</em> to choose one topic identifier and one content type identifier per entry.  While
               multiple identifiers can be chosen, it will make adding or removing one identifier from the group frustrating.  By only including one
@@ -92,7 +92,7 @@
         </div>
         <div class="modal-body" id="content-profile-body">
           <p class="lead" id="profile-message">Content Profiles are system objects, and as a result only have one admin specified
-            value: Profile Type.  This value documents a person's role or relationship to the business.</p>
+            value: <em>Profile Type</em>.  This value documents a person's role or relationship to the business.</p>
           <fieldset>
             <div class="form-group">
               <label class="col-sm-4 col-sm-4 control-label" for="profile-type-id"><abbr class="text-error" title="required">*</abbr> Profile Type</label>
@@ -191,6 +191,6 @@
 </div>
 
 <div class="row">
-    <p class="text-center">Under Construction</p>
-    <p class="text-center"><%= @page_controls.package.message %></p>
+    <p class="text-center">Administrative</p>
+    <p class="text-center"><%= @page_controls.message %></p>
 </div>

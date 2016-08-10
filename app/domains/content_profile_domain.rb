@@ -104,37 +104,9 @@ class ContentProfileDomain < ::Factory::DomainsBase
       usrs <<  content_profile.merge(profile_exist: content_profile[:success])
     end
 
-    results = {
-        success: false,
-        message: '',
-        user_package: usrs,
-        page_actions: [{
-                           path: :manage_content_profiles_profiles_path,
-                           text: "Refresh",
-                           icon: 'fa fa-refresh fa-lg',
-                           html_options: {
-                               id: "refresh-action",
-                               class: 'refresh'
-                           }
-                       },
-                       {
-                           path: '#content-entry-modal',
-                           text: 'New Entry',
-                           icon: 'fa fa-plus-square-o fa-lg',
-                           html_options: {
-                               id: 'create-entry-action',
-                             class: 'create',
-                             title: 'Create Content Profile Entry',
-                              data: {url: '/profiles/create_entries_for_user',
-                                     toggle: 'modal',
-                                     target: '#content-entry-modal'}
-                           }
-                       }],
-        package: []
-    }
-    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{results}"
+    Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{usrs}"
 
-    results
+    usrs
   end
 
 

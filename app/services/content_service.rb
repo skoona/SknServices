@@ -76,15 +76,35 @@ class ContentService < ::ContentProfileDomain
     res = SknUtils::PageControls.new({
                                          success: true,
                                          message: "",
-                                         profile_type_options: ProfileType.option_selects,
-                                         content_type_options: ContentType.option_selects,
-                                         content_type_opts_options: ContentTypeOpt.option_selects('Commission'),
-                                         topic_type_options: TopicType.option_selects,
-                                         topic_type_opts_options: TopicTypeOpt.option_selects('Branch'),
-                                         package: management_page_users_package(PROFILE_CONTEXT)
+                                         profile_type_options: ProfileType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+                                         content_type_options: ContentType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+                                         content_type_opts_options: ContentTypeOpt.option_selects('Commission').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+                                         topic_type_options: TopicType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+                                         topic_type_opts_options: TopicTypeOpt.option_selects('Branch').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+                                         package: management_page_users_package(PROFILE_CONTEXT),
+                                         page_actions: [{
+                                                            path: :manage_content_profiles_profiles_path,
+                                                            text: "Refresh",
+                                                            icon: 'fa fa-refresh fa-lg',
+                                                            html_options: {
+                                                                id: "refresh-action",
+                                                                class: 'refresh'
+                                                            }
+                                                        },
+                                                        {
+                                                            path: '#content-entry-modal',
+                                                            text: 'New Entry',
+                                                            icon: 'fa fa-plus-square-o fa-lg',
+                                                            html_options: {
+                                                                id: 'create-entry-action',
+                                                                class: 'create',
+                                                                title: 'Create Content Profile Entry',
+                                                                data: {url: '/profiles/create_entries_for_user',
+                                                                       toggle: 'modal',
+                                                                       target: '#content-entry-modal'}
+                                                            }
+                                                        }]
                                      })
-    res.success = res.package.success
-    res.message = res.package.message
     res
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
@@ -147,6 +167,7 @@ class ContentService < ::ContentProfileDomain
   # }
   # POST
   def handle_content_profile_entries_create(params)
+    raise Utility::Errors::IncompleteSelectionFailure, "Please make Topic and/or Content selection!" unless params['topic_type_value']
     SknUtils::PageControls.new({
                                 success: create_content_profile_entries(params),
                                 message: 'Content profile entry was successfully created.'
@@ -155,7 +176,7 @@ class ContentService < ::ContentProfileDomain
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
     SknUtils::PageControls.new({
                                    success: false,
-                                   message: e.message
+                                   message: "[ #{e.class.name} ] create ContentProfileEntry failed. Msg: #{e.message}"
                                })
   end
 

@@ -20,6 +20,7 @@ RSpec.describe ContentService, "Service routines of ContentService." do
     scenario "#new succeeds when :factory is valid value." do
       expect(ContentService.new({factory: service_factory})).to be_a(ContentService)
     end
+
     scenario "#new fails when :factory is invalid value." do
       expect{ ContentService.new({factory: nil}) }.to raise_error(ArgumentError)
     end
@@ -27,22 +28,24 @@ RSpec.describe ContentService, "Service routines of ContentService." do
     scenario "#factory.content_service returns a proper service object." do
       expect( service ).to be_a ContentService
     end
+
     scenario "#service #factory objects to be different." do
       expect( service.factory ).to be_a ServiceFactory
       expect( service.service.factory ).to be_a ServiceFactoryMockController
     end
+
     scenario "#current_user returns a UserProfile object." do
       expect( service.factory.current_user ).to be_a Secure::UserProfile
       expect( service.current_user ).to be_a Secure::UserProfile
     end
   end
 
-  context "Management methods return proper results. " do
+  context "Content Profile Management methods return proper results. " do
 
     scenario "#handle_content_profile_management prepares a page package of all users" do
       result = service.handle_content_profile_management({})
       expect(result).to be_a(SknUtils::PageControls)
-      expect(result.success).to be false
+      expect(result.success).to be true
       expect(result.message).to be_blank
     end
 
@@ -108,9 +111,29 @@ RSpec.describe ContentService, "Service routines of ContentService." do
     end
 
     scenario "#handle_api_accessible_content" do
+      parms = {"id"=>"content",
+                   "username"=>"developer",
+                   "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
+                   "content_type"=>"Commission",
+                   "content_value"=>["68613"],
+                   "topic_type"=>"Branch",
+                   "topic_value"=>["0038"],
+                   "description"=>"Determine which branch documents can be seen",
+                   "topic_type_description"=>"Branch Actions for a specific branch",
+                   "content_type_description"=>"Monthly Commission Reports and Files"
+      }
+      result = service.handle_api_accessible_content(parms)
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.package.success).to be true
     end
 
     scenario "#api_get_content_object" do
+      parms = {"id"=>"0:0:1",
+               "username"=>"developer"}
+      result = service.api_get_content_object(parms)
+      # catalog is not built, look for result and false
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.package.success).to be true
     end
   end
 

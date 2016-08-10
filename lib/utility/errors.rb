@@ -30,5 +30,7 @@ module Utility
     end
     class RemoteConnectionFailure < StandardError
     end
+    class IncompleteSelectionFailure < StandardError
+    end
   end
 end

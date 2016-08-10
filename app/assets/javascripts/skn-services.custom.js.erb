@@ -377,8 +377,9 @@ function replaceEntriesTableRows(dataPackage) {
             counter = 0,
             trNode,
             trRow,
-            deleteUrla = '<td><a class="btn delete" data-confirm="Are you sure?" data-method="delete" href="/profiles/delete_entry_for_user?id=',
-            deleteUrlb = '" rel="nofollow"><i class="fa fa-trash-o fa-lg" title="Delete Content Profile Entry" aria-hidden="true"></i></a></td>',
+            deleteUrla = '<td><a class="btn delete" data-confirm="',
+            deleteUrlb = '" data-method="delete" href="/profiles/delete_entry_for_user?id=',
+            deleteUrlc = '" rel="nofollow"><i class="fa fa-trash-o fa-lg" title="Delete Content Profile Entry" aria-hidden="true"></i></a></td>',
             deleteLink;
 
     if (dataPackage.profile_exist) {
@@ -393,8 +394,10 @@ function replaceEntriesTableRows(dataPackage) {
             newRow.push('<td>' + row.topic_type_description  + '</td>');
             newRow.push('<td>' + row.topic_value.join(',')  + '</td>');
             newRow.push('<td>' + JSON.stringify(row.content_value)  + '</td>');
-            deleteLink = deleteUrla + row.id + '&amp;pak=' + dataPackage.pak + deleteUrlb;
-            newRow.push(deleteLink);
+            deleteLink = deleteUrla +
+                              'Deleting: [' + row.description + '], entry.  Are you sure?' +
+                              deleteUrlb + row.id + '&amp;pak=' + dataPackage.pak + deleteUrlc;
+          newRow.push(deleteLink);
             trRow = $('<tr class="entry">').append(newRow.join());
 
             trNode = mcEntriesTable.row.add(trRow).draw().node();
@@ -403,15 +406,15 @@ function replaceEntriesTableRows(dataPackage) {
           counter = index + 1;
         });
 
-      if (counter == 0) {
-        $('#create-entry-action').attr('disabled', 'disabled');
-      } else {
-        $('#create-entry-action').removeAttr('disabled');
-      }
+        if (counter == 0) {
+          $('#create-entry-action').attr('disabled', 'disabled');
+        } else {
+          $('#create-entry-action').removeAttr('disabled');
+        }
 
     } else {
       $('#create-entry-action').attr('disabled', 'disabled');
-        mcEntriesTable.clear().draw();
+      mcEntriesTable.clear().draw();
     }
   $('#content-entry-modal input[name="username"]').val(dataPackage.username);
   $('#content-entry-modal input[name="pak"]').val(dataPackage.pak);
@@ -512,7 +515,7 @@ function handleManagementPages() {
         return true;
     });
 
-//    $('#mc-users-table tbody tr.profile').first().click();
+    $('#mc-users-table tbody tr.profile').first().click();
     $('#create-entry-action').attr('disabled', 'disabled');
 
     consoleLog("handleManagementPages() Enabled!");

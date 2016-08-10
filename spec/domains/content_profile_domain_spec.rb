@@ -54,8 +54,8 @@ RSpec.describe ContentProfileDomain, "Service routines of ContentProfileDomain."
     end
     scenario "#management_profiles" do
       result = @service.management_page_users_package('content')
-      expect(result).to be_a(Hash)
-      expect(result[:success]).to be false
+      expect(result).to be_a(Array)
+      expect(result.first).to be_a(Hash)
     end
     scenario "#get_content_object_api" do
       result = @service.get_content_object_api({})
