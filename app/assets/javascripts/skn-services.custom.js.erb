@@ -414,11 +414,7 @@ function replaceEntriesTableRows(dataPackage) {
           counter = index + 1;
         });
 
-        if (counter == 0) {
-          $('#create-entry-action').attr('disabled', 'disabled');
-        } else {
-          $('#create-entry-action').removeAttr('disabled');
-        }
+        $('#create-entry-action').removeAttr('disabled');
 
     } else {
       $('#create-entry-action').attr('disabled', 'disabled');
