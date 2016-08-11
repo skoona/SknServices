@@ -74,7 +74,9 @@ module Providers
                           filename: cv.to_s,
                           created: DateTime.now.strftime("%m/%d/%Y"),
                           size: cpe["content_type_description"],
-                          mime: "N/A"
+                          mime: "N/A",
+                          content_type: content_type,
+                          username: cpe['username']
               }
         end
       end

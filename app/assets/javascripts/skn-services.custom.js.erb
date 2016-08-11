@@ -80,7 +80,7 @@ function handleRailsInfo(ev) {
 function profileTablesGetObject(ev) {
   var dataPackage = $(ev.currentTarget).data().package,
       dataResponse,
-      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username;
+      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
   /*
    * flag selected in related table */
@@ -89,8 +89,12 @@ function profileTablesGetObject(ev) {
 
   ev.preventDefault();
 
-  window.open(objectUrl, dataPackage.filename);
+  if(dataPackage.hasOwnProperty('id')) {
+    window.open(objectUrl, dataPackage.filename);
     consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+  } else {
+    consoleLog("profileTablesGetObject() Not a file based request - skipped");
+  }
 
 
   /**  Worked but user could not detach
@@ -111,7 +115,7 @@ function profileTablesGetObject(ev) {
 
   */
 
-  consoleLog("profileTablesGetObject(completed)");
+  consoleLog("profileTablesGetObject(completed) ");
 
   return false;
 }
@@ -276,7 +280,10 @@ function replaceAccessibleTableRows(dataPackage) {
             trRow = $('<tr>').append(newRow.join());
 
             trNode = accessibleTable.row.add(trRow).draw().node();
-            $(trNode).data('package', row).on( "click", profileTablesGetObject);
+
+          if(row.hasOwnProperty('id')) {  // only request download when min params are present
+            $(trNode).data('package', row).on("click", profileTablesGetObject);
+          }
             counter = index + 1;
         });
     } else {
@@ -421,7 +428,7 @@ function replaceEntriesTableRows(dataPackage) {
   $('#content-entry-modal input[name="pak"]').val(dataPackage.pak);
   $('#content-entry-label').text('Create Content Profile Entry for ' + dataPackage.username);
 
-    consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ') ' + JSON.stringify(dataPackage));
+    consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ') ');
     return false;
 }
 

@@ -25,6 +25,7 @@ class ProfilesController < ApplicationController
   # get
   def api_get_content_object
     @page_controls = content_service.api_get_content_object(params)
+    return head(:not_found) unless @page_controls.success
     send_file(@page_controls.package.package.source, filename: @page_controls.package.package.filename, type: @page_controls.package.package.mime, disposition: :inline) and return
   end
 
