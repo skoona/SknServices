@@ -41,11 +41,7 @@
                                 <% end %>
                             <% end %>
 
-                            <% if current_user_has_access?('#SystemInformation') %>
-                                <% if current_user_has_access?('pages/details_sysinfo') %>
-                                    <%= nav_link_icon("glyphicon-cog", "System Information", details_sysinfo_pages_path) %>
-                                <% end %>
-                            <% end %>
+                            <%= nav_link_icon("glyphicon-cog", "System Information", details_sysinfo_pages_path) %>
                         </ul>
                     </li>
                     <% if current_user_has_access?('#Demonstration') %>
