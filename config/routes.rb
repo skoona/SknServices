@@ -13,7 +13,6 @@ Rails.application.routes.draw do
   resources :pages, only: :none do
     collection do
       get :home
-      get :learn_more
       get :about
       get :details_access
       get :details_architecture

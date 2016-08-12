@@ -27,8 +27,8 @@
                 The application controller uses it's module to gain access to Warden.  Whenever it receives the next http
                 request it checks to see if there is a current user value.
                 <ul>
-                  <li>If there is no current user, the controller will redirect the session to SessionsControllers#not_authenticated method, which redirects to a local sign-in page.</li>
-                  <li>If there is a valid user but they are not authorized to access this page, the application controller redirects the session to the SessionsController#not_authorized method, which presents an Not Authorized Page.</li>
+                  <li>If there is no current user and requested page is protected, the controller will redirect the session to SessionsControllers#not_authenticated method, which renders a local sign-in page.</li>
+                  <li>If there is a valid user but they are not authorized to access the requested page, the application controller redirects the session to the SessionsController#not_authorized method, which presents an Not Authorized Page.</li>
                   <li>For Authenticated and Authorized users the controller passes them through to their original route.</li>
                 </ul>
             </p>
@@ -50,7 +50,7 @@
             </p>
             <p>
                 For secured pages warden works with the UserProfile class to restore a cached
-                user profile, or by using authentication strategies - authenticate the current user.
+                user profile from the session, or by using authentication strategies - authenticate the current user.
                 Should authentication fail, the application controller decides where
                 to redirect the unauthenticated user; typically that's the Sign In page.
             </p>
@@ -61,12 +61,12 @@
                 removed from the cache, and clears the current_user method.
             </p>
             <p>
-                Warden's authentication of a user is completed by calling class methods on the UserProfile.  UserProfile proxies
-                these authenticate calls to a lower level UserProxy, in this application its a Postgres User Model.  We have included methods in that db model to authenticate the
+                Warden's authentication of a user is augmented by calling class methods on the UserProfile.  UserProfile proxies
+                these authenticate calls to a lower level UserProxy, in this application its a PostgreSQL User Model.  We have included methods in that db model to authenticate the
                 user and return a collection of params that the UserProfile class can use to create a valid UserProfile object.  This allows us to proxy in a LDAPUser, OAUTHUser,
                 DominoUser, or any other authentications class as a source for users.
             </p>
-            <p>The UserProfile object is the User and whats returned from the :current_user API of Warden; not the lower level proxy object.</p>
+            <p>The UserProfile object is the User and whats returned from the <code>:current_user</code> API of Warden; not the lower level proxy object.</p>
         </div>
     </section>
 </article>

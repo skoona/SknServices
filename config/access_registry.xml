@@ -363,10 +363,6 @@
         <description>Architectural Details</description>
     </resource>
     <resource secured="false">
-        <uri>pages/learn_more</uri>
-        <description>More Information</description>
-    </resource>
-    <resource secured="false">
         <uri>pages/details_content</uri>
         <description>ContentProfile Details</description>
     </resource>

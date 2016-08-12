@@ -103,7 +103,8 @@ module Providers
                           size: human_filesize(pn.size),
                           mime: content_mime_type(pn.extname),
                           username: cpe["username"] || cpe[:username],
-                          id: "#{pidx}:#{cidx}:#{idx}"
+                          id: "#{pidx}:#{cidx}:#{idx}",
+                          content_type: content_type
                         }
               catalog.store("#{pidx}:#{cidx}:#{idx}", { source: pn, filename: pn.basename.to_s, mime: content_mime_type(pn.extname)} )
             end
@@ -130,7 +131,7 @@ module Providers
       []
     end
 
-    # {"id"=>"0:0:1", "username"=>"developer", "controller"=>"profiles", "action"=>"api_get_content_object"}
+    # {"id"=>"0:0:1", "username"=>"developer", content_type="Commission" "controller"=>"profiles", "action"=>"api_get_content_object"}
     def retrieve_content_object(params, user_p=nil) # Hash entry result from available_content_list method
       page_user = user_p || (get_page_user(params["username"] || params[:username]))
 

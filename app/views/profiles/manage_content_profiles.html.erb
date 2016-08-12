@@ -58,22 +58,27 @@
             <p>It is considered <em>Best Practice</em> to choose one topic identifier and one content type identifier per entry.  While
               multiple identifiers can be chosen, it will make adding or removing one identifier from the group frustrating.  By only including one
               identifier per entry, you can easily delete, or add new entries as needed.</p>
-            <p>A user may have as many content profile entries as necessary to meet their needs.</p>
             <div class="table-responsive">
               <table id="mc-entries-table" class="table table-hover table-striped table-bordered display" cellspacing="0" width="100%">
-                    <thead class="bg-primary">
-                        <th>Entry Description</th>
-                        <th>Content</th>
-                        <th>Content Description</th>
-                        <th>Topic</th>
-                        <th>Topic Description</th>
-                        <th>Topic Value</th>
-                        <th>Content Value</th>
-                        <th>Actions</th>
-                    </thead>
-                    <tbody class="">
-                    </tbody>
-                </table>
+                <caption>
+                  <%= link_to( "#content-entry-modal", {id: 'create-entry-action', class: "btn create", data: {url: create_entries_for_user_profiles_path, toggle: 'modal', target: '#content-entry-modal' }}) do %>
+                      <i class="fa fa-plus-square-o fa-lg" title="Create Content Profile Entry" aria-hidden="true"></i>
+                      <span><strong>create new entry</strong></span>
+                  <% end %>
+                </caption>
+                <thead class="bg-primary">
+                    <th>Entry Description</th>
+                    <th>Content</th>
+                    <th>Content Description</th>
+                    <th>Topic</th>
+                    <th>Topic Description</th>
+                    <th>Topic Value</th>
+                    <th>Content Value</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody class="">
+                </tbody>
+              </table>
             </div>
         </div>
     </div>

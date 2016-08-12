@@ -11,7 +11,7 @@
         <p class="lead">
             The SknServices project exists to explore Authentication and Authorization services.
             With special focus on content-based authorization using expanded Permissions properties.  It also implements a
-            design strategy that lessens it's dependancy on Rails.
+            <strong>Services</strong> implementation strategy that lessens it's dependancy on Rails.
         </p>
 
       <div>
@@ -37,11 +37,11 @@
             <p>AccessRegistry class maps internal URIs to external String Roles; which can be managed in LDAP or similar systems.  Users having a particular role would be allowed to
               interact the associated resource, using RESTFul or CRUD or semantics.</p>
             <p>Access control methods are attached to the UserProfile object and thus available in all contexts of the application via :current_user.  Application Pages are easily
-               represented by combining the controller name and controller method name; or URL path.  An example URI for the index page in the HomeController would be 'home/index'.  Actions which may exist
+               represented by combining the controller name and controller method name; or URL path.  An example URI for the index page in the HomeController would be <code>home/index</code>.  Actions which may exist
                on menus or page action buttons may be given URL labels like: '#Print', '#ManageAccount', '#ManageContacts', etc.  On-page information elements URIs may
                be '_RecentOrders', '_CanceledOrders', or '_OrderHistory'</p>
             <p>Access permission roles, dynamically assigned to each user at login, might map URI='#ManageContacts' to Role='App.Manage.Contacts', giving that user the ability to manage contacts.  The AccessRegistry method call
-              would be: userProfileObject.has_access?(URI) = true.</p>
+              would be: <code>userProfileObject.has_access?(URI) = true</code>.</p>
             <p>
               Access authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and for each <em>showable data element</em>.
               Page Access authorization is automated by examining the the controller name and method to compose the URI for the page.  Clickable (menu items,
@@ -56,12 +56,12 @@
                its associated resources.  </p>
             <p><strong>ContentProfileEntries</strong></p>
             <p>A data model is the preferred container for the ContentProfile, although the access registry xml file could contain the needed modeling without the use of a database. This model registers each secured resource
-               using two-factors with each factor being composed of a key-value pair of attributes. A ContentProfileEntry(CPE) wraps these two factors to specify a user access to this type of content. The CPE itself represents
+               using two-factors with each factor being composed of a key-value pair of attributes. A ContentProfileEntry(CPE) wraps these two factors to specify a user's access to this type of content. The CPE itself represents
               one permission and many CPEs can be associated with one ContentProfile belonging to one identified user.</p>
             <p>The First factor key is TopicType, it categorizes the type of entity domain being secured; like Account, Branch Office, Product, Operational-Info, or other similar entities.  Each TopicType key
                uses its value attribute to specifically identify it; a k,v example being key=Account, value=#account number.</p>
             <p>The second factor's key is ContentType, categorizes the type of asset or resources being secured; like Contracts, Commission Statements, Licenses, or other similar assets. Each ContentType uses its
-               value attribute as a precise identifier or search term that can be used to select a certain type of item; presuming these items are stored a filesystem or
+               value attribute as a precise identifier or search term that can be used to select a certain set of items; presuming these items are stored a filesystem or
                document management system. The identifier is used to retrieve items matching.</p>
             <p>Here is an example of how a CPE could be applied to a file system storage container.
               <ul>
@@ -92,6 +92,20 @@
             <p>This approach does not intend to discount the usability or value of Rails as a Web Framework, it's excellent as a Web Framework; but it is not an Application Server similar to TomCat, or Jetty.</p>
             <p>We believe the resulting application will be easier to maintain, won't require us to test controllers and code we didn't write, and it will be easier to upgrade Rails versions.</p>
           </dd>
+
+          <dt>Service Strategy</dt>
+          <dd>
+            <p><strong>If not MVC where does code go?</strong></p>
+            <p>Following the Rails MVC Way, code that would be in the View and Controller is placed in a Services object that support one or more controllers.</p>
+            <p>A Services object is normally contextual, attempting to follow the flow of a business process.  It's primary role it to map or transform request/response data to the Controller.  The data is trasnforms typically comes from a Domain Class, which it inherits.  All services object return one bundle of results in a helper object call <code>ResultsBean</code>.
+            Views and Controllers us the contents of thei result bean to complete their operations; typically named <code>@page_controls</code>, this reduces the total number of instance variables being defined in controllers - again making testing easier.</p>
+            <p>Domain Classes contain the code that would otherwise be embedded in a Model, using the Rails MVC understanding.  However, Domain Classes concentrate their methods on the broader business process; attempting to collect related methods that handle all IO for the process, and the logic needed to ensure each process step is successful.</p>
+            <p>Domain classes call on or instantiate Adapter objects, and other helper objects to as needed to further condense business process tasks.</p>
+            <p>A ServiceFactory is used to collect all services defined in the application, it is the sole provider of instances of these services.  And expects both controllers and other services to be making requests for a particular service; which is memotizes to speed up secondary access.</p>
+            <p>Methods in a domain or service class should minimize their user of controller based methods and helpers where ever possible to maintain separation and improve test outcomes.  However, access to the controller is implemented and available from every service and domain class, through the inheritance chain: Domains inherit from DomainsBase class.
+              DomainsBase keep a initialization reference to the ServiceFactory that instantiated it <code>#service</code>, and the ServiceFactory keeps a reference to the controller that instantiated it <code>#factory</code>.  Thus from any service or domain <code>#service.factory</code> is a direct reference to the Controller.</p>
+          </dd>
+
           <dt>ServiceFactory</dt>
           <dd>
             <p><strong>Business Logic Propagation</strong></p>
@@ -100,7 +114,7 @@
               <ul>
                 <li><code>#service_factory</code> module contains controller helpers designed to be used by Services to gain
                   access to standard controller capabilities and other Services; these methods can easily be mocked, allowing the Services
-                  to be tested without a Controller being active in many cases. It wraps all Service/Domain object and standardizes their initialization params.
+                  to be tested without a Controller being active in many cases. It wraps all Service/Domain objects and standardizes their initialization params.
                 </li>
                 <li>
                   <code>#method_missing</code> method routes Services method calls to the service_factory, relieving us from defining every Service as a Controller Helper.

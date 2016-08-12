@@ -23,10 +23,8 @@
                     We understand these growth issues, and have chosen to apply the more traditional <strong>Domain Driven Design(DDD)</strong> approach, with Rails isolated as a Web Interface; as much as possible.</p>
                     <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our application business logic from it.  Calling on Rails only when absolutely needed to exchange
                         results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
-                    <p>The persistent assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed, and also that the developer should be shielded from the underlying
-                        technologies; is very dangerous and Microsoft-ish.  For examples of the wrong direction read the Rails Release notes starting a 4.0, up to version 5.
-                        Autoloading and ActiveSupport::Concerns are actually crippling core Ruby functionality, like <code>Module#include</code>: even the simple named route is in danger for V5, i.e. <code>:home_page_path()</code>.</p>
-                    <p class="lead">This application source, and implementation, serves as a model for how web applications can be engineered without dumbing down or wasting time.</p>
+                    <p>The persistent assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed for a web app is disturbing.  There is sooo much talent in the Rails community, it is possible to build apps better.</p>
+                    <p class="lead">This application source, and implementation, serves as a model for how web applications can be engineered without sacrificing longevity or major reworks.</p>
                 </div>
             </div>
             <p>Rails is a Great Web Framework.  Your application can derive great benefit from Rails when engineered (Designed) to co-exist with Rails.</p>
@@ -35,14 +33,14 @@
 	        <div class="panel-heading" role="tab" id="headingOurWay">
 	            <h4 class="panel-title">
 	                <a class="collapsed" role="button" data-toggle="collapse" href="#ourWay" aria-expanded="false" aria-controls="headingOurWay">
-                        Design Guidance: Our (A) Way
+                        Design Guidance: Our (Services) Way
 	                </a>
 	            </h4>
 	        </div>
 	        <div id="ourWay" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOurWay">
 	            <div class="panel-body">                   
 			        <p class="lead">We do not add business process logic to Models, controllers, or views! (the classic Rails Way)</p>
-              <p>We choose to step one step back from Rails code containers, models - views - controllers, and place our code in different containers more appropriate to our application purpose.  This need not be
+              <p>We choose to take one step back from Rails code containers, models - views - controllers, and place our code in different containers more appropriate to our application purpose.  This need not be
                 considered a huge departure from the Rails Way, just an alternate approach to building application with Rails.</p>
 			        <p>We consider controller methods as entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code>:service_name.entry_method_name(params)</code>.
 			          Where <code>:service_name</code> is the name of a business process service class associated with that page.
@@ -61,11 +59,10 @@ class ProfilesController < ApplicationController
   def content_profile_demo
     @page_controls = content_service.handle_demo_page(params)
     flash.notice.now = @page_controls.message if @page_controls.message.present?
-    # unless were CRUDing the view will handle any errors, so no redirects needed here.
   end
 
   # JSON only response
-  def content_profile_api
+  def api_content_profile
     @page_controls = content_service.handle_content_api(params)
     render json: @page_controls.to_hash, status: @page_controls.success ? :accepted : :not_found, layout: false, content_type: :json and return
   end
@@ -113,7 +110,7 @@ end
                        When changes and enhancements to the business logic is needed, we can make those changes without great concern or contraints being imposed by the delivery mechanism.  This also faciliates
                        making changes or upgrades to the delivery frameworks.</p>
                     <p>Services inherit directly from Domains to further shield our application from the external frameworks; this is easy to see when considering the controller.  Models on the other hand
-                       need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  I've chosen to go one step further and dedicate a <code>&lt;domain&gt;DataServices</code>
+                       need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  I've chosen to go one step further and dedicate a <code>&lt;context&gt;Provider</code>
                        class that wraps all the ActiveRecord IO calls, expecting it to be called by either Domain methods or Services methods.  I have considered using a Repository strategy to add more isolation and to facilitate testing.
                        For now the specialty domain level IO class provides enough isolation.  Ideally we should be able to write RSpec tests for the service/domain classes without invoking the Rails environment, or at least with fewer dependencies.</p>
                     <p>If service objects are focused on transforming domain results to external interfaces, and domains themselves are focused on the core business logic of a single process.  Then yes, there will
@@ -124,6 +121,100 @@ end
                        our ability to test off-line from Rails, and making the code more portable with greater reuse opportunities.  A task object would completely handle a task step or elements of the logical process flow
                        domain objects are responsible for.  <em>use the force!</em></p>
                 </div>
+              <pre class="pre-scrollable prettyprint lang-rb">
+class ServiceFactory < ::Factory::FactoriesBase
+
+
+  ##
+  # Application Services used in Controller methods
+  ##
+
+  def access_service
+    @sf_access_service ||= ::AccessService.new({factory: self})
+    yield @sf_access_service if block_given?
+    @sf_access_service
+  end
+
+  ...
+end
+              </pre>
+              <pre class="pre-scrollable prettyprint lang-rb">
+class ContentService < ::ContentProfileDomain
+
+
+  # Controller Entry Point
+  def handle_demo_page(params={})
+    SknUtils::PageControls.new({
+                                   success: true,
+                                   message: "",
+                                   page_users: get_page_users(PROFILE_CONTEXT)
+                               })
+  rescue Exception => e
+    Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+    SknUtils::PageControls.new({
+                                   success: false,
+                                   message: e.message,
+                                   page_users: []
+                               })
+  end
+
+  ...
+end
+              </pre>
+              </pre>
+              <pre class="pre-scrollable prettyprint lang-rb">
+ class ContentProfileDomain < ::Factory::DomainsBase
+
+
+  PROFILE_CONTEXT=""  # override in service
+
+  ##
+  # Returns a bundle for each available user
+  # - includes access/content profile
+  def get_page_users(context=PROFILE_CONTEXT)
+    usrs = []
+    Secure::UserProfile.page_users(context).each do |u|
+      usrs << {username: u.username,
+               display_name: u.display_name,
+               user_options: u.user_options || [],
+               get_content_object_url: factory.page_action_paths([:api_get_content_object_profiles_path]),
+               package: [ access_profile_package(u), content_profile_package(u) ]
+      }
+    end
+    usrs
+  end
+
+  def get_page_user(uname, context=PROFILE_CONTEXT)
+    page_user = Secure::UserProfile.page_user(uname, context)
+  end
+
+  def content_profile_package(user_profile=nil)
+    @accessible_type = "content" # [:access, :content]
+      raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
+
+    res = {
+       success: true,
+       message: "",
+       user_options: (user_profile.user_options || []),
+       accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
+       page_user: user_profile.username,
+       content_profile: factory.db_profile_provider.content_profile_for_user(user_profile)
+    }
+    res[:success] = res[:content_profile][:entries].empty? ? false : true
+    unless res[:success]
+      res[:message] = res[:content_profile][:message]
+    else
+      res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}, Options=#{user_profile.user_options.join(',')}"
+    end
+    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
+
+    res
+  end
+
+   ...
+end
+             </pre>
+
             </div>
             <p class="lead">Admittedly, this demonstration has not reached that level of <em>Nirvana</em> yet, but it is the design objective, and I'm not done! Construction details follow.</p>
         </div>
@@ -138,16 +229,12 @@ end
             </div>
             <div id="intents" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingintents">
                 <div class="panel-body">
-                    <p class="lead">The primary intent is to be a feasible example demonstrating Authentication, Authorization, and Content Access Control.  The Domain model composed to
-                    facilitate this demonstration is as follows.</p>
+                    <p class="lead">Intended to be a feasible example demonstrating Authentication, Authorization, and Content Access Control.</p>
                     <dl class="dl-horizontal">
                         <dt>Primary Use Case</dt>
                         <dd>
-                            <p>Allow users to download a collection of file based content, and optionally upload additional content.  The content is protected
+                            <p>Allow users to download a collection of file based content.  The content is protected
                             by access and content controls, ensuring only users authorized for that type of content have access.</p>
-                            <p>If you are a audio mix engineer and need to exchange music files with clients or mastering partners,  this app would facilitate that exchange unsuring
-                            only the right people at a client or partner could access the protected project files.  No doubt you have signed several confidentiality contracts that
-                            require you not to expose the musical content <em>in any way</em> to parties not listed on the contract: This app enables you to meet those strict requirements.</p>
                         </dd>
                         <dt>Administer Profiles</dt>
                             <dd>
@@ -160,7 +247,7 @@ end
                             </dd>
                         <dt>Execute ContentProfile</dt>
                             <dd>
-                                <p>Apply the pre-defined ContentProfile controls against down-loadable assets, and upload requests from a user.</p>
+                                <p>Apply the pre-defined ContentProfile controls against down-loadable assets requests from a user.</p>
                             </dd>
                     </dl>
                 </div>
@@ -172,7 +259,7 @@ end
             <div class="panel-heading" role="tab" id="headingUp">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#UserProfileService" aria-expanded="false" aria-controls="headingUp">
-                        UserProfile Service
+                      [Services Strategy] UserProfile Service
                     </a>
                 </h4>
             </div>
@@ -187,8 +274,8 @@ end
                                 <p>During initialization the user's roles are rendered from those assigned via group roles.</p>
                             </dd>
                         <dt>Inheritance</dt>
-                            <dd><p>Secure::UserProfile, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
-                                object across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
+                            <dd><p>Secure::UserProfile is a base class with direct access to the memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
+                                objects across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
                                 retention until there usage is complete.</p>
                         <dt>Provides</dt>
                             <dd>
@@ -256,7 +343,7 @@ end
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#ServiceFactory" aria-expanded="false" aria-controls="collapseTwo">
-                        ServiceFactory
+                      [Services Strategy] ServiceFactory
                     </a>
                 </h4>
             </div>
@@ -276,7 +363,7 @@ end
                                 To instantiate a ContentService use: <code>service_factory.content_service.some_method_name(params)</code>.</p>
                             <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all service/domain objects in the application. And to additionally
                                 provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
-                            <p>Inside of services, like ContentService or ContentProfileBuilder, reference the service_factory as <code>:factory</code>, as in: <code>factory.content_service.some_method</code> .</p>
+                            <p>Inside of services, like ContentService or ProfileProviders, reference the service_factory as <code>:factory</code> or <code>:service</code>, as in: <code>factory.content_service.some_method</code> .</p>
                         </dd>
                         <dt>Inheritance</dt>
                         <dd><p>ServiceFactory, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
@@ -344,40 +431,10 @@ end
         </div>
 
         <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#ProfileDataServices" aria-expanded="true" aria-controls="collapseOne">
-                        ProfileDataServices
-                    </a>
-                </h4>
-            </div>
-            <div id="ProfileDataServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body">
-                    <h5>ProfileDataServices</h5>
-                    <dl class="dl-horizontal">
-                        <dt>Instantiate</dt>
-                        <dd>
-                            <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                            <p>The intended use of this services object methods is to handle all IO related operations for Profile Data. It should not interact directly with ApplicationController entry points.</p>
-                        </dd>
-                        <dt>Inheritance</dt>
-                        <dd><p>ProfileDataServices, inherits common instantiation service from the <code>ContentProfileDomain</code> class.  The ContentProfileDomain class inherits from the <code>::Factory::DomainsBase</code>,
-                            which yields common initialization services, like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
-                            object storage services and session storage services through its inheritance chain.</p></dd>
-                        <dt>Provides</dt>
-                        <dd><p>ProfileDataServices provides contextual data access for content profile data objects and standard data packaging for internal processes.</p>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-            <p>Instantiated by: <code>service_factory()</code></p>
-        </div>
-
-        <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#ContentService" aria-expanded="false" aria-controls="collapseTwo">
-                        ContentService
+                      [Services Strategy] Services
                     </a>
                 </h4>
             </div>
@@ -410,65 +467,25 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#ProfileBuilder" aria-expanded="false" aria-controls="collapseThree">
-                        [Business Process] ProfileBuilder
-                    </a>
-                </h4>
-            </div>
-            <div id="ProfileBuilder" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                <div class="panel-body">
-                    <h5>ProfileBuilder</h5>
-                    <dl class="dl-horizontal">
-                        <dt>Instantiate</dt>
-                        <dd>
-                            <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                            <p>This service provides the data-backed ContentProfile and XML-backed AccessProfile, normalized as a ContentProfile object.</p>
-                            <p>The intended use of content profile builder methods is to offer a business logic control of accessible content available to each authenticated user.</p>
-                        </dd>
-                        <dt>Inheritance</dt>
-                        <dd><p>Builder::ProfileBuilder, like the <code>ContentProfileDomain</code>, inherits directly from the <code>::Factory::DomainsBase</code> class, and yield business logic methods to higher level service objects.
-                            Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
-                        <dt>Provides</dt>
-                        <dd><p>ProfileBuilder provides logical access to the service factory and all other peer services the factory manages.  It directly provides methods to produce Content Profiles.</p>
-                            <dl>
-                                <dt><code>:combined_profiles</code></dt>
-                                <dd>Both source styles of the ContentProfile returned in one array, <code>[hsh_access,hsh_content]</code>.</dd>
-                                <dt><code>:content_profile</code></dt>
-                                    <dd>The database backed entries, rendered as a ContentProfile.</dd>
-                                <dt><code>:access_profile</code></dt>
-                                    <dd>The XML AccessRegistry backed entries, rendered as a ContentProfile.</dd>
-                            </dl>
-                            <p>Each method requires a UserProfile instance, and optional true/false flag indicating if the result should be a hash or Utility::ContentProfileBean.</p>
-                        </dd>
-                    </dl>
-                </div>
-                <p>This service provides the ContentProfile business object</p>
-            </div>
-            <p>Instantiated by: <code>service_factory()</code></p>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingThree">
-                <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#DomainServices" aria-expanded="false" aria-controls="collapseThree">
-                        [Business Process] DomainServices
+                      [Services Strategy] Domains
                     </a>
                 </h4>
             </div>
             <div id="DomainServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                 <div class="panel-body">
-                    <h5>DomainServices</h5>
+                    <h5>Domains</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
-                            <p>DomainServices are not instantiated directly, they are inherited by higher level and more specialized service classes.</p>
-                            <p>The intended use of domain services classes methods is to offer a business logic control of a single business domain.  It is the starting point for all business domains objects and process services.</p>
+                            <p>Domains are not instantiated directly, they are inherited by higher level and more specialized service classes.</p>
+                            <p>The intended use of domains class methods is to offer a business logic control of a single business domain.  It is the starting point for all business process services.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>DomainServices, like the <code>ContentProfileDomain</code>, inherit directly from the <code>::Factory::DomainsBase</code> class, and yield business logic methods to higher level service objects.
+                        <dd><p>Domains inherit directly from the <code>::Factory::DomainsBase</code> class, and yields business logic methods to higher level service objects.
                             Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
                         <dt>Provides</dt>
-                        <dd><p>DomainServices provide logical access to the service factory and all other peer services the factory manages.  Typically you would find two to three levels of methods in a DomainServices class.</p>
+                        <dd><p>Domains have logical access to the service factory and all other peer services the factory manages.  Typically you would find two to three levels of methods in a Domain class.</p>
                             <dl>
                                 <dt>Level One</dt>
                                 <dd>Top level business interface.  Methods at this level take responsibility for doing the whole task; process a order or payment, would be an example of this.</dd>
@@ -484,14 +501,75 @@ end
                 </div>
                 <p>The Business Process Interface is here.</p>
             </div>
-            <p>Inherited by: <code>ContentService, ProfileDataServices, ...</code></p>
+            <p>Inherited by: <code>ContentService, ...</code></p>
         </div>
+
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#ProfileDataServices" aria-expanded="true" aria-controls="collapseOne">
+              [Services Strategy] domainProviders
+            </a>
+          </h4>
+        </div>
+        <div id="ProfileDataServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <h5>DBProfileProvider</h5>
+            <dl class="dl-horizontal">
+              <dt>Instantiate</dt>
+              <dd>
+                <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
+                <p>The intended use of this services object methods is to handle all IO related operations for domain context data. It should not interact directly with ApplicationController entry points.</p>
+              </dd>
+              <dt>Inheritance</dt>
+              <dd><p>DBProfileProvider, inherits common instantiation service from the <code>Factory::ProvidersBase</code> class.  The Factory::ProvidersBase yields common initialization services,
+                like the current_user() and access back to the service_factory for interaction with the controller if needed,  and object storage services.</p>
+              </dd>
+              <dt>Provides</dt>
+              <dd><p>DBProfileProvider provides contextual data access for content profile data objects with standard data packaging for internal processes.</p>
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <p>Instantiated by: <code>service_factory()</code></p>
+      </div>
+
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingThree">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" href="#ProfileBuilder" aria-expanded="false" aria-controls="collapseThree">
+              [Services Strategy] taskAdapter
+            </a>
+          </h4>
+        </div>
+        <div id="ProfileBuilder" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            <h5>FileSystemAdapter</h5>
+            <dl class="dl-horizontal">
+              <dt>Instantiate</dt>
+              <dd>
+                <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
+                <p>This service retrieves documents indicated by a DB-backed ContentProfile or a XML-backed AccessProfile, normaling the results.</p>
+                <p>The intended use of a task adapter is to handle external IO and  retrieve documents from their storage location based on the contents of a content profile entry.</p>
+              </dd>
+              <dt>Inheritance</dt>
+              <dd><p>Providers::FileSystemAdapter inherits directly from the <code>Factory::ContentAdaptersBase</code> class, and yields access services to domain classes objects.</p>
+              </dd>
+              <dt>Provides</dt>
+              <dd><p>FileSystemAdapter provides logical access to content storage facilities.</p>
+              </dd>
+            </dl>
+          </div>
+          <p>Currently there are two implementation of this component: FileSystemAdapter and InlineValueAdapter classes. </p>
+        </div>
+        <p>Instantiated by: <code>service_factory()</code></p>
+      </div>
 
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#SknUtils" aria-expanded="false" aria-controls="collapseTwo">
-                        ResultBean Value Containers
+                      [Services Strategy] ResultBean Value Containers
                     </a>
                 </h4>
             </div>
@@ -522,170 +600,10 @@ end
         </div>
 
         <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingThree">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#JSONApis" aria-expanded="false" aria-controls="collapseThree">
-                        JSON APIs
-                    </a>
-                </h4>
-            </div>
-            <div id="JSONApis" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                <div class="panel-body">
-                      <pre class="pre-scrollable prettyprint">
-                                        Final Access Package listing: One for each user is available in the API
-                                        GET: /profiles/content_profile_demo.json
-                                        GET: /profiles/access_profile_demo.json
-
-                        {
-                          "user_options":["Manager","0034","0037","0040"],
-                          "username":"developer",
-                          "display_name":"Employee Primary User: Developer",
-                          "package":{
-                            "success":true,
-                            "message":"AccessProfile Entries for developer:Employee Primary User: Developer Options=Manager,0034,0037,0040",
-                            "user_options":["Manager","0034","0037","0040"],
-                            "accessible_content_url":"/profiles/accessible_content.json?id=access",
-                            "page_user":"developer",
-                            "access_profile":{
-                                "username":"developer","entries":[
-                                   {"user_options":["Manager","0034","0037","0040"],
-                                    "topic_value":"PDF",
-                                    "content_value":{"doctype":"954"},
-                                    "content_type":"Commission",
-                                    "content_type_description":"Branch Commission Statements",
-                                    "topic_type":"Branch",
-                                    "topic_type_description":"Branch Commission Statements",
-                                    "description":"Branch Commission Statements",
-                                    "username":"developer",
-                                    "uri":"Commission/Branch/PDF"
-                                   },
-                                   {"user_options":["Manager","0034","0037","0040"],"topic_value":"CSV","content_value":{"doctype":"955"},"content_type":"Commission","content_type_description":"Branch Commission CSV Datafiles","topic_type":"Branch","topic_type_description":"Branch Commission CSV Datafiles","description":"Branch Commission CSV Datafiles","username":"developer","uri":"Commission/Branch/CSV"},
-                                   {"user_options":["Manager","0034","0037","0040"],"topic_value":"PDF","content_value":{"doctype":"956"},"content_type":"Experience","content_type_description":"Branch Experience Statements","topic_type":"Branch","topic_type_description":"Branch Experience Statements","description":"Branch Experience Statements","username":"developer","uri":"Experience/Branch/PDF"}
-                                                             ],
-                                "pak":null,
-                                "profile_type":"",
-                                "profile_type_description":"",
-                                "provider":"UserProfile",
-                                "display_name":"Employee Primary User: Developer",
-                                "email":"skoona@gmail.com"
-                            }
-                          }
-                        }
-
-
-                                        Final Access Package on Users List
-                                        GET: /profiles/accessible_content.json?id=access
-
-                        REQUEST:  {
-                            "user_options":["Manager","0034","0037","0040"],
-                            "topic_value":"PDF",
-                            "content_value":{"doctype":"954"},
-                            "content_type":"Commission",
-                            "content_type_description":"Branch Commission Statements",
-                            "topic_type":"Branch",
-                            "topic_type_description":"Branch Commission Statements",
-                            "description":"Branch Commission Statements",
-                            "uri":"Commission/Branch/PDF",
-                            "username":"developer"
-                            }
-
-                        RESPONSE: {
-                            "success":true,
-                            "content":"access"
-                            "message":"",
-                            "username":"developer",
-                            "display_name":"Employee Primary User: Developer",
-                            "package":[
-                                {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
-                                {"source":"images","filename":"somePic.png","created":"2016-01-05T16:18:57.881-05:00","size":"0"},
-                                {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:18:57.881-05:00","size":"0"}
-                                      ]
-                            }
-
-
-                                        Final ContentProfile Package on Users List
-                                        GET: /profiles/accessible_content.json?id=content
-
-                        REQUEST: {
-                            "user_options":["Manager","0034","0037","0040"],
-                            "topic_value":"Branch",
-                            "content_value":["68601","68602","68603"],
-                            "content_type":"Commission",
-                            "content_type_description":"Monthly Commission Reports and Files",
-                            "topic_type":"Branch",
-                            "topic_type_description":"Branch Actions",
-                            "description":"Determine which branch documents can be seen",
-                            "username":"developer"
-                            }
-
-                        RESPONSE: {
-                            "content":"content"
-                            "success":true,
-                            "message":"",
-                            "username":"developer",
-                            "display_name":"Employee Primary User: Developer",
-                            "package":[
-                                {"source":"datafiles","filename":"someFile.dat","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
-                                {"source":"images","filename":"somePic.png","created":"2016-01-05T16:24:12.066-05:00","size":"0"},
-                                {"source":"pdfs","filename":"someFile.pdf","created":"2016-01-05T16:24:12.066-05:00","size":"0"}
-                                      ]
-                            }
-                      </pre>
-                </div>
-            </div>
-            <p>JSON Apis</p>
-        </div>
-
-        <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#ProcessController" aria-expanded="false" aria-controls="collapseTwo">
-                        [Process] Controller
-                    </a>
-                </h4>
-            </div>
-            <div id="ProcessController" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    [Process] Controller
-                </div>
-            </div>
-            <p>More Stuff like tables</p>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#Configuration" aria-expanded="false" aria-controls="collapseTwo">
-                        Configuration
-                    </a>
-                </h4>
-            </div>
-            <div id="Configuration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    Config.gem
-                </div>
-            </div>
-            <p>More Stuff like tables</p>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#RailsModel" aria-expanded="false" aria-controls="collapseTwo">
-                        Rails Model
-                    </a>
-                </h4>
-            </div>
-            <div id="RailsModel" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    Rails Model: has_and_belongs_to_many was chosen as the method of interaction, to allow maximum reuse of existing patterns contained in Content/Topic and ContentTypeEntries models.
-                </div>
-            </div>
-            <p>More Stuff like tables</p>
-        </div>
-        <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#RailsViews" aria-expanded="false" aria-controls="collapseTwo">
-                        Rails View Helpers
+                      [Services Strategy] Rails View Helpers
                     </a>
                 </h4>
             </div>
@@ -713,21 +631,6 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#RailsApplicationControllers" aria-expanded="false" aria-controls="collapseTwo">
-                        Rails Application Controllers
-                    </a>
-                </h4>
-            </div>
-            <div id="RailsApplicationControllers" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    Rails Application Controllers are a neccessary evil, which we tolerate.
-                </div>
-            </div>
-            <p>More Stuff like tables</p>
-        </div>
-        <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#RSpecTesting" aria-expanded="false" aria-controls="collapseTwo">
                         RSpec Testing
                     </a>
@@ -738,7 +641,7 @@ end
                     RSpec Testing: This Rocks
                 </div>
             </div>
-            <p>More Stuff like tables</p>
+            <p>More Stuff ...</p>
         </div>
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">

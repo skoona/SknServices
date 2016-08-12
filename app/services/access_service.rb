@@ -86,20 +86,12 @@ class AccessService < ::AccessProfileDomain
   ##
 
   def handle_system_information_api(params)
-    msg = case params['id']
-      when 'xml'
-        reload_access_registry
-        "AccessRegistry Reloaded"
-      when 'purge'
-        count = service.purge_storage_objects((Time.now - 10.minutes).to_i)
-        "ObjectStorageContainer Purged #{count} Items"
-    end
     SknUtils::PageControls.new({
                                    success: true,
-                                   message: msg
+                                   message: system_actions_api(params)
                                })
   rescue Exception => e
-    Rails.logger.warn "#{self.class.name}.#{__method__}(#{params[:id]}) Klass: #{e.class.name}, Cause: #{e.message}, stack: #{e.backtrace[0..8]}"
+    Rails.logger.warn "#{self.class.name}.#{__method__}(#{params['id']}) Klass: #{e.class.name}, Cause: #{e.message}, stack: #{e.backtrace[0..8]}"
     SknUtils::PageControls.new({
         success: false,
         message: e.message

@@ -80,7 +80,7 @@ function handleRailsInfo(ev) {
 function profileTablesGetObject(ev) {
   var dataPackage = $(ev.currentTarget).data().package,
       dataResponse,
-      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username;
+      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
   /*
    * flag selected in related table */
@@ -89,8 +89,12 @@ function profileTablesGetObject(ev) {
 
   ev.preventDefault();
 
-  window.open(objectUrl, dataPackage.filename);
+  if(dataPackage.hasOwnProperty('id')) {
+    window.open(objectUrl, dataPackage.filename);
     consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+  } else {
+    consoleLog("profileTablesGetObject() Not a file based request - skipped");
+  }
 
 
   /**  Worked but user could not detach
@@ -111,7 +115,7 @@ function profileTablesGetObject(ev) {
 
   */
 
-  consoleLog("profileTablesGetObject(completed)");
+  consoleLog("profileTablesGetObject(completed) ");
 
   return false;
 }
@@ -276,7 +280,10 @@ function replaceAccessibleTableRows(dataPackage) {
             trRow = $('<tr>').append(newRow.join());
 
             trNode = accessibleTable.row.add(trRow).draw().node();
-            $(trNode).data('package', row).on( "click", profileTablesGetObject);
+
+          if(row.hasOwnProperty('id')) {  // only request download when min params are present
+            $(trNode).data('package', row).on("click", profileTablesGetObject);
+          }
             counter = index + 1;
         });
     } else {
@@ -407,11 +414,7 @@ function replaceEntriesTableRows(dataPackage) {
           counter = index + 1;
         });
 
-        if (counter == 0) {
-          $('#create-entry-action').attr('disabled', 'disabled');
-        } else {
-          $('#create-entry-action').removeAttr('disabled');
-        }
+        $('#create-entry-action').removeAttr('disabled');
 
     } else {
       $('#create-entry-action').attr('disabled', 'disabled');
@@ -419,8 +422,9 @@ function replaceEntriesTableRows(dataPackage) {
     }
   $('#content-entry-modal input[name="username"]').val(dataPackage.username);
   $('#content-entry-modal input[name="pak"]').val(dataPackage.pak);
+  $('#content-entry-label').text('Create Content Profile Entry for ' + dataPackage.username);
 
-    consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ') ' + JSON.stringify(dataPackage));
+    consoleLog('replaceEntriesTableRows(rowsAdded=' + counter + ') ');
     return false;
 }
 
@@ -445,6 +449,7 @@ function handleManagementPages() {
         }
     });
 
+
     /**
      *  Activate the UI, Track Actions from UsersTable
     */
@@ -464,7 +469,7 @@ function handleManagementPages() {
       console.log( "Selected Icon() title: " + title +", url: " + targetPak + " data: " + dataPackage.username);
 
       $('#content-profile-modal').modal('show');
-
+      return false;
     });
 
   /*
@@ -479,7 +484,7 @@ function handleManagementPages() {
 
       /* update content profile entries table */
       replaceEntriesTableRows(dataPackage);
-
+      return false;
     });
 
     /**
@@ -498,10 +503,10 @@ function handleManagementPages() {
       });
 
       console.log( "Topic Selected: topic: " + $(event.currentTarget).val() + ", data.opts: " + JSON.stringify(pkg.opts));
-
+      return false;
     });
     /* make initial selection */
-    $('#content-entry-modal select:not([multiple])').click();
+    $('#content-entry-modal select:not([multiple])').change();
 
     /* Watch the Tabs change, dataTable header don't align when invisible
      * then try to update the DataTable on that page.
@@ -515,7 +520,6 @@ function handleManagementPages() {
     });
 
     $('#mc-users-table tbody tr.profile').first().click();
-    $('#create-entry-action').attr('disabled', 'disabled');
 
     consoleLog("handleManagementPages() Enabled!");
 
