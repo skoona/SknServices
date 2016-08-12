@@ -281,9 +281,8 @@ function replaceAccessibleTableRows(dataPackage) {
 
             trNode = accessibleTable.row.add(trRow).draw().node();
 
-          if(row.hasOwnProperty('id')) {  // only request download when min params are present
             $(trNode).data('package', row).on("click", profileTablesGetObject);
-          }
+
             counter = index + 1;
         });
     } else {
