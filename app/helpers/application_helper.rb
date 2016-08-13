@@ -28,6 +28,23 @@ module ApplicationHelper
                        :gravatar => options)
   end
 
+  # Generate one or more <td>icons for each input
+  # ex: choose_column_icons(true,true,true,false,true)
+  #
+  # Light
+  # yes .glyphicon .glyphicon-ok-circle
+  #  no .glyphicon .glyphicon-remove-circle
+  # Dark
+  # yes .glyphicon .glyphicon-ok-sign
+  #  no .glyphicon .glyphicon-remove-sign
+  def choose_column_icons(*show)
+    #show is_a?(Array)
+    show.inject("") do |res,item|
+      icon = (item ? '.glyphicon-ok-circle' : '.glyphicon-remove-circle')
+      res << content_tag(:td, tag(:span, class: ['.glyphicon', icon, 'btn-lg']), class: 'text-center')
+    end
+  end
+
   def nav_link(link_text, link_path, http_method=nil)
     class_name = current_page?(link_path) ? 'active' : ''
     opts = http_method.nil? ? {method: http_method} : {}
@@ -63,16 +80,16 @@ module ApplicationHelper
     precision = 0
     negative_format = "(%u%n)"
     opts.each do |opt|
-      if opt.is_a? Hash
-        precision = opt[:precision] if opt.has_key? :precision
-        negative_format = opt[:negative_format] if opt.has_key? :negative_format
+      if opt.is_a?(Hash)
+        precision = opt[:precision] if opt.has_key?(:precision)
+        negative_format = opt[:negative_format] if opt.has_key?(:negative_format)
       end
     end
     is_a_number?(value) ? number_to_currency(value, precision: precision, negative_format: negative_format ) : s
   end
 
   def is_a_number?(s)
-    return true if [Fixnum, Float].include? s.class
+    return true if [Fixnum, Float].include?(s.class)
     s.to_s.strip.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
   end
 

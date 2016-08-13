@@ -1,6 +1,6 @@
 ---
 Packaging:
-  pomVersion: 1.0.1
+  pomVersion: 1.0.2
   isDeveloper: false
   isDevelopment: true
   isProduction: false
@@ -28,10 +28,10 @@ access_profile:
 security:
   admin_role: Services.Action.Admin
   extra_digest_strength: 3
-  session_expires: 160
-  remembered_for:  720
-  verify_login_after_seconds: 28800   # 8 hours
-  ! public_pages: # no easily stored in the xml, because of leading slash
+  session_expires: 480                # 8 hours
+  remembered_for: 2160                # 32 hours
+  verify_login_after_seconds: 14400   # 4 hours
+  ! public_pages: # not easily stored in the xml, because of leading slash
    - /assets
 
   ! user_options:
