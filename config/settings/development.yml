@@ -11,6 +11,6 @@ PostgreSQL:
 
 
 security:
-  session_expires: 60
-  remembered_for:  120
+  session_expires: 1280
+  remembered_for:  14400
   verify_login_after_seconds: 360   # 5 minutes
