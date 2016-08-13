@@ -81,7 +81,8 @@
 
 # Rails.application.config.middleware.use Warden::Manager do |manager|
 # Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
-Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
+# Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
+Rails.application.config.middleware.insert_after Rack::Attack, RailsWarden::Manager do |manager|
   # puts "===============[DEBUG]:01 #{self.class}\##{__method__}"
   # manager.default_user_class = Secure::UserProfile
   # manager.unauthenticated_action = "unauthenticated"

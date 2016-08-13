@@ -3,7 +3,6 @@
 
 feature "Authentication process for all users.", js: true do
 
-
   context "Users " do
     given(:user) { user_estester }
 

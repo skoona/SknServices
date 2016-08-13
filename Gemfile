@@ -7,6 +7,7 @@ gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
 gem 'pg', platform: :ruby
 
 gem "rails_warden"
+gem 'rack-attack'
 
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'sass-rails', '~> 5.0'
