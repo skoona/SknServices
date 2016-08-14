@@ -39,10 +39,11 @@ module ApplicationHelper
   #  no .glyphicon .glyphicon-remove-sign
   def choose_column_icons(*show)
     #show is_a?(Array)
-    show.inject("") do |res,item|
-      icon = (item ? '.glyphicon-ok-circle' : '.glyphicon-remove-circle')
-      res << content_tag(:td, tag(:span, class: ['.glyphicon', icon, 'btn-lg']), class: 'text-center')
+    out = show.inject([]) do |res,item|
+      icon = (item ? "glyphicon-ok-circle" : "glyphicon-remove-circle")
+      res << content_tag(:td, tag(:span, class: ["glyphicon", icon, "btn-lg"]), class: "text-center")
     end
+    raw out.join()
   end
 
   def nav_link(link_text, link_path, http_method=nil)
