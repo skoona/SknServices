@@ -7,6 +7,7 @@ class Rack::Attack
   # whitelisting). It must implement .increment and .write like
   # ActiveSupport::Cache::Store
 
+  # Ref: http://guides.rubyonrails.org/caching_with_rails.html#activesupport-cache-store
   Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
 
   # Throttle all requests by IP (60rpm)

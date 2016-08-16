@@ -7,7 +7,9 @@
 #  - context is a prefix for keys, which allows multiple caches in same storage container
 #  - The internal storage template is: {key: [object, timestamp]}
 #    * The timestamp allows for later cleanup if needed
-#
+# 
+# -- Maybe and Alternate Utility
+# Ref: http://guides.rubyonrails.org/caching_with_rails.html#activesupport-cache-store
 
 module Secure
   class ObjectStorageContainer
