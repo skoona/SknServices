@@ -10,7 +10,7 @@ describe ProfilesController, "Verify the basic API is working." do
 
   describe "#accessible_content are valid" do
     it "Access Request returns http success" do
-      get :api_accessible_content, {"user_options"=>["Manager"], "name"=>"Services.Action.Admin.ContentProfile",
+      get :api_accessible_content, params: {"user_options"=>["Manager"], "name"=>"Services.Action.Admin.ContentProfile",
                   "description"=>"Administer Authorization Content Profile",
                   "type"=>"EmployeePrimary", "username"=>"eptester", "controller"=>"profiles",
                   "id"=>"access"}
@@ -20,7 +20,7 @@ describe ProfilesController, "Verify the basic API is working." do
       expect(response).to be
     end
     it "Content Request returns http success" do
-      get :api_accessible_content, {"user_options"=>["Manager"], "description"=>"Determine which branch documents can be seen",
+      get :api_accessible_content, params: {"user_options"=>["Manager"], "description"=>"Determine which branch documents can be seen",
                  "username"=>"developer", "topic_value"=>"Branch", "content_value"=>["68601", "68602", "68603"],
                  "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files",
                  "topic_type"=>"Branch", "topic_type_description"=>"Branch Actions", "id"=>"content"}
@@ -30,7 +30,7 @@ describe ProfilesController, "Verify the basic API is working." do
       expect(response).to be
     end
     it "Access Request returns http success" do
-      get :api_accessible_content, {"user_options"=>["Manager"], "description"=>"Determine which branch documents can be seen",
+      get :api_accessible_content, params: {"user_options"=>["Manager"], "description"=>"Determine which branch documents can be seen",
                                 "username"=>"developer", "topic_value"=>"Branch", "content_value"=>["68601", "68602", "68603"],
                                 "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files",
                                 "topic_type"=>"Branch", "topic_type_description"=>"Branch Actions", "id"=>"access"}

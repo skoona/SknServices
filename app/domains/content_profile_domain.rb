@@ -298,7 +298,7 @@ class ContentProfileDomain < ::Factory::DomainsBase
   #              "content_type_description"=>"Branch Commission Statements"
   # }
   def handle_accessible_content_api(params) # :access, :username, :profile
-    cpe = HashWithIndifferentAccess.new(params) # [:access=role, :content=content]
+    cpe = HashWithIndifferentAccess.new(params.to_h) # [:access=role, :content=content]
     pg_u = get_page_user(cpe[:username] , cpe[:id])
       raise(Utility::Errors::NotFound, "No profile data available for user") unless pg_u.present?
 

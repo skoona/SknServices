@@ -19,7 +19,7 @@ describe PasswordResetsController, " Reset User Password Process" do
 
   describe "#edit receives the email link to find by reset token" do
     it "returns http success" do
-      get :edit, id: user.password_reset_token
+      get :edit, params: {id: user.password_reset_token}
       expect(assigns(:user)).to be_a(User)
       expect(response).to be_success
       expect(response).to render_template :edit
@@ -38,7 +38,7 @@ describe PasswordResetsController, " Reset User Password Process" do
       # - have it return the @page_controls object
       allow(controller.service_factory.access_service).to receive(:reset_password) {SknUtils::ResultBean.new(good)}
 
-      put :update, id: user.id, user: {password: "somevalue", password_confirmation: "somevalue"}
+      put :update, params: {id: user.id, user: {password: "somevalue", password_confirmation: "somevalue"}}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
       expect(response).to redirect_to signin_path
@@ -57,7 +57,7 @@ describe PasswordResetsController, " Reset User Password Process" do
       # - have it return the @page_controls object
       allow(controller.service_factory.access_service).to receive(:reset_password) {SknUtils::ResultBean.new(bad)}
 
-      put :update, id: user.id, user: {password: "somevalue", password_confirmation: "value"}
+      put :update, params: {id: user.id, user: {password: "somevalue", password_confirmation: "value"}}
       expect(assigns(:user)).to be_a(User)
       expect(response).to be_success
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
@@ -76,7 +76,7 @@ describe PasswordResetsController, " Reset User Password Process" do
       # - have it return the @page_controls object
       allow(controller.service_factory.access_service).to receive(:reset_requested) {SknUtils::ResultBean.new(good)}
 
-      post :create, user: {username: "some-ignored-value"}
+      post :create, params: {user: {username: "some-ignored-value"}}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
       expect(response).to redirect_to home_pages_path
@@ -92,7 +92,7 @@ describe PasswordResetsController, " Reset User Password Process" do
       # - have it return the @page_controls object
       allow(controller.service_factory.access_service).to receive(:reset_requested) {SknUtils::ResultBean.new(bad)}
 
-      post :create, user: {username: "some-ignored-value"}
+      post :create, params: {user: {username: "some-ignored-value"}}
       expect(response).to be_redirect
       expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
       expect(response).to redirect_to home_pages_path

@@ -1,7 +1,7 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
-require 'logging'
+# require 'logging'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -43,14 +43,12 @@ module SknService
       ActiveRecord::Base.logger = Rails.logger
     Rails.logger.info "Rails_Config loaded #{Rails.env}"
 
-
-
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+    # config.active_record.raise_in_transactional_callbacks = true
     config.active_record.schema_format = :ruby
 
-    config.middleware.insert_after  ActionDispatch::ParamsParser, Rack::Attack
-    # config.middleware.use Rack::Attack
+    # config.middleware.insert_after ActionDispatch::ParamsParser, Rack::Attack
+    config.middleware.use Rack::Attack
 
   end
 end
