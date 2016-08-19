@@ -106,12 +106,20 @@ are themselves assigned to a wrapper object called a Content Profile which maint
 
 Content Profiles are the anchor back to the User Profile, via the person authentication key(PAK) or UUID they rely on as THE primary identifier.
 
-    
-    
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+        
 ##License
 ---
 
-The MIT License (MIT)
+[The MIT License (MIT)](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2015-2016 James Scott, Jr.
 
