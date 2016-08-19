@@ -14,7 +14,7 @@ class SessionsController < ActionController::Base
     #warden.reset_session!
     authenticate!(scope: :access_profile, message: "Signed in successfully.  SessionsController#create")
     flash_message(:notice, warden.message)
-    redirect_to( params[:commit], notice: "Signed in successfully.") and return unless params[:commit].eql?('page')
+    redirect_to( params.to_unsafe_h[:commit], notice: "Signed in successfully.") and return unless params.to_unsafe_h[:commit].eql?('page')
     redirect_to_target_or_default home_pages_url  # "Signed in successfully."
   end
 

@@ -7,7 +7,8 @@ Date: Dec 2015
 This file contains a collection of notes and data used during development
 The Readme.md file is more like documentation; outside of the app itself.
 
-
+Rails V5.0.0 Permitted Params -- the way out: params.to_unsafe_h
+http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-instead-of-a-hash/
 
 ===PostgreSQL Required
 
