@@ -13,7 +13,7 @@
 #  updated_at                :datetime         not null
 #
 
-class ContentProfile < ActiveRecord::Base
+class ContentProfile < ApplicationRecord
   belongs_to :profile_type
   has_and_belongs_to_many :content_profile_entries, inverse_of: :content_profiles, :join_table => :join_entries
 

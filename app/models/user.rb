@@ -22,7 +22,7 @@
 #  user_options             :string(4096)
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Secure::UserProfileHelper
 
   has_secure_password

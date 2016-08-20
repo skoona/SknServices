@@ -10,7 +10,7 @@
 #  updated_at      :datetime         not null
 #
 
-class TopicType < ActiveRecord::Base
+class TopicType < ApplicationRecord
   has_many :topic_type_opts, inverse_of: :topic_type, :dependent => :destroy
 
   accepts_nested_attributes_for :topic_type_opts, allow_destroy: true, reject_if: lambda {|attributes| attributes['value'].blank?}

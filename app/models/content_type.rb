@@ -10,7 +10,7 @@
 #  updated_at      :datetime         not null
 #
 
-class ContentType < ActiveRecord::Base
+class ContentType < ApplicationRecord
   has_many :content_type_opts, inverse_of: :content_type, :dependent => :destroy
 
   accepts_nested_attributes_for :content_type_opts, allow_destroy: true, reject_if: lambda {|attributes| attributes['value'].blank?}

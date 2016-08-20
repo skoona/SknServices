@@ -7,7 +7,7 @@
 #  user_role_id       :integer
 #
 
-class UserGroupRolesUserRole < ActiveRecord::Base
+class UserGroupRolesUserRole < ApplicationRecord
   belongs_to :user_group_role
   belongs_to :user_role
 end

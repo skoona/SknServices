@@ -7,7 +7,7 @@
 #  content_profile_entry_id :integer
 #
 
-class JoinEntries < ActiveRecord::Base
+class JoinEntries < ApplicationRecord
   belongs_to :content_profile
   belongs_to :content_profile_entry
 end

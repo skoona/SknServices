@@ -9,7 +9,7 @@
 #  updated_at  :datetime         not null
 #
 
-class ProfileType < ActiveRecord::Base
+class ProfileType < ApplicationRecord
   has_one :content_profile
 
   validates_presence_of :name, :description

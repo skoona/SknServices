@@ -10,7 +10,7 @@
 #  updated_at  :datetime         not null
 #
 
-class UserGroupRole < ActiveRecord::Base
+class UserGroupRole < ApplicationRecord
   has_and_belongs_to_many :user_roles, join_table: :user_group_roles_user_roles
 
   validates_uniqueness_of :name

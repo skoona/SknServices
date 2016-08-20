@@ -11,7 +11,7 @@
 #  updated_at      :datetime         not null
 #
 
-class ContentTypeOpt < ActiveRecord::Base
+class ContentTypeOpt < ApplicationRecord
   belongs_to :content_type, inverse_of: :content_type_opts
 
   validates_presence_of :value, :description
