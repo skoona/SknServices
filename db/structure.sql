@@ -30,6 +30,18 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: content_profile_entries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -532,6 +544,14 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
+-- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
 -- Name: content_profile_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -577,6 +597,14 @@ ALTER TABLE ONLY join_entries
 
 ALTER TABLE ONLY profile_types
     ADD CONSTRAINT profile_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
 
 
 --
@@ -719,13 +747,6 @@ CREATE INDEX index_users_on_username ON users USING btree (username);
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
-
-
---
 -- Name: fk_rails_2e964899e5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -788,4 +809,5 @@ ALTER TABLE ONLY join_entries
 SET search_path TO "$user",public;
 
 INSERT INTO schema_migrations (version) VALUES ('20160113200706');
+
 
