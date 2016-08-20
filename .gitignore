@@ -15,6 +15,13 @@
 /vendor/bundle/
 /vendor/ruby/
 
+bin/thread_safe/
+bin/org/
+bin/arjdbc/
+bin/nokogiri/
+bin/bcrypt_jruby/
+public/assets/
+
 # minimal Rails specific artifacts
 db/*.sqlite3
 /db/*.sqlite3-journal
