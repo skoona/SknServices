@@ -2,12 +2,14 @@
 ---
 
 Author: James Scott
-Date: Dec 2015
+Date: Aug 19, 2016
+Upgrade to Rails 5.0.0.1
+Brandh: upgrade5
 
 #Introduction
 ---
 
-This is a Rails 4.2, Ruby 2.3 (JRuby capable), PostgreSQL Application, which demonstrates Authentication and Authorization strategies.  
+This is a Rails 5, Ruby 2.3 (JRuby capable), PostgreSQL Application, which demonstrates Authentication and Authorization strategies.  
 
 My original need was to demonstrate this methodology, rather than to continue open-ended theoretical discussions.  To end the conversations I needed
 to create two model implementations, one based on an existing XML file; modeled after Java's Security Manager and permission.  The other implementation would
@@ -119,7 +121,7 @@ Content Profiles are the anchor back to the User Profile, via the person authent
 ##License
 ---
 
-[The MIT License (MIT)](http://opensource.org/licenses/MIT)
+![The MIT License (MIT)](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2015-2016 James Scott, Jr.
 
