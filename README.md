@@ -67,6 +67,8 @@ $ mkdir tmp
 $ bin/setup
 $ rspec
 
+$ bin/rails server Puma -b 0.0.0.0
+
 ```
 
  
