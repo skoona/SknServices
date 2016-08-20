@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -18,14 +17,14 @@ ActiveRecord::Schema.define(version: 20160113200706) do
 
   create_table "content_profile_entries", force: :cascade do |t|
     t.string   "topic_value"
-    t.string   "topic_type",    limit: 255
+    t.string   "topic_type",               limit: 255
     t.string   "topic_type_description",   limit: 255
     t.string   "content_value"
-    t.string   "content_type",   limit: 255
-    t.string   "content_type_description",   limit: 255
-    t.string   "description",   limit: 255
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.string   "content_type",             limit: 255
+    t.string   "content_type_description", limit: 255
+    t.string   "description",              limit: 255
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
   end
 
   create_table "content_profiles", force: :cascade do |t|
@@ -37,21 +36,19 @@ ActiveRecord::Schema.define(version: 20160113200706) do
     t.string   "email",                     limit: 255
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.index ["person_authentication_key"], name: "index_content_profiles_on_person_authentication_key", unique: true, using: :btree
+    t.index ["profile_type_id"], name: "index_content_profiles_on_profile_type_id", using: :btree
   end
-
-  add_index "content_profiles", ["person_authentication_key"], name: "index_content_profiles_on_person_authentication_key", unique: true, using: :btree
-  add_index "content_profiles", ["profile_type_id"], name: "index_content_profiles_on_profile_type_id", using: :btree
 
   create_table "content_type_opts", force: :cascade do |t|
     t.string   "value",           limit: 255
     t.string   "description",     limit: 255
-    t.string   "type_name",     limit: 255
+    t.string   "type_name",       limit: 255
     t.integer  "content_type_id"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.index ["content_type_id"], name: "index_content_types_on_content_type_id", using: :btree
   end
-
-  add_index "content_type_opts", ["content_type_id"], name: "index_content_types_on_content_type_id", using: :btree
 
   create_table "content_types", force: :cascade do |t|
     t.string   "name",            limit: 255
@@ -64,10 +61,9 @@ ActiveRecord::Schema.define(version: 20160113200706) do
   create_table "join_entries", force: :cascade do |t|
     t.integer "content_profile_id"
     t.integer "content_profile_entry_id"
+    t.index ["content_profile_entry_id"], name: "index_join_entries_on_content_profile_entry_id", using: :btree
+    t.index ["content_profile_id"], name: "index_join_entries_on_content_profile_id", using: :btree
   end
-
-  add_index "join_entries", ["content_profile_entry_id"], name: "index_join_entries_on_content_profile_entry_id", using: :btree
-  add_index "join_entries", ["content_profile_id"], name: "index_join_entries_on_content_profile_id", using: :btree
 
   create_table "profile_types", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -83,9 +79,8 @@ ActiveRecord::Schema.define(version: 20160113200706) do
     t.integer  "topic_type_id"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.index ["topic_type_id"], name: "index_topic_types_on_topic_type_id", using: :btree
   end
-
-  add_index "topic_type_opts", ["topic_type_id"], name: "index_topic_types_on_topic_type_id", using: :btree
 
   create_table "topic_types", force: :cascade do |t|
     t.string   "name",            limit: 255
@@ -101,26 +96,23 @@ ActiveRecord::Schema.define(version: 20160113200706) do
     t.string   "group_type",  limit: 255
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.index ["name"], name: "index_user_group_roles_on_name", unique: true, using: :btree
   end
-
-  add_index "user_group_roles", ["name"], name: "index_user_group_roles_on_name", unique: true, using: :btree
 
   create_table "user_group_roles_user_roles", force: :cascade do |t|
     t.integer "user_group_role_id"
     t.integer "user_role_id"
+    t.index ["user_group_role_id"], name: "index_user_group_roles_user_roles_on_user_group_role_id", using: :btree
+    t.index ["user_role_id"], name: "index_user_group_roles_user_roles_on_user_role_id", using: :btree
   end
-
-  add_index "user_group_roles_user_roles", ["user_group_role_id"], name: "index_user_group_roles_user_roles_on_user_group_role_id", using: :btree
-  add_index "user_group_roles_user_roles", ["user_role_id"], name: "index_user_group_roles_user_roles_on_user_role_id", using: :btree
 
   create_table "user_roles", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.string   "description", limit: 255
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.index ["name"], name: "index_user_roles_on_name", unique: true, using: :btree
   end
-
-  add_index "user_roles", ["name"], name: "index_user_roles_on_name", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",                 limit: 255
@@ -140,11 +132,10 @@ ActiveRecord::Schema.define(version: 20160113200706) do
     t.string   "assigned_roles",           limit: 4096
     t.string   "remember_token_digest",    limit: 255
     t.string   "user_options",             limit: 4096
+    t.index ["person_authenticated_key"], name: "index_users_on_person_authenticated_key", unique: true, using: :btree
+    t.index ["remember_token"], name: "index_users_on_remember_token", using: :btree
+    t.index ["username"], name: "index_users_on_username", using: :btree
   end
-
-  add_index "users", ["person_authenticated_key"], name: "index_users_on_person_authenticated_key", unique: true, using: :btree
-  add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
-  add_index "users", ["username"], name: "index_users_on_username", using: :btree
 
   add_foreign_key "content_profiles", "profile_types"
   add_foreign_key "content_type_opts", "content_types"

@@ -11,7 +11,7 @@
 #  updated_at    :datetime         not null
 #
 
-class TopicTypeOpt < ActiveRecord::Base
+class TopicTypeOpt < ApplicationRecord
   belongs_to :topic_type, inverse_of: :topic_type_opts
 
   validates_presence_of :value, :description
