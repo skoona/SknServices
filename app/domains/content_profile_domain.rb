@@ -103,10 +103,17 @@ class ContentProfileDomain < ::Factory::DomainsBase
 
       usrs <<  content_profile.merge(profile_exist: content_profile[:success])
     end
+    results = {
+      profile_type_options: ProfileType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+      content_type_options: ContentType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+      content_type_opts_options: ContentTypeOpt.option_selects('Commission').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+      topic_type_options: TopicType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+      topic_type_opts_options: TopicTypeOpt.option_selects('Branch').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+      package: usrs
+    }
+    Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package]}"
 
-    Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{usrs}"
-
-    usrs
+    results
   end
 
 

@@ -76,22 +76,19 @@ class ContentService < ::ContentProfileDomain
     res = SknUtils::PageControls.new({
                                          success: true,
                                          message: "",
-                                         profile_type_options: ProfileType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-                                         content_type_options: ContentType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-                                         content_type_opts_options: ContentTypeOpt.option_selects('Commission').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-                                         topic_type_options: TopicType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-                                         topic_type_opts_options: TopicTypeOpt.option_selects('Branch').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-                                         package: management_page_users_package(PROFILE_CONTEXT),
                                          page_actions: [{
-                                                            path: :manage_content_profiles_profiles_path,
-                                                            text: "Refresh",
-                                                            icon: 'fa fa-refresh',
-                                                            html_options: {
-                                                                id: "refresh-action",
-                                                                class: ' refresh'
-                                                            }
-                                                        }]
-                                     })
+                                            path: :manage_content_profiles_profiles_path,
+                                            text: "Refresh",
+                                            icon: 'fa fa-refresh',
+                                            html_options: {
+                                                id: "refresh-action",
+                                                class: ' refresh'
+                                            }
+                                         }]
+                                     }.merge(
+                                        management_page_users_package(PROFILE_CONTEXT)
+                                     )
+    )
     res
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
