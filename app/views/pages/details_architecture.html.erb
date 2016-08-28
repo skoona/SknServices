@@ -102,7 +102,9 @@ end
             </div>
             <div id="domains" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingdomains">
                 <div class="panel-body">
-                    <p class="lead">Using object-oriented design methodologies, we develop a domain model for our application, and encapsulate those objectives in a Domain class.</p>
+                  <%= image_tag("SknService-ControllerFlow.png", alt: "Flow Path", class: "huge-image") %>
+
+                  <p class="lead">Using object-oriented design methodologies, we develop a domain model for our application, and encapsulate those objectives in a Domain class.</p>
                     <p>To delivery the value contained in a <strong>Domain class</strong> we wrap them in a <strong>Services class</strong>.  Which acts as an adapter to bring that value to the user.  This typically means
                        developing an html page with views and controllers to present the informational results to the user.  However, since we only delivery a package of data values to the controller interface
                        method, it is possible to serve those data values as JSON to a browser based application, like BackBone, or to a wide range of endpoints; even a PDF generator.</p>
@@ -259,13 +261,13 @@ end
             <div class="panel-heading" role="tab" id="headingUp">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#UserProfileService" aria-expanded="false" aria-controls="headingUp">
-                      [Services Strategy] UserProfile Service
+                      [Services Strategy] UserProfile
                     </a>
                 </h4>
             </div>
             <div id="UserProfileService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingUp">
                 <div class="panel-body">
-                    <h5>UserProfile Service</h5>
+                    <h5>UserProfile</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                             <dd>
@@ -349,6 +351,7 @@ end
             </div>
             <div id="ServiceFactory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
+                  <%= image_tag("SknService-MessageFlow.png", alt: "Flow Path", class: "huge-image") %>
                     <h5>ServiceFactory</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
@@ -360,10 +363,10 @@ end
                                 to those assets into the session just before the controller exits back to the browser.  The ServiceFactory is lightwieght and would derive no real benefit from being
                                 serialized into a session.  So it is simply created anew with each request/response cycle.</p>
                             <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
-                                To instantiate a ContentService use: <code>service_factory.content_service.some_method_name(params)</code>.</p>
-                            <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all service/domain objects in the application. And to additionally
+                                To instantiate a processService use: <code>service_factory.process_service.service_method_name(params)</code>.</p>
+                            <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all strategy components classes in the application. And to additionally
                                 provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
-                            <p>Inside of services, like ContentService or ProfileProviders, reference the service_factory as <code>:factory</code> or <code>:service</code>, as in: <code>factory.content_service.some_method</code> .</p>
+                            <p>Inside a processService, like ContentService or ProfileProviders, reference the service_factory as <code>:factory</code> or <code>:service</code>, as in: <code>factory.content_service.some_method</code> .</p>
                         </dd>
                         <dt>Inheritance</dt>
                         <dd><p>ServiceFactory, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
@@ -371,7 +374,7 @@ end
                             retention until there usage is complete.</p>
                         <dt>Provides</dt>
                         <dd>
-                            <p>ServiceFactory provides Services with the <code>:current_user</code>, <code>:controller</code> reference, and a <code>:method_missing</code> feature capable of
+                            <p>ServiceFactory provides Services with the <code>:current_user</code>, <code>:factory</code> reference, and a <code>:method_missing</code> feature capable of
                                 directing :not_found method calls to the controller to be serviced if possible.</p>
                             <p>Services should truly limit their demands of the controller object to zero if possible, and have the service_factory devise a solution to their requirements.  The most often
                                 experienced demand for the controller is when a service needs to resolve a named route or render a template partial to embed in a json response.</p>
@@ -379,84 +382,83 @@ end
                                 controller helper/presenter.  This way it can be easily mocked out later for testing.  In fact, I do use a <code>:page_actions</code> view helper located in the
                                 ApplicationHelper module, to handle rendering and route resolutions from a hashed set of control data from a service.  Basically, outsourcing to the ActionView those things it does best; and totally removing the need for a controller object in the majority of services and domains.</p>
                             <p>Engineering objectives shall include, avoidance of the controller in all services, domains, and specialty business services classes.  It is possible and practical, your RSpec tests will demonstrate it later.</p>
-                            <dl>
-                                <dt>ObjectStorageService API</dt>
-                                <dd>
-                                            <div class="well-sm">
-                                            <p># Saves object to inMemory ObjectStore<br/>
-                                               # Returns storage key, needed to retrieve<br/>
-                                                <code>:save_new_object(obj)</code></p>
-                                            </div>
-                                            <div class="well-sm">
-                                             <p># Updates existing container with new object reference<br/>
-                                                # returns object<br/>
-                                                <code>:set_existing_object(key, obj)</code></p>
-                                            </div>
-                                            <div class="well-sm">
-                                                <p># Retrieves object from InMemory Storage<br/>
-                                                # returns object<br/>
-                                                <code>:get_existing_object(key)</code></p>
-                                            </div>
-                                            <div class="well-sm">
-                                                <p># Releases object from InMemory Storage<br/>
-                                                # returns object, if present<br/>
-                                                <code>:remove_existing_object(key)</code></p>
-                                            </div>
-                                </dd>
-                                <dt>Session API</dt>
-                                <dd>
+                         </dd>
+                        <dt>ObjectStorageService API</dt>
+                        <dd>
                                     <div class="well-sm">
-                                        <p><code>:get_session_params(key)</code><br/>
-                                        <code>:set_session_params(key, value)</code></p>
+                                    <p># Saves object to inMemory ObjectStore<br/>
+                                       # Returns storage key, needed to retrieve<br/>
+                                        <code>:save_new_object(obj)</code></p>
                                     </div>
-                                </dd>
-                                <dt>Named Route Helpers</dt>
-                                <dd>
                                     <div class="well-sm">
-                                      <p>
-                                        Converts named routes to string<br/>
-                                          Basic: <code>[:named_route_path, {options}, '?query_string']</code><br>
-                                          Advanced: <code>{engine: :demo, path: :demo_profiles_path, options: {id:111304},query:'?query_string'}</code><br/>
-                                        <br/>
-                                        Example: <code>factory.page_action_paths(paths)</code></p>
+                                     <p># Updates existing container with new object reference<br/>
+                                        # returns object<br/>
+                                        <code>:set_existing_object(key, obj)</code></p>
                                     </div>
-                                </dd>
-                            </dl>
+                                    <div class="well-sm">
+                                        <p># Retrieves object from InMemory Storage<br/>
+                                        # returns object<br/>
+                                        <code>:get_existing_object(key)</code></p>
+                                    </div>
+                                    <div class="well-sm">
+                                        <p># Releases object from InMemory Storage<br/>
+                                        # returns object, if present<br/>
+                                        <code>:remove_existing_object(key)</code></p>
+                                    </div>
+                        </dd>
+                        <dt>Session API</dt>
+                        <dd>
+                            <div class="well-sm">
+                                <p><code>:get_session_params(key)</code><br/>
+                                <code>:set_session_params(key, value)</code></p>
+                            </div>
+                        </dd>
+                        <dt>Named Route Helpers</dt>
+                        <dd>
+                            <div class="well-sm">
+                              <p>
+                                Converts named routes to string<br/>
+                                  Basic: <code>[:named_route_path, {options}, '?query_string']</code><br>
+                                  Advanced: <code>{engine: :demo, path: :demo_profiles_path, options: {id:111304},query:'?query_string'}</code><br/>
+                                <br/>
+                                Example: <code>factory.page_action_paths(paths)</code></p>
+                            </div>
                         </dd>
                     </dl>
-                    <p>All Services, like ContentProfileBuilder, ProfileDataServicess or ContentService, should be instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
+                    <p>All Components, like ContentService, AccessService, DBProfileProvider, XMLProfileProvider, FileSystemAdapter, and InlineValuesAdapter
+                      are instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
                 </div>
             </div>
-            <p>Container, and Provider of Business Object Services!</p>
+            <p>Primary Component of this Services Strategy. Providing access to all application services!</p>
         </div>
 
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#ContentService" aria-expanded="false" aria-controls="collapseTwo">
-                      [Services Strategy] Services
+                      [Services Strategy] processServices
                     </a>
                 </h4>
             </div>
             <div id="ContentService" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
-                    <h5>ContentService</h5>
+                    <h5>processServices</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
                             <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                            <p>The intended use of services object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
+                            <p>The intended use of processServices object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
                                 on the <code>SknUtils::PageControls</code> group of result bean containers.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>ContentService, inherits io routines and common business logic from the <code>ContentProfileDomain</code> class.  The ContentProfileDomain class inherits from the <code>::Factory::DomainsBase</code>,
-                            which yields common initialization services of like the current_user() and access back to the service_factory for interaction with the controller if needed.  In particular, the <code>service_factory</code> includes
+                        <dd><p>processServices inherit business logic from the <code>processDomain</code> class.  The processDomain class inherits from the <code>::Factory::DomainsBase</code>,
+                            which yields common initialization services like the current_user() and access to the service_factory for interaction with the controller helpers if needed.  In particular, the <code>service_factory</code> includes
                             object storage services and session storage services through its inheritance chain.</p>
                         <dt>Provides</dt>
-                        <dd><p>ContentService provides customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
-                            in a <code>@page_controls</code> bean container, and all exceptions are trapped by its top level method.   PageControl bean containers are required to include
-                            <code>success: true|false, and message: error_message|success_message|empty</code> values at a minimum.</p>
-                            <p>JSON Api methods are hosted by this service.</p>
+                        <dd><p>processServices present customized business logic and standard information packaging for the application entry points assigned to  it.  Whereever used you can be assured of a valid response encoded
+                            in a <code>@page_controls</code> bean container, and all exceptions are trapped by this top level method.   PageControl bean containers are required to include
+                            <code>success: true|false, message: error_message|success_message|empty, and payload: [domainData]</code> values at a minimum.</p>
+                            <p>JSON Api or regular HTML methods are hosted by this service.</p>
                         </dd>
                     </dl>
                 </div>
@@ -468,34 +470,34 @@ end
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#DomainServices" aria-expanded="false" aria-controls="collapseThree">
-                      [Services Strategy] Domains
+                      [Services Strategy] processDomains
                     </a>
                 </h4>
             </div>
             <div id="DomainServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                 <div class="panel-body">
-                    <h5>Domains</h5>
+                    <h5>processDomains</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
-                            <p>Domains are not instantiated directly, they are inherited by higher level and more specialized service classes.</p>
-                            <p>The intended use of domains class methods is to offer a business logic control of a single business domain.  It is the starting point for all business process services.</p>
+                            <p>processDomains are not instantiated directly, they are inherited by higher level and more specialized service classes.</p>
+                            <p>The intended use of domains class methods is to offer a business logic control of a single business process.  It is the starting point for all business process services.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>Domains inherit directly from the <code>::Factory::DomainsBase</code> class, and yields business logic methods to higher level service objects.
+                        <dd><p>processDomains inherit directly from the <code>::Factory::DomainsBase</code> class, and yields business logic methods to higher level service objects.
                             Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
                         <dt>Provides</dt>
-                        <dd><p>Domains have logical access to the service factory and all other peer services the factory manages.  Typically you would find two to three levels of methods in a Domain class.</p>
+                        <dd><p>processDomains have logical access to the service factory and all other peer services the factory manages.  Typically you would find two to three levels of methods in a Domain class.</p>
                             <dl>
                                 <dt>Level One</dt>
-                                <dd>Top level business interface.  Methods at this level take responsibility for doing the whole task; process a order or payment, would be an example of this.</dd>
+                                <dd>Top level business interface.  Methods at this level take responsibility for doing the whole process step; process a order or payment, would be an example of this.</dd>
                                 <dt>Level Two</dt>
-                                <dd>The notion of the whole task, is likely to have component steps involved.  At this level methods are expected to perform one elements of the whole task.
+                                <dd>The notion of the whole process setp, is likely to have component tasks involved.  At this level methods are expected to perform one whole task.
                                     For this single-responsibility reason, we recommend creating dedicated objects to handle these component parts.</dd>
                                 <dt>level Three</dt>
                                 <dd>Is rarely needed, but if so would handle very narrow objectives; like I/O or RESTFul routines.</dd>
                             </dl>
-                            <p>This is the best place to exploit object-oriented design principles.</p>
+                            <p>This is the best place to exploit object-oriented design principles.  To that end, we include design components to meet the most frequent use cases; namely: <code>domainProviders</code>, and <code>taskAdapters</code>.</p>
                         </dd>
                     </dl>
                 </div>
@@ -514,22 +516,23 @@ end
         </div>
         <div id="ProfileDataServices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
           <div class="panel-body">
-            <h5>DBProfileProvider</h5>
+            <h5>domainProviders</h5>
             <dl class="dl-horizontal">
               <dt>Instantiate</dt>
               <dd>
                 <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                <p>The intended use of this services object methods is to handle all IO related operations for domain context data. It should not interact directly with ApplicationController entry points.</p>
+                <p>The intended use of a domainProvider object, is to handle all business object persistence related operations for domain context data. It should not interact directly any object aside from the domain object that calls it, and the Database Interface.</p>
               </dd>
               <dt>Inheritance</dt>
-              <dd><p>DBProfileProvider, inherits common instantiation service from the <code>Factory::ProvidersBase</code> class.  The Factory::ProvidersBase yields common initialization services,
-                like the current_user() and access back to the service_factory for interaction with the controller if needed,  and object storage services.</p>
+              <dd><p>domainProviders inherit common instantiation service from the <code>Factory::ProvidersBase</code> class.  The Factory::ProvidersBase yields common initialization services, and object storage services.</p>
               </dd>
               <dt>Provides</dt>
               <dd><p>DBProfileProvider provides contextual data access for content profile data objects with standard data packaging for internal processes.</p>
+                  <p>domainProviders by design should handle contextual IO for all or a subset of business objects. Returning results as a attribute hash or ValueBean, never returning the underlying ActiveModel object.</p>
               </dd>
             </dl>
           </div>
+          <p>Currently there are two implementations of this component: XMLProfileProvider and DBProfileProvider classes. </p>
         </div>
         <p>Instantiated by: <code>service_factory()</code></p>
       </div>
@@ -538,29 +541,29 @@ end
         <div class="panel-heading" role="tab" id="headingThree">
           <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" href="#ProfileBuilder" aria-expanded="false" aria-controls="collapseThree">
-              [Services Strategy] taskAdapter
+              [Services Strategy] taskAdapters
             </a>
           </h4>
         </div>
         <div id="ProfileBuilder" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
           <div class="panel-body">
-            <h5>FileSystemAdapter</h5>
+            <h5>taskAdapters</h5>
             <dl class="dl-horizontal">
               <dt>Instantiate</dt>
               <dd>
                 <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
-                <p>This service retrieves documents indicated by a DB-backed ContentProfile or a XML-backed AccessProfile, normaling the results.</p>
-                <p>The intended use of a task adapter is to handle external IO and  retrieve documents from their storage location based on the contents of a content profile entry.</p>
+                <p>The intended use of a taskAdapter is to handle specialized tasks which may include external IO of some sort, for Domains.</p>
               </dd>
               <dt>Inheritance</dt>
-              <dd><p>Providers::FileSystemAdapter inherits directly from the <code>Factory::ContentAdaptersBase</code> class, and yields access services to domain classes objects.</p>
+              <dd><p>taskAdapters inherit directly from the <code>Factory::TaskAdaptersBase</code> class which itself inherits from <code>Factory::DomainsBase</code> class.  The Factory::DomainsBase yields common initialization services, access to the service factory.</p>
               </dd>
               <dt>Provides</dt>
               <dd><p>FileSystemAdapter provides logical access to content storage facilities.</p>
+                <p>TaskAdapters by design are expected to handle a complete and single task step of a larger process flow, and have no dependencies outside of the domain object that calls it.  However to complete their assigned task they may engage other task adapters, services, and providers; thus they do require access to the service_factory.</p>
               </dd>
             </dl>
           </div>
-          <p>Currently there are two implementation of this component: FileSystemAdapter and InlineValueAdapter classes. </p>
+          <p>Currently there are two implementations of this component: FileSystemAdapter and InlineValueAdapter classes. </p>
         </div>
         <p>Instantiated by: <code>service_factory()</code></p>
       </div>
@@ -629,19 +632,59 @@ end
             <p>Describes helpers we created for views.</p>
         </div>
         <div class="panel panel-info">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#RSpecTesting" aria-expanded="false" aria-controls="collapseTwo">
-                        RSpec Testing
-                    </a>
-                </h4>
-            </div>
-            <div id="RSpecTesting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    RSpec Testing: This Rocks
-                </div>
-            </div>
-            <p>More Stuff ...</p>
+          <div class="panel-heading" role="tab" id="headingTwo">
+              <h4 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" href="#RSpecTesting" aria-expanded="false" aria-controls="collapseTwo">
+                      RSpec Testing
+                  </a>
+              </h4>
+          </div>
+          <div id="RSpecTesting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+              <div class="panel-body">
+                <p class="lead">RSpec Testing: This Rocks</p>
+                <p>The directory <code>spec/support</code> has a collection of modules and classes to augment testing:</p>
+                <ul>
+                  <li>
+                    <code>ServiceFactoryMockController</code> A class used to replace the need for a ApplicationController to initialize the ServiceFactory with. It contains methods that
+                    Service or Domain objects might call on the ApplicationController, like: current_user, page_actions, menu_active, etc.  The use of this
+                    mock controller has a significant speed increase compared to its alternative <strong>Integration/Controller</strong> tests.
+                  </li>
+                  <li>
+                    <code>TestUsers</code> contains a collection of methods that will return a testable user_profile object, either fully enabled as the current_user, or simply loaded as an independent record.
+                  </li>
+                  <li>
+                    <code>TestDataSerializers</code> contains a couple of methods that allow you to save objects to a seperate yaml file.  Can be used to capture a <code>@page_controls</code> object to be used latter as mocking data when testing views.
+                  </li>
+                </ul>
+                <p>Testing Services with RSpec looks like this:</p>
+                <pre class="pre-scrollable prettyprint lang-rb">
+RSpec.describe ContentService, "Service routines of ContentService." do
+  let!(:user) {user_bstester}
+
+  let(:mc) {ServiceFactoryMockController.new(user: user)}
+  let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
+
+  let(:service) {service_factory.content_service}
+
+  context "Content Profile Management methods return proper results. " do
+
+    scenario "#handle_content_profile_management prepares a page package of all users" do
+      result = service.handle_content_profile_management({})
+      expect(result).to be_a(SknUtils::PageControls)
+      expect(result.success).to be true
+      expect(result.message).to be_blank
+    end
+
+  end
+
+end
+                  </pre>
+              </div>
+          </div>
+          <P>Finished in 10.76 seconds (files took 3.44 seconds to load) </br>
+            223 examples, 0 failures</br>
+            Coverage report generated for RSpec to ./coverage/index.html 1275 / 1583 LOC (80.54%) covered.
+          </P>
         </div>
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">

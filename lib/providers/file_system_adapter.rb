@@ -19,7 +19,7 @@
 # end
 
 module Providers
-  class FileSystemAdapter < ::Factory::ContentAdaptersBase
+  class FileSystemAdapter < ::Factory::TaskAdaptersBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS  = 'access'

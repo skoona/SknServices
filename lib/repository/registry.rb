@@ -13,7 +13,10 @@ module Respository
     def self.register(type, repo)
       repositories[type] = repo
     end
-   
+    def self.unregister(type)
+      repositories.delete(type)
+    end
+
     def self.repositories
       @repositories ||= {}
     end

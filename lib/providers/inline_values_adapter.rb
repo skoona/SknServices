@@ -6,7 +6,7 @@
 #
 
 module Providers
-  class InlineValuesAdapter < ::Factory::ContentAdaptersBase
+  class InlineValuesAdapter < ::Factory::TaskAdaptersBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS = 'access'

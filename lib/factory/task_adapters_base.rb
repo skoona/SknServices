@@ -1,38 +1,37 @@
 ##
-# File: <root>/lib/factory/content_adapters_base.rb
+# File: <root>/lib/factory/task_adapters_base.rb
 #
 # Retrieves content for target system
 
 module Factory
-  class ContentAdaptersBase < DomainsBase
+  class TaskAdaptersBase < DomainsBase
 
     def ready?
       raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
     end
+
     # Ruby only Alternate: MIME::Types.type_for(full_filename), using mime.gem
     def content_mime_type(extension)
       extname = extension.gsub(/^\./,'')
       return 'text/plain' if extname.downcase.include?('log')
       Mime::Type.lookup_by_extension(extname).to_str rescue 'application/octet-stream'
     end
-    def available_content_list(params={})  # ContentProfileEntry Hash
-      raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
-    end
-    def retrieve_content_object(params={}) # Hash entry result from available_content_list method
-      raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
-    end
-    def retrieve_content_values(params={}) # ContentProfileEntry Hash
-      raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
-    end
 
-    def create_new_content_entry_path(params={}) # ContentProfileEntry Hash
-      raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
-    end
-    def add_new_content_entry_object(params={}, object_to_store=nil) # ContentProfileEntry Hash and object
-      raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
-    end
-    def remove_content_entry_object(params={}, object_to_store=nil) # ContentProfileEntry Hash and object
-      raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
+    ##
+    # Transaction request enables caller to execute public methods on this object
+    #
+    # provider.transaction_request(self) do |prov|
+    #   prov.provider_method(params)
+    #   prov.special_provider_method_that_needs_a_callback(callback, params)
+    # end
+    #
+    def transaction_request(callback, &block)
+      block.call(self)
+      Rails.logger.debug "transaction_request(Complete) for #{callback.class.name}"
+      true
+    rescue Exception => e
+      Rails.logger.debug "transaction_request(EXCEPTION) #{e.class.name.to_s} #{e.message} #{e.backtrace[0..3].join("\n")}"
+      false
     end
 
     protected

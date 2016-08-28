@@ -75,7 +75,7 @@ Providers::XMLProfileProvider
 
 Providers::InlineValuesAdapter
 Providers::FileSystemAdapter
-    Factory::ContentAdaptersBase
+    Factory::TaskAdaptersBase
         Factory::DomainsBase
 
 Secure::UserProfile
