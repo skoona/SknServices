@@ -19,6 +19,8 @@ module SknService
     # -- all .rb files in that directory are automatically loaded.
     config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
 
+    config.eager_load_paths << Rails.root.join('lib')
+
     # config.action_view.javascript_expansions[:defaults] = %w(jquery.min jquery_ujs)
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
