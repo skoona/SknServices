@@ -38,7 +38,7 @@
         <userdata>*.pdf</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Test.Branch.Commission.Statement.PDF.Access</authorizedRole>
+                <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Statement.PDF.Access</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -49,7 +49,7 @@
         <userdata>*.log</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Test.Branch.Commission.Statement.CSV.Access</authorizedRole>
+                <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Statement.CSV.Access</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -60,7 +60,7 @@
         <userdata>*.pdf</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Test.Branch.Commission.Experience.PDF.Access</authorizedRole>
+                <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Experience.PDF.Access</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -71,7 +71,7 @@
         <userdata>*.pdf</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Test.Branch.Commission.Branch.PDF.Access</authorizedRole>
+                <authorizedRole>Services.Branch.Commission.Branch.PDF.Access</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -82,7 +82,7 @@
         <userdata>"21|9|23|"</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="0034">Test.Branch.Operations.LicensedStates.USA</authorizedRole>
+                <authorizedRole options="0034">Services.Branch.Operations.LicensedStates.USA</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -104,8 +104,8 @@
         <userdata>*.pdf</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
-                <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
+                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
+                <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -116,8 +116,8 @@
         <userdata>*.log</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
-                <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
+                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
+                <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -128,8 +128,8 @@
         <userdata>*.png|*.jpg</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary,EmployeePrimary">Services.Action.Use.FileDownload.Image</authorizedRole>
-                <authorizedRole options="Developer,Manager">Services.Action.Admin.FileDownload.Image</authorizedRole>
+                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Image</authorizedRole>
+                <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Image</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>

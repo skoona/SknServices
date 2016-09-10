@@ -1,6 +1,6 @@
 ---
 Packaging:
-  pomVersion: 1.0.2
+  pomVersion: 1.0.3.0
   isDeveloper: false
   isDevelopment: true
   isProduction: false
@@ -10,10 +10,6 @@ PostgreSQL:
   username: postgres
   password: postgres
   host: localhost
-
-remote_log:
-  hostname: localhost
-  port: 8071
 
 access_profile:
   default_unknown_to_unsecure: false

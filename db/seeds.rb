@@ -17,10 +17,10 @@ begin
       {name: "Services.Action.Admin", description: "Employee Managers"},
       {name: "Services.Action.Primary", description: "Branch Managers"},
       {name: "Services.Action.Developer", description: "Super User or Developer"},
-      {name: "Test.Branch.Commission.Statement.PDF.Access", description: "Access Branch Commission Statements"},
-      {name: "Test.Branch.Commission.Statement.CSV.Access", description: "Access Branch Commission Data Files"},
-      {name: "Test.Branch.Commission.Experience.PDF.Access", description: "Access Branch Experience Report"},
-      {name: "Test.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
+      {name: "Services.Branch.Commission.Statement.PDF.Access", description: "Access Branch Commission Statements"},
+      {name: "Services.Branch.Commission.Statement.CSV.Access", description: "Access Branch Commission Data Files"},
+      {name: "Services.Branch.Commission.Experience.PDF.Access", description: "Access Branch Experience Report"},
+      {name: "Services.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
 
   all_users =
       {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}
@@ -33,7 +33,7 @@ begin
 
   group_manage_p = [
       {name: "Services.Action.Admin.UserAuthorizationGroups",   description: "Administer Authorization Group"},
-      {name: "Test.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
+      {name: "Services.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
 
   group_manage_s =
       {name: "Services.Action.Use.UserAuthorizationGroups", description: "Consumer of Authorization Groups"}
@@ -140,8 +140,8 @@ begin
       email:                 "skoona@gmail.com",
       password:                "developer99",
       password_confirmation:   "developer99",
-      user_options:            ["Developer","EmployeePrimary", "0034", "0037", "0040","0099", "1601"],
-      assigned_groups:         ["Developer","EmployeePrimary"],
+      user_options:            ["Developer", "0034", "0037", "0040","0099"],
+      assigned_groups:         ["Developer"],
       assigned_roles:          ["Services.Action.Developer"]
   },
   {
@@ -150,8 +150,8 @@ begin
       email:                 "appdev@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["Manager", "EmployeePrimary", "0034", "0037", "0040", "0099", "1601", "1602"],
-      assigned_groups:         ["Manager", "EmployeePrimary"],
+      user_options:            ["EmployeePrimary", "0034", "0037", "0040", "0099"],
+      assigned_groups:         ["EmployeePrimary"],
       assigned_roles:          ["Services.Action.Admin"]
   },
   {
@@ -160,12 +160,9 @@ begin
       email:                 "appdev1@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["EmployeeSecondary", "0037","0099", "1602"],
+      user_options:            ["EmployeeSecondary", "0037","0099"],
       assigned_groups:         ["EmployeeSecondary"],
-      assigned_roles:          ["Services.Action.Primary",
-                                "Test.Branch.Commission.Experience.PDF.Access",
-                                "Test.Branch.Commission.Statement.PDF.Access",
-                                "Test.Branch.Commission.Statement.CSV.Access"]
+      assigned_roles:          []
   },
   {
       username:              "bptester",
@@ -175,11 +172,7 @@ begin
       password_confirmation:   "nobugs",
       user_options:            ["BranchPrimary", "0034", "0037", "0040"],
       assigned_groups:         ["BranchPrimary"],
-      assigned_roles:          ["Services.Action.Primary",
-                                "Services.Action.ResetPassword",
-                                "Test.Branch.Commission.Experience.PDF.Access",
-                                "Test.Branch.Commission.Statement.PDF.Access",
-                                "Test.Branch.Commission.Statement.CSV.Access"]
+      assigned_roles:          ["Services.Action.Primary"]
   },
   {
       username:              "bstester",
@@ -189,8 +182,7 @@ begin
       password_confirmation:   "nobugs",
       user_options:            ["BranchSecondary", "0037"],
       assigned_groups:         ["BranchSecondary"],
-      assigned_roles:          ["Services.Action.ResetPassword",
-                                "Test.Branch.Commission.Statement.CSV.Access"]
+      assigned_roles:          []
   },
    {
        username:              "bnptester",
@@ -200,7 +192,7 @@ begin
        password_confirmation:   "nobugs",
        user_options:            [],
        assigned_groups:         ["BranchSecondary"],
-       assigned_roles:          ["Services.Action.ResetPassword" ]
+       assigned_roles:          []
    },
   {
       username:              "vptester",
@@ -210,7 +202,7 @@ begin
       password_confirmation:   "nobugs",
       user_options:            ["VendorPrimary", "0099"],
       assigned_groups:         ["VendorPrimary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
+      assigned_roles:          []
   },
   {
       username:              "vstester",
@@ -220,7 +212,7 @@ begin
       password_confirmation:   "nobugs",
       user_options:            ["VendorSecondary", "0099"],
       assigned_groups:         ["VendorSecondary"],
-      assigned_roles:          ["Services.Action.ResetPassword"]
+      assigned_roles:          []
   }
   ]
 

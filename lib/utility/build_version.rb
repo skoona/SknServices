@@ -25,7 +25,7 @@ module Utility
     def self.format_prod
       parts = @@pom_version.split(".")  # results in ["d","d","d","d"]
       rel, rmod = parts[2].to_i, parts[3].to_i
-      parts[2] = (rel + 1).to_s if rmod > 0
+      parts[2] = (rel + 1).to_s if rmod > 4
       parts[0..2].join(".")
     end
 

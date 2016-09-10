@@ -175,7 +175,7 @@ module Secure
         end # end catch
       else
         # TODO: Enable logging of all unregistered
-        Rails.logger.info("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{uopts}") if Rails.logger.present?
+        Rails.logger.warn("#{self.name}.#{__method__}() Not Registered: #{resource_uri} with opts=#{uopts}") unless @@ar_permissions.key?(resource_uri)
         result = @@ar_strict_mode
       end
 
@@ -191,7 +191,8 @@ module Secure
       roles = [user_roles].flatten.reject(&:blank?).map() {|s| "#{s}"}
       result = false
       value = false
-       if is_secured? resource_uri then
+
+      if is_secured? resource_uri then
          result = catch :found do
            roles.each do |user_role|
               CRUD_MODES.each do |crud_mode|
@@ -206,12 +207,12 @@ module Secure
            end # end user roles
            false    # false if nothing  is thrown, i.e not found
          end # end catch
-       else
+      else
          # TODO: Enable logging of all unregistered
-         Rails.logger.info("#{self.name}.#{__method__}() Not Secured: #{resource_uri} with opts=#{uopts}") if Rails.logger.present?
+         Rails.logger.warn("#{self.name}.#{__method__}() Not Secured: #{resource_uri} with opts=#{uopts}") unless @@ar_permissions.key?(resource_uri)
 
          result = @@ar_strict_mode
-       end
+      end
 
       result
     end
