@@ -44,7 +44,6 @@ group :development do
   gem 'pry-rails'
   gem 'better_errors'
   gem 'listen'
-  # gem 'quiet_assets'
   # gem 'binding_of_caller'
 end
 group :test do
@@ -53,9 +52,6 @@ group :test do
   gem 'rack_session_access'
 end
 group :development, :test do
-  # gem 'ruby-debug'
-  # gem 'ruby-debug-base'
-  # gem 'ruby-debug-ide'
   gem 'simplecov'
   gem 'capybara'
   gem 'capybara-screenshot'

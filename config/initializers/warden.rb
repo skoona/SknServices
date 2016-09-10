@@ -12,6 +12,9 @@
 #        https://github.com/ajsharp/warden-rspec-rails
 #        https://github.com/hassox/warden/wiki
 #
+#  Priamry Refs: http://pothibo.com/2013/07/authentication-with-warden-devise-less/
+#                http://pothibo.com/2013/11/ruby-on-rails-inside-actiondispatch-and-rack/
+#
 # 'use Rack::Session::Cookie, :secret => "replace this with some secret key"'
 ##
 # Main configuration
@@ -79,9 +82,7 @@
 # env['warden'].authenticate(:password)      # Try to authenticate via the :password strategy.  If it fails proceed anyway.
 # env['warden'].authenticate!(:password)     # Ensure authentication via the password strategy. If it fails, bail.
 
-# Rails.application.config.middleware.use Warden::Manager do |manager|
-# Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
-# Rails.application.config.middleware.insert_after ActionDispatch::ParamsParser, RailsWarden::Manager do |manager|
+Rails.application.config.middleware.insert_after ActionDispatch::Flash, Rack::Attack
 Rails.application.config.middleware.insert_after Rack::Attack, RailsWarden::Manager do |manager|
   # puts "===============[DEBUG]:01 #{self.class}\##{__method__}"
   # manager.default_user_class = Secure::UserProfile
@@ -220,8 +221,12 @@ Warden::Manager.on_request do |proxy|
 
   remembered = proxy.request.cookies["remember_token"].present?
 
-  # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
+  # Mac browser often look for special apple icons in the root directory which cause routing errors
+  # attempt to immediately respond to their icon request
+  # throw :warden if proxy.env['PATH_INFO'] =~ /apple-touch-icon(-precomposed)?\.png/
 
+
+  # Nothing really to do here, except check for timeouts and set last_login as if it were last_access (not changing it now)
   unless bypass_flag
 
     # If session has expired logout the user, unless remember cookie is still valid

@@ -31,31 +31,6 @@ class SessionsController < ActionController::Base
   def not_authorized
   end
 
-  protected
-
-  def redirect_to_target_or_default(default, *args)
-    redirect_to(session[:return_to] || default, *args)
-    session[:return_to] = nil
-  end
-
-  def accessed_page_name
-    Secure::AccessRegistry.get_resource_description(accessed_page) || ""
-  end
-
-  def accessed_page
-    "#{controller_name}/#{action_name}"
-  end
-
-  def flash_message(type, text)
-    if flash[type].present? and flash[type].is_a?(Array)
-      flash[type] << text
-    elsif flash[type].present? and flash[type].is_a?(String)
-      flash[type] = [flash[type], text]
-    else
-      flash[type] = [text]
-    end
-  end
-
   private
 
   def do_flashes
