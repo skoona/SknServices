@@ -206,11 +206,14 @@ module Utility
       ## Begin Good Work
 
       ContentType.create!([
+          {name: "Experience",   description: "Monthly Experience Reports and Files", value_data_type: "String",
+           content_type_opts_attributes: {
+               "0" => {value: "*.log", type_name: "Experience", description: "Document store Experience Document Type ID" } }
+          },
           {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "String",
            content_type_opts_attributes: {
                "0" => {value: "*.pdf", type_name: "Commission", description: "Document store Commision Document Type ID" },
-               "1" => {value: "*.csv", type_name: "Commission", description: "Document store Commision CSV Document Type ID" },
-               "2" => {value: "*.log", type_name: "Commission", description: "Document store Branch Experience Document Type ID"} }
+               "1" => {value: "*.csv", type_name: "Commission", description: "Document store Commision CSV Document Type ID" } }
           },
           {name: "Notification", description: "Email Notification of Related Events", value_data_type: "String",
            content_type_opts_attributes: {
@@ -263,18 +266,50 @@ module Utility
           }
       ])
 
+      cpe_developer = []
+      [
+          ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
+          ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
+          ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
+          ['LicensedStates', ['21','9'],    'Branch',  ['0034'], 'Licensed to operate in state'],
+          ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
+
+          ['Experience',     ['*.log'],     'Branch',  ['0037'], 'Branch Experience Statements'],
+          ['Commission',     ['*.csv'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
+          ['Notification',   ['Cancel'],    'Branch',  ['0037'], 'Notify Branch of Policy Events'],
+          ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
+
+          ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+          ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
+          ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
+
+          ['FileDownload',   ['*.pdf'], 'UserGroups',  ['Developer'], 'Shared access to project working files'],
+          ['FileDownload',   ['*.png'], 'UserGroups',  ['Developer'], 'Shared access to project working files'],
+          ['FileDownload',   ['*.jpg'], 'UserGroups',  ['Developer'], 'Shared access to project working files'],
+          ['FileDownload',   ['*.log'], 'UserGroups',  ['Developer'], 'Shared access to project working files']
+
+      ].each do |req|
+        cchoice = selections_choose_for(req[1], selections_for_content_type(req[0], true))
+        tchoice = selections_choose_for(req[3], selections_for_topic_type(req[2], true))
+
+        cpe_developer << create_content_profile_entry_for(req.last, tchoice, cchoice)
+      end
+
       cpe_primary = []
       [
+       ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
        ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
        ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
-       ['LicensedStates', ['21','9','23'], 'Branch',  ['0034'], 'Licensed to operate in state'],
+       ['LicensedStates', ['21','9'],    'Branch',  ['0034'], 'Licensed to operate in state'],
        ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
+       ['Experience',     ['*.log'],     'Branch',  ['0037'], 'Branch Experience Statements'],
        ['Commission',     ['*.csv'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
        ['Notification',   ['Cancel'],    'Branch',  ['0037'], 'Notify Branch of Policy Events'],
        ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
 
-       ['Commission',     ['*.log'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
+       ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+       ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
        ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
        ['FileDownload',   ['*.pdf'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files'],
@@ -290,12 +325,14 @@ module Utility
 
       cpe_sec = []
       [
+          ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
           ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
           ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
-          ['Commission',     ['*.log'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
+          ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+          ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
           ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
           ['FileDownload',   ['*.pdf'], 'UserGroups',  ['EmployeeSecondary'], 'Shared access to project working files'],
@@ -325,7 +362,9 @@ module Utility
         cp = create_content_profile_for(u, u.assigned_groups.first)
 
         entries = case u.assigned_groups.first
-                    when 'Developer', 'Manager', 'EmployeePrimary'
+                    when 'Developer'
+                      cpe_developer
+                    when 'Manager', 'EmployeePrimary'
                       cpe_primary
                     when 'EmployeeSecondary', 'BranchPrimary'
                       cpe_sec

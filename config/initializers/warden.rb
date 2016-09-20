@@ -82,6 +82,9 @@
 # env['warden'].authenticate(:password)      # Try to authenticate via the :password strategy.  If it fails proceed anyway.
 # env['warden'].authenticate!(:password)     # Ensure authentication via the password strategy. If it fails, bail.
 
+RailsWarden.default_user_class = Secure::UserProfile
+RailsWarden.unauthenticated_action = "unauthenticated"
+
 Rails.application.config.middleware.insert_after ActionDispatch::Flash, Rack::Attack
 Rails.application.config.middleware.insert_after Rack::Attack, RailsWarden::Manager do |manager|
   # puts "===============[DEBUG]:01 #{self.class}\##{__method__}"
@@ -96,9 +99,7 @@ Rails.application.config.middleware.insert_after Rack::Attack, RailsWarden::Mana
   manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
 end
 
-RailsWarden.default_user_class = Secure::UserProfile
-RailsWarden.unauthenticated_action = "unauthenticated"
-    
+
 # RackSessionAccess config
 if Rails.env.test?
   Rails.application.config.middleware.insert_before RailsWarden::Manager, RackSessionAccess::Middleware
