@@ -280,7 +280,7 @@ module Utility
           ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
 
           ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
-          ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
+          ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
           ['FileDownload',   ['*.pdf'], 'UserGroups',  ['Developer'], 'Shared access to project working files'],
@@ -308,7 +308,7 @@ module Utility
        ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
 
        ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
-       ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
+       ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
        ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
        ['FileDownload',   ['*.pdf'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files'],
@@ -331,7 +331,7 @@ module Utility
           ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
           ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
-          ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission LOG Files'],
+          ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
           ['FileDownload',   ['*.pdf'], 'UserGroups',  ['EmployeeSecondary'], 'Shared access to project working files'],
