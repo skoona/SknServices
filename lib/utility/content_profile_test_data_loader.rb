@@ -291,7 +291,6 @@ module Utility
       ].each do |req|
         cchoice = selections_choose_for(req[1], selections_for_content_type(req[0], true))
         tchoice = selections_choose_for(req[3], selections_for_topic_type(req[2], true))
-
         cpe_developer << create_content_profile_entry_for(req.last, tchoice, cchoice)
       end
 

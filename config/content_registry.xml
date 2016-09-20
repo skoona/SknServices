@@ -46,7 +46,7 @@
     <resource secured="true" content="true">
         <uri>Commission/Branch/CSV</uri>
         <description>Branch Commission CSV Datafiles</description>
-        <userdata>*.log</userdata>
+        <userdata>*.csv</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Statement.CSV.Access</authorizedRole>
@@ -57,7 +57,7 @@
     <resource secured="true" content="true">
         <uri>Experience/Branch/PDF</uri>
         <description>Branch Experience Statements</description>
-        <userdata>*.pdf</userdata>
+        <userdata>*.log</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Experience.PDF.Access</authorizedRole>

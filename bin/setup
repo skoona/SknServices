@@ -48,17 +48,17 @@ chdir APP_ROOT do
   ], verbose: true)
 
   puts "\n== Preloading some test data files #{FileUtils.pwd} =="
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0037/Experience/")
+  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0037/Experience/")
   system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0037/Commission/")
   system!("cp -v controlled/downloads/images/* controlled/projects/Branch/0037/Commission/")
   system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0037/Commission/")
 
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0034/Experience/")
+  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0034/Experience/")
   system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0034/Commission/")
   system!("cp -v controlled/downloads/images/* controlled/projects/Branch/0034/Commission/")
   system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0034/Commission/")
 
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0040/Experience/")
+  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0040/Experience/")
   system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0040/Commission/")
   system!("cp -v controlled/downloads/images/* controlled/projects/Branch/0040/Commission/")
   system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0040/Commission/")
