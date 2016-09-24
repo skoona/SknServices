@@ -51,11 +51,49 @@ describe Providers::XMLProfileProvider, "Service routines of Providers::XMLProfi
       expect( @service.content_profile_for_user(user,true) ).to be_a Utility::ContentProfileBean
     end
     it "#get_existing_profile returns nil" do
-      expect( @service.get_existing_profile(@auth) ).to be_nil
+      expect( @service.send(:get_existing_profile, @auth) ).to be_nil
     end
     it "#get_existing_profile returns found object" do
       expect( @service.content_profile_for_user(user,true) ).to be_a Utility::ContentProfileBean
-      expect( @service.get_existing_profile(user) ).to be_a Hash
+      expect( @service.send(:get_existing_profile, user) ).to be_a Hash
+    end
+    it "#encode_userdata_content returns String for String." do
+      expect( @service.send(:encode_userdata_content, "Happy") ).to be_kind_of String
+    end
+    it "#encode_userdata_content returns String for Array." do
+      expect( @service.send(:encode_userdata_content, [123,456,789]) ).to be_kind_of String
+    end
+    it "#encode_userdata_content returns String for Hash." do
+      expect( @service.send(:encode_userdata_content, {docTyoe: 955}) ).to be_kind_of String
+    end
+    it "#create_content_profile_entry returns a one count for items created" do
+      parms = {
+          "uri"=>"ContentType/TopicType/SomeKey",
+          "content_type"=>"ContentType",
+          "content_value"=>{:docType=>123, :drawerType=>4312},
+          "topic_type"=>"TopicType",
+          "topic_value"=>["0034", "0037", "0040"],
+          "description"=>"XML Testing Data"
+      }
+      expect( @service.create_content_profile_entry(parms, false) ).to eq(1)
+    end
+    it "#create_content_profile_entry returns a three count for items created" do
+      parms = {
+          "uri"=>"ContentType/TopicType/SomeKey",
+          "content_type"=>"ContentType",
+          "content_value"=>{:docType=>123, :drawerType=>4312},
+          "topic_type"=>"TopicType",
+          "topic_value"=>["0034", "0037", "0040"],
+          "description"=>"XML Testing Data"
+      }
+      expect( @service.create_content_profile_entry([parms,parms,parms], false) ).to eq(3)
+    end
+
+    it "#destroy_content_profile_entry returns a one count for items deleted" do
+      parms = {
+          "uri"=>"Commission/Branch/BAD"
+      }
+      expect( @service.destroy_content_profile_entry(parms, false) ).to eq(1)
     end
   end
 
@@ -71,7 +109,22 @@ describe Providers::XMLProfileProvider, "Service routines of Providers::XMLProfi
        expect( @service.content_profile_for_user(nil,true).success ).to be false
      end
      it "#get_existing_profile should handle nil user." do
-       expect{ @service.get_existing_profile(nil) }.to raise_error(Utility::Errors::NotFound)
+       expect{ @service.send(:get_existing_profile, nil) }.to raise_error(Utility::Errors::NotFound)
+     end
+     it "#encode_userdata_content should handle nil parms." do
+       expect( @service.send(:encode_userdata_content, nil) ).to be_nil
+     end
+     it "#create_content_profile_entry returns a zero count for nil inputs" do
+       expect( @service.create_content_profile_entry(nil, false) ).to eq(0)
+     end
+     it "#destroy_content_profile_entry returns a zero count for nil inputs" do
+       expect( @service.destroy_content_profile_entry(nil, false) ).to eq(0)
+     end
+     it "#create_content_profile_entry returns a zero count for empty inputs" do
+       expect( @service.create_content_profile_entry({}, false) ).to eq(0)
+     end
+     it "#destroy_content_profile_entry returns a zero count for empty inputs" do
+       expect( @service.destroy_content_profile_entry({}, false) ).to eq(0)
      end
   end
 

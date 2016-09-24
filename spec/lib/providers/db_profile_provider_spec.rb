@@ -51,11 +51,11 @@ describe Providers::DBProfileProvider, "Service routines of Provider::DBProfileP
       expect( @service.content_profile_for_user(user,true) ).to be_a Utility::ContentProfileBean
     end
     it "#get_existing_profile returns nil" do
-      expect( @service.get_existing_profile(@auth) ).to be_nil
+      expect( @service.send(:get_existing_profile, @auth) ).to be_nil
     end
     it "#get_existing_profile returns found object" do
       expect( @service.content_profile_for_user(user,true) ).to be_a Utility::ContentProfileBean
-      expect( @service.get_existing_profile(user) ).to be_a Hash
+      expect( @service.send(:get_existing_profile, user) ).to be_a Hash
     end
   end
 
@@ -71,7 +71,7 @@ describe Providers::DBProfileProvider, "Service routines of Provider::DBProfileP
        expect( @service.content_profile_for_user(nil,true).success ).to be false
      end
      it "#get_existing_profile should raise error on nil user." do
-       expect{ @service.get_existing_profile(nil) }.to raise_error(Utility::Errors::NotFound)
+       expect{ @service.send(:get_existing_profile, nil) }.to raise_error(Utility::Errors::NotFound)
      end
   end
 

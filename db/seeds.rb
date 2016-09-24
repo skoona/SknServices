@@ -17,10 +17,10 @@ begin
       {name: "Services.Action.Admin", description: "Employee Managers"},
       {name: "Services.Action.Primary", description: "Branch Managers"},
       {name: "Services.Action.Developer", description: "Super User or Developer"},
-      {name: "Services.Branch.Commission.Statement.PDF.Access", description: "Access Branch Commission Statements"},
-      {name: "Services.Branch.Commission.Statement.CSV.Access", description: "Access Branch Commission Data Files"},
-      {name: "Services.Branch.Commission.Experience.PDF.Access", description: "Access Branch Experience Report"},
-      {name: "Services.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
+      {name: "Services.Branch.Commission.PDF.Access", description: "Access Branch Commission Statements"},
+      {name: "Services.Branch.Commission.CSV.Access", description: "Access Branch Commission Data Files"},
+      {name: "Services.Branch.Experience.PDF.Access", description: "Access Branch Experience Report"},
+      {name: "Services.Branch.LicensedStates.Operations.Access", description: "Access Branch Licensed USA States"}]
 
   all_users =
       {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}
@@ -33,7 +33,7 @@ begin
 
   group_manage_p = [
       {name: "Services.Action.Admin.UserAuthorizationGroups",   description: "Administer Authorization Group"},
-      {name: "Services.Branch.Operations.LicensedStates.USA", description: "Access Branch Licensed USA States"}]
+      {name: "Services.Branch.LicensedStates.Operations.Access", description: "Access Branch Licensed USA States"}]
 
   group_manage_s =
       {name: "Services.Action.Use.UserAuthorizationGroups", description: "Consumer of Authorization Groups"}

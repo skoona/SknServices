@@ -1,14 +1,10 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<contentRegistry xnlns="http://skoona.net/SknServices/ContentRegistry"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                xsi:schemaLocation="http://skoona.net/SknServices/ContentRegistry content_registry.xsd">
-
-<!-- see: config/content_registry.xsd -->
-
-    <!--============================================================================= -->
-    <!--================== Content RESOURCE REGISTRY  =============================== -->
-    <!--============================================================================= -->
-    <!--
+<?xml version="1.0" encoding="UTF-8"?>
+<contentRegistry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xnlns="http://skoona.net/SknServices/ContentRegistry" xsi:schemaLocation="http://skoona.net/SknServices/ContentRegistry content_registry.xsd">
+  <!-- see: config/content_registry.xsd -->
+  <!--============================================================================= -->
+  <!--================== Content RESOURCE REGISTRY  =============================== -->
+  <!--============================================================================= -->
+  <!--
       =============================================================================
       A possible Content Access scheme could be:
          <resource secured="true" content="true">
@@ -30,108 +26,98 @@
                                         Select user_options = authorizedRole(options)
       =============================================================================
       -->
-
-    <!--============== Content Profile Adaptation  ========== -->
-    <resource secured="true" content="true">
-        <uri>Commission/Branch/PDF</uri>
-        <description>Branch Commission Statements</description>
-        <userdata>*.pdf</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Statement.PDF.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>Commission/Branch/CSV</uri>
-        <description>Branch Commission CSV Datafiles</description>
-        <userdata>*.csv</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Statement.CSV.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>Experience/Branch/PDF</uri>
-        <description>Branch Experience Statements</description>
-        <userdata>*.log</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Experience.PDF.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>Commission/Branch/BAD</uri>
-        <description>Test where RoleName has no Options</description>
-        <userdata>*.pdf</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Branch.Commission.Branch.PDF.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>LicensedStates/Branch/Operations</uri>
-        <description>Producer Licensed States</description>
-        <userdata>"21|9|23|"</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0034">Services.Branch.Operations.LicensedStates.USA</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>Activity/Partner/0099</uri>
-        <description>Partner Relationship Reports</description>
-        <userdata>*.pdf</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="0099">Services.Action.Use.FileDownload.Pdf</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>FileDownload/UserGroups/Pdf</uri>
-        <description>Permission to Download PDF Files</description>
-        <userdata>*.pdf</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
-                <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>FileDownload/UserGroups/Datafiles</uri>
-        <description>Permission to Download Data Files</description>
-        <userdata>*.log</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
-                <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true" content="true">
-        <uri>FileDownload/UserGroups/Images</uri>
-        <description>Permission to Download Image Files</description>
-        <userdata>*.png|*.jpg</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Image</authorizedRole>
-                <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Image</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
+  <!--============== Content Profile Adaptation  ========== -->
+  <resource secured="true" content="true">
+    <uri>Commission/Branch/PDF</uri>
+    <description>Branch Commission Statements</description>
+    <userdata>*.pdf</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.PDF.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>Commission/Branch/CSV</uri>
+    <description>Branch Commission CSV Datafiles</description>
+    <userdata>*.csv</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.CSV.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>Experience/Branch/PDF</uri>
+    <description>Branch Experience Statements</description>
+    <userdata>*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="0034,0037,0040">Services.Branch.Experience.PDF.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>Commission/Branch/BAD</uri>
+    <description>Test where RoleName has no Options</description>
+    <userdata>*.pdf</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole>Services.Branch.Commission.PDF.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>LicensedStates/Branch/Operations</uri>
+    <description>Producer Licensed States</description>
+    <userdata>"21|9|23|"</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="0034">Services.Branch.LicensedStates.Operations.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>Activity/Partner/0099</uri>
+    <description>Partner Relationship Reports</description>
+    <userdata>*.pdf</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="0099">Services.Action.Use.FileDownload.Pdf</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/Pdf</uri>
+    <description>Permission to Download PDF Files</description>
+    <userdata>*.pdf</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
+        <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/Datafiles</uri>
+    <description>Permission to Download Data Files</description>
+    <userdata>*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
+        <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/Images</uri>
+    <description>Permission to Download Image Files</description>
+    <userdata>*.png|*.jpg</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Image</authorizedRole>
+        <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Image</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
 </contentRegistry>

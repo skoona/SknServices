@@ -58,10 +58,10 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
 
   let(:in_branch_option) {["0037"]}
   let(:out_branch_option) {["1162"]}
-  let(:commission_all) {["Services.Branch.Commission.Statement.PDF.Access",
-                         "Services.Branch.Commission.Statement.CSV.Access",
-                         "Services.Branch.Commission.Experience.PDF.Access"]}
-  let(:commission_expr) {["Services.Branch.Commission.Experience.PDF.Access"]}
+  let(:commission_all) {["Services.Branch.Commission.PDF.Access",
+                         "Services.Branch.Commission.CSV.Access",
+                         "Services.Branch.Experience.PDF.Access"]}
+  let(:commission_expr) {["Services.Branch.Experience.PDF.Access"]}
 
   let(:resource_unknown) {"any value will do"}
   let(:resource_options) {"testing/role/options"}

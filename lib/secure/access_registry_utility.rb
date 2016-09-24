@@ -118,7 +118,7 @@ module Secure
               resource_hash[resource_uri][key].store(name,role)
             end # end authorized role
           else # of permission
-            resource_hash[resource_uri][keystr] = process_resource_content(keystr, sibl.content.squish)
+            resource_hash[resource_uri][keystr] = decode_userdata_content(keystr, sibl.content.squish)
           end
 
         end # of sibling
@@ -144,7 +144,7 @@ module Secure
     #   value|value|...
     #   key:value|key:value|...
     #   Reserved chars: |:     - vertical-bar and semi-colon
-    def process_resource_content(name, value)
+    def decode_userdata_content(name, value)
       return value unless name.eql?("userdata")
       return value.gsub('"','') unless value.match(/[\||:]/)
 

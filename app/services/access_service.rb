@@ -7,7 +7,17 @@ class AccessService < ::AccessProfileDomain
 
   PROFILE_CONTEXT='access'
 
+  ##
   # Users Controller Methods
+  ##
+
+  def get_user_form_options
+    SknUtils::PageControls.new({
+       groups: group_select_options,
+       roles: role_select_options
+    })
+  end
+
   def handle_users_index
     result = { counter: 0,
                users: User.paginate(page: params[:page], :per_page => 16)

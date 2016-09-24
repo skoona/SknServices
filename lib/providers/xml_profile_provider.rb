@@ -11,125 +11,6 @@
 #
 # Storage thru Factory
 # #######
-#
-# ## Refe: http://codereview.stackexchange.com/questions/51569/building-xml-by-enumerating-through-array-hashes
-#
-#
-# data = [
-#     { 'name' => 'category1',
-#       'subCategory' => [
-#           { 'name' => 'subCategory1',
-#             'product' => [
-#                 { 'name' => 'productName1',
-#                   'desc' => 'desc1' },
-#                 { 'name' => 'productName2',
-#                   'desc' => 'desc2' } ]
-#           } ]
-#     },
-#     { 'name' => 'category2',
-#       'subCategory' => [
-#           { 'name' => 'subCategory2.1',
-#             'product' => [
-#                 { 'name' => 'productName2.1.1',
-#                   'desc' => 'desc1' },
-#                 { 'name' => 'productName2.1.2',
-#                   'desc' => 'desc2' } ]
-#           } ]
-#     },
-# ]
-#
-# require 'nokogiri'
-#
-# def process_array(label,array,xml)
-#   array.each do |hash|
-#     xml.send(label) do                 # Create an element named for the label
-#       hash.each do |key,value|
-#         if value.is_a?(Array)
-#           process_array(key,value,xml) # Recurse
-#         else
-#           xml.send(key,value)          # Create <key>value</key> (using variables)
-#         end
-#       end
-#     end
-#   end
-# end
-#
-# builder = Nokogiri::XML::Builder.new do |xml|
-#   xml.root do                           # Wrap everything in one element.
-#     process_array('category',data,xml)  # Start the recursion with a custom name.
-#   end
-# end
-#
-# puts builder.to_xml
-# ######
-# <?xml version="1.0"?>
-#     <root>
-#       <category>
-#         <name>category1</name>
-#         <subCategory>
-#           <name>subCategory1</name>
-#           <product>
-#             <name>productName1</name>
-#             <desc>desc1</desc>
-#           </product>
-#           <product>
-#             <name>productName2</name>
-#             <desc>desc2</desc>
-#           </product>
-#         </subCategory>
-#       </category>
-#       <category>
-#       <name>category2</name>
-#       <subCategory>
-#         <name>subCategory2.1</name>
-#         <product>
-#           <name>productName2.1.1</name>
-#           <desc>desc1</desc>
-#         </product>
-#         <product>
-#           <name>productName2.1.2</name>
-#           <desc>desc2</desc>
-#         </product>
-#       </subCategory>
-#     </category>
-# </root>
-# ######
-#
-#  OR
-#
-# require 'nokogiri'
-#
-# def process_array(label,array,xml)
-#   array.each do |hash|
-#     kids,attrs = hash.partition{ |k,v| v.is_a?(Array) }
-#     xml.send(label,Hash[attrs]) do
-#       kids.each{ |k,v| process_array(k,v,xml) }
-#     end
-#   end
-# end
-#
-# builder = Nokogiri::XML::Builder.new do |xml|
-#   xml.root{ process_array('category',data,xml) }
-# end
-#
-# puts builder.to_xml
-# ######
-# <?xml version="1.0"?>
-# <root>
-#   <category name="category1">
-#     <subCategory name="subCategory1">
-#       <product name="productName1" desc="desc1"/>
-#       <product name="productName2" desc="desc2"/>
-#     </subCategory>
-#   </category>
-#   <category name="category2">
-#     <subCategory name="subCategory2.1">
-#       <product name="productName2.1.1" desc="desc1"/>
-#       <product name="productName2.1.2" desc="desc2"/>
-#       </subCategory>
-#   </category>
-# </root>
-# ######
 
 
 module Providers
@@ -139,6 +20,11 @@ module Providers
 
     def initialize(params={})
       super(params)
+      cpbf = Settings.access_profile.content_registry_filename.basename
+      cpbx = Settings.access_profile.content_registry_filename.extension
+      @content_registry_filename = Pathname.new("#{Rails.root}/config/#{cpbf}.#{cpbx}")
+      @rootPath = 'contentRegistry'
+      @optionsKeyword = Settings.access_profile.options_keyword
     end
 
     def self.provider_type
@@ -157,13 +43,102 @@ module Providers
       beaned ? Utility::ContentProfileBean.new(hsh) : hsh
     end
 
-    # Not ment to be public, it is for testing reason
+    # Arrays of the following hash
+    # parms = {
+    #  "uri"=>"ContentType/TopicType/SomeKey",
+    #  "content_type"=>"ContentType",
+    #  "content_value"=>{:docType=>123, :drawerType=>4312},
+    #  "topic_type"=>"TopicType",
+    #  "topic_value"=>["0034", "0037", "0040"],
+    #  "description"=>"XML Testing Data"
+    # }
+    # Create an XML version of a ContentProfileEntry from parms
+    def create_content_profile_entry(parms, enabled=true)
+      count = 0
+      return 0 if parms.nil? or [parms].first.empty?
+
+      document = Nokogiri::XML(IO.read(@content_registry_filename))
+
+      Nokogiri::XML::Builder.with(document.at(@rootPath)) do |xml|
+
+        [parms].flatten.compact.each do |parm|
+          cpe = HashWithIndifferentAccess.new(parm)
+          b,a,c = cpe[:uri].split('/')
+          role_opts = [cpe[:topic_value]].flatten.join(',')
+          ctv = encode_userdata_content(cpe[:content_value])
+
+          xml.resource('secured' => 'true', 'content' => 'true' ) do
+            xml.uri cpe[:uri]
+            xml.description cpe[:description]
+            xml.userdata ctv
+            xml.permission('type' => 'READ') do
+              xml.authorizedRoles do
+                xml.authorizedRole(@optionsKeyword => role_opts) do
+                  xml.text "Services.#{a}.#{b}.#{c}.Access"
+                end
+              end
+            end
+          end
+          count += 1
+        end # end loop
+
+      end
+      doc = Nokogiri::XML(document.to_xml, &:noblanks)  # restore pretty print
+      if enabled and count > 0
+        IO.write(@content_registry_filename, doc.to_xml)
+      end
+      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() Created: #{count}, Writing: #{ doc.to_xml}")
+      count
+    end
+
+    # Arrays of the following hash
+    # parms = {
+    #  "uri"=>"ContentType/TopicType/SomeKey"
+    # }
+    # Deletes ALL nodes that match parms[:uri]
+    def destroy_content_profile_entry(parms, enabled=true)
+      count = 0
+      return 0 if parms.nil? or [parms].first.empty?
+
+      doc = Nokogiri::XML(IO.read(@content_registry_filename))
+
+      [parms].flatten.compact.each do |parm|
+        uri = parm['uri']
+        doc.root.search("uri:contains('#{uri}')").each do |node|
+          n = node.parent.unlink # parent.remove
+          n.remove
+          count += 1
+        end
+      end
+
+      if enabled and count > 0
+        IO.write(@content_registry_filename, doc.to_xml)
+      end
+      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() Deleted: #{count}, Writing: #{ doc.to_xml}")
+      count
+    end
+
+
+  protected
+
+    # encode userdata as Hash, Array,or String
+    def encode_userdata_content(content_value)
+      case content_value
+        when Hash
+          content_value.to_a.map() {|i| i.join(':') }.join('|')
+        when Array
+          content_value.map(&:to_s).join('|')
+        else
+          content_value
+      end
+    end
+
+    # Not meant to be public, it is for testing reason
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
       get_prebuilt_profile(usr_prf.person_authenticated_key)
     end
 
-    protected
     ##
     # AccessProfile
     ##

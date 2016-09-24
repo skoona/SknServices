@@ -118,15 +118,16 @@ module Providers
       profile_obj
     end
 
-    def get_existing_profile(usr_prf)
-      raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
-      get_prebuilt_profile(usr_prf.person_authenticated_key)
-    end
 
   protected
     ##
     # ContentProfile
     ##
+
+    def get_existing_profile(usr_prf)
+      raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
+      get_prebuilt_profile(usr_prf.person_authenticated_key)
+    end
 
     def remove_content_profile_entry_from(profile_obj, profile_entry_obj)
       profile_obj.content_profile_entries.destroy(profile_entry_obj)
