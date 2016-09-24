@@ -133,7 +133,7 @@ module Providers
       end
     end
 
-    # Not meant to be public, it is for testing reason
+    # Not meant to be public, use send() to test
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
       get_prebuilt_profile(usr_prf.person_authenticated_key)

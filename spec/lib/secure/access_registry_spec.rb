@@ -91,7 +91,7 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
     end
   end
 
-  context "Element payloads are directly accessable from secured and unsecured resources. " do
+  context "Element payloads are directly accessible from secured and unsecured resources. " do
     context "From secured resource." do
       it "#get_resource_description returns desciption element as string." do
         expect(Secure::AccessRegistry.get_resource_description('testing/userdata')).to be_a_kind_of(String)
