@@ -16,12 +16,20 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def access_service
-    @sf_access_service ||= ::AccessService.new({factory: self})
+    def self.access_service
+      yield @sf_access_service if block_given?
+      @sf_access_service
+    end
+    @sf_access_service = ::AccessService.new({factory: self})
     yield @sf_access_service if block_given?
     @sf_access_service
   end
   def content_service
-    @sf_content_service ||= ::ContentService.new({factory: self})
+    def self.content_service
+      yield @sf_content_service if block_given?
+      @sf_content_service
+    end
+    @sf_content_service = ::ContentService.new({factory: self})
     yield @sf_content_service if block_given?
     @sf_content_service
   end
@@ -31,12 +39,20 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def xml_profile_provider
-    @sf_xml_profile_builder ||= Providers::XMLProfileProvider.new({factory: self})
+    def self.xml_profile_provider
+      yield @sf_xml_profile_builder if block_given?
+      @sf_xml_profile_builder
+    end
+    @sf_xml_profile_builder = Providers::XMLProfileProvider.new({factory: self})
     yield @sf_xml_profile_builder if block_given?
     @sf_xml_profile_builder
   end
   def db_profile_provider
-    @sf_db_profile_builder ||= Providers::DBProfileProvider.new({factory: self})
+    def self.db_profile_provider
+      yield @sf_db_profile_builder if block_given?
+      @sf_db_profile_builder
+    end
+    @sf_db_profile_builder = Providers::DBProfileProvider.new({factory: self})
     yield @sf_db_profile_builder if block_given?
     @sf_db_profile_builder
   end
@@ -46,12 +62,20 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def content_adapter_file_system
-    @sf_content_adapter_file_system ||= Providers::FileSystemAdapter.new({factory: self})
+    def self.content_adapter_file_system
+      yield @sf_content_adapter_file_system if block_given?
+      @sf_content_adapter_file_system
+    end
+    @sf_content_adapter_file_system = Providers::FileSystemAdapter.new({factory: self})
     yield @sf_content_adapter_file_system if block_given?
     @sf_content_adapter_file_system
   end
   def content_adapter_inline_values
-    @sf_content_adapter_inline_values ||= Providers::InlineValuesAdapter.new({factory: self})
+    def self.content_adapter_inline_values
+      yield @sf_content_adapter_inline_values if block_given?
+      @sf_content_adapter_inline_values
+    end
+    @sf_content_adapter_inline_values = Providers::InlineValuesAdapter.new({factory: self})
     yield @sf_content_adapter_inline_values if block_given?
     @sf_content_adapter_inline_values
   end
