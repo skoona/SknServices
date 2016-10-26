@@ -1,7 +1,7 @@
 ## app/domains/service_factory.rb
 #
 # Replace factory helpers with Factory Object from DomainsBase
-# - Domain services live for one request cycle and are expensive to create, this object memorizes them
+# - Domain services live for one request cycle and are expensive to create, this object memoitizes them
 # - This factory should be passed around like "factory" or "service"
 # - Should make testing easier
 #
@@ -16,11 +16,11 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def access_service
-    def self.access_service
-      yield @sf_access_service if block_given?
+    def self.access_service                                         # Second call will execute this method, first call defines it as singleton method which has HIGHER PRIORITY on class method
+      yield @sf_access_service if block_given?                      # Ref: http://www.techoalien.com/2016/10/ruby-memoization-using-singleton-method.html
       @sf_access_service
     end
-    @sf_access_service = ::AccessService.new({factory: self})
+    @sf_access_service = ::AccessService.new({factory: self})       # First call will execute this set of code
     yield @sf_access_service if block_given?
     @sf_access_service
   end
@@ -82,7 +82,7 @@ class ServiceFactory < ::Factory::FactoriesBase
 
   ##
   # Adapter by Content
-  # Will accepts ResultBean, Hash, ot single string value
+  # Will accepts ResultBean, Hash, or single string value
   def adapter_for_content_profile_entry(content)
     content_type = (content.respond_to?(:to_hash) ? content['content_type'] : content)
     case content_type

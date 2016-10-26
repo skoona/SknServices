@@ -35,6 +35,8 @@ James,
 ##Installation
 ---
 
+Application UserIDs are in the db/seed.rb file.  Developer credentials are: username: developer, passwd: developer99
+
 You will need to install PostGreSQL, and add/edit PostgreSQL credentials:
  
     config/settings.yml, 
