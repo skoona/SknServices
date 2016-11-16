@@ -57,7 +57,7 @@ module Factory
 
       # Purge all over 2 days old
       def purge_older_than_two_days(seconds=nil)
-        object_store.purge_by_seconds(seconds) # 2 days is default, else (Time.now - 2.days).to_i
+        object_store.purge_by_seconds(seconds) # 2 days is default, else (Time.zone.now - 2.days).to_i
       end
 
       protected

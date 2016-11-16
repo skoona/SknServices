@@ -19,7 +19,7 @@ module Secure
         minutes_from_now(Settings.security.remembered_for.to_i)
       end
       def minutes_from_now(val=20)
-        Time.now.advance(:minutes => val) # val.minutes.from_now
+        Time.zone.now.advance(:minutes => val) # val.minutes.from_now
       end
 
       # AccessProfile will call this
@@ -72,7 +72,7 @@ module Secure
         upp = self.new(value) if value.present?
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
         return nil unless upp && value.token_authentic?(token)
-        upp.last_access = Time.now if upp
+        upp.last_access = Time.zone.now if upp
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")
@@ -99,7 +99,7 @@ module Secure
 
       def last_login_time_expired?(person)
         return false unless person.present?
-        a = (Time.now.to_i - person.last_access.to_i)
+        a = (Time.zone.now.to_i - person.last_access.to_i)
         b = (@login_after_seconds ||= Settings.security.verify_login_after_seconds.to_i)
         rc = (a > b )
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username}) (A[#{a}] > B[#{b}]) = C[#{rc}]")

@@ -24,7 +24,7 @@ class AccessProfileDomain < ::Factory::DomainsBase
         reload_access_registry
         "AccessRegistry Reloaded"
       when 'purge'
-        count = service.purge_storage_objects((Time.now - 10.minutes).to_i)
+        count = service.purge_storage_objects((Time.zone.now - 10.minutes).to_i)
         "ObjectStorageContainer Purged #{count} Items"
     end
   end

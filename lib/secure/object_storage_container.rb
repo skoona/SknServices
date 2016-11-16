@@ -41,7 +41,7 @@ module Secure
     # Returns count removed
     def purge_by_seconds(seconds=nil)
       counter = 0
-      expired = seconds || (Time.now - 2.days).to_i # as an integer number of seconds since the Epoch.
+      expired = seconds || (Time.zone.now - 2.days).to_i # as an integer number of seconds since the Epoch.
       @objects_storage_container.delete_if do |k,v|
         if v.last < expired
           counter += 1
@@ -56,7 +56,7 @@ module Secure
 
     def add_to_store(key, object, context=CDEFAULT)
       store_key = "#{context}.#{key.to_s}".to_sym
-      @objects_storage_container.update({store_key => [object, Time.now.to_i]})
+      @objects_storage_container.update({store_key => [object, Time.zone.now.to_i]})
       Rails.logger.debug "  #{self.class.name}.#{__method__}(#{context}) Key=#{store_key.to_s}"
       true # prevent return of full hash
     end

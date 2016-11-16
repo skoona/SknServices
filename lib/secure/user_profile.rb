@@ -23,7 +23,7 @@ module Secure
       raise(Utility::Errors::NotFound, "UserProfile Requires a instance from the Users model.") unless user
 
       @user_object = user
-      @last_access = Time.now
+      @last_access = Time.zone.now
 
       [:@id, :@person_authenticated_key, :@assigned_roles,
        :@name, :@user_options, :@assigned_groups, :@username,
@@ -96,7 +96,7 @@ module Secure
     def disable_authentication_controls(prepare_only=false)
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
-      self.last_access = Time.now
+      self.last_access = Time.zone.now
       delete_storage_object(person_authenticated_key.to_sym)
       proxy_u.save
       true
@@ -107,7 +107,7 @@ module Secure
       Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.proxy_u.active= true
-      self.last_access = Time.now
+      self.last_access = Time.zone.now
       update_storage_object(person_authenticated_key.to_sym, self)
       true
     end
