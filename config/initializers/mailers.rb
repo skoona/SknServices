@@ -10,7 +10,7 @@ ActionMailer::Base.smtp_settings = {
 	:enable_starttls_auto		=> true
 }
 ActionMailer::Base.raise_delivery_errors = true
-ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) unless Rails.env.production?
+ActionMailer::Base.register_interceptor(Utility::DevelopmentMailInterceptor) unless Rails.env.production?
 
 
 #

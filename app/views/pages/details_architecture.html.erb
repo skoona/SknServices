@@ -45,11 +45,11 @@
 			        <p>We consider controller methods as entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code>:service_name.entry_method_name(params)</code>.
 			          Where <code>:service_name</code> is the name of a business process service class associated with that page.
 			          This service's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values, which can easily be converted into JSON,
-			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values bean.</p>
+			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values container.</p>
                 <p>For apps that have some sort of menu-bar or top of page information
-			          section.  We up the instance variable count by one, by allowing a <code>@page_info</code> values bean, which would contain all the values needed to populate the top of page information section of
+			          section.  We up the instance variable count by one, by allowing a <code>@page_info</code> values container, which would contain all the values needed to populate the top of page information section of
 			          that page thru the page partials prepared for it.  In cases where the return code to the controller method is negative, we maintain the <code>:success, :message</code> keys in the
-			          values bean (i.e. ResultsBean) to carry this failure state.  This allows the controller to redirect to the logical next page based on error, or continue to regular destination 
+			          values container (i.e. ResultsBean) to carry this failure state.  This allows the controller to redirect to the logical next page based on error, or continue to regular destination
 			          on success; message is used for the Flash message when needed.</p>
 
 			          <pre class="pre-scrollable prettyprint lang-rb">
@@ -146,14 +146,14 @@ class ContentService < ::ContentProfileDomain
 
   # Controller Entry Point
   def handle_demo_page(params={})
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: true,
                                    message: "",
                                    page_users: get_page_users(PROFILE_CONTEXT)
                                })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: false,
                                    message: e.message,
                                    page_users: []
@@ -165,57 +165,7 @@ end
               </pre>
               </pre>
               <pre class="pre-scrollable prettyprint lang-rb">
- class ContentProfileDomain < ::Factory::DomainsBase
-
-
-  PROFILE_CONTEXT=""  # override in service
-
-  ##
-  # Returns a bundle for each available user
-  # - includes access/content profile
-  def get_page_users(context=PROFILE_CONTEXT)
-    usrs = []
-    Secure::UserProfile.page_users(context).each do |u|
-      usrs << {username: u.username,
-               display_name: u.display_name,
-               user_options: u.user_options || [],
-               get_content_object_url: factory.page_action_paths([:api_get_content_object_profiles_path]),
-               package: [ access_profile_package(u), content_profile_package(u) ]
-      }
-    end
-    usrs
-  end
-
-  def get_page_user(uname, context=PROFILE_CONTEXT)
-    page_user = Secure::UserProfile.page_user(uname, context)
-  end
-
-  def content_profile_package(user_profile=nil)
-    @accessible_type = "content" # [:access, :content]
-      raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
-
-    res = {
-       success: true,
-       message: "",
-       user_options: (user_profile.user_options || []),
-       accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
-       page_user: user_profile.username,
-       content_profile: factory.db_profile_provider.content_profile_for_user(user_profile)
-    }
-    res[:success] = res[:content_profile][:entries].empty? ? false : true
-    unless res[:success]
-      res[:message] = res[:content_profile][:message]
-    else
-      res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}, Options=#{user_profile.user_options.join(',')}"
-    end
-    Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
-
-    res
-  end
-
-   ...
-end
-             </pre>
+ class ContentProfileDomain </pre>
 
             </div>
             <p class="lead">Admittedly, this demonstration has not reached that level of <em>Nirvana</em> yet, but it is the design objective! Refactoring now has a clear target (i.e plan).</p>
@@ -448,15 +398,15 @@ end
                         <dd>
                             <p>ServiceFactory provides instantiation services to any requester in the request/response cycle.</p>
                             <p>The intended use of processServices object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
-                                on the <code>SknUtils::PageControls</code> group of result bean containers.</p>
+                                on the <code>SknUtils::NestedResult</code> group of result value containers.</p>
                         </dd>
                         <dt>Inheritance</dt>
                         <dd><p>processServices inherit business logic from the <code>processDomain</code> class.  The processDomain class inherits from the <code>::Factory::DomainsBase</code>,
                             which yields common initialization services like the current_user() and access to the service_factory for interaction with the controller helpers if needed.  In particular, the <code>service_factory</code> includes
                             object storage services and session storage services through its inheritance chain.</p>
                         <dt>Provides</dt>
-                        <dd><p>processServices present customized business logic and standard information packaging for the application entry points assigned to  it.  Whereever used you can be assured of a valid response encoded
-                            in a <code>@page_controls</code> bean container, and all exceptions are trapped by this top level method.   PageControl bean containers are required to include
+                        <dd><p>processServices present customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
+                            in a <code>@page_controls</code> value container, and all exceptions are trapped by this top level method.   PageControl value containers are required to include
                             <code>success: true|false, message: error_message|success_message|empty, and payload: [domainData]</code> values at a minimum.</p>
                             <p>JSON Api or regular HTML methods are hosted by this service.</p>
                         </dd>
@@ -572,30 +522,25 @@ end
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" href="#SknUtils" aria-expanded="false" aria-controls="collapseTwo">
-                      [Services Strategy] ResultBean Value Containers
+                      [Services Strategy] NestedResult or DottedHash Value Containers
                     </a>
                 </h4>
             </div>
             <div id="SknUtils" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
-                    <p>The <strong>skn_utils.gem</strong> contains dynamic base classes inherited to create local value containers or beans; plain old ruby objects (PORO).</p>
-                    <p>Initialized with a Hash of key value pairs: <code>res = SknUtils::PageControls.new({one: 1, two: [{one: 'one', two: 'two'}]})</code>  The keys become method names that return the associated values.  This
-                    transformation of the hash continues, during its initialization, to follow nested hashes and arrays of hashes.</p>
-                    <p>Nesting can be controller by initialization params, or choose from ready made base classes, preset to follow or not follow nesting.
-                        SknUtils::ResultBean class only follows directly valued hashed, while the SknUtils::PageControls class follows directly valued hashes
-                        and arrays of hashes. SknUtils::Genericbean only follow the initial hash, leaving all nested values untouched.   </p>
+                    <p>The <strong>skn_utils.gem</strong> contains dynamic base classes inherited to create local value containers or plain old ruby objects (PORO).</p>
+                    <p>Initialized with a Hash of key value pairs: <code>res = SknUtils::NestedResult.new({one: 1, two: [{one: 'one', two: 'two'}]})</code>  The keys become method names that return the associated values.  This
+                    transformation of the hash continues, during its initialization, to follow nested hashes, arrays of hashes, and arrays of array of hashes.</p>
                     <p>Overall the result of using this gem is an easily used container for transporting or packaging values for use in views, json responses, etc.
-                    Accessing the values in a SknUtil bean can be done using <code>dot</code> notation, or <code>hash</code> notation:
+                    Accessing the values in a SknUtil::NestedResult can be done using <code>dot</code> notation, or <code>hash</code> notation:
                     example: <code>res.one #=> 1</code>, <code>res.two.first.two #=> 'two'</code></p>
-                    <p>If you need to unwrap the bean to convert it to json or just to have the hash back;<br/> <code>res.to_hash #=> {one: 1, two: [{one: 'one', two: 'two'}]}</code>, gets the job done.</p>
+                    <p>If you need to unwrap the container to convert it to json or just to have the hash back;<br/> <code>res.to_hash #=> {one: 1, two: [{one: 'one', two: 'two'}]}</code>, gets the job done.</p>
                     <p>There are many more logical features built into the package, read more at <a href="https://github.com/skoona/skn_utils">SknUtils</a>. The is one feature that you should know and use:
                     the present <code>&lt;keyName&gt;?</code> feature.  Example: <code>res.two? #=> true,  res.twenty? #=> false</code></p>
 
                     <dl class="dl-horizontal">
-                        <dt>SknUtils:PageControls</dt>
+                        <dt>SknUtils::NestedResult</dt>
                           <dd>Used directly to transport values to controller method.</dd>
-                        <dt>Utility::ContentProfileBean < SknUtils:PageControls</dt>
-                            <dd>Locally defined container used to transport data-driven content profiles.</dd>
                     </dl>
                 </div>
             </div>
@@ -670,7 +615,7 @@ RSpec.describe ContentService, "Service routines of ContentService." do
 
     scenario "#handle_content_profile_management prepares a page package of all users" do
       result = service.handle_content_profile_management({})
-      expect(result).to be_a(SknUtils::PageControls)
+      expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
       expect(result.message).to be_blank
     end

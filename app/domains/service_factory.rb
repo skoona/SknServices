@@ -16,20 +16,13 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def access_service
-    def self.access_service                                         # Second call will execute this method, first call defines it as singleton method which has HIGHER PRIORITY on class method
-      yield @sf_access_service if block_given?                      # Ref: http://www.techoalien.com/2016/10/ruby-memoization-using-singleton-method.html
-      @sf_access_service
-    end
-    @sf_access_service = ::AccessService.new({factory: self})       # First call will execute this set of code
+    @sf_access_service ||= ::AccessService.new({factory: self})       # First call will execute this set of code
     yield @sf_access_service if block_given?
     @sf_access_service
   end
+
   def content_service
-    def self.content_service
-      yield @sf_content_service if block_given?
-      @sf_content_service
-    end
-    @sf_content_service = ::ContentService.new({factory: self})
+    @sf_content_service ||= ::ContentService.new({factory: self})
     yield @sf_content_service if block_given?
     @sf_content_service
   end
@@ -39,20 +32,13 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def xml_profile_provider
-    def self.xml_profile_provider
-      yield @sf_xml_profile_builder if block_given?
-      @sf_xml_profile_builder
-    end
-    @sf_xml_profile_builder = Providers::XMLProfileProvider.new({factory: self})
+    @sf_xml_profile_builder ||= Providers::XMLProfileProvider.new({factory: self})
     yield @sf_xml_profile_builder if block_given?
     @sf_xml_profile_builder
   end
+
   def db_profile_provider
-    def self.db_profile_provider
-      yield @sf_db_profile_builder if block_given?
-      @sf_db_profile_builder
-    end
-    @sf_db_profile_builder = Providers::DBProfileProvider.new({factory: self})
+    @sf_db_profile_builder ||= Providers::DBProfileProvider.new({factory: self})
     yield @sf_db_profile_builder if block_given?
     @sf_db_profile_builder
   end
@@ -62,20 +48,13 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def content_adapter_file_system
-    def self.content_adapter_file_system
-      yield @sf_content_adapter_file_system if block_given?
-      @sf_content_adapter_file_system
-    end
-    @sf_content_adapter_file_system = Providers::FileSystemAdapter.new({factory: self})
+    @sf_content_adapter_file_system ||= Providers::FileSystemAdapter.new({factory: self})
     yield @sf_content_adapter_file_system if block_given?
     @sf_content_adapter_file_system
   end
+
   def content_adapter_inline_values
-    def self.content_adapter_inline_values
-      yield @sf_content_adapter_inline_values if block_given?
-      @sf_content_adapter_inline_values
-    end
-    @sf_content_adapter_inline_values = Providers::InlineValuesAdapter.new({factory: self})
+    @sf_content_adapter_inline_values ||= Providers::InlineValuesAdapter.new({factory: self})
     yield @sf_content_adapter_inline_values if block_given?
     @sf_content_adapter_inline_values
   end

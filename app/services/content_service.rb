@@ -14,14 +14,14 @@ class ContentService < ::ContentProfileDomain
 
   # Controller Entry Point
   def handle_demo_page(params={})
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: true,
                                    message: "",
                                    page_users: get_page_users(PROFILE_CONTEXT)
                                })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: false,
                                    message: e.message,
                                    page_users: []
@@ -32,7 +32,7 @@ class ContentService < ::ContentProfileDomain
   # Controller Entry Point
   def handle_api_accessible_content(params)
     payload = handle_accessible_content_api(params)
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    package: {
                                        success: true,
                                        message: params[:content_type_description],
@@ -44,7 +44,7 @@ class ContentService < ::ContentProfileDomain
                                })
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({package: {
+    SknUtils::NestedResult.new({package: {
         success: false,
         message: e.message,
         username: "", display_name: "" ,
@@ -55,7 +55,7 @@ class ContentService < ::ContentProfileDomain
 
   # Controller Entry Point
   def api_get_content_object(params)
-    res = SknUtils::PageControls.new({
+    res = SknUtils::NestedResult.new({
                                          success: true,
                                          message: "",
                                          package: get_content_object_api(params)
@@ -64,7 +64,7 @@ class ContentService < ::ContentProfileDomain
     res
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: false,
                                    message: e.message,
                                    package: {}
@@ -73,7 +73,7 @@ class ContentService < ::ContentProfileDomain
 
   # Controller Entry Point
   def handle_content_profile_management(params)
-    res = SknUtils::PageControls.new({
+    res = SknUtils::NestedResult.new({
                                          success: true,
                                          message: "",
                                          page_actions: [{
@@ -92,7 +92,7 @@ class ContentService < ::ContentProfileDomain
     res
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: false,
                                    message: e.message,
                                    package: []
@@ -100,39 +100,39 @@ class ContentService < ::ContentProfileDomain
   end
 
   def handle_content_profile_create(params)
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: create_content_profile_with_profile_type_id(params),
                                  message: 'Content Profile was successfully created.'
                              })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: false,
                                  message: "create ContentProfile failed. Msg: #{e.class.name}"
                              })
   end
 
   def handle_content_profile_update(params)
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: update_content_profile_with_profile_type_id(params),
                                  message: 'Content profile was successfully updated.'
                              })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: false,
                                  message: e.message
                              })
   end
 
   def handle_content_profile_destroy(params)
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: destroy_content_profile_by_pak(params),
                                  message: 'Content profile was successfully destroyed.'
                              })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: false,
                                  message: e.message
                              })
@@ -152,13 +152,13 @@ class ContentService < ::ContentProfileDomain
   # POST
   def handle_content_profile_entries_create(params)
     raise Utility::Errors::IncompleteSelectionFailure, "Please make Topic and/or Content selection!" unless params['topic_type_value']
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                 success: create_content_profile_entries(params),
                                 message: 'Content profile entry was successfully created.'
                              })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: false,
                                    message: "[ #{e.class.name} ] create ContentProfileEntry failed. Msg: #{e.message}"
                                })
@@ -170,7 +170,7 @@ class ContentService < ::ContentProfileDomain
   # }
   def handle_content_profile_entry_destroy(params)
     result = destroy_content_profile_entry(params)
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: result,
                                  message: result ?
                                      'Destroy Content profile entry was successfully' :
@@ -178,7 +178,7 @@ class ContentService < ::ContentProfileDomain
                              })
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                  success: false,
                                  message: e.message
                              })

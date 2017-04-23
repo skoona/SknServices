@@ -44,7 +44,7 @@ RSpec.describe ContentService, "Service routines of ContentService." do
 
     scenario "#handle_content_profile_management prepares a page package of all users" do
       result = service.handle_content_profile_management({})
-      expect(result).to be_a(SknUtils::PageControls)
+      expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
       expect(result.message).to be_blank
     end
@@ -106,7 +106,7 @@ RSpec.describe ContentService, "Service routines of ContentService." do
 
     scenario "#handle_demo_page" do
       result = service.handle_demo_page({})
-      expect(result).to be_a(SknUtils::PageControls)
+      expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
     end
 
@@ -123,7 +123,7 @@ RSpec.describe ContentService, "Service routines of ContentService." do
                    "content_type_description"=>"Monthly Commission Reports and Files"
       }
       result = service.handle_api_accessible_content(parms)
-      expect(result).to be_a(SknUtils::PageControls)
+      expect(result).to be_a(SknUtils::NestedResult)
       expect(result.package.success).to be true
     end
 
@@ -132,7 +132,7 @@ RSpec.describe ContentService, "Service routines of ContentService." do
                "username"=>"developer"}
       result = service.api_get_content_object(parms)
       # catalog is not built, look for result and false
-      expect(result).to be_a(SknUtils::PageControls)
+      expect(result).to be_a(SknUtils::NestedResult)
       expect(result.package.success).to be true
     end
   end

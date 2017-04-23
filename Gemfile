@@ -23,7 +23,7 @@ gem 'font-awesome-sass'
 
 gem 'jbuilder'
 gem 'simple_form'
-gem 'skn_utils'
+gem 'skn_utils', "~> 3.0"
 gem 'bcrypt'
 gem 'gravatar_image_tag'
 

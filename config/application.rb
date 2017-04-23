@@ -14,9 +14,9 @@ end
 module SknService
   class Application < Rails::Application
 
-    config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
+    # config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
 
-    config.eager_load_paths << Rails.root.join('lib')
+    # config.eager_load_paths << Rails.root.join('lib')
 
     config.time_zone = Settings.Packaging.time_zone
 

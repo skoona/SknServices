@@ -12,7 +12,7 @@ class AccessService < ::AccessProfileDomain
   ##
 
   def get_user_form_options
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
        groups: group_select_options,
        roles: role_select_options
     })
@@ -26,7 +26,7 @@ class AccessService < ::AccessProfileDomain
     if current_user_has_create?('users/new')
       result.store(:package, {page_actions: [{ id: "new-user", path: new_user_path, text: "User", icon: 'glyphicon-plus'}]})
     end
-    @page_controls = SknUtils::PageControls.new(result)
+    @page_controls = SknUtils::NestedResult.new(result)
   end
 
 
@@ -44,7 +44,7 @@ class AccessService < ::AccessProfileDomain
         user: user,
         message: "Password has been reset please sign in"
     }
-    SknUtils::ResultBean.new(bean)
+    SknUtils::NestedResult.new(bean)
 
   rescue Exception => e
     Rails.logger.error "#{self.class.name}.#{__method__}(#{user.username if user.present?}) Klass: #{e.class.name}, Cause: #{e.message}"
@@ -53,7 +53,7 @@ class AccessService < ::AccessProfileDomain
         user: user,
         message: e.message
     }
-    SknUtils::ResultBean.new(bean)
+    SknUtils::NestedResult.new(bean)
   end
 
   def permitted(params)
@@ -70,10 +70,10 @@ class AccessService < ::AccessProfileDomain
         user: usr,
         message: "Email sent with password reset instructions"
     }
-    SknUtils::ResultBean.new(bean)
+    SknUtils::NestedResult.new(bean)
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}(#{usr.username if usr.present?}) Klass: #{e.class.name}, Cause: #{e.message}"
-    SknUtils::ResultBean.new({
+    SknUtils::NestedResult.new({
         success: false,
         message: e.message
     })
@@ -96,13 +96,13 @@ class AccessService < ::AccessProfileDomain
   ##
 
   def handle_system_information_api(params)
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
                                    success: true,
                                    message: system_actions_api(params)
                                })
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}(#{params['id']}) Klass: #{e.class.name}, Cause: #{e.message}, stack: #{e.backtrace[0..8]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
         success: false,
         message: e.message
     })
@@ -110,11 +110,11 @@ class AccessService < ::AccessProfileDomain
 
   def handle_system_information(params)
 
-    SknUtils::PageControls.new( generate_system_info_bundle )
+    SknUtils::NestedResult.new( generate_system_info_bundle )
 
   rescue Exception => e
     Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message}, stack: #{e.backtrace[0..8]}"
-    SknUtils::PageControls.new({
+    SknUtils::NestedResult.new({
         success: false,
         message: e.message,
         authenticated_user: false,

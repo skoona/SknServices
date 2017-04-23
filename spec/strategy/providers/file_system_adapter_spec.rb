@@ -75,7 +75,7 @@ RSpec.describe Providers::FileSystemAdapter, 'Content Adapter for File Systems' 
 
     it "#create_new_content_entry_path returns true on success. " do
       expect( @service.adapter_for_content_profile_entry(cpe).create_new_content_entry_path() ).to be false
-      expect( @service.adapter_for_content_profile_entry(SknUtils::ResultBean.new(cpe)).create_new_content_entry_path(cpe, {noop: true}) ).to be true
+      expect( @service.adapter_for_content_profile_entry(SknUtils::NestedResult.new(cpe)).create_new_content_entry_path(cpe, {noop: true}) ).to be true
     end
 
   end

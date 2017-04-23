@@ -37,7 +37,7 @@ RSpec.describe AccessService, "Service routines of AccessProfile and AccessProfi
   context "Services methods delivery as designed." do
 
     scenario "#get_user_form_options returns array of options with descriptions. " do
-      expect( service.get_user_form_options ).to be_a SknUtils::PageControls
+      expect( service.get_user_form_options ).to be_a SknUtils::NestedResult
       expect( service.get_user_form_options.groups.first.last['data-description'.to_sym] ).to be_a String
     end
     scenario "#group_select_options returns array of options with descriptions. " do
@@ -50,7 +50,7 @@ RSpec.describe AccessService, "Service routines of AccessProfile and AccessProfi
     end
     scenario "#get_user_form_options() returns a PageControls object with two methods containing array of arrays." do
       result = service.get_user_form_options()
-      expect(result).to be_a(SknUtils::PageControls)
+      expect(result).to be_a(SknUtils::NestedResult)
       expect(result.to_hash().keys.size).to be > 1
     end
 

@@ -43,8 +43,8 @@ module Secure
       )
       unless self.name.eql?('SessionsController') or self.name.eql?('ActionView::TestCase::TestController')
         Rails.logger.debug("Secure::ControllerAccessControl Activated!")
-        send( :before_action, :login_required)
         send( :before_action, :establish_domain_services)
+        send( :before_action, :login_required)
         send( :after_action,  :manage_domain_services)
         send( :rescue_from,   ActionController::UnknownFormat, {with: :raise_not_found})
         send( :protect_from_forgery )
@@ -55,6 +55,9 @@ module Secure
     # New Services extension
     def service_factory
       @service_factory ||= ::ServiceFactory.new({factory: self})
+      @service_factory_methods ||= @service_factory.public_methods
+      yield @service_factory if block_given?
+      @service_factory
     end
 
     def login_required
@@ -215,16 +218,12 @@ module Secure
 
     # Easier to code than delegation, or forwarder
     def method_missing(method, *args, &block)
-      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: ##{method}")
-      if @service_factory
-        if @service_factory.respond_to?(method)
-          block_given? ? @service_factory.send(method, *args, block) :
-              (args.size == 0 ?  @service_factory.send(method) : @service_factory.send(method, *args))
-        else
-          super(method, *args, &block)
-        end
+      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method.inspect}")
+      if @service_factory_methods.try(:include?, method)
+        block_given? ? @service_factory.send(method, *args, block) :
+            (args.size == 0 ?  @service_factory.send(method) : @service_factory.send(method, *args))
       else
-        super(method, *args, &block)
+        super
       end
     end
 

@@ -36,11 +36,11 @@ describe PasswordResetsController, " Reset User Password Process" do
 
       # mock out the controller.password_service.reset_password(params)
       # - have it return the @page_controls object
-      allow(controller.service_factory.access_service).to receive(:reset_password) {SknUtils::ResultBean.new(good)}
+      allow(controller.service_factory.access_service).to receive(:reset_password) {SknUtils::NestedResult.new(good)}
 
       put :update, params: {id: user.id, user: {password: "somevalue", password_confirmation: "somevalue"}}
       expect(response).to be_redirect
-      expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
+      expect(assigns(:page_controls)).to be_a(SknUtils::NestedResult)
       expect(response).to redirect_to signin_path
     end
 
@@ -55,12 +55,12 @@ describe PasswordResetsController, " Reset User Password Process" do
       user.valid?
       # mock out the controller.password_service.reset_password(params)
       # - have it return the @page_controls object
-      allow(controller.service_factory.access_service).to receive(:reset_password) {SknUtils::ResultBean.new(bad)}
+      allow(controller.service_factory.access_service).to receive(:reset_password) {SknUtils::NestedResult.new(bad)}
 
       put :update, params: {id: user.id, user: {password: "somevalue", password_confirmation: "value"}}
       expect(assigns(:user)).to be_a(User)
       expect(response).to be_success
-      expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
+      expect(assigns(:page_controls)).to be_a(SknUtils::NestedResult)
       expect(response).to render_template :edit
     end
   end
@@ -74,11 +74,11 @@ describe PasswordResetsController, " Reset User Password Process" do
       }
       # mock out the controller.password_service.reset_requested()
       # - have it return the @page_controls object
-      allow(controller.service_factory.access_service).to receive(:reset_requested) {SknUtils::ResultBean.new(good)}
+      allow(controller.service_factory.access_service).to receive(:reset_requested) {SknUtils::NestedResult.new(good)}
 
       post :create, params: {user: {username: "some-ignored-value"}}
       expect(response).to be_redirect
-      expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
+      expect(assigns(:page_controls)).to be_a(SknUtils::NestedResult)
       expect(response).to redirect_to home_pages_path
     end
 
@@ -90,11 +90,11 @@ describe PasswordResetsController, " Reset User Password Process" do
       }
       # mock out the controller.password_service.reset_requested()
       # - have it return the @page_controls object
-      allow(controller.service_factory.access_service).to receive(:reset_requested) {SknUtils::ResultBean.new(bad)}
+      allow(controller.service_factory.access_service).to receive(:reset_requested) {SknUtils::NestedResult.new(bad)}
 
       post :create, params: {user: {username: "some-ignored-value"}}
       expect(response).to be_redirect
-      expect(assigns(:page_controls)).to be_a(SknUtils::ResultBean)
+      expect(assigns(:page_controls)).to be_a(SknUtils::NestedResult)
       expect(response).to redirect_to home_pages_path
     end
   end
