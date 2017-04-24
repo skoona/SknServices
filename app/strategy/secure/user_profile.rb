@@ -1,8 +1,12 @@
 ##
-# lib/Secure/user_content_profile.rb
+# app/strategy/Secure/user_content_profile.rb
 #
-# Will Contain the users content profile
-#
+# Represents the User object to the application
+# TODO:
+# - Currently require a User.class object as input
+# - Will be refactored to require a short hash of :id, :roles, and :names -> user hash bundle
+#   with current User.class becoming the UserAuthenticationProxy.class
+#   responsible for authenticating user login params and returning the user hash bundle
 #
 module Secure
   class UserProfile
@@ -31,6 +35,7 @@ module Secure
         instance_variable_set(k, nil)
         instance_variable_set(k, user.send(k.to_s[1..-1].to_sym) )
       end
+
       @user_options ||= []
       setup_combined_user_roles()
     end
@@ -157,7 +162,7 @@ module Secure
         block_given? ? proxy_u.send(method, *args, block) :
             (args.size == 0 ?  proxy_u.send(method) : proxy_u.send(method, *args))
       else
-        super(method, *args, &block)
+        super
       end
     end
 

@@ -33,7 +33,6 @@ module Secure
       send( :helper_method, [ :accessed_page_name,
                               :accessed_page,
                               :page_action_paths,
-                              :service_factory,
                               :current_user_has_access?,
                               :current_user_has_read?,
                               :current_user_has_create?,
@@ -43,8 +42,7 @@ module Secure
       )
       unless self.name.eql?('SessionsController') or self.name.eql?('ActionView::TestCase::TestController')
         Rails.logger.debug("Secure::ControllerAccessControl Activated!")
-        send( :before_action, :establish_domain_services)
-        send( :before_action, :login_required)
+        send( :before_action, :establish_domain_services, :login_required)
         send( :after_action,  :manage_domain_services)
         send( :rescue_from,   ActionController::UnknownFormat, {with: :raise_not_found})
         send( :protect_from_forgery )
