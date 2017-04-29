@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.0'
+gem 'rails', '5.0.1'
 gem 'config'
 gem 'logging'
 gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
@@ -22,7 +22,7 @@ gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'font-awesome-sass'
 
 gem 'jbuilder'
-gem 'simple_form'
+gem 'simple_form', '~> 3.0'
 gem 'skn_utils', "~> 3.0"
 gem 'bcrypt'
 gem 'gravatar_image_tag'
