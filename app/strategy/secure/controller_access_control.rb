@@ -53,7 +53,6 @@ module Secure
     # New Services extension
     def service_factory
       @service_factory ||= ::ServiceFactory.new({factory: self})
-      @service_factory_methods ||= @service_factory.public_methods
       yield @service_factory if block_given?
       @service_factory
     end
@@ -217,7 +216,7 @@ module Secure
     # Easier to code than delegation, or forwarder
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method.inspect}")
-      if @service_factory_methods.try(:include?, method)
+      if @service_factory.public_methods.try(:include?, method)
         block_given? ? @service_factory.send(method, *args, block) :
             (args.size == 0 ?  @service_factory.send(method) : @service_factory.send(method, *args))
       else
