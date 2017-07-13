@@ -14,7 +14,7 @@
 <% if authenticated? && current_user.is_admin? %>
     <fieldset>
     <legend>Access Details</legend>
-      <%= f.input :user_options, collection:  Settings.security.user_options, checked: @user.user_options, as: :check_boxes, include_blank: false, label: "Security Options" %>
+      <%= f.input :user_options, collection:  SknSettings.security.user_options, checked: @user.user_options, as: :check_boxes, include_blank: false, label: "Security Options" %>
       <%= f.input :assigned_groups, collection: @page_controls.groups.map(&:first), checked: @user.assigned_groups, as: :check_boxes, include_blank: false, label: "Groups" %>
       <%= f.input :assigned_roles, collection: @page_controls.roles.map(&:first), checked: @user.assigned_roles, as: :check_boxes, include_blank: false, label: "Roles" %>
       <%= f.input :active, inline_label: "Active", label: "Account status" %>

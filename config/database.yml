@@ -14,9 +14,9 @@ defaults: &defaults
   adapter: postgresql
   encoding: unicode
   pool: 10
-  username: <%= Settings.PostgreSQL.username %>
-  password: <%= Settings.PostgreSQL.password %>
-  host: <%= Settings.PostgreSQL.host %>
+  username: <%= SknSettings.PostgreSQL.username %>
+  password: <%= SknSettings.PostgreSQL.password %>
+  host: <%= SknSettings.PostgreSQL.host %>
 
 development:
   database: SknServices_development

@@ -1,3 +1,5 @@
+require 'bundler/setup'
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 if $LOADED_FEATURES.grep(/spec\/rails_helper\.rb/).any?
   begin
@@ -18,8 +20,11 @@ if $LOADED_FEATURES.grep(/spec\/rails_helper\.rb/).any?
 end
 
 ENV['RAILS_ENV'] = 'test'
+
 require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
+
+# require 'deep_merge/rails_compat'
 
 require 'rspec/rails'
 require 'spec_helper'

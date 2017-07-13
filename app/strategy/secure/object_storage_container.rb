@@ -27,7 +27,7 @@ module Secure
       SecureRandom.hex(16)    # returns a 32 char string
     end
     def get_new_secure_digest(token)
-      BCrypt::Password.create(token, cost: (BCrypt::Engine::MIN_COST + Settings.security.extra_digest_strength)) # Good and Strong
+      BCrypt::Password.create(token, cost: (BCrypt::Engine::MIN_COST + SknSettings.security.extra_digest_strength)) # Good and Strong
     end
 
     def remove_from_store(key, context=CDEFAULT)

@@ -216,7 +216,7 @@ Warden::Manager.on_request do |proxy|
   uri = (full_path.present? and full_path.starts_with?('/')) ? full_path[1..-1] : full_path
 
   bypass_flag = ("/").eql?(full_path) ||
-      Settings.security.public_pages.map {|p| p.eql?(full_path) }.any? ||
+      SknSettings.security.public_pages.map {|p| p.eql?(full_path) }.any? ||
       Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
       Secure::AccessRegistry.security_check?(uri)            #  'signin'
 

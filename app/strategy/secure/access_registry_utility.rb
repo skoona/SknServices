@@ -59,7 +59,7 @@
 
 module Secure
   class AccessRegistryUtility
-    @@ar_options_keyword = Settings.access_profile.options_keyword
+    @@ar_options_keyword = SknSettings.access_profile.options_keyword
 
     # Initialize object and load the xmlFile
     def initialize (xml_filename, rootPath='accessRegistry')

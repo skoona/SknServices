@@ -98,10 +98,10 @@ module Secure
 
     CRUD_MODES = ["CREATE","READ","UPDATE","DELETE"].freeze
     @@ar_permissions = (
-        Secure::AccessRegistryUtility.new(Settings.access_profile.access_registry_filename.basename).from_xml().merge(
-          Secure::AccessRegistryUtility.new(Settings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml())
+        Secure::AccessRegistryUtility.new(SknSettings.access_profile.access_registry_filename.basename).from_xml().merge(
+          Secure::AccessRegistryUtility.new(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml())
     )
-    @@ar_strict_mode = Settings.access_profile.default_unknown_to_unsecure
+    @@ar_strict_mode = SknSettings.access_profile.default_unknown_to_unsecure
 
     def initialize
       # not needed as this is a static class
@@ -229,8 +229,8 @@ module Secure
     end
 
     def self.ar_reload_configuration_file
-      access_registry = Secure::AccessRegistryUtility.new(Settings.access_profile.access_registry_filename.basename).from_xml()
-      content_registry = Secure::AccessRegistryUtility.new(Settings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml()
+      access_registry = Secure::AccessRegistryUtility.new(SknSettings.access_profile.access_registry_filename.basename).from_xml()
+      content_registry = Secure::AccessRegistryUtility.new(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml()
       @@ar_permissions = access_registry.merge(content_registry)
       Rails.logger.info("#{self.name}.#{__method__}() Configuration file reloaded!") if Rails.logger.present?
       true

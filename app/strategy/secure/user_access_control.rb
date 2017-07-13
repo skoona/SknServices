@@ -5,7 +5,7 @@ module Secure
   module UserAccessControl
     extend ActiveSupport::Concern
 
-    ADMIN_ROLE = Settings.security.admin_role
+    ADMIN_ROLE = SknSettings.security.admin_role
 
     included do |klass|
       Rails.logger.debug("Secure::UserAccessControl included By #{klass.name}")
@@ -13,10 +13,10 @@ module Secure
 
     module ClassMethods   # mostly called by Warden
       def security_session_time
-        minutes_from_now(Settings.security.session_expires.to_i)
+        minutes_from_now(SknSettings.security.session_expires.to_i)
       end
       def security_remember_time
-        minutes_from_now(Settings.security.remembered_for.to_i)
+        minutes_from_now(SknSettings.security.remembered_for.to_i)
       end
       def minutes_from_now(val=20)
         Time.zone.now.advance(:minutes => val) # val.minutes.from_now
@@ -100,7 +100,7 @@ module Secure
       def last_login_time_expired?(person)
         return false unless person.present?
         a = (Time.zone.now.to_i - person.last_access.to_i)
-        b = (@login_after_seconds ||= Settings.security.verify_login_after_seconds.to_i)
+        b = (@login_after_seconds ||= SknSettings.security.verify_login_after_seconds.to_i)
         rc = (a > b )
         Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{person.username}) (A[#{a}] > B[#{b}]) = C[#{rc}]")
         rc

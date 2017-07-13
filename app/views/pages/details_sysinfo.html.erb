@@ -44,10 +44,10 @@
                     <p>ActiveRecord Database => <%= Rails.configuration.database_configuration[Rails.env]["database"] || 'unknown' %></p>
                     <p>ActiveRecord  Adapter => <%= Rails.configuration.database_configuration[Rails.env]["adapter"] || 'unknown' %></p>
                     <p>ActiveRecord PoolSize => <%= Rails.configuration.database_configuration[Rails.env]["pool"] || 'unknown' %></p>
-                    <p>isDeveloper => <%= Settings.Packaging.isDeveloper.to_s %></p>
-                    <p>isDevelopment => <%= Settings.Packaging.isDevelopment.to_s %></p>
-                    <p>isProduction => <%= Settings.Packaging.isProduction.to_s %></p>
-                    <p>Development Version <%= Settings.Packaging.pomVersion.to_s %></p>
+                    <p>isDeveloper => <%= SknSettings.Packaging.isDeveloper.to_s %></p>
+                    <p>isDevelopment => <%= SknSettings.Packaging.isDevelopment.to_s %></p>
+                    <p>isProduction => <%= SknSettings.Packaging.isProduction.to_s %></p>
+                    <p>Development Version <%= SknSettings.Packaging.pomVersion.to_s %></p>
                 </div>
             </div>
         </div>

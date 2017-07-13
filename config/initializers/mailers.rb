@@ -20,6 +20,6 @@ ActionMailer::Base.register_interceptor(Utility::DevelopmentMailInterceptor) unl
 # }
 #
 
-# ActionMailer::Base.register_interceptor(TestEmailInterceptor) unless Settings.Packaging.isProduction
+# ActionMailer::Base.register_interceptor(TestEmailInterceptor) unless SknSettings.Packaging.isProduction
 # ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) if Rails.env.test?
 # Mail.register_interceptor(DevelopmentMailInterceptor) if Rails.env.test?

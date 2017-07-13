@@ -20,11 +20,11 @@ module Providers
 
     def initialize(params={})
       super(params)
-      cpbf = Settings.access_profile.content_registry_filename.basename
-      cpbx = Settings.access_profile.content_registry_filename.extension
+      cpbf = SknSettings.access_profile.content_registry_filename.basename
+      cpbx = SknSettings.access_profile.content_registry_filename.extension
       @content_registry_filename = Pathname.new("#{Rails.root}/config/#{cpbf}.#{cpbx}")
       @rootPath = 'contentRegistry'
-      @optionsKeyword = Settings.access_profile.options_keyword
+      @optionsKeyword = SknSettings.access_profile.options_keyword
     end
 
     def self.provider_type

@@ -14,11 +14,9 @@ end
 module SknService
   class Application < Rails::Application
 
-    # config.autoload_paths += Dir["#{Rails.root}/lib/**/"]
+    SknSettings.load_config_basename!(Rails.env.to_s)
 
-    # config.eager_load_paths << Rails.root.join('lib')
-
-    config.time_zone = Settings.Packaging.time_zone
+    config.time_zone = SknSettings.Packaging.time_zone
 
     config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en

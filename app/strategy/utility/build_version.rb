@@ -9,7 +9,7 @@
 module Utility
   class BuildVersion
 
-    @@pom_version = Settings.Packaging.pomVersion.to_s
+    @@pom_version = SknSettings.Packaging.pomVersion.to_s
 
     # 2.2.x or 2.2.d.d
     def self.build_version(prod_flag=false)
