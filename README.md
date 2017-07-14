@@ -13,7 +13,7 @@ Of the two implementation strategies the database model is my preference, as it 
 of the final algorithmic result, is the 'ContentProfile Demo' page.  It lists all the systems users, and when one is selected it displays
 both the XML AccessProfile, and the matching DB ContentProfile.
 
-The algorithm and point being made was: Create a two-factor authorization per user, that precisely identifies the business entities a user is assigned to, and precisely identifies the
+The algorithm and point being made was: Create a multi-factor authorization/permission record that precisely identifies the business entities a user is assigned to, and precisely identifies the
 types of content that user is authorized to interact with on behalf of an assigned business entity. I.e For Account number 1104, user UUID can view Commission Document types:96033
 
 After having proven my point, I've decided to share the body of this work and complete it by implementing a Corporate and Branch Office domain model.  The initial context of the application
@@ -23,49 +23,6 @@ Advanced security and authorization features are fully implemented and I think q
   
 
 James,
-
-
-## Installation
-Application UserIDs are in the db/seed.rb file.  Developer credentials are: username: developer, passwd: developer99
-
-You will need to install PostGreSQL, and add/edit PostgreSQL credentials an the Application-Context Configuration YAML files:
- 
-    config/settings.yml, 
-    config/settings/development.yml or create and edit config/settings/development.local.yml
-    config/settings/test.yml or create and edit config/settings/test.local.yml
- 
-It might be helpful to set these environment params too:
-    
-    export COVERAGE=true
-    export BUNDLE_PATH='vendor/bundle'     Note: use of rvm wipes out all these values, you may need to reset them
-    
-	note: demo userids are documented in the seeds.rb file.
-	
-    
-The default Ruby for this package is 2.4.0  If you want to use a different version of ruby; Edit
-
-```Bash
-
-$ vim .ruby-version             # change 'ruby-2.3.1'
-
-```
-
-
-Then execute;
- 
-```Bash
-
-$ mkdir tmp
-$ bin/setup
-$ rspec
-
-$ bundle exec rails server Puma -b 0.0.0.0
-
-```
-
- 
-    Also: db/seeds.rb contains test user credentials
-          lib/tasks/profile_tools_task.rake creates the initial database version of the content profile, during 'bin/setup'
 
 
 ![App Data Model](app/assets/images/SknService-Warden.jpg "Application Data Model")
@@ -90,6 +47,7 @@ engineering challenge when it comes to handling the dynamics of Electronic Deliv
 #### ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.
 For content authorization there is an assumption that protected resources are classified and stored in some type of storage container system(SCS). An SCS might actually be a simple FileSystem or
 a enterprise class document management systems.  In any event, retrieving items would require we specify some meta-data to retrieve a single document/item and different meta-data to retrieve a collection of typed documents.
+
 I chose a FileSystem as the SCS for this demo application, so filename implies a specific instance of a thing, and filename with wildcards implies a collection of things, and the file path is identity meta-data.
 
 Filepaths are a part of the TOPIC structure, filenames are a part of the CONTENT structure. A ContentProfile entry will have both structures present.
@@ -115,6 +73,40 @@ ContentProfiles are the anchor back to the UserProfile, via the :person_authenti
 
 The ContentProfile collection of classes represent the database implementation of this Content Profile strategy.
 The AccessProfile collection of classes represent the XML-File implementation of this Content Profile strategy as an extension to it's original role as access authorization for page views, clickables, and process access permissions.
+
+
+## Installation
+Application UserIDs are in the db/seed.rb file.  Developer credentials are: username: developer, passwd: developer99
+
+You will need to install PostGreSQL, and add/edit PostgreSQL credentials an the Application-Context Configuration YAML files:
+
+    config/settings.yml,
+    config/settings/development.yml or create and edit config/settings/development.local.yml
+    config/settings/test.yml or create and edit config/settings/test.local.yml
+
+It might be helpful to set these environment params too:
+
+    export COVERAGE=true
+    export BUNDLE_PATH='vendor/bundle'     Note: use of rvm wipes out all these values, you may need to reset them
+
+	note: demo userids are documented in the seeds.rb file.
+
+
+Then execute;
+
+```Bash
+
+$ mkdir tmp
+$ bin/setup
+$ rspec
+
+$ bundle exec rails server Puma -b 0.0.0.0
+
+```
+
+
+    Also: db/seeds.rb contains test user credentials
+          lib/tasks/profile_tools_task.rake creates the initial database version of the content profile, during 'bin/setup'
 
 
 ## Contributing
