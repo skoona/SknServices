@@ -4,8 +4,8 @@ Rails Authorization and Authentication implementation using a non-MVC strategy.
 # Introduction
 This is a Rails 5, Ruby 2.3 (JRuby capable), PostgreSQL Application which demonstrates Authentication and Authorization strategies.
 
-My original need was to demonstrate a content authorization methodology, rather than to continue open-ended theoretical discussions.  To end the conversations I needed
-to create two model implementations, one based on an existing XML file; modeled after Java's Security Manager and permission.  The other implementation would
+My original need was to demonstrate a content authorization methodology, rather than to continue open-ended theoretical discussions.  Two
+implementaitons would be needed, one based on an existing XML file; modeled after Java's Security Manager and permission.  The other implementation would
 be a Database driven model that represented the same goal.  It is my observation that they both meet my objective, and could both
 be used successfully in any application base.  
 
@@ -13,7 +13,7 @@ Of the two implementation strategies the database model is my preference, as it 
 of the final algorithmic result, is the 'ContentProfile Demo' page.  It lists all the systems users, and when one is selected it displays
 both the XML AccessProfile, and the matching DB ContentProfile.
 
-The algorithm and point being made was: Create a multi-factor authorization/permission record that precisely identifies the business entities a user is assigned to, and precisely identifies the
+The algorithm and point being made was: Create a multi-factor authorization/permission record that precisely identifies the business entities a user is assigned to, then precisely identify the
 types of content that user is authorized to interact with on behalf of an assigned business entity. I.e For Account number 1104, user UUID can view Commission Document types:96033
 
 After having proven my point, I've decided to share the body of this work and complete it by implementing a Corporate and Branch Office domain model.  The initial context of the application
