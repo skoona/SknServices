@@ -1,15 +1,8 @@
-#SknService
----
+# SknService
+Rails Authorization and Authentication implementation using a non-MVC strategy.
 
-Author: James Scott
-Date: Aug 19, 2016
-Upgrade to Rails 5.0.0.1
-Brandh: upgrade5
-
-#Introduction
----
-
-This is a Rails 5, Ruby 2.3 (JRuby capable), PostgreSQL Application, which demonstrates Authentication and Authorization strategies.  
+# Introduction
+This is a Rails 5, Ruby 2.3 (JRuby capable), PostgreSQL Application which demonstrates Authentication and Authorization strategies.
 
 My original need was to demonstrate this methodology, rather than to continue open-ended theoretical discussions.  To end the conversations I needed
 to create two model implementations, one based on an existing XML file; modeled after Java's Security Manager and permission.  The other implementation would
@@ -32,9 +25,7 @@ The basic security and authorization features are fully implemented and I think 
 James,
 
 
-##Installation
----
-
+## Installation
 Application UserIDs are in the db/seed.rb file.  Developer credentials are: username: developer, passwd: developer99
 
 You will need to install PostGreSQL, and add/edit PostgreSQL credentials:
@@ -80,9 +71,7 @@ $ bin/rails server Puma -b 0.0.0.0
 
 ![App Data Model](app/assets/images/SknService-Warden.jpg "Application Data Model")
 
-##Overview
----
-
+## Overview
 This application demonstrates and explores methods for Authentication, Access Authorizations,
 and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
 this application.
@@ -97,11 +86,9 @@ ContentProfiles are the main focus of exploration in this app, which has proven 
 engineering challenge when it comes to handling the dynamics of Electronic Delivery.  
 
 
-###Core Idea
----
+### Core Idea
 
-####ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.
-
+#### ContentProfile and AccessProfile are implementations of the same core idea, with side benefits.  For lack of a better term: ContentProfile is the label adopted to represent that core idea.
 In general anything that can be accessed is considered a CONTENT TYPE.  The specific entity that content is related to is considered a
 TOPIC TYPE.  Both types must be fully qualified with their respective Identifiers. Once qualified the two are combined into a holding object 
 called a Content Profile Entry, and given a descriptive title.
@@ -114,7 +101,6 @@ Content Profiles are the anchor back to the User Profile, via the person authent
 
 
 ## Contributing
-
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
@@ -122,9 +108,7 @@ Content Profiles are the anchor back to the User Profile, via the person authent
 5. Create new Pull Request
 
         
-##License
----
-
+## License
 ![The MIT License (MIT)](http://opensource.org/licenses/MIT)
 
 Copyright (c) 2015-2016 James Scott, Jr.
