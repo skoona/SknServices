@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '5.0.1'
 gem 'logging'
-gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
+# gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
 gem 'pg', platform: :ruby
 
 gem "rails_warden"
@@ -22,7 +22,6 @@ gem 'font-awesome-sass'
 
 gem 'jbuilder'
 gem 'simple_form', '~> 3.0'
-gem 'deep_merge', '~> 1.1', :require => 'deep_merge/rails_compat'
 gem 'skn_utils', "~> 3"
 gem 'bcrypt'
 gem 'gravatar_image_tag'
