@@ -4,7 +4,7 @@ Rails Authorization and Authentication implementation using a non-MVC strategy.
 # Introduction
 This is a Rails 5, Ruby 2.3 (JRuby capable), PostgreSQL Application which demonstrates Authentication and Authorization strategies.
 
-My original need was to demonstrate an content authorization methodology, rather than to continue open-ended theoretical discussions.  To end the conversations I needed
+My original need was to demonstrate a content authorization methodology, rather than to continue open-ended theoretical discussions.  To end the conversations I needed
 to create two model implementations, one based on an existing XML file; modeled after Java's Security Manager and permission.  The other implementation would
 be a Database driven model that represented the same goal.  It is my observation that they both meet my objective, and could both
 be used successfully in any application base.  
