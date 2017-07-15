@@ -1,7 +1,7 @@
-# spec/services/access_services_spec.rb
+# spec/strategy.services/access_services_spec.rb
 #
 
-RSpec.describe AccessService, "Service routines of AccessProfile and AccessProfileDomain."  do
+RSpec.describe Services::AccessService, "Service routines of AccessProfile and AccessProfileDomain."  do
   let!(:user) {user_bstester}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
@@ -12,16 +12,16 @@ RSpec.describe AccessService, "Service routines of AccessProfile and AccessProfi
   context "Initialization "  do
 
     scenario "#new throws an Exception without params." do
-      expect{ AccessService.new }.to raise_error(ArgumentError)
+      expect{ Services::AccessService.new }.to raise_error(ArgumentError)
     end
     scenario "#new succeeds with only :factory as init param." do
-      expect(AccessService.new({factory: service_factory})).to be_a(AccessService)
+      expect(Services::AccessService.new({factory: service_factory})).to be_a(Services::AccessService)
     end
     scenario "#new fails when :factory is invalid." do
-      expect{ AccessService.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Services::AccessService.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     scenario "#factory.profile_data_services returns a proper service object." do
-      expect( service ).to be_a AccessService
+      expect( service ).to be_a Services::AccessService
     end
     scenario "#service #factory and #controller objects to be different." do
       expect( service.factory ).to be_a ServiceFactory

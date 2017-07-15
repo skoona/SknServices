@@ -49,12 +49,13 @@ group :test do
   gem 'rails-controller-testing'
   gem 'launchy'
   gem 'rack_session_access'
+  gem 'rspec-rails'
 end
 group :development, :test do
   gem 'simplecov'
   gem 'capybara'
   gem 'capybara-screenshot'
-  gem 'rspec-rails'
+
   gem 'factory_girl_rails'
   gem 'faker'
   gem 'database_cleaner'

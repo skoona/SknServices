@@ -1,4 +1,4 @@
-# spec/services/profile_builder_spec.rb
+# spec/strategy.services/profile_builder_spec.rb
 #
 
 describe Providers::XMLProfileProvider, "Service routines of Providers::XMLProfileProvider."  do

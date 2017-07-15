@@ -14,7 +14,7 @@
 
 
 module Providers
-  class XMLProfileProvider < ::Factory::ProvidersBase
+  class XMLProfileProvider < ProvidersBase
 
     PROVIDER_PREFIX = self.name
 

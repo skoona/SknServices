@@ -1,4 +1,4 @@
-# spec/services/access_registry_spec.rb
+# spec/strategy.services/access_registry_spec.rb
 #
 
 ## Access Registry Model for Testing

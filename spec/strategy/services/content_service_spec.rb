@@ -1,7 +1,7 @@
-# spec/services/content_service_spec.rb
+# spec/strategy.services/content_service_spec.rb
 #
 
-RSpec.describe ContentService, "Service routines of ContentService." do
+RSpec.describe Services::ContentService, "Service routines of Services::ContentService." do
   let!(:user) {user_bstester}
   let!(:userp) {page_user_bnptester}
 
@@ -14,19 +14,19 @@ RSpec.describe ContentService, "Service routines of ContentService." do
   context "Initialization "  do
 
     scenario "#new throws an Exception without params." do
-      expect{ ContentService.new }.to raise_error(ArgumentError)
+      expect{ Services::ContentService.new }.to raise_error(ArgumentError)
     end
 
     scenario "#new succeeds when :factory is valid value." do
-      expect(ContentService.new({factory: service_factory})).to be_a(ContentService)
+      expect(Services::ContentService.new({factory: service_factory})).to be_a(Services::ContentService)
     end
 
     scenario "#new fails when :factory is invalid value." do
-      expect{ ContentService.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Services::ContentService.new({factory: nil}) }.to raise_error(ArgumentError)
     end
 
     scenario "#factory.content_service returns a proper service object." do
-      expect( service ).to be_a ContentService
+      expect( service ).to be_a Services::ContentService
     end
 
     scenario "#service #factory objects to be different." do

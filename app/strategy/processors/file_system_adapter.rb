@@ -18,8 +18,8 @@
 #             type: "application/pdf")
 # end
 
-module Providers
-  class FileSystemAdapter < ::Factory::TaskAdaptersBase
+module Processors
+  class FileSystemAdapter < ProcessorBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS  = 'access'

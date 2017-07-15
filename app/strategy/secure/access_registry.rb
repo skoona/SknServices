@@ -1,5 +1,5 @@
 ##
-# app/services/access_registry.rb
+# app/strategy.services/access_registry.rb
 #
 # Reads a control file from <rails_root>/config/access_registry.xml into a control hash
 # offers static routines to callers which validate access to controlled resources

@@ -7,12 +7,12 @@
 # <Name>Domain object are the container and mainline for a business process.  They may
 # have many task oriented objects which they invoke to handle aspects of a process request.  Domain
 # Classes should limit their use of methods outside the scope of their private collection of objects,
-# and that of other service/domains.  We are trying to remove all Rails or Framework dependencies from
+# and that of other service/strategy.domains.  We are trying to remove all Rails or Framework dependencies from
 # this business logic layer.  One hope is we can test without loading Rails, or the Web Framework!
 #
 # Domain Driven Design is the influence for this overall model.  To that end, you should:
 #  - Structure ALL method names, and related task objects, to follow label names of the steps or actions from the business process your modeling.
-#  - Restrict accessing Framework services, mandate your DomainService object to enrich you input params package instead.
+#  - Restrict accessing Framework strategy.services, mandate your DomainService object to enrich you input params package instead.
 #  - Wrap all physical data IO and WebService/RestFul data IO in Task Specific Class which you instantiate to acquire the data.  Make them easily mockable!
 #  - Consider enhancing the DomainService class or creating a TaskClass to handle single responsibility task, rather than fat methods.
 #  - TaskClasses should return 'self' on every method call; using a established callback_method protocol on your domain class.
@@ -21,7 +21,7 @@
 # They are normally directly inherited by <Name>Service, which are responsible
 # for wrapping the request/response to an external Framework, typically Rails/Controller/View
 #
-# Instantiated By: ServiceFactory, from <root>/app/domains/service_factory.rb
+# Instantiated By: ServiceFactory, from <root>/app/strategy.domains/service_factory.rb
 #
 # Description:
 # This module contains the #initialize method for all inherited Classes.  It provides a common
@@ -41,9 +41,9 @@
 #
 # #current_user
 # - Provides local access to the user object for this request cycle.  You could alternately ask the controller for this same
-#   value, but that is discouraged at the domain level (thats what services do!)
+#   value, but that is discouraged at the domain level (thats what strategy.services do!)
 #
-module Factory
+module Domains
   class DomainsBase
 
     attr_accessor :user, :factory
@@ -92,7 +92,7 @@ module Factory
     end
 
     # Easier to code than delegation, or forwarder
-    # Allows domains, service, to access objects in service_factory and/or controller by name only
+    # Allows strategy.domains, service, to access objects in service_factory and/or controller by name only
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
       if @factory.respond_to?(method)

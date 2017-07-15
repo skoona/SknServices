@@ -3,7 +3,7 @@
 # Common Base for all Services oriented Classes, without Domains
 #
 
-module Factory
+module Providers
   class ProvidersBase
     include Factory::ObjectStorageService
 
@@ -11,7 +11,7 @@ module Factory
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Factory::ProvidersBase inherited By #{klass.name}")
+      Rails.logger.debug("Providers::ProvidersBase inherited By #{klass.name}")
     end
 
     def initialize(params={})

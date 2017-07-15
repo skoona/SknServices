@@ -1,11 +1,11 @@
-# spec/domains/content_profile_domain_spec.rb
+# spec/strategy.domains/content_profile_domain_spec.rb
 #
-# By replacing ApplicationController and type: :controller, with ContentProfileDomain
+# By replacing ApplicationController and type: :controller, with Domains::ContentProfileDomain
 # we are able to run test faster and without overhead of a test contoller.
 # this will work for Domain(s) that don't require a full controller
 #
 
-RSpec.describe ContentProfileDomain, "Service routines of ContentProfileDomain." do
+RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::ContentProfileDomain." do
 
   let!(:user) { page_user_eptester }
   let!(:userp) { page_user_bnptester }
@@ -18,19 +18,19 @@ RSpec.describe ContentProfileDomain, "Service routines of ContentProfileDomain."
 
   context "Initialization "  do
     scenario "#new throws an Exception without params." do
-      expect{ ContentProfileDomain.new }.to raise_error(ArgumentError)
+      expect{ Domains::ContentProfileDomain.new }.to raise_error(ArgumentError)
     end
     scenario "#new succeeds when :factory is valid value." do
-      expect(ContentProfileDomain.new({factory: service_factory})).to be_a(ContentProfileDomain)
+      expect(Domains::ContentProfileDomain.new({factory: service_factory})).to be_a(Domains::ContentProfileDomain)
     end
     scenario "#new fails when :factory is invalid value." do
-      expect{ ContentProfileDomain.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Domains::ContentProfileDomain.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     scenario "#new succeeds when initialized via #service_factory and a #domain_service." do
-      expect(service_factory.content_service).to be_kind_of ContentProfileDomain
+      expect(service_factory.content_service).to be_kind_of Domains::ContentProfileDomain
     end
-    scenario "#service returns an #is_a ContentProfileDomain object." do
-      expect( @service ).to be_kind_of ContentProfileDomain
+    scenario "#service returns an #is_a Domains::ContentProfileDomain object." do
+      expect( @service ).to be_kind_of Domains::ContentProfileDomain
     end
     scenario "#current_user returns a UserProfile object." do
       expect( @service.current_user ).to be_a Secure::UserProfile

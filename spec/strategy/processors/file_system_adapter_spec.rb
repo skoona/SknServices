@@ -1,6 +1,6 @@
 
 
-RSpec.describe Providers::InlineValuesAdapter, 'Content Adapter for XML Based AccessRegistry' do
+RSpec.describe Processors::FileSystemAdapter, 'Content Adapter for File Systems' do
 
   let(:user) { page_user_developer }
   let(:mc) {ServiceFactoryMockController.new(user: user)}
@@ -8,23 +8,23 @@ RSpec.describe Providers::InlineValuesAdapter, 'Content Adapter for XML Based Ac
 
   before(:each) do
     @factory = service_factory
-    @service = @factory.content_adapter_inline_values
+    @service = @factory.content_adapter_file_system
   end
 
 
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Providers::InlineValuesAdapter.new }.to raise_error(ArgumentError)
+      expect{ Processors::FileSystemAdapter.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :factory as init param." do
-      expect(Providers::InlineValuesAdapter.new({factory: @factory})).to be_a(Providers::InlineValuesAdapter)
+      expect(Processors::FileSystemAdapter.new({factory: @factory})).to be_a(Processors::FileSystemAdapter)
     end
     it "#new fails when :factory is invalid." do
-      expect{ Providers::InlineValuesAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
+      expect{ Processors::FileSystemAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
     end
     it "#factory.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Providers::InlineValuesAdapter
+      expect( @service ).to be_a Processors::FileSystemAdapter
     end
     it "#service #factory and #controller objects to be different." do
       expect( @service.factory ).to be_a ServiceFactory
@@ -45,26 +45,18 @@ RSpec.describe Providers::InlineValuesAdapter, 'Content Adapter for XML Based Ac
 
   context "Core methods delivery as designed." do
     let(:cpe) {
-                { :id=>"access",
-                  :uri=>"LicensedStates/Branch/Operations",
-                  :resource_options=>{
-                      :uri=>"LicensedStates/Branch/Operations",
-                      :role=>"Test.Branch.Operations.LicensedStates.USA",
-                      :role_opts=>["0037"]
-                  },
-                  'content_type' =>"LicensedStates",
-                  :content_value=>["21"],
-                  :topic_type=>"Branch",
-                  :topic_value=>["0037"],
-                  :description=>"Partner Relationship Reports",
-                  :topic_type_description=>"Partner Relationship Reports",
-                  :content_type_description=>"Partner Relationship Reports",
-                  :username=>"vptester",
-                  :user_options=>["VendorPrimary", "0037"]
-                }
+           {"id"=>"content",
+                   "username"=>"bptester",
+                   "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
+                   "content_type"=>"Commission",
+                   "content_value"=>["*.pdf"],
+                   "topic_type"=>"Branch",
+                   "topic_value"=>["0037"],
+                   "description"=>"Determine which branch documents can be seen",
+                   "topic_type_description"=>"Branch Actions for a specific branch",
+                   "content_type_description"=>"Monthly Commission Reports and Files"
+           }
     }
-
-
     it "#ready? Returns True. " do
       expect( @service.ready?).to be true
     end
@@ -72,13 +64,18 @@ RSpec.describe Providers::InlineValuesAdapter, 'Content Adapter for XML Based Ac
     ## Expected Response
     # {:source=>"images", :filename=>"galaxy-man.png", :created=>"2016/02/14", :size=>"3.2 MB"}
     it "#available_content_list returns array of options with descriptions. " do
-      expect(  @factory.adapter_for_content_profile_entry(cpe).available_content_list({}) ).to be_a Array
-      expect(  @factory.adapter_for_content_profile_entry(cpe).available_content_list(cpe).first ).to be_a(Hash)
+      expect( @service.adapter_for_content_profile_entry(cpe).available_content_list({}) ).to be_a Array
+      expect( @service.adapter_for_content_profile_entry(cpe).available_content_list(cpe).first ).to be_a(Hash)
     end
 
     it "#retrieve_content_values returns content_value as is: Array, Hash, or String. " do
-      expect(  @factory.adapter_for_content_profile_entry(cpe).retrieve_content_values({}) ).to be_a Array
-      expect(  @factory.adapter_for_content_profile_entry(cpe).retrieve_content_values(cpe).first.first ).to be_a(String)
+      expect( @service.adapter_for_content_profile_entry(cpe).retrieve_content_values({}) ).to be_a Array
+      expect( @service.adapter_for_content_profile_entry(cpe).retrieve_content_values(cpe).first ).to be_a(String)
+    end
+
+    it "#create_new_content_entry_path returns true on success. " do
+      expect( @service.adapter_for_content_profile_entry(cpe).create_new_content_entry_path() ).to be false
+      expect( @service.adapter_for_content_profile_entry(SknUtils::NestedResult.new(cpe)).create_new_content_entry_path(cpe, {noop: true}) ).to be true
     end
 
   end

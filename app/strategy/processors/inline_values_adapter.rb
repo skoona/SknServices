@@ -5,8 +5,8 @@
 #
 #
 
-module Providers
-  class InlineValuesAdapter < ::Factory::TaskAdaptersBase
+module Processors
+  class InlineValuesAdapter < ProcessorBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS = 'access'
@@ -52,11 +52,11 @@ module Providers
     # Returns and array of {source: "", filename: "", created: "", size: ""}
     def available_content_list(cpe)
       result = []
-      topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
-      content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
-      topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
+      topic_type    = cpe[:topic_type]    || cpe["topic_type"]  # should always be an array
+      content_type  = cpe[:content_type]  || cpe["content_type"]  # should always be an array
+      topic_value   = cpe[:topic_value]   || cpe["topic_value"]  # should always be an array
       content_value = cpe[:content_value] || cpe["content_value"]  # should always be an array
-      user_options = cpe[:user_options] || cpe["user_options"] || [] # many times this value is nil
+      user_options  = cpe[:user_options]  || cpe["user_options"] || [] # many times this value is nil
 
       ##
       # This is another security check to see if user options include these topic ids

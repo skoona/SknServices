@@ -54,27 +54,6 @@
         </div>
 
         <div>
-            <h3>Features</h3>
-
-            <h4>A ContentProfile Implementation offers:</h4>
-            <ol>
-              <li><strong>ContentProfile</strong> is anchored to a specific Authenticated User, by associating and identifying the person using a permanent and persistent identifier from a trusted authentication
-                  source; and manages the collection of <strong>ContentProfileEntries</strong> for that user.</li>
-              <li>A <strong>ContentEntry</strong> ensures both the Topic and the Content are uniquely identified and specific to their respective types.</li>
-              <li>Each <strong>TopicType</strong> identifies one type of business entity class; like an Account, Customer, Order, Product, Branch Office, Partner, etc.  Further, the <strong>TopicTypeValue</strong> contains
-                the ID number/reference for that single entity.  An example being: <em>TopicType:Account, TopicTypeValue:12016</em>.</li>
-              <li>Each <strong>ContentType</strong> identifies one type of business asset related to the current TopicType; like a Commission Statement for an Account, Order History Document for a
-                  Customer, Profitability Report for an Order, etc.  Further, the <strong>ContentTypeValue</strong> contains the ID number/reference, or SearchTerm for that specific type asset (i.e. type, not instance id).  An example being: <em>TopicType:Account,
-                  TopicTypeValue:12016, ContentType:Commission, ContentTypeValue:{docTypeID=486}</em>.</li>
-              <li>Type Values may contain one or more elements as needed to specifically identify their entity; the ContentProfile class only insists on at least one value.  Values may also be simple values and not refer to
-                  external sub-systems.  Here is an example of an operational value that describes the states a branch is licensed to do business
-                  in: <em>TopicType:BranchOffice, TopicTypeValue:44201, ContentType:LicensedStates, ContentTypeValue:['Indiana','Michigan','Ohio']</em>.</li>
-              <li>Rake Tasks to load and update selection values for Topics, Contents, and their values.  From a User Interface free-hand typing of values is not allowed, only preloaded values are allowed.</li>
-              <li>Each ContentType may require a ContentAdapter class to execute the retrieval process.  The actual business asset a ContentType refers to may in fact be stored in a
-                  FileSystem, or Document Management System requiring a WebService call to retrieve it; so a content type value is actually a foreign key to access remote instances of that document type.</li>
-            </ol>
-        </div>
-        <div>
             <h3>Implementation</h3>
 
             <p>An implementation would include the content profile model, admin ui to manage profiles and entries, and a content adapter classes focused on retrieval of requested assets.</p>

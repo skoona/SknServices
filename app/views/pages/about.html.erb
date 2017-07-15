@@ -9,7 +9,7 @@
 
     <section>
         <p class="lead">
-            The SknServices project exists to explore Authentication and Authorization services.
+            The SknServices project exists to explore Authentication and Authorization strategy.services.
             With special focus on content-based authorization using expanded Permissions properties.  It also implements a
             <strong>Services</strong> implementation strategy that lessens it's dependancy on Rails.
         </p>
@@ -25,9 +25,9 @@
                profile attributes and permissions used to enable the users access to the system once they are authenticated.  Authentication
                is handled by Warden Strategies capable of user/password, http basic auth, single-sign-on tokens, and several more.</p>
             <p>Remember me, secure email based password-reset, and session timeout is also enabled.</p>
-            <p>The UserProfile class centralizes authentication and authorization methods and/or services into a single user class.  The current user is locally available from every Rails controller as :current_user.</p>
+            <p>The UserProfile class centralizes authentication and authorization methods and/or strategy.services into a single user class.  The current user is locally available from every Rails controller as :current_user.</p>
             <p>Authentication is evaluated with every page request, except for images, javascript, and css script files.</p>
-            <p>The UserProfile coordinates the services of the AccessProfile and the ContentProfile, providing controlled and consistent access to business information.</p>
+            <p>The UserProfile coordinates the strategy.services of the AccessProfile and the ContentProfile, providing controlled and consistent access to business information.</p>
           </dd>
 
           <dt>Authorization: Access</dt>
@@ -98,11 +98,13 @@
           <dd>
             <p><strong>If not MVC where does code go?</strong></p>
             <p>Following the Rails MVC Way, code that would be in the View and Controller is placed in a Services object that support one or more controllers.</p>
-            <p>A Services object is normally contextual, attempting to follow the flow of a business process.  It's primary role it to map or transform request/response data to the Controller.  The data is trasnforms typically comes from a Domain Class, which it inherits.  All services object return one bundle of results in a helper object call <code>ResultsBean</code>.
+            <p>A Services object is normally contextual, attempting to follow the flow of a business process.  It's primary role it to map or transform request/response data to the Controller.  The data is trasnforms typically comes from a Domain Class, which it inherits.  All strategy.services object return one bundle of results in a helper object call <code>ResultsBean</code>.
             Views and Controllers us the contents of thei result bean to complete their operations; typically named <code>@page_controls</code>, this reduces the total number of instance variables being defined in controllers - again making testing easier.</p>
             <p>Domain Classes contain the code that would otherwise be embedded in a Model, using the Rails MVC understanding.  However, Domain Classes concentrate their methods on the broader business process; attempting to collect related methods that handle all IO for the process, and the logic needed to ensure each process step is successful.</p>
             <p>Domain classes call on or instantiate Adapter objects, and other helper objects to as needed to further condense business process tasks.</p>
-            <p>A ServiceFactory is used to collect all services defined in the application, it is the sole provider of instances of these services.  And expects both controllers and other services to be making requests for a particular service; which is memotizes to speed up secondary access.</p>
+            <p>A ServiceFactory is used to collect all strategy.services defined in the application, it is the sole provider of
+              instances of these strategy.services. And expects both controllers and other strategy.services to be making
+              requests for a particular service; which is memotizes to speed up secondary access.</p>
             <p>Methods in a domain or service class should minimize their user of controller based methods and helpers where ever possible to maintain separation and improve test outcomes.  However, access to the controller is implemented and available from every service and domain class, through the inheritance chain: Domains inherit from DomainsBase class.
               DomainsBase keep a initialization reference to the ServiceFactory that instantiated it <code>#service</code>, and the ServiceFactory keeps a reference to the controller that instantiated it <code>#factory</code>.  Thus from any service or domain <code>#service.factory</code> is a direct reference to the Controller.</p>
           </dd>
@@ -124,7 +126,7 @@
             </p>
             <p>You can think of the ServiceFactory as a classic Rails ControllerHelper.  However, all our business logic and data generation logic is defined in Service Classes memorized by the ServiceFactory.  For testing this allows the ServiceFactory mock out the controller, in many cases.</p>
             <p><strong>Object Storage Services</strong></p>
-            <p>The ServiceFactory provides controller services to the Services Object and it also provides and in-memory storage facility where objects can be stored across multiple request/response cycles if needed.</p>
+            <p>The ServiceFactory provides controller strategy.services to the Services Object and it also provides and in-memory storage facility where objects can be stored across multiple request/response cycles if needed.</p>
           </dd>
           <dt>Domains</dt>
           <dd>

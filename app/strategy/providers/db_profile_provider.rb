@@ -6,7 +6,7 @@
 # Storage thru Factory
 
 module Providers
-  class DBProfileProvider < ::Factory::ProvidersBase
+  class DBProfileProvider < ProvidersBase
 
     PROVIDER_PREFIX = self.name
 

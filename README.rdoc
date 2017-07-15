@@ -70,12 +70,12 @@ AccessService
 
 Providers::DBProfileProvider
 Providers::XMLProfileProvider
-    Factory::ProvidersBase
+    Providers::ProvidersBase
         +Factory::ObjectStorageService
 
-Providers::InlineValuesAdapter
-Providers::FileSystemAdapter
-    Factory::TaskAdaptersBase
+Processors::InlineValuesAdapter
+Processors::FileSystemAdapter
+    Processors::ProcessorBase
         Factory::DomainsBase
 
 Secure::UserProfile
