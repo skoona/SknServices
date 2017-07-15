@@ -27,7 +27,7 @@ James,
 
 ![App Data Model](app/assets/images/SknService-Warden.jpg "Application Data Model")
 
-## Overview
+## Description
 This application demonstrates and explores methods for Authentication, Access Authorizations,
 and Content Authorizations.  Referred to as UserProfiles, AccessProfiles, and ContentProfiles in
 this application.
