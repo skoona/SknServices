@@ -15,15 +15,42 @@
         <div class="well">
             <h3>Core Idea</h3>
 
-            <p>In general anything that can be accessed is considered a <strong>content type</strong>.  The specific entity that content is related to is considered a
-               <strong>topic type</strong>.  Both types <em>must be fully qualified with their respective <strong>Identifiers</strong></em>.
-               Once qualified the two are combined into a holding object called a ContentProfileEntry, and given a descriptive title.</p>
-            <p>Most business will have a few topic types and not everyone will be allowed to view the content associated with all instances of that topic type.  Example: A
-               Sales Representative should only be able to view commission documents for Accounts in their territory.</p>
-            <p>One ContentProfileEntry describes one permission, through the combination of a fully qualified content type and topic type.  It is expected that a
-               user's collection would have many of these specialized entries.  Entries
-               are themselves assigned to a wrapper object called a ContentProfile which maintains the whole collection.</p>
-            <p>ContentProfiles are also the anchor back to the User Profile, using the person authentication key(PAK) or UUID they rely on as <strong>the users</strong> primary identifier.</p>
+          <p>For <strong>content authorization</strong> there is an assumption that protected resources are classified and stored in some type of <em>storage container system(SCS)</em>. An SCS might actually be a simple FileSystem or
+            a enterprise class document management system.  In any event, retrieving items would require we specify some meta-data to <em>retrieve a single resource</em> and different meta-data to retrieve a <em>collection of resources</em>.</p>
+
+          <p>I chose a FileSystem as the SCS for this demo application, so filename implies a specific instance of a thing, and filename with wildcards implies a collection of things, and the file path is identity meta-data.</p>
+
+          <p>Filepaths are a part of the TOPIC structure, filenames are a part of the CONTENT structure. A ContentProfile entry will have both structures present.</p>
+
+          <figure>
+            <figcaption>The TOPIC structure is composed of three elements</figcaption>
+            <ul>
+              <li>topic_type:  :string           some type of business entity like a branch, agency, store, etc.</li>
+              <li>topic_value: :array-of-strings the identifier for this entity; branch number, agency number, store number, any hard and unique reference.</li>
+              <li>description: :string           label for this component</li>
+            </ul>
+          </figure>
+          <figure>
+            <figcaption>The CONTENT structure is composed of three elements</figcaption>
+            <ul>
+              <li>content_type:  :string           textual type of item or document; commission statement, 1099 document, budget spreadsheet, etc.</li>
+              <li>content_value: :array-of-strings either the collection name for this type of content, or it's specific ID</li>
+              <li>description:   :string           label for this component</li>
+            </ul>
+          </figure>
+          <p>The container for these two structures is defined as a ContentProfileEntry(CPE), which would be composed of these two structures and a descriptive label. CPEs are the final content authorization permission record.
+            A user is considered to have permission to specific content only if a related CPE exists in their ContentProfile.</p>
+
+          <p>One ContentProfileEntry describes one permission, through the combination of a fully qualified content type identifiers and topic type identifiers.  It is expected that a
+          user's collection would have many of these specialized entries, and that some entries may be shareable (reducing redundancy) with other users.  Entries
+            are themselves assigned to a wrapper object called a ContentProfile which maintains a users unique collection.</p>
+
+          <p>ContentProfiles are the anchor back to the UserProfile, via the :person_authentication_key(PAK) or UUID they rely on as the primary identifier.</p>
+
+          <p>The ContentProfile collection of classes represent the database implementation of this Content Profile strategy.</p>
+          <p>The AccessProfile collection of classes represent the XML-File implementation of this Content Profile strategy as an extension to it's original role as access authorization for page views, clickables, and process access permissions.</p>
+
+
         </div>
 
         <div>
