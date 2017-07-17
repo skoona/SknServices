@@ -4,7 +4,7 @@ RSpec.describe Processors::FileSystemAdapter, 'Content Adapter for File Systems'
 
   let(:user) { page_user_developer }
   let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { ServiceFactory.new({factory: mc}) }
+  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
 
   before(:each) do
     @factory = service_factory
@@ -27,10 +27,10 @@ RSpec.describe Processors::FileSystemAdapter, 'Content Adapter for File Systems'
       expect( @service ).to be_a Processors::FileSystemAdapter
     end
     it "#service #factory and #controller objects to be different." do
-      expect( @service.factory ).to be_a ServiceFactory
+      expect( @service.factory ).to be_a Factory::ServiceFactory
       expect( @service.factory.factory ).to be_a ServiceFactoryMockController
       expect( @service.factory.controller ).to be_a ServiceFactoryMockController
-      expect( @service.controller ).to be_a ServiceFactory
+      expect( @service.controller ).to be_a Factory::ServiceFactory
     end
     it "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
