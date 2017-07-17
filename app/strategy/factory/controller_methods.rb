@@ -42,7 +42,7 @@ module Factory
 
     # New Services extension
     def service_factory
-      @service_factory ||= ::ServiceFactory.new({factory: self})
+      @service_factory ||= Factory::ServiceFactory.new({factory: self})
       yield @service_factory if block_given?
       @service_factory
     end

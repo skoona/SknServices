@@ -5,7 +5,7 @@ describe Providers::DBProfileProvider, "Service routines of Provider::DBProfileP
   let(:user) {page_user_developer}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { ServiceFactory.new({factory: mc}) }
+  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
 
   before do
     Secure::ObjectStorageContainer.instance.test_reset!
@@ -30,7 +30,7 @@ describe Providers::DBProfileProvider, "Service routines of Provider::DBProfileP
       expect( @service ).to be_a Providers::DBProfileProvider
     end
     it "#service #factory and #controller objects to be different." do
-      expect( @service.factory ).to be_a ServiceFactory
+      expect( @service.factory ).to be_a Factory::ServiceFactory
       expect( @service.factory.factory ).to be_a ServiceFactoryMockController
     end
     it "#current_user returns a UserProfile object." do

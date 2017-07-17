@@ -6,7 +6,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
   let!(:userp) {page_user_bnptester}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
+  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc, user: user}) }
 
   let(:service) {service_factory.content_service}
 
@@ -30,7 +30,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
     end
 
     scenario "#service #factory objects to be different." do
-      expect( service.factory ).to be_a ServiceFactory
+      expect( service.factory ).to be_a Factory::ServiceFactory
       expect( service.service.factory ).to be_a ServiceFactoryMockController
     end
 

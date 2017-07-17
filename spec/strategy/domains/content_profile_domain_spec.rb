@@ -10,7 +10,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
   let!(:user) { page_user_eptester }
   let!(:userp) { page_user_bnptester }
   let!(:mc) {ServiceFactoryMockController.new(user: user)}
-  let!(:service_factory)  { ServiceFactory.new({factory: mc}) }
+  let!(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
 
   before do
     @service = service_factory.content_service
@@ -37,7 +37,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
       expect( @service.factory.current_user ).to be_a Secure::UserProfile
     end
     scenario "#service.factory.factory returns the controller object." do
-      expect( @service.controller ).to be_a ServiceFactory
+      expect( @service.controller ).to be_a Factory::ServiceFactory
       expect( @service.factory.factory ).to be_a ServiceFactoryMockController
     end
   end
