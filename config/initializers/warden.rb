@@ -94,7 +94,7 @@ Rails.application.config.middleware.insert_after Rack::Attack, Warden::Manager d
                          :store => true,
                          :strategies => [:password, :not_authorized],
                          :action => :new
-  manager.failure_app = lambda {|env| SessionsController.action(:new).call(env) }
+  manager.failure_app = lambda {|env| SessionsController.action(:unauthenticated).call(env) }
 end
 
 
@@ -313,8 +313,8 @@ end
 #
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
-  env['warden'].request.params[:action] = opts[:action] || :unauthenticated
-  env['warden'].request.params[:warden_failure] = opts
+  # env['warden'].request.params[:action] = opts[:action] || :unauthenticated
+  # env['warden'].request.params[:warden_failure] = opts
   domain_part = ("." + env["SERVER_NAME"].split('.')[1..2].join('.')).downcase
   env['warden'].cookies.delete( :remember_token, domain: domain_part )
   env['warden'].cookies.delete( Rails.application.config.session_options[:key], domain: domain_part )
