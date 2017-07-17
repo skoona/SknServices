@@ -82,14 +82,12 @@
 # env['warden'].authenticate(:password)      # Try to authenticate via the :password strategy.  If it fails proceed anyway.
 # env['warden'].authenticate!(:password)     # Ensure authentication via the password strategy. If it fails, bail.
 
-RailsWarden.default_user_class = Secure::UserProfile
-RailsWarden.unauthenticated_action = "unauthenticated"
+# Warden.default_user_class = Secure::UserProfile
+# Warden.unauthenticated_action = "unauthenticated"
 
 Rails.application.config.middleware.insert_after ActionDispatch::Flash, Rack::Attack
-Rails.application.config.middleware.insert_after Rack::Attack, RailsWarden::Manager do |manager|
+Rails.application.config.middleware.insert_after Rack::Attack, Warden::Manager do |manager|
   # puts "===============[DEBUG]:01 #{self.class}\##{__method__}"
-  # manager.default_user_class = Secure::UserProfile
-  # manager.unauthenticated_action = "unauthenticated"
   manager.default_scope = :access_profile
   manager.default_strategies :api_auth, :remember_token, :password, :not_authorized
   manager.scope_defaults :access_profile,
@@ -102,7 +100,7 @@ end
 
 # RackSessionAccess config
 if Rails.env.test?
-  Rails.application.config.middleware.insert_before RailsWarden::Manager, RackSessionAccess::Middleware
+  Rails.application.config.middleware.insert_before Warden::Manager, RackSessionAccess::Middleware
 end
 
 class Warden::SessionSerializer
@@ -216,7 +214,7 @@ Warden::Manager.on_request do |proxy|
   uri = (full_path.present? and full_path.starts_with?('/')) ? full_path[1..-1] : full_path
 
   bypass_flag = ("/").eql?(full_path) ||
-      SknSettings.security.public_pages.map {|p| p.eql?(full_path) }.any? ||
+      SknSettings.security.public_pages.map {|p| full_path.starts_with?(p) }.any? ||
       Secure::AccessRegistry.security_check?(full_path) ||   #  '/signin'
       Secure::AccessRegistry.security_check?(uri)            #  'signin'
 
@@ -315,6 +313,8 @@ end
 #
 Warden::Manager.before_failure do |env, opts|
   # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
+  env['warden'].request.params[:action] = opts[:action] || :unauthenticated
+  env['warden'].request.params[:warden_failure] = opts
   domain_part = ("." + env["SERVER_NAME"].split('.')[1..2].join('.')).downcase
   env['warden'].cookies.delete( :remember_token, domain: domain_part )
   env['warden'].cookies.delete( Rails.application.config.session_options[:key], domain: domain_part )
@@ -338,4 +338,141 @@ Warden::Manager.before_logout do |user,auth,opts|
 
   Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, starting-session.id=#{session_id_before_reset}, ending-session.id=#{auth.request.session_options[:id]}"
   true
+end
+
+
+##
+# Warden Overrides related to Rails environment.
+#
+# Credit to and Influenced by:
+#   https://github.com/hassox/rails_warden
+#   https://github.com/plataformatec/devise/blob/master/lib/devise/rails/warden_compat.rb
+
+module Warden::Mixins::Common
+
+  # Gets the rails request object by default if it's available
+  def request
+    return @request if @request
+    if defined?(ActionDispatch::Request)
+      @request = ActionDispatch::Request.new(env)
+    elsif env['action_controller.rescue.request']
+      @request = env['action_controller.rescue.request']
+    else
+      Rack::Request.new(env)
+    end
+  end
+
+  def response
+    return @response if @response
+    if defined?(ActionDispatch::Response)
+      @response  = ActionDispatch::Response.new
+    elsif env['action_controller.rescue.response']
+      @response = env['action_controller.rescue.response']
+    else
+      Rack::Response.new(env)
+    end
+  end
+
+  def cookies
+    unless defined?('ActionController::Cookies')
+      puts 'cookies was not defined'
+      return
+    end
+    @cookies ||= begin
+                   # Duck typing...
+      controller = Struct.new(:request, :response) do
+        def self.helper_method(*args); end
+      end
+      controller.send(:include, ActionController::Cookies)
+      controller.new(self.request, self.response).send(:cookies)
+    end
+  end
+
+  def logger
+    unless defined?('Rails')
+      puts 'logger not defined'
+      return
+    end
+    Rails.logger
+  end
+
+  def raw_session
+    request.session
+  end
+
+  def reset_session!
+    raw_session.inspect # why do I have to inspect it to get it to clear?
+    raw_session.clear
+  end
+
+end # end common
+
+module Secure
+  module Warden
+    module HelperMethods
+      # The main accessor for the warden proxy instance
+      # :api: public
+      def warden
+        request.env['warden']
+      end
+
+      # Proxy to the authenticated? method on warden
+      # :api: public
+      def authenticated?(*args)
+        warden.authenticated?(*args)
+      end
+      alias_method :logged_in?, :authenticated?
+
+      # Access the currently logged in user
+      # :api: public
+      def user(*args)
+        warden.user(*args)
+      end
+      alias_method :current_user, :user
+
+      def user=(user)
+        warden.set_user user
+      end
+      alias_method :current_user=, :user=
+    end # Helper Methods
+
+    module ControllerOnlyMethods
+      # Logout the current user
+      # :api: public
+      def logout(*args)
+        warden.raw_session.inspect  # Without this inspect here.  The session does not clear :|
+        warden.logout(*args)
+      end
+
+      # Proxy to the authenticate method on warden
+      # :api: public
+      def authenticate(*args)
+        warden.authenticate(*args)
+      end
+
+      # Proxy to the authenticate method on warden
+      # :api: public
+      def authenticate!(*args)
+        defaults = {:action => :unauthenticated}
+        if args.last.is_a? Hash
+          args[-1] = defaults.merge(args.last)
+        else
+          args << defaults
+        end
+        warden.authenticate!(*args)
+      end
+
+    end
+  end
+end
+
+Rails.configuration.after_initialize do
+  class ::ActionController::Base
+    include Secure::Warden::HelperMethods
+    include Secure::Warden::ControllerOnlyMethods
+  end
+
+  module ::ApplicationHelper
+    include Secure::Warden::HelperMethods
+  end
 end

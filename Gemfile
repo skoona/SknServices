@@ -5,7 +5,8 @@ gem 'logging'
 # gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
 gem 'pg', platform: :ruby
 
-gem "rails_warden"
+gem "warden"
+# gem "rails_warden"
 gem 'rack-attack'
 gem 'rack-cache'
 

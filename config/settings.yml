@@ -29,7 +29,9 @@ security:
   verify_login_after_seconds: 14400   # 4 hours
   ! public_pages: # not easily stored in the xml, because of leading slash
    - /assets
-
+   - /signin
+   - /sessions
+   - /signout
   ! user_options:
    - Manager
    - Developer

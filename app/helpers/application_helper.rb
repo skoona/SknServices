@@ -2,7 +2,17 @@
 module ApplicationHelper
 
   def self.included(klass)
-    Rails.logger.debug("ApplicationHelper included By #{klass.class.name}|#{klass.class.to_s} self: #{self.class.name}")
+    Rails.logger.debug("ApplicationHelper included By #{klass.class}|#{klass} self: #{self.class}")
+  end
+
+  def flash_message(type, text)
+    if flash[type].present? and flash[type].is_a?(Array)
+      flash[type] << text
+    elsif flash[type].present? and flash[type].is_a?(String)
+      flash[type] = [flash[type], text]
+    else
+      flash[type] = [text]
+    end
   end
 
   def menu_active?(menu_link)
@@ -68,6 +78,42 @@ module ApplicationHelper
         end
       end
     end
+  end
+
+  ### Converts named routes to string
+  #  Basic '/some/hardcoded/string/path'
+  #        '[:named_route_path]'
+  #        '[:named_route_path, {options}]'
+  #        '[:named_route_path, {options}, '?query_string']'
+  #
+  # Advanced ==> {engine: :demo,
+  #               path: :demo_profiles_path,
+  #               options: {id: 111304},
+  #               query: '?query_string'
+  #              }
+  #              {engine: :sym, path: :sym , options: {}, query: ''}
+  def page_action_paths(paths)
+    case paths
+      when Array
+        case paths.size
+          when 1
+            send( paths[0] )
+          when 2
+            send( paths[0], paths[1] )
+          when 3
+            rstr = send( paths[0], paths[1] )
+            rstr + paths[2]
+        end
+
+      when Hash
+        rstr = send(paths[:engine]).send(paths[:path], paths.fetch(:options,{}) )
+        rstr + paths.fetch(:query, '')
+
+      when String
+        paths
+    end
+  rescue
+    '#page_action_error'
   end
 
   def do_page_actions

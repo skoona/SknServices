@@ -7,7 +7,7 @@ class ProfilesController < ApplicationController
 
   def content_profile_demo
     @page_controls = content_service.handle_demo_page(params.to_unsafe_h)
-    flash.notice.now = @page_controls.message if @page_controls.message.present?
+    flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
   # json api, requires :username and access: [:access, :content]

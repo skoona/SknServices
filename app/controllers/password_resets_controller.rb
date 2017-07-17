@@ -1,3 +1,6 @@
+##
+#
+#
 class PasswordResetsController < ApplicationController
 	
   def new

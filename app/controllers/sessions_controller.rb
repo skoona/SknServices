@@ -1,5 +1,12 @@
+##
+#
+#
+
 class SessionsController < ActionController::Base
-  include Secure::ControllerAccessControl, ApplicationHelper
+  include Factory::ControllerMethods                 # Development Strategy
+  include ApplicationHelper                          # Controller, View Helper
+  include Secure::ControllerAccessControl            # Warden Security
+
   layout "application"
 
   before_action :do_flashes
