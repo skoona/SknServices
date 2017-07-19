@@ -109,21 +109,8 @@ module Processors
     # Allows strategy.domains, service, to access objects in service_factory and/or controller by name only
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      if @factory.respond_to?(method)
-        block_given? ? @factory.send(method, *args, block) :
-            (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))
-      elsif @factory.respond_to?(:factory) and @factory.factory.respond_to?(method)
-        block_given? ? @factory.factory.send(method, *args, block) :
-            (args.size == 0 ?  @factory.factory.send(method) : @factory.factory.send(method, *args))
-      elsif method.to_s.end_with?('?')
-        if instance_variable_defined?("@#{method.to_s[0..-2]}")
-          attribute?(method.to_s[0..-2].to_sym)
-        else
-          false
-        end
-      else
-        super(method, *args, &block)
-      end
+      block_given? ? factory.send(method, *args, block) :
+          (args.size == 0 ?  factory.send(method) : factory.send(method, *args))
     end
 
   end

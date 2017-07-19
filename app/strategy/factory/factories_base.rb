@@ -50,12 +50,13 @@ module Factory
 
     protected
 
+
     # Support the regular respond_to? method by
-    # answering for any attr that user_object actually handles
+    # answering for any method the controller actually handles
     #:nodoc:
-    # def respond_to_missing?(method, incl_private=false)
-    #   @factory.send(:respond_to?, method) || super(method,incl_private)
-    # end
+    def respond_to_missing?(method, incl_private=false)
+      factory.send(:respond_to?, method, incl_private) || super
+    end
 
 
     private
@@ -63,18 +64,11 @@ module Factory
     # Easier to code than delegation, or forwarder; @factory assumed to equal @controller
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      if @factory
-        if @factory.respond_to?(method)
-          block_given? ? @factory.send(method, *args, block) :
-              (args.size == 0 ?  @factory.send(method) : @factory.send(method, *args))
-        elsif @factory.respond_to?(:factory) and @factory.factory.respond_to?(method)
-          block_given? ? @factory.factory.send(method, *args, block) :
-              (args.size == 0 ?  @factory.factory.send(method) : @factory.factory.send(method, *args))
-        else
-          super(method, *args, &block)
-        end
+      if factory.respond_to?(method)
+        block_given? ? factory.send(method, *args, block) :
+            (args.size == 0 ?  factory.send(method) : factory.send(method, *args))
       else
-        super(method, *args, &block)
+        super
       end
     end
 

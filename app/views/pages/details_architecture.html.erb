@@ -18,12 +18,13 @@
             </div>
             <div id="guidance" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGuidance">
                 <div class="panel-body">
-                    <p class="lead">This application is a Rails 5+ &amp; Ruby-2.3.1 app.  However, WE DO NOT FOLLOW THE CLASSIC RAILS WAY.</p>
-                    <p> Rails is an MVC Web Framework.  The MVC model is a classic and used with success, as is, for many applications.  However, there are many maintenance, scaling, and growth issues when the codeset exceeds a certain size or features set mix.
-                    We understand these growth issues, and have chosen to apply the more traditional <strong>Domain Driven Design(DDD)</strong> approach, with Rails isolated as a Web Interface; as much as possible.</p>
-                    <p>Our way involves treating all of Rails as a Web Interface or adapter, and isolating our application business logic from it.  Calling on Rails only when absolutely needed to exchange
-                        results with the user.  One outcome is, we don't waste time testing Rails and can focus on our delivery with significant code re-use opportunities.</p>
-                    <p>The persistent assumptions, by Rails's Developers, that MVC and convention over configuration is all that's needed for a web app is disturbing.  There is sooo much talent in the Rails community, it is possible to build apps better.</p>
+                    <p class="lead">DO NOT FOLLOW THE RAILS WAY.</p>
+                    <p>The MVC model is a classic and used with success, as is, for many applications.  However, there are many maintenance, scaling, and growth issues when the codeset exceeds a certain size or features set mix.
+                    Understanding these growth issues, it is recommended that you apply a more traditional <strong>Domain Driven Design(DDD)</strong> or <strong>Object Oriented(OO)</strong> approach to building web applications, with Rails isolated as a Web Interface as much as possible.</p>
+                    <p>This would involve treating all of Rails as a Web Interface or adapter, and isolating our application business logic from it.  Calling on Rails only when absolutely needed to exchange
+                        results with the user.</p>
+                    <p>However, this is not another Web Framework! It is a thought provoking alternative to the Rails Way. An alternative that still builds applications using the full capabilities of Rails, while keeping your business logic components separate from Rails.
+                     This avoids the negative impact of Rails release changes, and enables your ability to easily add or change features.</p>
                     <p class="lead">This application source, and implementation, serves as a model for how web applications can be engineered without sacrificing longevity or major reworks.</p>
                 </div>
             </div>
@@ -84,7 +85,7 @@ ProfileType < ActiveRecord::Base
   end
 end          				
           			</pre>
-                    <p>In the case of models this mean only short methods to help with form option lists, and the model's own validation methods. Nothing more!</p>
+                    <p>In the case of models this means only short methods to help with form option lists, and the model's own validation methods. Nothing more!</p>
           		</div>
        		</div>
        		<p>If we don't add business logic to the controllers or the models, where does it go?  Answer, in the Services objects which inherit directly from Domain objects.</p>
@@ -109,8 +110,8 @@ end
                        developing an html page with views and controllers to present the informational results to the user.  However, since we only delivery a package of data values to the controller interface
                        method, it is possible to serve those data values as JSON to a browser based application, like BackBone, or to a wide range of endpoints; even a PDF generator.</p>
                     <p>The core of our Application is defined in an object-oriented fashion and protected or isolated from the delivery frameworks(s) used to delivery its value to the user.
-                       When changes and enhancements to the business logic is needed, we can make those changes without great concern or contraints being imposed by the delivery mechanism.  This also faciliates
-                       making changes or upgrades to the delivery frameworks.</p>
+                       When changes and enhancements to the business logic are needed, we can make those changes without great concern or constraints being imposed by the delivery mechanism.  This also facilitates
+                       easier upgrades of the delivery frameworks; since we have reduced the number of touch points between our application the Rails.</p>
                     <p>Services inherit directly from Domains to further shield our application from the external frameworks; this is easy to see when considering the controller.  Models on the other hand
                        need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  I've chosen to go one step further and dedicate a <code>&lt;context&gt;Provider</code>
                        class that wraps all the ActiveRecord IO calls, expecting it to be called by either Domain methods or Services methods.  I have considered using a Repository strategy to add more isolation and to facilitate testing.
