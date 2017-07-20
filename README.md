@@ -23,9 +23,9 @@ Advanced security and authorization features are fully implemented and I think q
   
 
 James,
+[more details](https://skoona.blogspot.com/2016/08/sknservices-alternate-development_11.html)
 
-
-![App Data Model](app/assets/images/SknService-Warden.jpg "Application Data Model")
+![App Data Model](app/assets/images/SknServices-Strategy.png)
 
 ## Description
 This application demonstrates and explores methods for Authentication, Access Authorizations,
