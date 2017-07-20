@@ -26,7 +26,7 @@ class UsersController < ApplicationController
   before_action :target_object, only: [:show, :edit, :update, :destroy]
 
   def index
-    @page_controls = service_factory.access_service.handle_users_index
+    @page_controls = access_service.handle_users_index
   end
 
   def show

@@ -46,7 +46,7 @@
 module Domains
   class DomainsBase
 
-    attr_accessor :user, :factory
+    attr_accessor :factory
 
     def initialize(params={})
       params.keys.each do |k|
@@ -54,45 +54,16 @@ module Domains
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
       raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
-      @user = @factory.current_user unless @user
-    end
-
-    def service
-      @factory
-    end
-
-    def controller
-      @factory
-    end
-
-    def current_user
-      @user ||= @factory.current_user
     end
 
     def self.inherited(klass)
       Rails.logger.debug("Factory::DomainsBase inherited By #{klass.name}")
     end
 
-    protected
-
-    # Support the regular respond_to? method by
-    # answering for any attr that user_object actually handles
-    #:nodoc:
-    def respond_to_missing?(method, incl_private=false)
-      @factory.send(:respond_to?, method) || super(method,incl_private)
-    end
-
-    # some_instance_var?
-    def attribute?(attr)
-      if attr.is_a? Symbol
-        send(attr).present?
-      else
-        send(attr.to_sym).present?
-      end
-    end
+  private
 
     # Easier to code than delegation, or forwarder
-    # Allows strategy.domains, service, to access objects in service_factory and/or controller by name only
+    # Allows strategy.domains, service, to access objects in service_factory and/or controller methods by name only
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
       block_given? ? factory.send(method, *args, block) :

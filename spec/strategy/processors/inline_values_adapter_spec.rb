@@ -26,11 +26,9 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
     it "#factory.profile_data_services returns a proper service object." do
       expect( @service ).to be_a Processors::InlineValuesAdapter
     end
-    it "#service #factory and #controller objects to be different." do
+    it "#factory and #controller objects to be different." do
       expect( @service.factory ).to be_a Factory::ServiceFactory
-      expect( @service.factory.factory ).to be_a ServiceFactoryMockController
-      expect( @service.factory.controller ).to be_a ServiceFactoryMockController
-      expect( @service.controller ).to be_a Factory::ServiceFactory
+      expect( @service.controller ).to be_a ServiceFactoryMockController
     end
     it "#current_user returns a UserProfile object." do
       expect( @service.factory.current_user ).to be_a Secure::UserProfile

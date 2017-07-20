@@ -29,13 +29,12 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       expect( service ).to be_a Services::ContentService
     end
 
-    scenario "#service #factory objects to be different." do
+    scenario "#controller #factory objects to be different." do
       expect( service.factory ).to be_a Factory::ServiceFactory
-      expect( service.service.factory ).to be_a ServiceFactoryMockController
+      expect( service.controller ).to be_a ServiceFactoryMockController
     end
 
     scenario "#current_user returns a UserProfile object." do
-      expect( service.factory.current_user ).to be_a Secure::UserProfile
       expect( service.current_user ).to be_a Secure::UserProfile
     end
   end

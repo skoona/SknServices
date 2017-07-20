@@ -6,7 +6,7 @@
 module Processors
   class ProcessorBase
 
-    attr_accessor :user, :factory
+    attr_accessor :factory
 
     def initialize(params={})
       params.keys.each do |k|
@@ -14,19 +14,6 @@ module Processors
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
       raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
-      @user = @factory.current_user unless @user
-    end
-
-    def service
-      @factory
-    end
-
-    def controller
-      @factory
-    end
-
-    def current_user
-      @user ||= @factory.current_user
     end
 
     def self.inherited(klass)
@@ -61,7 +48,7 @@ module Processors
       false
     end
 
-    protected
+  protected
 
     def get_page_user(uname, context=nil)
       page_user = Secure::UserProfile.page_user(uname, context)
@@ -87,22 +74,6 @@ module Processors
           'GB' => 1024 * 1024 * 1024 * 1024,
           'TB' => 1024 * 1024 * 1024 * 1024 * 1024
       }.each_pair { |e, s| return "#{(value.to_f / (s / 1024)).round(1)} #{e}" if value < s }
-    end
-
-    # Support the regular respond_to? method by
-    # answering for any attr that user_object actually handles
-    #:nodoc:
-    def respond_to_missing?(method, incl_private=false)
-      @factory.send(:respond_to?, method) || super(method,incl_private)
-    end
-
-    # some_instance_var?
-    def attribute?(attr)
-      if attr.is_a? Symbol
-        send(attr).present?
-      else
-        send(attr.to_sym).present?
-      end
     end
 
     # Easier to code than delegation, or forwarder

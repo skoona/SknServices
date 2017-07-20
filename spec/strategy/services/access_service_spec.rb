@@ -5,7 +5,7 @@ RSpec.describe Services::AccessService, "Service routines of AccessProfile and A
   let!(:user) {user_bstester}
 
   let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc, user: user}) }
+  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
 
   let(:service) {service_factory.access_service}
 
@@ -25,11 +25,9 @@ RSpec.describe Services::AccessService, "Service routines of AccessProfile and A
     end
     scenario "#service #factory and #controller objects to be different." do
       expect( service.factory ).to be_a Factory::ServiceFactory
-      expect( service.service.factory ).to be_a ServiceFactoryMockController
-      expect( service.factory.controller ).to be_a ServiceFactoryMockController
+      expect( service.controller ).to be_a ServiceFactoryMockController
     end
     scenario "#current_user returns a UserProfile object." do
-      expect( service.factory.current_user ).to be_a Secure::UserProfile
       expect( service.current_user ).to be_a Secure::UserProfile
     end
   end

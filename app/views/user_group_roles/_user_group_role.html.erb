@@ -1,13 +1,11 @@
 
 <div class="well <%= action_name.eql?('show') ? 'col-md-push-3 col-md-6' : 'col-md-6' %>">
     <div class="media">
-        <div class="media-left">
-            <%= link_to user_group_role do %>
-                <span class="media-object">
-                    <span style="font-size:4.5em;" class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                </span>
-            <% end %>
-        </div>
+        <%= link_to user_group_role do %>
+            <span class="media-object pull-left" style="padding-right: 12px;">
+                <span style="font-size:4.5em;" class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </span>
+        <% end %>
 
         <div class="media-body">
             <h4 class="media-heading">Name: <%= user_group_role.name %></h4>

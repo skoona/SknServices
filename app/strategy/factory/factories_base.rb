@@ -7,7 +7,7 @@ module Factory
   class FactoriesBase
     include Factory::ObjectStorageService
 
-    attr_accessor :user, :factory
+    attr_accessor :factory
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
@@ -20,36 +20,18 @@ module Factory
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
       raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
-      @user = @factory.current_user unless @user
-    end
-
-
-    ##
-    # The controller knows itself as 'self'
-    # so we bridge to it for our Services
-    def service
-      @factory
-    end
-    def controller
-      @factory
-    end
-
-    ##
-    # Same for current_user, a controller value
-    def current_user
-      @user ||= @factory.current_user
     end
 
     # User Session Handler
     def get_session_param(key)
       @factory.session[key]
     end
+
     def set_session_param(key, value)
       @factory.session[key] = value
     end
 
-    protected
-
+  protected
 
     # Support the regular respond_to? method by
     # answering for any method the controller actually handles
@@ -59,7 +41,7 @@ module Factory
     end
 
 
-    private
+  private
 
     # Easier to code than delegation, or forwarder; @factory assumed to equal @controller
     def method_missing(method, *args, &block)

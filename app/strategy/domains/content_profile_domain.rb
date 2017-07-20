@@ -19,7 +19,7 @@ module Domains
         usrs << {username: u.username,
                  display_name: u.display_name,
                  user_options: u.user_options || [],
-                 get_content_object_url: factory.page_action_paths([:api_get_content_object_profiles_path]),
+                 get_content_object_url: page_action_paths([:api_get_content_object_profiles_path]),
                  package: [ access_profile_package(u), content_profile_package(u) ]
         }
       end
@@ -85,7 +85,7 @@ module Domains
 
         content_profile = nil
 
-        content_profile = factory.db_profile_provider.content_profile_for_user(u)
+        content_profile = db_profile_provider.content_profile_for_user(u)
 
         unless content_profile and content_profile[:success]
           content_profile = {
@@ -184,9 +184,9 @@ module Domains
              success: true,
              message: "",
              user_options: (user_profile.user_options || []),
-             accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'access', format: :json}]),
+             accessible_content_url: page_action_paths([:api_accessible_content_profiles_path, {id: 'access', format: :json}]),
              page_user: user_profile.username,
-             access_profile: factory.xml_profile_provider.content_profile_for_user(user_profile)
+             access_profile: xml_profile_provider.content_profile_for_user(user_profile)
       }
       res[:success] = res[:access_profile][:entries].empty? ? false : true
       unless res[:success]
@@ -258,9 +258,9 @@ module Domains
          success: true,
          message: "",
          user_options: (user_profile.user_options || []),
-         accessible_content_url: factory.page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
+         accessible_content_url: page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
          page_user: user_profile.username,
-         content_profile: factory.db_profile_provider.content_profile_for_user(user_profile)
+         content_profile: db_profile_provider.content_profile_for_user(user_profile)
       }
       res[:success] = res[:content_profile][:entries].empty? ? false : true
       unless res[:success]
@@ -327,24 +327,24 @@ module Domains
     def create_content_profile_with_profile_type_id(params)
       pt = ProfileType.find_by(id: params['profile_type_id'])
       u = get_page_user(params['username'])
-      cp = service.db_profile_provider.create_content_profile_for(u, pt.name)
+      cp =db_profile_provider.create_content_profile_for(u, pt.name)
       cp.present?
     end
     def update_content_profile_with_profile_type_id(params)
-      cp = service.db_profile_provider.update_content_profile_for(params['id'], params['profile_type_id'].to_i)
+      cp =db_profile_provider.update_content_profile_for(params['id'], params['profile_type_id'].to_i)
       cp.present?
     end
     def destroy_content_profile_by_pak(params)
-      cp = service.db_profile_provider.destroy_content_profile_by_pak(params['id'])
+      cp =db_profile_provider.destroy_content_profile_by_pak(params['id'])
       cp.present?
     end
 
     def create_content_profile_entries(params)
-      cp = service.db_profile_provider.create_content_profile_entry_by_ids(params)
+      cp =db_profile_provider.create_content_profile_entry_by_ids(params)
       cp.present?
     end
     def destroy_content_profile_entry(params)
-      cp = service.db_profile_provider.destroy_content_profile_entry_with_pak_and_id(params['pak'], params['id'])
+      cp =db_profile_provider.destroy_content_profile_entry_with_pak_and_id(params['pak'], params['id'])
       cp.present?
     end
 

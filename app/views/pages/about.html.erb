@@ -143,7 +143,7 @@
             <p>Service objects inherit a related Domain Class and have the single respobsibility to transpose the Domains information to a data bean useable by the controller or view.  It may invoke some controller methods to format certain
                values, like a named URL; however such calls are supported by Controller/View Helpers which can be mocked for testing.</p>
             <p>Service object are directly invoked by a Controller route-based method, like: HomeController#index.   The implementation of the :index method looks similar
-               to: <code>page_controls = service_factory.home_service.homes_list()</code></p>
+               to: <code>page_controls = home_service.homes_list()</code></p>
             <p>The return value from the above call is a ResultsBean object.  All Services return a bean of this type containing all the data or information elements relevant to this methods
                response.  This bean package can be converted to JSON or a Hash bundle as needed by the View handler or API Response.  The only required elements for this type of bean is :success, and :message, so each service methods
               includes these elements allowing the controller method coding to flash a message and/or redirect as needed.</p>

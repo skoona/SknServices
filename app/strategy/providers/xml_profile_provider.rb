@@ -19,7 +19,7 @@ module Providers
     PROVIDER_PREFIX = self.name
 
     def initialize(params={})
-      super(params)
+      super
       cpbf = SknSettings.access_profile.content_registry_filename.basename
       cpbx = SknSettings.access_profile.content_registry_filename.extension
       @content_registry_filename = Pathname.new("#{Rails.root}/config/#{cpbf}.#{cpbx}")

@@ -314,7 +314,7 @@ end
                                 to those assets into the session just before the controller exits back to the browser.  The ServiceFactory is lightwieght and would derive no real benefit from being
                                 serialized into a session.  So it is simply created anew with each request/response cycle.</p>
                             <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
-                                To instantiate a processService use: <code>service_factory.process_service.service_method_name(params)</code>.</p>
+                                To instantiate a processService use: <code>process_service.service_method_name(params)</code>.</p>
                             <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all strategy components classes in the application. And to additionally
                                 provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
                             <p>Inside a processService, like ContentService or ProfileProviders, reference the service_factory as <code>:factory</code> or <code>:service</code>, as in: <code>factory.content_service.some_method</code> .</p>
@@ -512,13 +512,13 @@ end
               </dd>
               <dt>Provides</dt>
               <dd><p>FileSystemAdapter provides logical access to content storage facilities.</p>
-                <p>taskProcessor by design are expected to handle a complete and single task step of a larger process flow, and have no dependencies.  However to complete their assigned task they may engage other task processors, strategy.services, and providers; thus they do benefit from access to the service_factory.</p>
+                <p>taskProcessor by design are expected to handle a complete and single task step of a larger process flow, and have no dependencies.  However to complete their assigned task they may engage other task processors, strategy.services, and providers; thus they do benefit from access to the </p>
               </dd>
             </dl>
           </div>
           <p>Currently there are two implementations of this component: FileSystemAdapter and InlineValueAdapter classes. </p>
         </div>
-        <p>Instantiated by: <code>service_factory()</code></p>
+        <p>Instantiated by: <code>service_factory()</code>.  However, they are capable of operating independently of the </p>
       </div>
 
         <div class="panel panel-info">

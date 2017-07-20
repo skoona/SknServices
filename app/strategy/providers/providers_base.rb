@@ -7,7 +7,7 @@ module Providers
   class ProvidersBase
     include Factory::ObjectStorageService
 
-    attr_accessor :user, :factory
+    attr_accessor :factory
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
@@ -20,13 +20,6 @@ module Providers
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
       raise ArgumentError, "Providers: Missing required initialization param!" if @factory.nil?
-      @user = @factory.current_user unless @user
-    end
-
-    ##
-    # Same for current_user, a controller value
-    def current_user
-      @user ||= @factory.current_user
     end
 
     ##
@@ -56,14 +49,7 @@ module Providers
     end
 
 
-    protected
-
-    # Support the regular respond_to? method by
-    # answering for any attr that user_object actually handles
-    #:nodoc:
-    # def respond_to_missing?(method, incl_private=false)
-    #   @factory.send(:respond_to?, method) || super(method,incl_private)
-    # end
+  protected
 
     ##
     # generate xml from a regular hash, with/out arrays
@@ -117,7 +103,7 @@ module Providers
       }
     end
 
-    private
+  private
 
     # support for #generate_xml_from_hash
     def process_simple_array(label,array,xml)
@@ -126,15 +112,6 @@ module Providers
         xml.send(label,Hash[attrs]) do
           kids.each{ |k,v| process_array(k,v,xml) }
         end
-      end
-    end
-
-    # some_instance_var?
-    def attribute?(attr)
-      if attr.is_a? Symbol
-        send(attr).present?
-      else
-        send(attr.to_sym).present?
       end
     end
 

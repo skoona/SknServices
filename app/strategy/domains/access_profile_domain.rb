@@ -26,7 +26,7 @@ module Domains
           reload_access_registry
           "AccessRegistry Reloaded"
         when 'purge'
-          count = service.purge_storage_objects((Time.zone.now - 10.minutes).to_i)
+          count =purge_storage_objects((Time.zone.now - 10.minutes).to_i)
           "ObjectStorageContainer Purged #{count} Items"
       end
     end
@@ -61,8 +61,8 @@ module Domains
       end
 
       authenticated_user = (current_user.present? ? true : false )
-      xprofile = service.xml_profile_provider.content_profile_for_user(current_user)
-      cprofile = service.db_profile_provider.content_profile_for_user(current_user)
+      xprofile =xml_profile_provider.content_profile_for_user(current_user)
+      cprofile =db_profile_provider.content_profile_for_user(current_user)
       storage_size = Secure::ObjectStorageContainer.instance.size_of_store('Admin')
       storage_keys = Secure::ObjectStorageContainer.instance.list_storage_keys_and_value_class
 
@@ -77,7 +77,7 @@ module Domains
          content_entries: content_entries,
          xprofile: xprofile,
          cprofile: cprofile,
-         apis_enabled: (authenticated_user and service.current_user_has_access?('#Management')),
+         apis_enabled: (authenticated_user and current_user_has_access?('#Management')),
          storage_size: storage_size,
          storage_keys: storage_keys
       }

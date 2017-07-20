@@ -34,11 +34,9 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
     end
     scenario "#current_user returns a UserProfile object." do
       expect( @service.current_user ).to be_a Secure::UserProfile
-      expect( @service.factory.current_user ).to be_a Secure::UserProfile
     end
-    scenario "#service.factory.factory returns the controller object." do
-      expect( @service.controller ).to be_a Factory::ServiceFactory
-      expect( @service.factory.factory ).to be_a ServiceFactoryMockController
+    scenario "#service.controller returns the controller object." do
+      expect( @service.controller ).to be_a ServiceFactoryMockController
     end
   end
 
