@@ -1,5 +1,5 @@
 # SknService
-Rails Authorization and Authentication implementation using a non-MVC strategy.
+Rails Authorization and Authentication implementation using an alternate MVC strategy.
 
 # Introduction
 This is a Rails 5, Ruby 2.3 (JRuby capable), PostgreSQL Application which demonstrates Authentication and Authorization strategies.
@@ -23,7 +23,9 @@ Advanced security and authorization features are fully implemented and I think q
   
 
 James,
+
 [more details](https://skoona.blogspot.com/2016/08/sknservices-alternate-development_11.html)
+
 
 ![App Data Model](app/assets/images/SknServices-Strategy.png)
 
