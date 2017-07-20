@@ -449,7 +449,7 @@ end
                                 <dt>level Three</dt>
                                 <dd>Is rarely needed, but if so would handle very narrow objectives; like I/O or RESTFul routines.</dd>
                             </dl>
-                            <p>This is the best place to exploit object-oriented design principles.  To that end, we include design components to meet the most frequent use cases; namely: <code>domainProviders</code>, and <code>taskAdapters</code>.</p>
+                            <p>This is the best place to exploit object-oriented design principles.  To that end, we include design components to meet the most frequent use cases; namely: <code>domainProviders</code>, and <code>taskProcessor</code>.</p>
                         </dd>
                     </dl>
                 </div>
@@ -493,25 +493,25 @@ end
         <div class="panel-heading" role="tab" id="headingThree">
           <h4 class="panel-title">
             <a class="collapsed" role="button" data-toggle="collapse" href="#ProfileBuilder" aria-expanded="false" aria-controls="collapseThree">
-              [Services Strategy] taskAdapters
+              [Services Strategy] Processors
             </a>
           </h4>
         </div>
         <div id="ProfileBuilder" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
           <div class="panel-body">
-            <h5>taskAdapters</h5>
+            <h5>Processor</h5>
             <dl class="dl-horizontal">
               <dt>Instantiate</dt>
               <dd>
                 <p>ServiceFactory provides instantiation strategy.services to any requester in the request/response cycle.</p>
-                <p>The intended use of a taskAdapter is to handle specialized tasks which may include external IO of some sort, for Domains.</p>
+                <p>The intended use of a Processor is to handle specialized tasks which may include external IO of some sort, for Domains.</p>
               </dd>
               <dt>Inheritance</dt>
-              <dd><p>taskAdapters inherit directly from the <code>Processors::ProcessorBase</code> class which itself inherits from <code>Factory::DomainsBase</code> class.  The Factory::DomainsBase yields common initialization strategy.services, access to the service factory.</p>
+              <dd><p>A task processor inherits directly from the <code>Processors::ProcessorBase</code> class.  The ProcessorBase yields common initialization strategy.services, and access to the service factory.</p>
               </dd>
               <dt>Provides</dt>
               <dd><p>FileSystemAdapter provides logical access to content storage facilities.</p>
-                <p>TaskAdapters by design are expected to handle a complete and single task step of a larger process flow, and have no dependencies outside of the domain object that calls it.  However to complete their assigned task they may engage other task adapters, strategy.services, and providers; thus they do require access to the service_factory.</p>
+                <p>taskProcessor by design are expected to handle a complete and single task step of a larger process flow, and have no dependencies.  However to complete their assigned task they may engage other task processors, strategy.services, and providers; thus they do benefit from access to the service_factory.</p>
               </dd>
             </dl>
           </div>
