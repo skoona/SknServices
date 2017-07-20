@@ -1,17 +1,17 @@
-# lib/factory/factories_base.rb
+# lib/registry/factories_base.rb
 #
 # Common Base for all Services oriented Classes, without Domains
 #
 
-module Factory
-  class FactoriesBase
-    include Factory::ObjectStorageService
+module Registry
+  class RegistryBase
+    include Registry::ObjectStorageService
 
-    attr_accessor :factory
+    attr_accessor :registry
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Factory::FactoriesBase inherited By #{klass.name}")
+      Rails.logger.debug("Registry::RegistryBase inherited By #{klass.name}")
     end
 
     def initialize(params={})
@@ -19,16 +19,16 @@ module Factory
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
+      raise ArgumentError, "ServiceRegistry: Missing required initialization param!" if @registry.nil?
     end
 
     # User Session Handler
     def get_session_param(key)
-      @factory.session[key]
+      @registry.session[key]
     end
 
     def set_session_param(key, value)
-      @factory.session[key] = value
+      @registry.session[key] = value
     end
 
   protected
@@ -37,18 +37,18 @@ module Factory
     # answering for any method the controller actually handles
     #:nodoc:
     def respond_to_missing?(method, incl_private=false)
-      factory.send(:respond_to?, method, incl_private) || super
+      registry.send(:respond_to?, method, incl_private) || super
     end
 
 
   private
 
-    # Easier to code than delegation, or forwarder; @factory assumed to equal @controller
+    # Easier to code than delegation, or forwarder; @registry assumed to equal @controller
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      if factory.respond_to?(method)
-        block_given? ? factory.send(method, *args, block) :
-            (args.size == 0 ?  factory.send(method) : factory.send(method, *args))
+      if registry.respond_to?(method)
+        block_given? ? registry.send(method, *args, block) :
+            (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
       else
         super
       end

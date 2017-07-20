@@ -1,5 +1,5 @@
 ##
-# lib/factory/domains_base.rb
+# lib/registry/domains_base.rb
 #
 # Common Base for all <Name>Domain objects
 #
@@ -21,21 +21,21 @@
 # They are normally directly inherited by <Name>Service, which are responsible
 # for wrapping the request/response to an external Framework, typically Rails/Controller/View
 #
-# Instantiated By: ServiceFactory, from <root>/app/strategy.domains/service_factory.rb
+# Instantiated By: ServiceRegistry, from <root>/app/strategy.domains/service_registry.rb
 #
 # Description:
 # This module contains the #initialize method for all inherited Classes.  It provides a common
-# instantiation method providing the #factory object and the #current_user object.
+# instantiation method providing the #registry object and the #current_user object.
 #
 # Class Model and Request Flow:
-#                                                                       ServiceFactory#name1_service >> Name1Service#some_method          >|
-#   Rack(Warden middleware) >> Router >> Controller#url_named_method >> ServiceFactory#name2_service >> Name2Service#some_method          >|
-#                                                                       ServiceFactory#nameX_service >> NameX[Domain|Service]#some_method >|
+#                                                                       ServiceRegistry#name1_service >> Name1Service#some_method          >|
+#   Rack(Warden middleware) >> Router >> Controller#url_named_method >> ServiceRegistry#name2_service >> Name2Service#some_method          >|
+#                                                                       ServiceRegistry#nameX_service >> NameX[Domain|Service]#some_method >|
 #   Rack(Warden middleware) << ActionView#NameView#render << Controller#url_named_method << ------------------[ResultsBean]----------------|
 #
-# #factory
-# - Provides access to all the other <Name>Services objects via #factory.other_service.service_method,
-#   and the invoking Controller via #factory.controller.some_method
+# #registry
+# - Provides access to all the other <Name>Services objects via #registry.other_service.service_method,
+#   and the invoking Controller via #registry.controller.some_method
 # - Provides #get_session_param and #set_session_param
 # - Access an in-memory object/data storage container, #create_storage_key_and_store_object, #update_storage_object, #get_storage_object, #delete_storage_object
 #
@@ -46,28 +46,28 @@
 module Domains
   class DomainsBase
 
-    attr_accessor :factory
+    attr_accessor :registry
 
     def initialize(params={})
       params.keys.each do |k|
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
+      raise ArgumentError, "ServiceRegistry: Missing required initialization param!" if @registry.nil?
     end
 
     def self.inherited(klass)
-      Rails.logger.debug("Factory::DomainsBase inherited By #{klass.name}")
+      Rails.logger.debug("Registry::DomainsBase inherited By #{klass.name}")
     end
 
   private
 
     # Easier to code than delegation, or forwarder
-    # Allows strategy.domains, service, to access objects in service_factory and/or controller methods by name only
+    # Allows strategy.domains, service, to access objects in service_registry and/or controller methods by name only
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      block_given? ? factory.send(method, *args, block) :
-          (args.size == 0 ?  factory.send(method) : factory.send(method, *args))
+      block_given? ? registry.send(method, *args, block) :
+          (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
     end
 
   end

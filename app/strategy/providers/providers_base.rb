@@ -1,13 +1,14 @@
-# lib/factory/providers_base.rb
+##
+# File: <root>/app/strategy/providers/providers_base.rb
 #
 # Common Base for all Services oriented Classes, without Domains
 #
 
 module Providers
   class ProvidersBase
-    include Factory::ObjectStorageService
+    include Registry::ObjectStorageService
 
-    attr_accessor :factory
+    attr_accessor :registry
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
@@ -19,7 +20,7 @@ module Providers
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "Providers: Missing required initialization param!" if @factory.nil?
+      raise ArgumentError, "Providers: Missing required initialization param!" if @registry.nil?
     end
 
     ##
@@ -115,11 +116,11 @@ module Providers
       end
     end
 
-    # Easier to code than delegation, or forwarder; @factory assumed to equal @controller
+    # Easier to code than delegation, or forwarder; @registry assumed to equal @controller
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      block_given? ? factory.send(method, *args, block) :
-          (args.size == 0 ?  factory.send(method) : factory.send(method, *args))
+      block_given? ? registry.send(method, *args, block) :
+          (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
     end
 
   end

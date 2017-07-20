@@ -5,10 +5,10 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
   let!(:user) {user_bstester}
   let!(:userp) {page_user_bnptester}
 
-  let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc, user: user}) }
+  let(:mc) {ServiceRegistryMockController.new(user: user)}
+  let(:service_registry)  { Services::ServiceRegistry.new({registry: mc}) }
 
-  let(:service) {service_factory.content_service}
+  let(:service) {service_registry.content_service}
 
 
   context "Initialization "  do
@@ -17,21 +17,21 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       expect{ Services::ContentService.new }.to raise_error(ArgumentError)
     end
 
-    scenario "#new succeeds when :factory is valid value." do
-      expect(Services::ContentService.new({factory: service_factory})).to be_a(Services::ContentService)
+    scenario "#new succeeds when :registry is valid value." do
+      expect(Services::ContentService.new({registry: service_registry})).to be_a(Services::ContentService)
     end
 
-    scenario "#new fails when :factory is invalid value." do
-      expect{ Services::ContentService.new({factory: nil}) }.to raise_error(ArgumentError)
+    scenario "#new fails when :registry is invalid value." do
+      expect{ Services::ContentService.new({registry: nil}) }.to raise_error(ArgumentError)
     end
 
-    scenario "#factory.content_service returns a proper service object." do
+    scenario "#registry.content_service returns a proper service object." do
       expect( service ).to be_a Services::ContentService
     end
 
-    scenario "#controller #factory objects to be different." do
-      expect( service.factory ).to be_a Factory::ServiceFactory
-      expect( service.controller ).to be_a ServiceFactoryMockController
+    scenario "#controller #registry objects to be different." do
+      expect( service.registry ).to be_a Services::ServiceRegistry
+      expect( service.controller ).to be_a ServiceRegistryMockController
     end
 
     scenario "#current_user returns a UserProfile object." do

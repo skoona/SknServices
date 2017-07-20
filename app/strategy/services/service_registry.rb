@@ -1,16 +1,16 @@
-## app/strategy/service_factory.rb
+## app/strategy/service_registry.rb
 #
-# Replace factory helpers with Factory Object from DomainsBase
+# Replace registry helpers with Registry Object from DomainsBase
 # - Domain strategy.services live for one request cycle and are expensive to create, this object memoitizes them
-# - This factory should be passed around like "factory" or "service"
+# - This registry is available in the namespace of all services, domains, and multi-method processors
 # - Should make testing easier
 #
 
-# self is factory
-# factory is the thing that initialized us: i.e. controller is really factory
-module Factory
+# self is registry
+# registry is the thing that initialized us: i.e. controller is really registry
+module Services
 
-  class ServiceFactory < ::Factory::FactoriesBase
+  class ServiceRegistry < ::Registry::RegistryBase
 
 
     ##
@@ -18,13 +18,13 @@ module Factory
     ##
 
     def access_service
-      @sf_access_service ||= Services::AccessService.new({factory: self})       # First call will execute this set of code
+      @sf_access_service ||= AccessService.new({registry: self})       # First call will execute this set of code
       yield @sf_access_service if block_given?
       @sf_access_service
     end
 
     def content_service
-      @sf_content_service ||= Services::ContentService.new({factory: self})
+      @sf_content_service ||= ContentService.new({registry: self})
       yield @sf_content_service if block_given?
       @sf_content_service
     end
@@ -34,13 +34,13 @@ module Factory
     ##
 
     def xml_profile_provider
-      @sf_xml_profile_builder ||= Providers::XMLProfileProvider.new({factory: self})
+      @sf_xml_profile_builder ||= Providers::XMLProfileProvider.new({registry: self})
       yield @sf_xml_profile_builder if block_given?
       @sf_xml_profile_builder
     end
 
     def db_profile_provider
-      @sf_db_profile_builder ||= Providers::DBProfileProvider.new({factory: self})
+      @sf_db_profile_builder ||= Providers::DBProfileProvider.new({registry: self})
       yield @sf_db_profile_builder if block_given?
       @sf_db_profile_builder
     end
@@ -50,13 +50,13 @@ module Factory
     ##
 
     def content_adapter_file_system
-      @sf_content_adapter_file_system ||= Processors::FileSystemAdapter.new({factory: self})
+      @sf_content_adapter_file_system ||= Processors::FileSystemAdapter.new({registry: self})
       yield @sf_content_adapter_file_system if block_given?
       @sf_content_adapter_file_system
     end
 
     def content_adapter_inline_values
-      @sf_content_adapter_inline_values ||= Processors::InlineValuesAdapter.new({factory: self})
+      @sf_content_adapter_inline_values ||= Processors::InlineValuesAdapter.new({registry: self})
       yield @sf_content_adapter_inline_values if block_given?
       @sf_content_adapter_inline_values
     end

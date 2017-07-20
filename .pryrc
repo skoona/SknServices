@@ -1,6 +1,6 @@
 
-Pry::Commands.create_command "get-service-factory" do
-  description "Gain access to default ServiceFactory"
+Pry::Commands.create_command "get-service-registry" do
+  description "Gain access to default ServiceRegistry"
 
   def process
     u = Secure::UserProfile.find_and_authenticate_user("developer","developer99");
@@ -13,6 +13,6 @@ Pry::Commands.create_command "get-service-factory" do
   	c = session.instance_variable_get(:@controller);
   	c.warden.set_user(u);
 
-  	$service = c.service_factory
+  	$service = c.service_registry
   end
 end

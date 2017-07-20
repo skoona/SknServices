@@ -1,5 +1,5 @@
 ##
-# lib/providers/xml_profile_provider.rb
+# File: <root>/app/strategy/providers/xml_profile_provider.rb
 #
 # ContentProfile from XML
 #
@@ -9,7 +9,7 @@
 # http://stackoverflow.com/questions/10541800/namespace-attributes-in-builder-gem
 # https://github.com/rtomayko/tilt
 #
-# Storage thru Factory
+# Storage thru Registry
 # #######
 
 

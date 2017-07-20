@@ -3,12 +3,12 @@
 RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based AccessRegistry' do
 
   let(:user) { page_user_developer }
-  let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
+  let(:mc) {ServiceRegistryMockController.new(user: user)}
+  let(:service_registry)  { Services::ServiceRegistry.new({registry: mc}) }
 
   before(:each) do
-    @factory = service_factory
-    @service = @factory.content_adapter_inline_values
+    @registry = service_registry
+    @service = @registry.content_adapter_inline_values
   end
 
 
@@ -17,27 +17,27 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
     it "#new throws an Exception without params." do
       expect{ Processors::InlineValuesAdapter.new }.to raise_error(ArgumentError)
     end
-    it "#new succeeds with only :factory as init param." do
-      expect(Processors::InlineValuesAdapter.new({factory: @factory})).to be_a(Processors::InlineValuesAdapter)
+    it "#new succeeds with only :registry as init param." do
+      expect(Processors::InlineValuesAdapter.new({registry: @registry})).to be_a(Processors::InlineValuesAdapter)
     end
-    it "#new fails when :factory is invalid." do
-      expect{ Processors::InlineValuesAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
+    it "#new fails when :registry is invalid." do
+      expect{ Processors::InlineValuesAdapter.new({registry: nil}) }.to raise_error(ArgumentError)
     end
-    it "#factory.profile_data_services returns a proper service object." do
+    it "#registry.profile_data_services returns a proper service object." do
       expect( @service ).to be_a Processors::InlineValuesAdapter
     end
-    it "#factory and #controller objects to be different." do
-      expect( @service.factory ).to be_a Factory::ServiceFactory
-      expect( @service.controller ).to be_a ServiceFactoryMockController
+    it "#registry and #controller objects to be different." do
+      expect( @service.registry ).to be_a Services::ServiceRegistry
+      expect( @service.controller ).to be_a ServiceRegistryMockController
     end
     it "#current_user returns a UserProfile object." do
-      expect( @service.factory.current_user ).to be_a Secure::UserProfile
+      expect( @service.registry.current_user ).to be_a Secure::UserProfile
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
     it "#method_missing is not broken by respond_to_missing?." do
       expect( @service.current_user ).to be_a Secure::UserProfile
       expect{ @service.will_not_find_me }.to raise_error(NoMethodError)
-      expect{ @service.factory.will_not_find_me }.to raise_error(NoMethodError)
+      expect{ @service.registry.will_not_find_me }.to raise_error(NoMethodError)
     end
   end
 
@@ -70,13 +70,13 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
     ## Expected Response
     # {:source=>"images", :filename=>"galaxy-man.png", :created=>"2016/02/14", :size=>"3.2 MB"}
     it "#available_content_list returns array of options with descriptions. " do
-      expect(  @factory.adapter_for_content_profile_entry(cpe).available_content_list({}) ).to be_a Array
-      expect(  @factory.adapter_for_content_profile_entry(cpe).available_content_list(cpe).first ).to be_a(Hash)
+      expect(  @registry.adapter_for_content_profile_entry(cpe).available_content_list({}) ).to be_a Array
+      expect(  @registry.adapter_for_content_profile_entry(cpe).available_content_list(cpe).first ).to be_a(Hash)
     end
 
     it "#retrieve_content_values returns content_value as is: Array, Hash, or String. " do
-      expect(  @factory.adapter_for_content_profile_entry(cpe).retrieve_content_values({}) ).to be_a Array
-      expect(  @factory.adapter_for_content_profile_entry(cpe).retrieve_content_values(cpe).first.first ).to be_a(String)
+      expect(  @registry.adapter_for_content_profile_entry(cpe).retrieve_content_values({}) ).to be_a Array
+      expect(  @registry.adapter_for_content_profile_entry(cpe).retrieve_content_values(cpe).first.first ).to be_a(String)
     end
 
   end

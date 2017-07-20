@@ -1,23 +1,23 @@
 ##
-# File: <root>/lib/factory/task_adapters_base.rb
+# File: <root>/app/strategy/processors/processor_base.rb
 #
-# Retrieves content for target system
+# Common base for multi-method processors
 
 module Processors
   class ProcessorBase
 
-    attr_accessor :factory
+    attr_accessor :registry
 
     def initialize(params={})
       params.keys.each do |k|
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceFactory: Missing required initialization param!" if @factory.nil?
+      raise ArgumentError, "ServiceRegistry: Missing required initialization param!" if @registry.nil?
     end
 
     def self.inherited(klass)
-      Rails.logger.debug("Factory::DomainsBase inherited By #{klass.name}")
+      Rails.logger.debug("Registry::DomainsBase inherited By #{klass.name}")
     end
 
     def ready?
@@ -77,11 +77,11 @@ module Processors
     end
 
     # Easier to code than delegation, or forwarder
-    # Allows strategy.domains, service, to access objects in service_factory and/or controller by name only
+    # Allows strategy.domains, service, to access objects in service_registry and/or controller by name only
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      block_given? ? factory.send(method, *args, block) :
-          (args.size == 0 ?  factory.send(method) : factory.send(method, *args))
+      block_given? ? registry.send(method, *args, block) :
+          (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
     end
 
   end

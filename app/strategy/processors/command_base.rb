@@ -1,3 +1,4 @@
+##
 # File: app/strategy/processors/commands_base.rb
 #
 # Common Base for all Single Task Processsors
@@ -10,7 +11,7 @@ module Processors
 
 
   class CommandBase
-    include ::Factory::ObjectStorageService
+    include ::Registry::ObjectStorageService
 
     def self.inherited(klass)
       klass.processor_type = klass.name

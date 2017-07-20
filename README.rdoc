@@ -46,7 +46,7 @@ http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-i
                                   Service               Role                Inherts from
                                   ----------------      ----------------    -----------------------
 sessions_controller                None                  Login/Out           ActionController::Base
-application_controller             service_factory       App/Security        ActionController::Base/Secure::ControllerAccessControl
+application_controller             service_registry       App/Security        ActionController::Base/Secure::ControllerAccessControl
 users_controller                   access_service        Admin               ApplicationController
 user_group_roles_controller        access_service        Admin               ApplicationController
 password_resets_controller         access_service        Admin               ApplicationController
@@ -56,30 +56,30 @@ profiles_controller                content_service       Features Demo       App
 
 === Services Strategy Components Layout
 
-ServiceFactory
-    Factory::FactoriesBase
-        +Factory::ObjectStorageService
+ServiceRegistry
+    Registry::RegistryBase
+        +Registry::ObjectStorageService
 
 ContentService
     ContentProfileDomain
-        Factory::DomainsBase
+        Registry::DomainsBase
 
 AccessService
     AccessProfileDomain
-        Factory::DomainsBase
+        Registry::DomainsBase
 
 Providers::DBProfileProvider
 Providers::XMLProfileProvider
     Providers::ProvidersBase
-        +Factory::ObjectStorageService
+        +Registry::ObjectStorageService
 
 Processors::InlineValuesAdapter
 Processors::FileSystemAdapter
     Processors::ProcessorBase
-        Factory::DomainsBase
+        Registry::DomainsBase
 
 Secure::UserProfile
-    +Factory::ObjectStorageService
+    +Registry::ObjectStorageService
     +Secure::UserAccessControl
     (proxy)User
         +Secure::UserProfileHelper

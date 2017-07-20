@@ -4,28 +4,28 @@
 RSpec.describe Services::AccessService, "Service routines of AccessProfile and AccessProfileDomain."  do
   let!(:user) {user_bstester}
 
-  let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
+  let(:mc) {ServiceRegistryMockController.new(user: user)}
+  let(:service_registry)  { Services::ServiceRegistry.new({registry: mc}) }
 
-  let(:service) {service_factory.access_service}
+  let(:service) {service_registry.access_service}
 
   context "Initialization "  do
 
     scenario "#new throws an Exception without params." do
       expect{ Services::AccessService.new }.to raise_error(ArgumentError)
     end
-    scenario "#new succeeds with only :factory as init param." do
-      expect(Services::AccessService.new({factory: service_factory})).to be_a(Services::AccessService)
+    scenario "#new succeeds with only :registry as init param." do
+      expect(Services::AccessService.new({registry: service_registry})).to be_a(Services::AccessService)
     end
-    scenario "#new fails when :factory is invalid." do
-      expect{ Services::AccessService.new({factory: nil}) }.to raise_error(ArgumentError)
+    scenario "#new fails when :registry is invalid." do
+      expect{ Services::AccessService.new({registry: nil}) }.to raise_error(ArgumentError)
     end
-    scenario "#factory.profile_data_services returns a proper service object." do
+    scenario "#registry.profile_data_services returns a proper service object." do
       expect( service ).to be_a Services::AccessService
     end
-    scenario "#service #factory and #controller objects to be different." do
-      expect( service.factory ).to be_a Factory::ServiceFactory
-      expect( service.controller ).to be_a ServiceFactoryMockController
+    scenario "#service #registry and #controller objects to be different." do
+      expect( service.registry ).to be_a Services::ServiceRegistry
+      expect( service.controller ).to be_a ServiceRegistryMockController
     end
     scenario "#current_user returns a UserProfile object." do
       expect( service.current_user ).to be_a Secure::UserProfile

@@ -102,31 +102,31 @@
             Views and Controllers us the contents of thei result bean to complete their operations; typically named <code>@page_controls</code>, this reduces the total number of instance variables being defined in controllers - again making testing easier.</p>
             <p>Domain Classes contain the code that would otherwise be embedded in a Model, using the Rails MVC understanding.  However, Domain Classes concentrate their methods on the broader business process; attempting to collect related methods that handle all IO for the process, and the logic needed to ensure each process step is successful.</p>
             <p>Domain classes call on or instantiate Adapter objects, and other helper objects to as needed to further condense business process tasks.</p>
-            <p>A ServiceFactory is used to collect all strategy.services defined in the application, it is the sole provider of
+            <p>A ServiceRegistry is used to collect all strategy.services defined in the application, it is the sole provider of
               instances of these strategy.services. And expects both controllers and other strategy.services to be making
               requests for a particular service; which is memotizes to speed up secondary access.</p>
             <p>Methods in a domain or service class should minimize their user of controller based methods and helpers where ever possible to maintain separation and improve test outcomes.  However, access to the controller is implemented and available from every service and domain class, through the inheritance chain: Domains inherit from DomainsBase class.
-              DomainsBase keep a initialization reference to the ServiceFactory that instantiated it <code>#service</code>, and the ServiceFactory keeps a reference to the controller that instantiated it <code>#factory</code>.  Thus from any service or domain <code>#service.factory</code> is a direct reference to the Controller.</p>
+              DomainsBase keep a initialization reference to the ServiceRegistry that instantiated it <code>#service</code>, and the ServiceRegistry keeps a reference to the controller that instantiated it <code>#registry</code>.  Thus from any service or domain <code>#service.registry</code> is a direct reference to the Controller.</p>
           </dd>
 
-          <dt>ServiceFactory</dt>
+          <dt>ServiceRegistry</dt>
           <dd>
             <p><strong>Business Logic Propagation</strong></p>
             <p>Rails ApplicationController is augmented with a <code>#login_required</code> method to support the Authentication/Authorization processes.  In support of business logic two more
             methods are added to the base ApplicationController for use by all controllers that inherit from it.
               <ul>
-                <li><code>#service_factory</code> module contains controller helpers designed to be used by Services to gain
+                <li><code>#service_registry</code> module contains controller helpers designed to be used by Services to gain
                   access to standard controller capabilities and other Services; these methods can easily be mocked, allowing the Services
                   to be tested without a Controller being active in many cases. It wraps all Service/Domain objects and standardizes their initialization params.
                 </li>
                 <li>
-                  <code>#method_missing</code> method routes Services method calls to the service_factory, relieving us from defining every Service as a Controller Helper.
+                  <code>#method_missing</code> method routes Services method calls to the service_registry, relieving us from defining every Service as a Controller Helper.
                 </li>
               </ul>
             </p>
-            <p>You can think of the ServiceFactory as a classic Rails ControllerHelper.  However, all our business logic and data generation logic is defined in Service Classes memorized by the ServiceFactory.  For testing this allows the ServiceFactory mock out the controller, in many cases.</p>
+            <p>You can think of the ServiceRegistry as a classic Rails ControllerHelper.  However, all our business logic and data generation logic is defined in Service Classes memorized by the ServiceRegistry.  For testing this allows the ServiceRegistry mock out the controller, in many cases.</p>
             <p><strong>Object Storage Services</strong></p>
-            <p>The ServiceFactory provides controller strategy.services to the Services Object and it also provides and in-memory storage facility where objects can be stored across multiple request/response cycles if needed.</p>
+            <p>The ServiceRegistry provides controller strategy.services to the Services Object and it also provides and in-memory storage facility where objects can be stored across multiple request/response cycles if needed.</p>
           </dd>
           <dt>Domains</dt>
           <dd>
@@ -161,7 +161,7 @@
           <dd>
             <p><strong>Directly test the code you write</strong></p>
             <p>To implement an application using these strategies you will create Domains, ProcessStep, Services, and Helpers Classes; along with the necessary Views.</p>
-            <p>Using the ServiceFactory as a stand in for a Controller, many of the Services and Domains can be tested without engaging the full Rails stack, which might make tests run faster.</p>
+            <p>Using the ServiceRegistry as a stand in for a Controller, many of the Services and Domains can be tested without engaging the full Rails stack, which might make tests run faster.</p>
             <p>Rather than test a Rails Controller to verify business logic, test the Service#method that's invoked in that controllers method.  Only during LIVE Integration or Feature tests
                should concerned about what the Rails Controller is doing.</p>
           </dd>

@@ -9,25 +9,25 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
 
   let!(:user) { page_user_eptester }
   let!(:userp) { page_user_bnptester }
-  let!(:mc) {ServiceFactoryMockController.new(user: user)}
-  let!(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
+  let!(:mc) {ServiceRegistryMockController.new(user: user)}
+  let!(:service_registry)  { Services::ServiceRegistry.new({registry: mc}) }
 
   before do
-    @service = service_factory.content_service
+    @service = service_registry.content_service
   end
 
   context "Initialization "  do
     scenario "#new throws an Exception without params." do
       expect{ Domains::ContentProfileDomain.new }.to raise_error(ArgumentError)
     end
-    scenario "#new succeeds when :factory is valid value." do
-      expect(Domains::ContentProfileDomain.new({factory: service_factory})).to be_a(Domains::ContentProfileDomain)
+    scenario "#new succeeds when :registry is valid value." do
+      expect(Domains::ContentProfileDomain.new({registry: service_registry})).to be_a(Domains::ContentProfileDomain)
     end
-    scenario "#new fails when :factory is invalid value." do
-      expect{ Domains::ContentProfileDomain.new({factory: nil}) }.to raise_error(ArgumentError)
+    scenario "#new fails when :registry is invalid value." do
+      expect{ Domains::ContentProfileDomain.new({registry: nil}) }.to raise_error(ArgumentError)
     end
-    scenario "#new succeeds when initialized via #service_factory and a #domain_service." do
-      expect(service_factory.content_service).to be_kind_of Domains::ContentProfileDomain
+    scenario "#new succeeds when initialized via #service_registry and a #domain_service." do
+      expect(service_registry.content_service).to be_kind_of Domains::ContentProfileDomain
     end
     scenario "#service returns an #is_a Domains::ContentProfileDomain object." do
       expect( @service ).to be_kind_of Domains::ContentProfileDomain
@@ -36,7 +36,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
     scenario "#service.controller returns the controller object." do
-      expect( @service.controller ).to be_a ServiceFactoryMockController
+      expect( @service.controller ).to be_a ServiceRegistryMockController
     end
   end
 
@@ -129,7 +129,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
 
   context "Profile Data Services methods return proper results. " do
 
-    # purposely exercise #method_missing in Factory::DomainsBase, via @service.params method request
+    # purposely exercise #method_missing in Registry::DomainsBase, via @service.params method request
     scenario "#update_content_profile_with_profile_type_id" do
       parms = {"profile_type_id"=>"6",
                "button"=>"content-profile-modal",

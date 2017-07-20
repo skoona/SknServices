@@ -1,5 +1,5 @@
 module TestProviders
-  class DocumentProvider < Factory::FactoriesBase
+  class DocumentProvider < Registry::RegistryBase
     attr_accessor :key, :obj
     def initialize
       @obj = SknUtils::NestedResult.new({samples: "samples", quanity: 3, values: [22, 16, 55]})
@@ -24,7 +24,7 @@ module TestProviders
 
   end
 
-  class ImageProvider < Factory::FactoriesBase
+  class ImageProvider < Registry::RegistryBase
     attr_accessor :key, :obj
     def initialize
       @obj = SknUtils::NestedResult.new({samples: "samples", quanity: 2, values: [55, 22]})
@@ -50,7 +50,7 @@ module TestProviders
   end
 end
 
-RSpec.describe 'Inherited Factory Base Services' do
+RSpec.describe 'Inherited Registry Base Services' do
 
   before(:each) do
     Secure::ObjectStorageContainer.instance.test_reset!

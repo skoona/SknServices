@@ -3,12 +3,12 @@
 RSpec.describe Processors::FileSystemAdapter, 'Content Adapter for File Systems' do
 
   let(:user) { page_user_developer }
-  let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { Factory::ServiceFactory.new({factory: mc}) }
+  let(:mc) {ServiceRegistryMockController.new(user: user)}
+  let(:service_registry)  { Services::ServiceRegistry.new({registry: mc}) }
 
   before(:each) do
-    @factory = service_factory
-    @service = @factory.content_adapter_file_system
+    @registry = service_registry
+    @service = @registry.content_adapter_file_system
   end
 
 
@@ -17,27 +17,27 @@ RSpec.describe Processors::FileSystemAdapter, 'Content Adapter for File Systems'
     it "#new throws an Exception without params." do
       expect{ Processors::FileSystemAdapter.new }.to raise_error(ArgumentError)
     end
-    it "#new succeeds with only :factory as init param." do
-      expect(Processors::FileSystemAdapter.new({factory: @factory})).to be_a(Processors::FileSystemAdapter)
+    it "#new succeeds with only :registry as init param." do
+      expect(Processors::FileSystemAdapter.new({registry: @registry})).to be_a(Processors::FileSystemAdapter)
     end
-    it "#new fails when :factory is invalid." do
-      expect{ Processors::FileSystemAdapter.new({factory: nil}) }.to raise_error(ArgumentError)
+    it "#new fails when :registry is invalid." do
+      expect{ Processors::FileSystemAdapter.new({registry: nil}) }.to raise_error(ArgumentError)
     end
-    it "#factory.profile_data_services returns a proper service object." do
+    it "#registry.profile_data_services returns a proper service object." do
       expect( @service ).to be_a Processors::FileSystemAdapter
     end
-    it "#factory and #controller objects to be different." do
-      expect( @service.factory ).to be_a Factory::ServiceFactory
-      expect( @service.controller ).to be_a ServiceFactoryMockController
+    it "#registry and #controller objects to be different." do
+      expect( @service.registry ).to be_a Services::ServiceRegistry
+      expect( @service.controller ).to be_a ServiceRegistryMockController
     end
     it "#current_user returns a UserProfile object." do
-      expect( @service.factory.current_user ).to be_a Secure::UserProfile
+      expect( @service.registry.current_user ).to be_a Secure::UserProfile
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
     it "#method_missing is not broken by respond_to_missing?." do
       expect( @service.current_user ).to be_a Secure::UserProfile
       expect{ @service.will_not_find_me }.to raise_error(NoMethodError)
-      expect{ @service.factory.will_not_find_me }.to raise_error(NoMethodError)
+      expect{ @service.registry.will_not_find_me }.to raise_error(NoMethodError)
     end
   end
 

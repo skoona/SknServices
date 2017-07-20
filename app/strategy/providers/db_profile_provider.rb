@@ -1,9 +1,9 @@
 ##
-# lib/providers/db_profile_provider.rb
+# File: <root>/app/strategy/providers/db_profile_provider.rb
 #
 # ContentProfile from DB
 #
-# Storage thru Factory
+# Storage thru Registry
 
 module Providers
   class DBProfileProvider < ProvidersBase

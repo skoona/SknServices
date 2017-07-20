@@ -110,7 +110,7 @@ module Processors
             end
         end
       end
-      factory.update_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}", catalog)
+      registry.update_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}", catalog)
       Rails.logger.debug "#{self.class}##{__method__} Catalog: #{catalog}, Result: #{result}"
       
       result
@@ -135,7 +135,7 @@ module Processors
     def retrieve_content_object(params, user_p=nil) # Hash entry result from available_content_list method
       page_user = user_p || (get_page_user(params["username"] || params[:username]))
 
-      catalog = factory.get_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}")
+      catalog = registry.get_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}")
       result = {
           success: true,
           package: catalog.try(:[], params[:id]) || {}              # { source:, filename: , mime: }  key should be :id but prior method flipped value to :profile

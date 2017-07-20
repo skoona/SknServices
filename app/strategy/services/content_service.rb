@@ -8,7 +8,7 @@ module Services
 
   class ContentService < Domains::ContentProfileDomain
 
-  # attr_accessor :factory, :current_user, :page_user  -- initialize by DomainService
+  # attr_accessor :registry, :current_user, :page_user  -- initialize by DomainService
 
     PROFILE_CONTEXT='content'
 

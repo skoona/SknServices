@@ -125,7 +125,7 @@ end
                        domain objects are responsible for.  <em>use the force!</em></p>
                 </div>
               <pre class="pre-scrollable prettyprint lang-rb">
-class ServiceFactory < ::Factory::FactoriesBase
+class ServiceRegistry < ::Registry::RegistryBase
 
 
   ##
@@ -133,7 +133,7 @@ class ServiceFactory < ::Factory::FactoriesBase
   ##
 
   def access_service
-    @sf_access_service ||= ::AccessService.new({factory: self})
+    @sf_access_service ||= ::AccessService.new({registry: self})
     yield @sf_access_service if block_given?
     @sf_access_service
   end
@@ -227,7 +227,7 @@ end
                                 <p>During initialization the user's roles are rendered from those assigned via group roles.</p>
                             </dd>
                         <dt>Inheritance</dt>
-                            <dd><p>Secure::UserProfile is a base class with direct access to the memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
+                            <dd><p>Secure::UserProfile is a base class with direct access to the memory-based Object Storage Interface Module <code>Registry::ObjectStorageService</code>, capable of keeping references to memory
                                 objects across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
                                 retention until there usage is complete.</p>
                         <dt>Provides</dt>
@@ -295,41 +295,41 @@ end
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" href="#ServiceFactory" aria-expanded="false" aria-controls="collapseTwo">
-                      [Services Strategy] ServiceFactory
+                    <a class="collapsed" role="button" data-toggle="collapse" href="#ServiceRegistry" aria-expanded="false" aria-controls="collapseTwo">
+                      [Services Strategy] ServiceRegistry
                     </a>
                 </h4>
             </div>
-            <div id="ServiceFactory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div id="ServiceRegistry" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
                   <%= image_tag("SknService-MessageFlow.png", alt: "Flow Path", class: "huge-image") %>
-                    <h5>ServiceFactory</h5>
+                    <h5>ServiceRegistry</h5>
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
-                            <p>ServiceFactory is instantiated by the top level Application Controller using a <code>:before_action</code> callback to a private method
+                            <p>ServiceRegistry is instantiated by the top level Application Controller using a <code>:before_action</code> callback to a private method
                                 called <code>:establish_domain_services</code>.  There is also a twin to this callback referred to as <code>:manage_domain_services</code>,
                                 called by the <code>:after_action</code> callback.</p>
                             <p><code>:establish_domain_services</code> and <code>:manage_domain_services</code> work to recover assets from the request session, and to save keys
-                                to those assets into the session just before the controller exits back to the browser.  The ServiceFactory is lightwieght and would derive no real benefit from being
+                                to those assets into the session just before the controller exits back to the browser.  The ServiceRegistry is lightwieght and would derive no real benefit from being
                                 serialized into a session.  So it is simply created anew with each request/response cycle.</p>
-                            <p>The ServiceFactory itself is instantiated as <code>@service_factory</code> in the top level ApplicationController, behind a memotizing method <code>service_factory</code>.
+                            <p>The ServiceRegistry itself is instantiated as <code>@service_registry</code> in the top level ApplicationController, behind a memotizing method <code>service_registry</code>.
                                 To instantiate a processService use: <code>process_service.service_method_name(params)</code>.</p>
-                            <p>The intended use of the <code>service_factory</code> is to provide lazy instantiation and memotization of all strategy components classes in the application. And to additionally
+                            <p>The intended use of the <code>service_registry</code> is to provide lazy instantiation and memotization of all strategy components classes in the application. And to additionally
                                 provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
-                            <p>Inside a processService, like ContentService or ProfileProviders, reference the service_factory as <code>:factory</code> or <code>:service</code>, as in: <code>factory.content_service.some_method</code> .</p>
+                            <p>Inside a processService, like ContentService or ProfileProviders, reference the service_registry as <code>:registry</code> or <code>:service</code>, as in: <code>registry.content_service.some_method</code> .</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>ServiceFactory, inherits from <code>::Factory::ServicesBase</code> which yields a memory-based Object Storage Interface Module <code>Factory::ObjectStorageService</code>, capable of keeping references to memory
+                        <dd><p>ServiceRegistry, inherits from <code>::Registry::RegistryBase</code> which yields a memory-based Object Storage Interface Module <code>Registry::ObjectStorageService</code>, capable of keeping references to memory
                             object across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
                             retention until there usage is complete.</p>
                         <dt>Provides</dt>
                         <dd>
-                            <p>ServiceFactory provides Services with the <code>:current_user</code>, <code>:factory</code> reference, and a <code>:method_missing</code> feature capable of
+                            <p>ServiceRegistry provides Services with the <code>:current_user</code>, <code>:registry</code> reference, and a <code>:method_missing</code> feature capable of
                                 directing :not_found method calls to the controller to be serviced if possible.</p>
-                            <p>Services should truly limit their demands of the controller object to zero if possible, and have the service_factory devise a solution to their requirements.  The most often
+                            <p>Services should truly limit their demands of the controller object to zero if possible, and have the service_registry devise a solution to their requirements.  The most often
                                 experienced demand for the controller is when a service needs to resolve a named route or render a template partial to embed in a json response.</p>
-                            <p>Let's not recreate the application controller, for those types of requirements use the controller, just wrap those patterns in a method defined in the service_factory or a
+                            <p>Let's not recreate the application controller, for those types of requirements use the controller, just wrap those patterns in a method defined in the service_registry or a
                                 controller helper/presenter.  This way it can be easily mocked out later for testing.  In fact, I do use a <code>:page_actions</code> view helper located in the
                                 ApplicationHelper module, to handle rendering and route resolutions from a hashed set of control data from a service.  Basically, outsourcing to the ActionView those things it does best; and totally removing the need for a controller object in the majority of strategy.services and strategy.domains.</p>
                             <p>Engineering objectives shall include, avoidance of the controller in all strategy.services, strategy.domains, and specialty business strategy.services classes.  It is possible and practical, your RSpec tests will demonstrate it later.</p>
@@ -372,12 +372,12 @@ end
                                   Basic: <code>[:named_route_path, {options}, '?query_string']</code><br>
                                   Advanced: <code>{engine: :demo, path: :demo_profiles_path, options: {id:111304},query:'?query_string'}</code><br/>
                                 <br/>
-                                Example: <code>factory.page_action_paths(paths)</code></p>
+                                Example: <code>registry.page_action_paths(paths)</code></p>
                             </div>
                         </dd>
                     </dl>
                     <p>All Components, like ContentService, AccessService, DBProfileProvider, XMLProfileProvider, FileSystemAdapter, and InlineValuesAdapter
-                      are instantiated via the service_factory facilities.  And primary utility objects can also be supported via the service factory.</p>
+                      are instantiated via the service_registry facilities.  And primary utility objects can also be supported via the service registry.</p>
                 </div>
             </div>
             <p>Primary Component of this Services Strategy. Providing access to all application strategy.services!</p>
@@ -397,13 +397,13 @@ end
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
-                            <p>ServiceFactory provides instantiation strategy.services to any requester in the request/response cycle.</p>
+                            <p>ServiceRegistry provides instantiation strategy.services to any requester in the request/response cycle.</p>
                             <p>The intended use of processServices object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
                                 on the <code>SknUtils::NestedResult</code> group of result value containers.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>processServices inherit business logic from the <code>processDomain</code> class.  The processDomain class inherits from the <code>::Factory::DomainsBase</code>,
-                            which yields common initialization strategy.services like the current_user() and access to the service_factory for interaction with the controller helpers if needed.  In particular, the <code>service_factory</code> includes
+                        <dd><p>processServices inherit business logic from the <code>processDomain</code> class.  The processDomain class inherits from the <code>::Registry::DomainsBase</code>,
+                            which yields common initialization strategy.services like the current_user() and access to the service_registry for interaction with the controller helpers if needed.  In particular, the <code>service_registry</code> includes
                             object storage strategy.services and session storage strategy.services through its inheritance chain.</p>
                         <dt>Provides</dt>
                         <dd><p>processServices present customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
@@ -414,7 +414,7 @@ end
                     </dl>
                 </div>
             </div>
-            <p>Instantiated by: <code>service_factory()</code></p>
+            <p>Instantiated by: <code>service_registry()</code></p>
         </div>
 
         <div class="panel panel-info">
@@ -437,10 +437,10 @@ end
                               strategy.services.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>processDomains inherit directly from the <code>::Factory::DomainsBase</code> class, and yields business logic methods to higher level service objects.
+                        <dd><p>processDomains inherit directly from the <code>::Registry::DomainsBase</code> class, and yields business logic methods to higher level service objects.
                             Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
                         <dt>Provides</dt>
-                        <dd><p>processDomains have logical access to the service factory and all other peer strategy.services the factory manages.  Typically you would find two to three levels of methods in a Domain class.</p>
+                        <dd><p>processDomains have logical access to the service registry and all other peer strategy.services the registry manages.  Typically you would find two to three levels of methods in a Domain class.</p>
                             <dl>
                                 <dt>Level One</dt>
                                 <dd>Top level business interface.  Methods at this level take responsibility for doing the whole process step; process a order or payment, would be an example of this.</dd>
@@ -473,7 +473,7 @@ end
             <dl class="dl-horizontal">
               <dt>Instantiate</dt>
               <dd>
-                <p>ServiceFactory provides instantiation strategy.services to any requester in the request/response cycle.</p>
+                <p>ServiceRegistry provides instantiation strategy.services to any requester in the request/response cycle.</p>
                 <p>The intended use of a domainProvider object, is to handle all business object persistence related operations for domain context data. It should not interact directly any object aside from the domain object that calls it, and the Database Interface.</p>
               </dd>
               <dt>Inheritance</dt>
@@ -487,7 +487,7 @@ end
           </div>
           <p>Currently there are two implementations of this component: XMLProfileProvider and DBProfileProvider classes. </p>
         </div>
-        <p>Instantiated by: <code>service_factory()</code></p>
+        <p>Instantiated by: <code>service_registry()</code></p>
       </div>
 
       <div class="panel panel-info">
@@ -504,11 +504,11 @@ end
             <dl class="dl-horizontal">
               <dt>Instantiate</dt>
               <dd>
-                <p>ServiceFactory provides instantiation strategy.services to any requester in the request/response cycle.</p>
+                <p>ServiceRegistry provides instantiation strategy.services to any requester in the request/response cycle.</p>
                 <p>The intended use of a Processor is to handle specialized tasks which may include external IO of some sort, for Domains.</p>
               </dd>
               <dt>Inheritance</dt>
-              <dd><p>A task processor inherits directly from the <code>Processors::ProcessorBase</code> class.  The ProcessorBase yields common initialization strategy.services, and access to the service factory.</p>
+              <dd><p>A task processor inherits directly from the <code>Processors::ProcessorBase</code> class.  The ProcessorBase yields common initialization strategy.services, and access to the service registry.</p>
               </dd>
               <dt>Provides</dt>
               <dd><p>FileSystemAdapter provides logical access to content storage facilities.</p>
@@ -518,7 +518,7 @@ end
           </div>
           <p>Currently there are two implementations of this component: FileSystemAdapter and InlineValueAdapter classes. </p>
         </div>
-        <p>Instantiated by: <code>service_factory()</code>.  However, they are capable of operating independently of the </p>
+        <p>Instantiated by: <code>service_registry()</code>.  However, they are capable of operating independently of the </p>
       </div>
 
         <div class="panel panel-info">
@@ -593,7 +593,7 @@ end
                 <p>The directory <code>spec/support</code> has a collection of modules and classes to augment testing:</p>
                 <ul>
                   <li>
-                    <code>ServiceFactoryMockController</code> A class used to replace the need for a ApplicationController to initialize the ServiceFactory with. It contains methods that
+                    <code>ServiceRegistryMockController</code> A class used to replace the need for a ApplicationController to initialize the ServiceRegistry with. It contains methods that
                     Service or Domain objects might call on the ApplicationController, like: current_user, page_actions, menu_active, etc.  The use of this
                     mock controller has a significant speed increase compared to its alternative <strong>Integration/Controller</strong> tests.
                   </li>
@@ -601,7 +601,7 @@ end
                     <code>TestUsers</code> contains a collection of methods that will return a testable user_profile object, either fully enabled as the current_user, or simply loaded as an independent record.
                   </li>
                   <li>
-                    <code>TestDataSerializers</code> contains a couple of methods that allow you to save objects to a seperate yaml file.  Can be used to capture a <code>@page_controls</code> object to be used latter as mocking data when testing views.
+                    <code>TestDataSerializers</code> contains a couple of methods that allow you to save objects to a separate yaml file.  Can be used to capture a <code>@page_controls</code> object to be used latter as mocking data when testing views.
                   </li>
                 </ul>
                 <p>Testing Services with RSpec looks like this:</p>
@@ -609,10 +609,10 @@ end
 RSpec.describe ContentService, "Service routines of ContentService." do
   let!(:user) {user_bstester}
 
-  let(:mc) {ServiceFactoryMockController.new(user: user)}
-  let(:service_factory)  { ServiceFactory.new({factory: mc, user: user}) }
+  let(:mc) {ServiceRegistryMockController.new(user: user)}
+  let(:service_registry)  { ServiceRegistry.new({registry: mc}) }
 
-  let(:service) {service_factory.content_service}
+  let(:service) {service_registry.content_service}
 
   context "Content Profile Management methods return proper results. " do
 
@@ -666,6 +666,38 @@ end
             </div>
             <p>Authentication and Authorization Data Models</p>
         </div>
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="todo">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" href="#todo-list" aria-expanded="false" aria-controls="collapseTwo">
+              To Do List
+            </a>
+          </h4>
+        </div>
+        <div id="todo-list" class="panel-collapse collapse" role="tabpanel" aria-labelledby="todo">
+          <div class="panel-body">
+            <h3>To Do</h3>
+            <dl class="dl-horizontal">
+              <dt>CommandBase</dt>
+                <dd>Processors have two types of implementations based on their intended purpose: Single or Multi Method mode.  Mode is implementation via inheritance; <code>Processors:ProcessorBase</code> class is for multi-method, <code>Processors::CommandBase</code> class is for single-method implementation.  Single mode Processors would live outside of the ServiceRegistry umbrella and be invoke directly by Domains when needed; they are desiged to be invoke via: <code>myCommandProcessor.call(params_hash)</code> </dd>
+              <dt>Profile Runtime</dt>
+                <dd>A new class to handle runtime requests for user ContentProfiles and authorization queries, rather than bolting these methods on the UserProfile.  While these features are present in the code, I'd like to organize them better.</dd>
+              <dt>AccessRegistry</dt>
+                <dd>There are a lot of direct calles to the <code>Secure:AccessRegistry...</code> class which I would like to corral into a AccessRegistry provider or processor.</dd>
+              <dt>Clarify</dt>
+              <dd>There are three significant and wonderful components in this codeset; as depicted on the homepage.
+                <ol>
+                  <li>Deep authentication implementation via UserProfile class, backed by Warden and Rack-Attack.</li>
+                  <li>Deep authorization coverage of all processes and accessible elements via AccessProfile classes, backed by Warden and ApplicationController.</li>
+                  <li>Deep authorization coverage of secured-content based resources via ContentProfile XML or Database classes.</li>
+                </ol>
+                For which I need to expose as usable features in your app.
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <p>Todo List: Items I want to spend more time on</p>
+      </div>
     </section>
 
 </article>

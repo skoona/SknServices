@@ -1,4 +1,5 @@
 ##
+# # File: <root>/app/strategy/domains/content_profile_domain.rb
 #
 # Inherited by: ContentService
 #

@@ -1,15 +1,15 @@
 ##
-# lib/factory/object_storage_services.rb
+# lib/registry/object_storage_services.rb
 #
 # Object Storage Support for domain and service classes
 #
-module Factory
+module Registry
 
   module ObjectStorageService
     extend ActiveSupport::Concern
 
     included do |klass|
-        Rails.logger.debug("Factory::ObjectStorageService included By #{klass.name}")
+        Rails.logger.debug("Registry::ObjectStorageService included By #{klass.name}")
     end
 
     ##
@@ -131,4 +131,4 @@ module Factory
 
   end # end ObjectStorageService namespace
 
-end # end factory namespace
+end # end registry namespace

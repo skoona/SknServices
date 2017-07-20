@@ -10,7 +10,7 @@
 #
 module Secure
   class UserProfile
-    include Factory::ObjectStorageService
+    include Registry::ObjectStorageService
     include Secure::UserAccessControl
 
     @@object_storage_service_prefix = self.name
