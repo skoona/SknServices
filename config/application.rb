@@ -40,6 +40,6 @@ module SknService
     ActiveRecord::Base.logger = Rails.logger
     config.logger = Rails.logger
 
-    Rails.logger.info "Config loaded: #{Rails.env}"
+    Rails.logger.info "SknSettings config loaded: #{Rails.env}"
   end
 end

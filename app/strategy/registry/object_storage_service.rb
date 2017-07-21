@@ -86,7 +86,7 @@ module Registry
     # Returns storage key, needed to retrieve
     def create_storage_key_and_store_object(obj)
       key = singleton_class.generate_new_storage_key()
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) saved as new with key:#{key}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{obj.class.name}) saved as new with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
       key
     end
@@ -94,7 +94,7 @@ module Registry
     # Updates existing container with new object reference
     # returns object
     def update_storage_object(key, obj)
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
+      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{obj.class.name}) updated existing with key:#{key}")
       singleton_class.persist_storage_key(key, obj)
       obj
     end
@@ -103,7 +103,7 @@ module Registry
     # returns object
     def get_storage_object(key)
       obj = singleton_class.retrieve_storage_key(key)
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
+      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{obj.class.name}) retrieved existing with key:#{key}")
       obj
     end
 
@@ -111,7 +111,7 @@ module Registry
     # returns object, if present
     def delete_storage_object(key)
       obj = singleton_class.release_storage_key(key)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}(#{obj.class.name}) removed existing object with key:#{key}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}(#{obj.class.name}) removed existing object with key:#{key}")
       obj
     end
 
@@ -119,13 +119,13 @@ module Registry
     # returns true|false
     def is_object_stored?(key)
       rc = singleton_class.query_storage_key?(key)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() existing object with key:#{key}, exists?:#{rc ? 'True' : 'False'}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() existing object with key:#{key}, exists?:#{rc ? 'True' : 'False'}")
       rc
     end
 
     def purge_storage_objects(seconds=nil)
       rc = singleton_class.purge_older_than_two_days(seconds)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() purged #{rc} items from storage.")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() purged #{rc} items from storage.")
       rc
     end
 

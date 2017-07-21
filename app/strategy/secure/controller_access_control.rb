@@ -51,7 +51,7 @@ module Secure
       unless public_page
         unless authenticated?
           store_target_location
-          Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page. #{controller_name}#login_required")
+          Rails.logger.debug("#{self.class.name}##{__method__}(public:#{public_page}): Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page. #{controller_name}#login_required")
           flash_message(:alert, "You must sign in before accessing the '#{accessed_page_name}' page.  #{controller_name}#login_required")
           redirect_to unauthenticated_sessions_url
         else
@@ -64,7 +64,7 @@ module Secure
       else
         flash.delete(:notice) if !!flash.notice and !flash.notice.first.nil? and flash.notice.include?("Please sign in to continue")
       end
-      Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
+      Rails.logger.debug("#{self.class.name}##{__method__}(public:#{public_page}): Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
     end
 
     def redirect_to_target_or_default(default, *args)

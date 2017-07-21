@@ -28,7 +28,7 @@ module Providers
     def get_prebuilt_profile(pak)
       profile = nil
       profile = get_storage_object(pak)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{profile}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{profile}")
       profile
     end
 

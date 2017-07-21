@@ -99,7 +99,7 @@ module Secure
 
     # Warden will call this methods
     def disable_authentication_controls(prepare_only=false)
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.last_access = Time.zone.now
       delete_storage_object(person_authenticated_key.to_sym)
@@ -109,7 +109,7 @@ module Secure
 
     # Warden will call this methods
     def enable_authentication_controls(prepare_only=false)
-      Rails.logger.debug("  #{self.class.name.to_s}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
       return self if prepare_only
       self.proxy_u.active= true
       self.last_access = Time.zone.now
