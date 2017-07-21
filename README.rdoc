@@ -42,11 +42,11 @@ ServiceRegistry
 
 ContentService
     ContentProfileDomain
-        Registry::DomainsBase
+        Domains::DomainsBase
 
 AccessService
     AccessProfileDomain
-        Registry::DomainsBase
+        Domains::DomainsBase
 
 Providers::DBProfileProvider
 Providers::XMLProfileProvider
@@ -55,8 +55,30 @@ Providers::XMLProfileProvider
 
 Processors::InlineValuesAdapter
 Processors::FileSystemAdapter
-    Processors::ProcessorBase
-        Registry::DomainsBase
+    Processors::ProcessorBase (Multiple Purpose)
+
+    Processors::CommandBase (Not Used Yet - Single Purpose)
+
+Registry::ControllerMethods
+Secure::ObjectStorageContainer
+
+Utility::ContentProfileBean
+    SknUtils::NestedResult
+
+
+==== Special Helpers
+    PageActionsBuilder
+    Secure::ControllerAccessControl#page_action_paths
+    ApplicationHelper#do_page_actions
+
+
+=== Authentication and Authorization Components Layout
+==== Gems Warden, Skn_utils
+
+config/initializers/warden.rb
+SessionsController
+Secure::ControllerAccessControl
+Secure::ObjectStorageContainer
 
 Secure::UserProfile
     +Registry::ObjectStorageService
@@ -71,48 +93,33 @@ Secure::AccessRegistry
         +config/content_registry.xml
         +config/content_registry.xsd
 
-Secure::ControllerAccessControl
-Secure::ObjectStorageContainer
+==== UserProfile Required User Object Attributes
 
-Utility::ContentProfileBean
-    SknUtils::PageControls
-
-
-==== Special Helpers
-    PageActionsBuilder
-    Secure::ControllerAccessControl#page_action_paths
-    ApplicationHelper#do_page_actions
-
-
-# Gem 'annotate'
-bundle exec annotate
+    :person_authenticated_key => String Secure Key 32chars
+    :assigned_groups => Array
+    :assigned_roles => Array
+    :user_options => Array
+    :roles => Array
+    :username => String
+    :display_name|:name => String
+    :remember_token => String Secure Key 32chars
+    :password => String
+    :email => String
 
 
-###Annoying Things
+
+==== Annoying Things
 
     poltergeist is the pits, signout_url fails because of the delete method
                 javascript interactions are flaky
                 webkit is no real alternative, since it has mac install issues
 
+==== Neat Thingys
 
-###Neat Thingys
+    v = my_hash.try(:[], 'key1').try(:[], 'key2').try(:[], 'key3')
+    v = my_hash.dig('key1','key2','key3')
 
-    my_hash.try(:[], 'key1').try(:[], 'key2').try(:[], 'key3')
-
-###UserProfile Required User Object Attributes
-
-            :person_authenticated_key => String Secure Key 32chars
-            :assigned_groups => Array
-            :assigned_roles => Array
-            :user_options => Array
-            :roles => Array
-            :username => String
-            :display_name|:name => String
-            :remember_token => String Secure Key 32chars
-            :password => String
-            :email => String
-
-##
+```ruby
 module Utility
 
   # Print Performance Elements of 'process_action.action_controller' event
@@ -175,7 +182,8 @@ end
 ActiveSupport::Notifications.subscribe('process_action.action_controller', Utility::LogRequestDuration.new)
 ActiveSupport::Notifications.subscribe('sql.active_record', Utility::LogSQLRequests.new)
 
-==OR
+## OR
+
 # Notification Publish/Interceptors
 #      vendor/bundle/gems/actionpack-4.2.5/lib/action_controller/metal/instrumentation.rb
 #      vendor/bundle/gems/actionpack-4.2.5/lib/action_controller/log_subscriber.rb
@@ -227,5 +235,5 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |name, start, fin
   Rails.logger.idata(message)
 
 end
-
+```
 
