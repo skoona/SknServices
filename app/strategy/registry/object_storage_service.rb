@@ -1,15 +1,16 @@
 ##
-# lib/registry/object_storage_services.rb
+# File: app/strategy/registry/object_storage_services.rb
 #
 # Object Storage Support for domain and service classes
 #
 module Registry
 
   module ObjectStorageService
-    extend ActiveSupport::Concern
+    # extend ActiveSupport::Concern
 
-    included do |klass|
-        Rails.logger.debug("Registry::ObjectStorageService included By #{klass.name}")
+    def self.included(klass)
+      klass.extend ClassMethods
+      Rails.logger.debug("Registry::ObjectStorageService included By #{klass.name}")
     end
 
     ##
