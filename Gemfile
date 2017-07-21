@@ -6,9 +6,10 @@ gem 'logging'
 gem 'pg', platform: :ruby
 
 gem "warden"
-# gem "rails_warden"
-gem 'rack-attack'
 gem 'rack-cache'
+gem 'rack-attack'
+gem 'skn_utils', "~> 3"
+gem 'bcrypt'
 
 gem 'bootstrap-sass'
 gem 'sass-rails'
@@ -23,8 +24,6 @@ gem 'font-awesome-sass'
 
 gem 'jbuilder'
 gem 'simple_form', '~> 3.0'
-gem 'skn_utils', "~> 3"
-gem 'bcrypt'
 gem 'gravatar_image_tag'
 
 gem 'tzinfo-data'
