@@ -12,7 +12,7 @@ module Providers
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Providers::ProvidersBase inherited By #{klass.name}")
+      Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
     def initialize(params={})
@@ -28,7 +28,7 @@ module Providers
     def get_prebuilt_profile(pak)
       profile = nil
       profile = get_storage_object(pak)
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{profile}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{profile}")
       profile
     end
 

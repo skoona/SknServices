@@ -1,5 +1,4 @@
-===SknService
----
+=== SknService
 
 Author: James Scott <jscott@localhost.com>
 Date: Dec 2015
@@ -23,30 +22,11 @@ http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-i
 ```
 
 
-```ruby
-
-      # Commission ids
-
-      # Drawer IDs: FAGN, <RefId>27655173</RefId>
-      # File Types: FAGN, <RefId>27635476</RefId>
-      # Folder Names: Commission/30023 <RefId>27637844</RefId>
-      # Document Type: STMT, <RefId>955</RefId>
-      # {
-      #   :id=>"c02ac7af-aed0-4582-895b-827d4c1a3ae5",
-      #   :name=>"Statements",
-      #   :ref_id=>"29734314",
-      #   :type=>"955",
-      #   :pages=>"2",
-      #   :date=>Thu, 09 Jul 2015 17:35:27 +0000
-      # },
-```
-
-
 === Controller Layout
                                   Service               Role                Inherts from
                                   ----------------      ----------------    -----------------------
 sessions_controller                None                  Login/Out           ActionController::Base
-application_controller             service_registry       App/Security        ActionController::Base/Secure::ControllerAccessControl
+application_controller             service_registry      App/Security        ActionController::Base/Secure::ControllerAccessControl
 users_controller                   access_service        Admin               ApplicationController
 user_group_roles_controller        access_service        Admin               ApplicationController
 password_resets_controller         access_service        Admin               ApplicationController

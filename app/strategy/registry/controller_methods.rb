@@ -6,17 +6,17 @@ module Registry
   module ControllerMethods
     extend ActiveSupport::Concern
 
-    included(nil) do |klass|
-      Rails.logger.debug("Registry::ControlerMethods included By #{klass.name}")
-      send( :helper_method, [ :accessed_page_name, :accessed_page])
+    def self.included(klass)
+      Rails.logger.debug("#{self.name} included By #{klass.name}")
+      klass.send( :helper_method, [ :accessed_page_name, :accessed_page])
 
-      unless self.name.eql?('SessionsController') or self.name.eql?('ActionView::TestCase::TestController')
-        send( :protect_from_forgery )
+      unless ['SessionsController', 'ActionView::TestCase::TestController'].include?( klass.name )
+        klass.send( :protect_from_forgery )
       end
 
-      Rails.logger.debug("Registry::ControlerMethods Activated!")
-      send( :before_action, :establish_domain_services)
-      send( :after_action,  :persist_domain_services)
+      Rails.logger.info("#{self.name} Activated!")
+      klass.send( :before_action, :establish_domain_services)
+      klass.send( :after_action,  :persist_domain_services)
     end
 
     # Enhance the PERF Logger output

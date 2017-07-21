@@ -32,7 +32,7 @@ module WebServicesTestHelper
       req_key = "#{operation_name.to_s}_response.#{rspec_req}" if rspec_req.present?
       req_key = "soap_fault_response" if code == 500
 
-      Rails.logger.debug "#{self.class.name.to_s}.#{__method__}() Operation: #{operation_name} USING_MOCKED_DATA: #{@test_data.include?(req_key)}, Fixture: #{req_key}"
+      Rails.logger.debug "#{self.class.name}.#{__method__}() Operation: #{operation_name} USING_MOCKED_DATA: #{@test_data.include?(req_key)}, Fixture: #{req_key}"
 
       if  @test_data.include?(req_key)
           HTTPI::Response.new(code, headers, Fixture.get_fixture(req_key))

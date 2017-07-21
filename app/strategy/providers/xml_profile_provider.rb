@@ -87,7 +87,7 @@ module Providers
       if enabled and count > 0
         IO.write(@content_registry_filename, doc.to_xml)
       end
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() Created: #{count}, Writing: #{ doc.to_xml}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() Created: #{count}, Writing: #{ doc.to_xml}")
       count
     end
 
@@ -114,7 +114,7 @@ module Providers
       if enabled and count > 0
         IO.write(@content_registry_filename, doc.to_xml)
       end
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() Deleted: #{count}, Writing: #{ doc.to_xml}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() Deleted: #{count}, Writing: #{ doc.to_xml}")
       count
     end
 
@@ -173,7 +173,7 @@ module Providers
       end
       update_storage_object(user_profile.person_authenticated_key, results) if results[:success]
       
-      Rails.logger.debug("#{self.class.name.to_s}.#{__method__}() returns: #{results.to_hash}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{results.to_hash.keys}")
       results
       
     rescue Exception => e

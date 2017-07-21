@@ -27,23 +27,19 @@
 
 module Secure
   module ControllerAccessControl
-    extend ActiveSupport::Concern
 
-    included(nil) do |klass|
-      Rails.logger.debug("Secure::ControllerAccessControl included By #{klass.name}")
-      send( :helper_method, [
-                              :current_user_has_access?,
-                              :current_user_has_read?,
-                              :current_user_has_create?,
-                              :current_user_has_update?,
-                              :current_user_has_delete?
-                            ]
-      )
-      unless self.name.eql?('SessionsController') or self.name.eql?('ActionView::TestCase::TestController')
-        Rails.logger.debug("Secure::ControllerAccessControl Activated!")
-        send( :before_action, :login_required)
+    def self.included(klass)
+      Rails.logger.debug("#{self.name} included By #{klass.name}")
+      klass.send( :helper_method, [:current_user_has_access?,
+                             :current_user_has_read?,
+                             :current_user_has_create?,
+                             :current_user_has_update?,
+                             :current_user_has_delete?
+                            ])
+      unless ['SessionsController', 'ActionView::TestCase::TestController'].include?(klass.name)
+        Rails.logger.debug("Secure::ControllerAccessControl Activated! #{klass.name}")
+        klass.send( :before_action, :login_required)
       end
-
     end
 
     def login_required
@@ -51,7 +47,7 @@ module Secure
       unless public_page
         unless authenticated?
           store_target_location
-          Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page. #{controller_name}#login_required")
+          Rails.logger.debug("#{self.class.name}##{__method__}(public:#{public_page}): Restricted Page '#{accessed_page}' accessed, redirecting to UnAuthenticated page. #{controller_name}#login_required")
           flash_message(:alert, "You must sign in before accessing the '#{accessed_page_name}' page.  #{controller_name}#login_required")
           redirect_to unauthenticated_sessions_url
         else
@@ -64,7 +60,7 @@ module Secure
       else
         flash.delete(:notice) if !!flash.notice and !flash.notice.first.nil? and flash.notice.include?("Please sign in to continue")
       end
-      Rails.logger.debug("#{self.class.name.to_s}##{__method__}(public:#{public_page}): Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
+      Rails.logger.debug("#{self.class.name}##{__method__}(public:#{public_page}): Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
     end
 
     def redirect_to_target_or_default(default, *args)

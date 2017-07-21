@@ -57,7 +57,7 @@ module Domains
     end
 
     def self.inherited(klass)
-      Rails.logger.debug("Registry::DomainsBase inherited By #{klass.name}")
+      Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
   private
