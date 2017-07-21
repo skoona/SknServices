@@ -6,7 +6,6 @@
 module Registry
 
   module ObjectStorageService
-    # extend ActiveSupport::Concern
 
     def self.included(klass)
       klass.extend ClassMethods

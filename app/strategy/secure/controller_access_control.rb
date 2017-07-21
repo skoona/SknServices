@@ -27,23 +27,19 @@
 
 module Secure
   module ControllerAccessControl
-    extend ActiveSupport::Concern
 
-    included(nil) do |klass|
+    def self.included(klass)
       Rails.logger.debug("Secure::ControllerAccessControl included By #{klass.name}")
-      send( :helper_method, [
-                              :current_user_has_access?,
-                              :current_user_has_read?,
-                              :current_user_has_create?,
-                              :current_user_has_update?,
-                              :current_user_has_delete?
-                            ]
-      )
-      unless self.name.eql?('SessionsController') or self.name.eql?('ActionView::TestCase::TestController')
-        Rails.logger.debug("Secure::ControllerAccessControl Activated!")
-        send( :before_action, :login_required)
+      klass.send( :helper_method, [:current_user_has_access?,
+                             :current_user_has_read?,
+                             :current_user_has_create?,
+                             :current_user_has_update?,
+                             :current_user_has_delete?
+                            ])
+      unless ['SessionsController', 'ActionView::TestCase::TestController'].include?(self.name)
+        Rails.logger.debug("Secure::ControllerAccessControl Activated! #{klass.name}")
+        klass.send( :before_action, :login_required)
       end
-
     end
 
     def login_required

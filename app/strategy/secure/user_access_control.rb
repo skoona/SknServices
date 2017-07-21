@@ -3,12 +3,12 @@
 
 module Secure
   module UserAccessControl
-    extend ActiveSupport::Concern
 
     ADMIN_ROLE = SknSettings.security.admin_role
 
-    included do |klass|
+    def self.included(klass)
       Rails.logger.debug("Secure::UserAccessControl included By #{klass.name}")
+      klass.extend ClassMethods
     end
 
     module ClassMethods   # mostly called by Warden
