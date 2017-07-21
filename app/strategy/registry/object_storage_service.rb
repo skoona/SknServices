@@ -6,10 +6,10 @@
 module Registry
 
   module ObjectStorageService
-    extend ActiveSupport::Concern
 
-    included do |klass|
+    def self.included(klass)
         Rails.logger.debug("Registry::ObjectStorageService included By #{klass.name}")
+        klass.extend ClassMethods
     end
 
     ##
