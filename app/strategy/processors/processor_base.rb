@@ -20,6 +20,11 @@ module Processors
       Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
+    # Not required, simply reduces traffic since it is called often
+    def current_user
+      @current_user ||= registry.current_user
+    end
+
     def ready?
       raise NotImplementedError, "#{self.name}##{__method__} Not Implemented!"
     end

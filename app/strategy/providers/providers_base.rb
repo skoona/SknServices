@@ -23,6 +23,11 @@ module Providers
       raise ArgumentError, "Providers: Missing required initialization param!" if @registry.nil?
     end
 
+    # Not required, simply reduces traffic since it is called often
+    def current_user
+      @current_user ||= registry.current_user
+    end
+
     ##
     # Retrieves Existing ContentProfile for ContentProviders
     def get_prebuilt_profile(pak)

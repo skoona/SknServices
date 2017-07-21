@@ -33,6 +33,11 @@ module Registry
 
   protected
 
+    # Not required, simply reduces traffic since it is called often
+    def current_user
+      @current_user ||= registry.current_user
+    end
+
     # Support the regular respond_to? method by
     # answering for any method the controller actually handles
     #:nodoc:
