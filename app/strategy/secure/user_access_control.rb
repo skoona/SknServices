@@ -56,7 +56,7 @@ module Secure
         value = self.find_by(username: uname).try(:authenticate, upass)
         upp = self.new(value) if value.present?
         upp = nil unless upp
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{upp.present? ? value.name : 'Not Found!'}")
         upp
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{uname}) returns: #{e.class.name} msg: #{e.message}")
@@ -70,7 +70,7 @@ module Secure
         upp = nil
         value = self.find_by(remember_token: token)
         upp = self.new(value) if value.present?
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}, CachedKeys: #{count_storage_objects}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, #{upp.present? ? upp.name : 'Not Found!'}")
         return nil unless upp && value.token_authentic?(token)
         upp.last_access = Time.zone.now if upp
         upp
@@ -84,7 +84,7 @@ module Secure
         raise ArgumentError, "Invalid Credentials!" unless token.present?
         value = retrieve_storage_key(token)
         value.proxy_u.active = false if value.present? and last_login_time_expired?(value)
-        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, State: #{(value && value.proxy_u.active) ? 'Active': 'Not Active[Expired]' }, CachedKeys: #{count_storage_objects}")
+        Rails.logger.debug("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{value.present? ? value.name : 'Not Found!'}, State: #{(value && value.proxy_u.active) ? 'Active': 'Not Active[Expired]' }")
         value
       rescue Exception => e
         Rails.logger.error("  #{self.name.to_s}.#{__method__}(#{token}) returns: #{e.class.name} msg: #{e.message}")

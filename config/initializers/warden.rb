@@ -115,14 +115,14 @@ class Warden::SessionSerializer
   # Use id to find the existing object
   def deserialize(keys)
     # puts "===============[DEBUG]:sf #{self.class}\##{__method__}"
-    klass, token = keys
+    klass, pak = keys
     klass = case klass
               when Class
                 klass
               when String, Symbol
                 klass.to_s.classify.constantize
             end
-    klass.fetch_cached_user( token )
+    klass.fetch_cached_user( pak )
   end
 end
 
@@ -141,8 +141,8 @@ Warden::Strategies.add(:api_auth) do
     Rails.logger.debug "  -> Warden::Strategies.add(:api_auth).authenticate!()"
     user = Secure::UserProfile.find_and_authenticate_user(auth.credentials[0],auth.credentials[1])
     (user.present? and user.active?) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
-  rescue
-    fail("Your Credentials are invalid or expired.  Not Authorized! RescueBasic")
+  rescue => e
+    fail("Your Credentials are invalid or expired.  Not Authorized! [ApiAuth](#{e.message})")
   end
 end
 
@@ -162,7 +162,7 @@ Warden::Strategies.add(:remember_token) do
     user = Secure::UserProfile.fetch_remembered_user(token)
     (user.present? and user.active?) ? success!(user, "Session successfully restored. Remembered!") : fail("Your session has expired. FailRemembered")
   rescue => e
-    fail("Your Credentials are invalid or expired. Not Authorized! RescueRemembered: #{e.message}")
+    fail("Your Credentials are invalid or expired. Not Authorized! [RememberToken](#{e.message})")
   end
 end
 
@@ -180,8 +180,8 @@ Warden::Strategies.add(:password) do
     Rails.logger.debug "  -> Warden::Strategies.add(:password).authenticate!()"
     user = Secure::UserProfile.find_and_authenticate_user(params["session"]["username"], params["session"]["password"])
     (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
-  rescue
-    fail!("Your Credentials are invalid or expired. RescuePassword")
+  rescue => e
+    fail!("Your Credentials are invalid or expired. [Password](#{e.message})")
   end
 end
 
@@ -195,7 +195,7 @@ Warden::Strategies.add(:not_authorized) do
 
   def authenticate!
     Rails.logger.debug "  -> Warden::Strategies.add(:not_authorized).authenticate!()"
-    fail!("Your Credentials are invalid or expired. Not Authorized! FailNotAuthorized")
+    fail!("Your Credentials are invalid or expired. Not Authorized! [NotAuthorized](FailNotAuthorized)")
   end
 end
 
@@ -234,7 +234,7 @@ Warden::Manager.on_request do |proxy|
     if proxy.user and !proxy.user.active?
       timeout_flag = true
       proxy.logout()
-      proxy.request.flash[:alert] = "Your Session has Expired! Warden#on_request"
+      proxy.request.flash[:alert] = "Your Session has Expired! [Warden](#on_request)"
     end
 
     # see if we can restore a session via API or RememberToken
