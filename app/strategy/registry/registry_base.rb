@@ -11,7 +11,7 @@ module Registry
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Registry::RegistryBase inherited By #{klass.name}")
+      Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
     def initialize(params={})

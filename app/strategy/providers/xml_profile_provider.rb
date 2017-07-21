@@ -173,7 +173,7 @@ module Providers
       end
       update_storage_object(user_profile.person_authenticated_key, results) if results[:success]
       
-      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{results.to_hash}")
+      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{results.to_hash.keys}")
       results
       
     rescue Exception => e

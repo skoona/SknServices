@@ -296,7 +296,7 @@ end
 #
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) stored_users=#{Secure::UserProfile.count_storage_objects}, remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, session.id=#{auth.request.session_options[:id]}"
+  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) :remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, session.id=#{auth.request.session_options[:id]}"
   true
 end
 

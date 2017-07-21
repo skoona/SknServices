@@ -77,7 +77,7 @@ module Domains
          content_entries: content_entries,
          xprofile: xprofile,
          cprofile: cprofile,
-         apis_enabled: (authenticated_user and current_user_has_access?('#Management')),
+         apis_enabled: (authenticated_user and current_user.has_access?('#Management')),
          storage_size: storage_size,
          storage_keys: storage_keys
       }

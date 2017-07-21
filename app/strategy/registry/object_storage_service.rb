@@ -9,7 +9,7 @@ module Registry
 
     def self.included(klass)
       klass.extend ClassMethods
-      Rails.logger.debug("Registry::ObjectStorageService included By #{klass.name}")
+      Rails.logger.debug("#{self.name} included By #{klass.name}")
     end
 
     ##

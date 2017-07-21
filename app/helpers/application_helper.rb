@@ -2,7 +2,7 @@
 module ApplicationHelper
 
   def self.included(klass)
-    Rails.logger.debug("ApplicationHelper included By #{klass.class}|#{klass} self: #{self.class}")
+    Rails.logger.debug("ApplicationHelper included By #{klass.name}, self: #{self.name}")
   end
 
   def flash_message(type, text)

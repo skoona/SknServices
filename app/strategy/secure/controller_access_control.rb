@@ -29,14 +29,14 @@ module Secure
   module ControllerAccessControl
 
     def self.included(klass)
-      Rails.logger.debug("Secure::ControllerAccessControl included By #{klass.name}")
+      Rails.logger.debug("#{self.name} included By #{klass.name}")
       klass.send( :helper_method, [:current_user_has_access?,
                              :current_user_has_read?,
                              :current_user_has_create?,
                              :current_user_has_update?,
                              :current_user_has_delete?
                             ])
-      unless ['SessionsController', 'ActionView::TestCase::TestController'].include?(self.name)
+      unless ['SessionsController', 'ActionView::TestCase::TestController'].include?(klass.name)
         Rails.logger.debug("Secure::ControllerAccessControl Activated! #{klass.name}")
         klass.send( :before_action, :login_required)
       end

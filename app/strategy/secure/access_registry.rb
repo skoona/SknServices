@@ -255,7 +255,8 @@ module Secure
         result = get_resource_content_entry(roles, uri, opts)
         results << result unless result.empty?
       end
-      Rails.logger.info("#{self.name}.#{__method__}() opts=#{opts}, roles=#{roles}, result=#{results}") if Rails.logger.present?
+      # Rails.logger.debug("#{self.name}.#{__method__}() opts=#{opts}, roles=#{roles}, result=#{results}") if Rails.logger.present?
+      Rails.logger.debug("#{self.name}.#{__method__}() Entries=#{results}") if Rails.logger.present?
       results
     end
 
