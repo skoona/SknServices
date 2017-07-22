@@ -355,6 +355,10 @@
         <description>Welcome to SknServices</description>
     </resource>
     <resource secured="false">
+        <uri>pages/help</uri>
+        <description>Application Assistance</description>
+    </resource>
+    <resource secured="false">
         <uri>pages/about</uri>
         <description>About SknServices</description>
     </resource>

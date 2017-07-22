@@ -1,0 +1,78 @@
+<% content_for(:title, accessed_page_name) %>
+
+
+<article>
+    <div class="jumbotron">
+        <h2 class="page-header"><%= accessed_page_name %></h2>
+        <%= image_tag("SknService-PageMap.png", alt: "Main Path", class: "") %>
+    </div>
+
+    <section>
+        <p class="lead">
+            The SknServices project exists to explore Authentication and Authorization strategies.
+            With special focus on content-based authorization using expanded Permissions properties.
+        </p>
+
+        <h4>Predefined Users</h4>
+        <div class="col-md-offset-1 col-md-10">
+          <div class="col-md-4">
+            <div class="well">
+                <h4>Username: <code>developer</code></h4>
+                <p>password: <code>developer99</code></p>
+                <p>Super User</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+              <div class="well">
+                <h4>Username: <code>eptester</code></h4>
+                <p>password: <code>nobugs</code></p>
+                <p>Employee Primary User</p>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="well">
+                <h4>Username: <code>estester</code></h4>
+                <p>password: <code>nobugs</code></p>
+                <p>Employee Secondary User</p>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="well">
+                <h4>Username: <code>bptester</code></h4>
+                <p>password: <code>nobugs</code></p>
+                <p>Branch Primary User</p>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="well">
+                <h4>Username: <code>bstester</code></h4>
+                <p>password: <code>nobugs</code></p>
+                <p>Branch Secondary User</p>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="well">
+                <h4>Username: <code>bnptester</code></h4>
+                <p>password: <code>nobugs</code></p>
+                <p>Branch No Privileges</p>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="well">
+                <h4>Username: <code>vptester</code></h4>
+                <p>password: <code>nobugs</code></p>
+                <p>Vendor Primary User</p>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="well">
+                <h4>Username: <code>vstester</code></h4>
+                <p>password: <code>nobugs</code></p>
+                <p>Vendor Secondary User</p>
+              </div>
+          </div>
+        </div>
+
+    </section>
+
+</article>

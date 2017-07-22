@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     collection do
       get :home
       get :about
+      get :help
       get :details_access
       get :details_architecture
       get :details_auth
