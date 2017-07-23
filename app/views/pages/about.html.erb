@@ -2,7 +2,7 @@
 
 
 <article>
-    <div class="jumbotron">
+    <div class="jumbotron test-squeez">
         <h2 class="page-header"><%= accessed_page_name %></h2>
         <%= image_tag("SknServices-Strategy.png", alt: "Main Path", class: "") %>
     </div>
@@ -91,7 +91,8 @@
           <dd>
             <p><strong>Are not Application Servers</strong></p>
             <p>Rather than building the application the Rails (MVC) Way.  We took a step back from MVC, and opportunistically used a strategy influenced by Domain Driven Design principals.  Our intent was
-               to separate as much of our application logic from the direct mechanics of Rails as possible; treating Rails more like a library or web adapter.</p>
+               to separate as much of our application logic from the direct mechanics of Rails as possible; treating Rails more like a library or web adapter.  Where/When it is required to make a Rails API call we wrap
+              those calls in a semantically named method of our choosing; often inside our Provider class.</p>
             <p>This approach does not intend to discount the usability or value of Rails as a Web Framework, it's excellent as a Web Framework; but it is not an Application Server similar to TomCat, or Jetty.</p>
             <p>The resulting application will be easier to maintain, test, and it will be easier to upgrade Rails versions.</p>
           </dd>

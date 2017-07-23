@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Copy updated PDFs from root to controlled locations
+#
+
+find controlled -name "SknServices-ArchitecturalDetails.pdf" -type f -exec cp ./SknServices-ArchitecturalDetails.pdf {} \;
+find controlled -name "About-SknServices.pdf" -type f -exec cp ./About-SknServices.pdf {} \;
+
+ls -l `find controlled/ -name "*.pdf" -type f -print`
