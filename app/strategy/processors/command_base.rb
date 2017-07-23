@@ -1,7 +1,7 @@
 ##
 # File: app/strategy/processors/commands_base.rb
 #
-# Common Base for all Single Task Processsors
+# Common Base for all Single Task Processors
 #
 
 module Processors

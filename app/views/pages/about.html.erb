@@ -2,64 +2,66 @@
 
 
 <article>
-    <div class="jumbotron">
+    <div class="jumbotron test-squeez">
         <h2 class="page-header"><%= accessed_page_name %></h2>
-        <%= image_tag("SknService-PageMap.png", alt: "Main Path", class: "") %>
+        <%= image_tag("SknServices-Strategy.png", alt: "Main Path", class: "") %>
     </div>
 
     <section>
         <p class="lead">
-            The SknServices project exists to explore Authentication and Authorization strategy.services.
-            With special focus on content-based authorization using expanded Permissions properties.  It also implements a
-            <strong>Services</strong> implementation strategy that lessens it's dependancy on Rails.
+            The SknServices project exists to explore Authentication and Authorization strategies.
+            With special focus on content-based authorization using expanded Permissions properties.  It also implements the
+            <strong>SknService Development Strategy</strong> for the target application which lessens the dependency on Rails.
         </p>
 
       <div>
-        <h4>SknServices Strategies</h4>
+        <h4>Core Capabilities</h4>
         <dl class="dl-horizontal">
           <dt>Authentication</dt>
           <dd>
             <p><strong>UserProfile</strong></p>
-            <p>The Warden Gem is used for its highly secure and flexible rack-based security engine.</p>
+            <p>The Warden Gem is used for its highly secure and flexible rack-based security engine.  Rack-Attack gem augments Warden's security management features.</p>
             <p>A unique ID, Personal Authentication Token(PAK), is assigned to each user and persisted internally forever. This id is used to coordinate the collection of user
                profile attributes and permissions used to enable the users access to the system once they are authenticated.  Authentication
                is handled by Warden Strategies capable of user/password, http basic auth, single-sign-on tokens, and several more.</p>
-            <p>Remember me, secure email based password-reset, and session timeout is also enabled.</p>
-            <p>The UserProfile class centralizes authentication and authorization methods and/or strategy.services into a single user class.  The current user is locally available from every Rails controller as :current_user.</p>
-            <p>Authentication is evaluated with every page request, except for images, javascript, and css script files.</p>
-            <p>The UserProfile coordinates the strategy.services of the AccessProfile and the ContentProfile, providing controlled and consistent access to business information.</p>
+            <p>Remember me, secure email based password-reset, and session timeout are also enabled; but considered application-based features or optional.</p>
+            <p>The UserProfile class centralizes authentication and authorization methods and/or services into a single user class.  The current user is locally available from every Rails controller as :current_user.  Additionaly, a UserProxy class
+              exists for use by the UserProfile and is responsible for interfacing the the authentication provider.  The application considers the UserProfile as the <em>user</em>!</p>
+            <p>Authentication is evaluated with every page request, except for images, javascript, and css script files; through automation in the ApplicationController.</p>
+            <p>The UserProfile coordinates the services of the AccessProfile and the ContentProfile, providing controlled and consistent access to business information.</p>
           </dd>
 
           <dt>Authorization: Access</dt>
           <dd>
             <p><strong>AccessProfile</strong></p>
-            <p>AccessRegistry.xml, registers and/or assigns a URI to every page, action, and information element.  All secured page elements are assigned an unique id, called URI, by a developer.</p>
+            <p>AccessRegistry.xml, encodes and/or assigns a URI to every page, action, and information element for which security is intended.  All secured elements are assigned an unique URI id by a developer.</p>
             <p>AccessRegistry class maps internal URIs to external String Roles; which can be managed in LDAP or similar systems.  Users having a particular role would be allowed to
               interact the associated resource, using RESTFul or CRUD or semantics.</p>
             <p>Access control methods are attached to the UserProfile object and thus available in all contexts of the application via :current_user.  Application Pages are easily
                represented by combining the controller name and controller method name; or URL path.  An example URI for the index page in the HomeController would be <code>home/index</code>.  Actions which may exist
                on menus or page action buttons may be given URL labels like: '#Print', '#ManageAccount', '#ManageContacts', etc.  On-page information elements URIs may
                be '_RecentOrders', '_CanceledOrders', or '_OrderHistory'</p>
-            <p>Access permission roles, dynamically assigned to each user at login, might map URI='#ManageContacts' to Role='App.Manage.Contacts', giving that user the ability to manage contacts.  The AccessRegistry method call
-              would be: <code>userProfileObject.has_access?(URI) = true</code>.</p>
+            <p>Access permission roles collected for each user at login, might map URI='#ManageContacts' to Role='App.Manage.Contacts', giving that user the ability to manage contacts.  The AccessRegistry method call
+              would be: <code>userProfileObject.has_access?(URI) # ==> true</code>.</p>
             <p>
-              Access authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and for each <em>showable data element</em>.
-              Page Access authorization is automated by examining the the controller name and method to compose the URI for the page.  Clickable (menu items,
-              buttons, etc) authorization requires the developer to use programming helpers to implement authorization.  Showable Data Elements
-              have two levels of authorization available; Clickable, and content-based authorization using expanded permissions, both use the AccessRegistry.
+              Access authorizations are evaluated for each <em>page access</em>, <em>clickable control</em>, and for each <em>showable data element</em> when the service is building
+              the response.  The service omits info elements the user is not authorized for.  This allow the view handler to blindly display all info it is given, knowing the
+              service has removed non-authorized info.  Page Access authorization is automated by examining the the <code>#controller_name</code> and <code>#action_name</code> methods
+              to compose the URI for the page.  Clickable (menu items, buttons, etc) authorization requires the developer to use programming helpers to evaluate authorization.  Showable data elements
+              have two levels of authorization available; <em>Clickable</em>, and <em>Content-based</em> authorization using expanded permissions, both use the AccessRegistry.
             </p>
           </dd>
           <dt>Authorization: Content</dt>
           <dd>
             <p><strong>ContentProfile</strong></p>
-            <p>A ContentProfile contains a the collection of permission entries for a user identified via their PAK id.  Each user is optionally assigned a content profile, which will grant access to
-               its associated resources.  </p>
+            <p>A ContentProfile contains the collection of permission entries for a user identified via their PAK id.  Each user is optionally assigned a content profile which will grant access to
+               its guarded or secure resources.</p>
             <p><strong>ContentProfileEntries</strong></p>
             <p>A data model is the preferred container for the ContentProfile, although the access registry xml file could contain the needed modeling without the use of a database. This model registers each secured resource
                using two-factors with each factor being composed of a key-value pair of attributes. A ContentProfileEntry(CPE) wraps these two factors to specify a user's access to this type of content. The CPE itself represents
               one permission and many CPEs can be associated with one ContentProfile belonging to one identified user.</p>
             <p>The First factor key is TopicType, it categorizes the type of entity domain being secured; like Account, Branch Office, Product, Operational-Info, or other similar entities.  Each TopicType key
-               uses its value attribute to specifically identify it; a k,v example being key=Account, value=#account number.</p>
+               uses its value attribute to specifically identify it; a k,v example being key=Account, value=#account-number.</p>
             <p>The second factor's key is ContentType, categorizes the type of asset or resources being secured; like Contracts, Commission Statements, Licenses, or other similar assets. Each ContentType uses its
                value attribute as a precise identifier or search term that can be used to select a certain set of items; presuming these items are stored a filesystem or
                document management system. The identifier is used to retrieve items matching.</p>
@@ -82,88 +84,116 @@
       </div>
 
       <div>
-        <%= image_tag("SknServices-Strategy.png", alt: "Alt Path", class: "huge-image") %>
-        <h4>DDD Lite Strategy</h4>
+        <%= image_tag("SknService-RegistryMethod.png", alt: "Alt Path", class: "huge-image") %>
+        <h4>SknServices Strategy <small>DDD Lite Strategy</small></h4>
         <dl class="dl-horizontal">
           <dt>Web Frameworks</dt>
           <dd>
             <p><strong>Are not Application Servers</strong></p>
-            <p>Rather than building the application the Rails (MVC) Way.  We took a step back from MVC, and opportunistically use a strategy influenced by Domain Driven Design principals.  Our intent was
-               to separate as much of our application logic from the direct mechanics of Rails as possible; treating Rails more like a library or web adapter.</p>
+            <p>Rather than building the application the Rails (MVC) Way.  We took a step back from MVC, and opportunistically used a strategy influenced by Domain Driven Design principals.  Our intent was
+               to separate as much of our application logic from the direct mechanics of Rails as possible; treating Rails more like a library or web adapter.  Where/When it is required to make a Rails API call we wrap
+              those calls in a semantically named method of our choosing; often inside our Provider class.</p>
             <p>This approach does not intend to discount the usability or value of Rails as a Web Framework, it's excellent as a Web Framework; but it is not an Application Server similar to TomCat, or Jetty.</p>
-            <p>We believe the resulting application will be easier to maintain, won't require us to test controllers and code we didn't write, and it will be easier to upgrade Rails versions.</p>
+            <p>The resulting application will be easier to maintain, test, and it will be easier to upgrade Rails versions.</p>
           </dd>
 
           <dt>Service Strategy</dt>
           <dd>
             <p><strong>If not MVC where does code go?</strong></p>
-            <p>Following the Rails MVC Way, code that would be in the View and Controller is placed in a Services object that support one or more controllers.</p>
-            <p>A Services object is normally contextual, attempting to follow the flow of a business process.  It's primary role it to map or transform request/response data to the Controller.  The data is trasnforms typically comes from a Domain Class, which it inherits.  All strategy.services object return one bundle of results in a helper object call <code>ResultsBean</code>.
-            Views and Controllers us the contents of thei result bean to complete their operations; typically named <code>@page_controls</code>, this reduces the total number of instance variables being defined in controllers - again making testing easier.</p>
-            <p>Domain Classes contain the code that would otherwise be embedded in a Model, using the Rails MVC understanding.  However, Domain Classes concentrate their methods on the broader business process; attempting to collect related methods that handle all IO for the process, and the logic needed to ensure each process step is successful.</p>
-            <p>Domain classes call on or instantiate Adapter objects, and other helper objects to as needed to further condense business process tasks.</p>
-            <p>A ServiceRegistry is used to collect all strategy.services defined in the application, it is the sole provider of
-              instances of these strategy.services. And expects both controllers and other strategy.services to be making
-              requests for a particular service; which is memotizes to speed up secondary access.</p>
-            <p>Methods in a domain or service class should minimize their user of controller based methods and helpers where ever possible to maintain separation and improve test outcomes.  However, access to the controller is implemented and available from every service and domain class, through the inheritance chain: Domains inherit from DomainsBase class.
-              DomainsBase keep a initialization reference to the ServiceRegistry that instantiated it <code>#service</code>, and the ServiceRegistry keeps a reference to the controller that instantiated it <code>#registry</code>.  Thus from any service or domain <code>#service.registry</code> is a direct reference to the Controller.</p>
+            <p>Following the Rails MVC Way, code that would be in the View and Controller is placed in a Services object grouping that supports <strong>controller entry-point methods</strong>.  We are presuming a
+              Services object will support more than one controller entry method, following the notion of a business process being implemented.  Because of this <strong>more than one</strong> decision items
+              like the ServiceRegistry and ProcessDomain classes exists to simplify the initialization of the multi-method service object themselves and their access to providers and processors.</p>
+            <p>A Services object is normally contextual, attempting to follow the flow of a business process.  It's primary role is to map or transform request/response data for the Controller.  The data it
+              transforms typically comes from a Domain Class, which it inherits.  All services object return one bundle of results in a DottedHash object called <code>SknHash or NestedResult</code>.
+            Views and Controllers use the contents of their nested result to complete their operations; typically named <code>@page_controls</code>, this reduces the total number of instance variables being defined
+              in controllers - again making testing easier.</p>
+            <p>Domain Classes contain the code that would otherwise be embedded in a Model, using the Rails MVC understanding.  However, Domain Classes concentrate their methods on the broader business process;
+              attempting to collect related methods that handle all operations for the process, and the logic needed to ensure each process step is successful.  Methods contained in the Domain class also
+              facilitate cross-domain sharing or reuse of process methods; since another service/domains could require a function contained in a different domain, they could call straight through that process_service to use a domain method.</p>
+            <p>Domain classes call on or instantiate Provider and Processor objects, and other helper objects to as needed to further condense business process tasks; which reduces the code size of the domains and their methods.</p>
+            <p>A ServiceRegistry is used to collect all services, providers, and optionally processors defined in the application, it is the sole provider of
+              instances of these services. ServiceRegistry expects both controllers and other services to be making requests for a particular service; which is memotizes to speed up secondary access.</p>
+            <p>Methods in a domain or service class should minimize their user of controller based methods and helpers to maintain separation and improve test outcomes.  However, access to the controller is
+              available from every service and domain class, through the inheritance chain: Domains inherit from DomainsBase class.  DomainsBase keep a initialization reference to the ServiceRegistry that instantiated it <code>#registry</code>,
+              and the ServiceRegistry keeps a reference to the controller that instantiated it <code>#registry</code>.  Thus from any service or domain <code>#registry.controller_name</code> is an in-direct or direct reference to the Controller.
+              By implementing a ServiceRegistry and associated #method_missing methods, we avoid the burden of populating a #delegate or #forwardable method requirement.</p>
+            <p>Helpers are used to wrap controller methods that are required from Services or Domains.  Wrapping controller methods with a helper facilitates test mocking and localizes the Rails syntax requirements to the Rails helper.</p>
           </dd>
 
           <dt>ServiceRegistry</dt>
           <dd>
             <p><strong>Business Logic Propagation</strong></p>
-            <p>Rails ApplicationController is augmented with a <code>#login_required</code> method to support the Authentication/Authorization processes.  In support of business logic two more
-            methods are added to the base ApplicationController for use by all controllers that inherit from it.
+            <p>Rails ApplicationController is augmented with a <code>#login_required</code> method to support the Authentication/Authorization processes.  In support of business logic three more
+            methods/components are added to the base ApplicationController for use by all controllers that inherit from it.
               <ul>
-                <li><code>#service_registry</code> module contains controller helpers designed to be used by Services to gain
+                <li><code>:ApplicationHelper</code> module contains controller helpers designed to be used by Services to gain
                   access to standard controller capabilities and other Services; these methods can easily be mocked, allowing the Services
-                  to be tested without a Controller being active in many cases. It wraps all Service/Domain objects and standardizes their initialization params.
+                  to be tested without a Controller being active in many cases.
+                </li>
+                <li><code>#service_registry</code> wraps all Services and Provider classes and standardizes their initialization params.
                 </li>
                 <li>
-                  <code>#method_missing</code> method routes Services method calls to the service_registry, relieving us from defining every Service as a Controller Helper.
+                  <code>#method_missing</code> method routes Services method calls to the service_registry, relieving us from defining every Service as a Controller Helper or populating the syntax of #delegate and/or #Forwardable.
                 </li>
               </ul>
             </p>
-            <p>You can think of the ServiceRegistry as a classic Rails ControllerHelper.  However, all our business logic and data generation logic is defined in Service Classes memorized by the ServiceRegistry.  For testing this allows the ServiceRegistry mock out the controller, in many cases.</p>
-            <p><strong>Object Storage Services</strong></p>
-            <p>The ServiceRegistry provides controller strategy.services to the Services Object and it also provides and in-memory storage facility where objects can be stored across multiple request/response cycles if needed.</p>
+            <p>You can think of the ServiceRegistry as a classic Rails ControllerHelper.  However, all our business logic and data generation logic is defined in Service Classes memorized by the ServiceRegistry.  For testing this allows the ServiceRegistry replace the controller, in many cases.</p>
+          </dd>
+          <dt>Object Storage Service</dt>
+          <dd>
+            <p><strong>Session like object storage</strong></p>
+            <p>The ServiceRegistry provides a in-memory object storage service for use by Services and Provider classes where expensive objects can be stored across multiple request/response cycles if needed.</p>
           </dd>
           <dt>Domains</dt>
           <dd>
-            <p><strong>Domain Objects</strong></p>
+            <p><strong>Domain Classes</strong></p>
             <p>Domain classes contain methods related to the business process it is responsible for.  PasswordResetDomain would have methods structured to handle each step in the process of resetting a
                user password, and all the related IO routines involved. This a base class for its related Services object, and should not be directly instantiated.</p>
-            <p>A Domain's class single responsibility is to have methods to complete the whole process of a business service.  It has no concern for how its resolved information will be presented or displayed.</p>
+            <p>A Domain's class single responsibility is to have methods to complete the whole process of a business sub-domain.  It has no concern for how its resolved information will be presented or displayed.</p>
             <p>Domain classes do make IO calls to ActiveRecord Models, and by this strategies convention the only class to make these AR calls.  However, the AR Models have no business logic and minimal validations and callbacks implemented.</p>
-            <p>If the work of a particular step in the business process gets deeply involved (more than 50 lines), a ProcessStep class should be created the handle that step for the Domain class</p>
+            <p>If the work of a particular step in the business process gets deeply involved (more than x lines), a taskProcessor class should be created the handle that step for the Domain class</p>
           </dd>
           <dt>Services</dt>
           <dd>
             <p><strong>Service Objects</strong></p>
-            <p>Service objects inherit a related Domain Class and have the single respobsibility to transpose the Domains information to a data bean useable by the controller or view.  It may invoke some controller methods to format certain
+            <p>Service objects inherit a related Domain Class and have the single responsibility to transpose the Domain's information to a data value package useable by the controller or view.  It may invoke some controller methods to format certain
                values, like a named URL; however such calls are supported by Controller/View Helpers which can be mocked for testing.</p>
-            <p>Service object are directly invoked by a Controller route-based method, like: HomeController#index.   The implementation of the :index method looks similar
-               to: <code>page_controls = home_service.homes_list()</code></p>
-            <p>The return value from the above call is a ResultsBean object.  All Services return a bean of this type containing all the data or information elements relevant to this methods
-               response.  This bean package can be converted to JSON or a Hash bundle as needed by the View handler or API Response.  The only required elements for this type of bean is :success, and :message, so each service methods
+            <p>Service objects are directly invoked by a Controller route-based method, like: HomeController#index.  The implementation of the :index method looks similar
+               to: <code>@page_controls = home_service.homes_list()</code></p>
+            <p>The return value from the above call is a DottedHash object.  All Services should return a value container of this type containing all the data or information elements relevant to this methods
+               response.  This value container can be converted to JSON or a Hash bundle as needed by the View handler or API Response.  The only required elements for this type of value container is :success, and :message, so each service methods
               includes these elements allowing the controller method coding to flash a message and/or redirect as needed.</p>
-            <p>All the statements you would normally see in a MVC controller method are actually contained in the Service object's method.</p>
-            <p>Service objects should perform any authorization checks needed before packaging domain data in the ResultsBean.  This prevents the View handler from being required to do it, and provides better protection of the applications data.</p>
+            <p>All the statements you would normally see in a MVC controller method are actually contained in the Service object's structure.</p>
+            <p>Service objects should perform any authorization checks needed before packaging domain data into a response.  This prevents the View handler from being required to do it, and provides better protection of the applications data.</p>
           </dd>
-          <dt>ResultsBean</dt>
+          <dt>DottedHash</dt>
           <dd>
-            <p><strong>Data exchange between Service and Rails MVC classes</strong></p>
+            <p>SknUtils::NestedResult class, <strong>Data exchange between Service and Rails MVC classes</strong></p>
             <p>SknUtils Gem is utilized to provide a flexible container to hold all data returned by a Service.  Dot notation or hash notation is supported by this object, again making it easy to capture test data.</p>
+          </dd>
+          <dt>Helpers</dt>
+          <dd>
             <p><strong>Controller &amp; View Helpers</strong></p>
-            <p><code>ApplicationHelper</code> module and the <code>ControllerAccessControl</code> module contain helpers designed for views to operate on the data-only results returned by all Services, and to authorize on-page elements. </p>
+            <p><code>ApplicationHelper</code> module and the <code>ControllerAccessControl</code> module contain security helpers and helpers designed for views to operate on the data-only results returned by all Services, and to authorize on-page elements. </p>
+            <p>The design guidance for html views, and other view handlers, is to not do access authorization in the view.  Instead allow the service objects to do the authorization and return either an empty value or a positive value.</p>
           </dd>
           <dt>Testing</dt>
           <dd>
             <p><strong>Directly test the code you write</strong></p>
-            <p>To implement an application using these strategies you will create Domains, ProcessStep, Services, and Helpers Classes; along with the necessary Views.</p>
+            <p>To implement an application using this strategy you will create Domains, Providers, Processors, Services, and Helpers Classes; along with the necessary Views.</p>
             <p>Using the ServiceRegistry as a stand in for a Controller, many of the Services and Domains can be tested without engaging the full Rails stack, which might make tests run faster.</p>
-            <p>Rather than test a Rails Controller to verify business logic, test the Service#method that's invoked in that controllers method.  Only during LIVE Integration or Feature tests
-               should concerned about what the Rails Controller is doing.</p>
+            <p>Eighty plus (80+%) percent test coverage can be achieved by testing each Services method alone.  Testing the Service#method that's invoked in that controllers method with a range of valid and invalid params will
+              exercise the majority of paths through your business logic.</p>
+          </dd>
+          <dt>Rails Upgrades</dt>
+          <dd>
+            <p><strong>Did we wrap all the Rails touch points?</strong></p>
+            <ul>
+              <li>Module: ApplicationHelper, contains all the Rails methods call by a Service, Domain, or Provider class.</li>
+              <li>Provider class, contains all the ActiveRecord methods called.  They were concentrated in a providers to remove sprawl!</li>
+              <li>Services and Domain classes, remove all business logic from Views and the Controller proper.</li>
+            </ul>
+            <p>The result will be upgrades which can be easily <strong>evaluated and applied with minimal effort!</strong></p>
           </dd>
         </dl>
       </div>

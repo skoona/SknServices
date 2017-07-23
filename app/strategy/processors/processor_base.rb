@@ -17,7 +17,12 @@ module Processors
     end
 
     def self.inherited(klass)
-      Rails.logger.debug("Registry::DomainsBase inherited By #{klass.name}")
+      Rails.logger.debug("#{self.name} inherited By #{klass.name}")
+    end
+
+    # Not required, simply reduces traffic since it is called often
+    def current_user
+      @current_user ||= registry.current_user
     end
 
     def ready?

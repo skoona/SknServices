@@ -7,7 +7,7 @@ module Secure
     ADMIN_ROLE = SknSettings.security.admin_role
 
     def self.included(klass)
-      Rails.logger.debug("Secure::UserAccessControl included By #{klass.name}")
+      Rails.logger.debug("#{self.name} included By #{klass.name}")
       klass.extend ClassMethods
     end
 

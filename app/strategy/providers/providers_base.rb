@@ -12,7 +12,7 @@ module Providers
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Providers::ProvidersBase inherited By #{klass.name}")
+      Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
     def initialize(params={})
@@ -21,6 +21,11 @@ module Providers
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
       raise ArgumentError, "Providers: Missing required initialization param!" if @registry.nil?
+    end
+
+    # Not required, simply reduces traffic since it is called often
+    def current_user
+      @current_user ||= registry.current_user
     end
 
     ##

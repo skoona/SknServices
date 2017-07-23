@@ -153,241 +153,241 @@
                 </table>
             </div>
         </div>
-    </div>
 
-    <div class="panel panel-success">
-        <div class="panel-heading" role="tab" id="headingFive">
-            <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                    Current User Info
-                </a>
-            </h4>
-        </div>
-        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-            <div class="panel-body">
-
-            <% if @page_controls.authenticated_user %>
-                    <% if @page_controls.xprofile.success %>
-                    <h3>Access Profile</h3>
-                        <div class="table-responsive">
-                            <table id="access-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                <caption><h4><%= @page_controls.xprofile.display_name %> at <%= @page_controls.xprofile.email %></h4></caption>
-                                <thead class="bg-primary">
-                                    <th>Profile Type</th>
-                                    <th>Description</th>
-                                    <th>Provider</th>
-                                    <th>PAK</th>
-                                    <th>Username</th>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><%= @page_controls.xprofile.profile_type %></td>
-                                    <td><%= @page_controls.xprofile.profile_type_description %></td>
-                                    <td><%= @page_controls.xprofile.provider %></td>
-                                    <td><%= @page_controls.xprofile.pak %></td>
-                                    <td><%= @page_controls.xprofile.username %></td>
-                                </tr>
-                                <tr>
-                                    <table id="access-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                        <caption><h4>Content Profile Entries</h4></caption>
-                                        <thead class="bg-primary">
-                                            <th>Entry Description</th>
-                                            <th>Content</th>
-                                            <th>Content Description</th>
-                                            <th>Topic</th>
-                                            <th>Topic Value</th>
-                                            <th>Content Value</th>
-                                        </thead>
-                                        <tbody>
-                                        <% @page_controls.xprofile.entries.each do |row| %>
-                                            <tr>
-                                                <td><%= row.description %></td>
-                                                <td><%= row.content_type %></td>
-                                                <td><%= row.content_type_description %></td>
-                                                <td><%= row.topic_type %></td>
-                                                <td><%= row.topic_value.join(',') %></td>
-                                                <% if row.content_value.first.respond_to?(:to_hash) %>
-                                                  <td><%= row.content_value.map(&:to_hash) %></td>
-                                                <% else %>
-                                                  <td><%= row.content_value.join(",") %></td>
-                                                <% end %>
-                                            </tr>
-                                        <% end %>
-                                        </tbody>
-                                    </table>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    <% else %>
-                        <div class="alert alert-warning" role="alert"><%= @page_controls.xprofile.message %></div>
-                    <% end %>
-
-                    <% if @page_controls.cprofile.success %>
-                        <h3>Content Profile</h3>
-                        <div class="table-responsive">
-                            <table id="content-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                <caption><h4><%= @page_controls.cprofile.display_name %> at <%= @page_controls.cprofile.email %></h4></caption>
-                                <thead class="bg-primary">
-                                    <th>Profile Type</th>
-                                    <th>Description</th>
-                                    <th>Provider</th>
-                                    <th>PAK</th>
-                                    <th>Username</th>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><%= @page_controls.cprofile.profile_type %></td>
-                                        <td><%= @page_controls.cprofile.profile_type_description %></td>
-                                        <td><%= @page_controls.cprofile.provider %></td>
-                                        <td><%= @page_controls.cprofile.pak %></td>
-                                        <td><%= @page_controls.cprofile.username %></td>
-                                    </tr>
-                                    <tr>
-                                        <table id="content-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                            <caption><h4>Content Profile Entries</h4></caption>
-                                            <thead class="bg-primary">
-                                                <th>Entry Description</th>
-                                                <th>Content</th>
-                                                <th>Content Description</th>
-                                                <th>Topic</th>
-                                                <th>Topic Value</th>
-                                                <th>Content Value</th>
-                                            </thead>
-                                            <tbody>
-                                            <% @page_controls.cprofile.entries.each do |row| %>
-                                                <tr>
-                                                    <td><%= row.description %></td>
-                                                    <td><%= row.content_type %></td>
-                                                    <td><%= row.content_type_description %></td>
-                                                    <td><%= row.topic_type %></td>
-                                                    <td><%= row.topic_value.join(',') %></td>
-                                                    <td><%= row.content_value.join(',') %></td>
-                                                </tr>
-                                            <% end %>
-                                            </tbody>
-                                        </table>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    <% else %>
-                        <div class="alert alert-warning" role="alert"><%= @page_controls.cprofile.message %></div>
-                    <% end %>
-
-                <div class="well">
-                  <h3>User Options</h3>
-                  <ol>
-                    <% current_user.user_options.each do |item| -%>
-                        <li><%= item %></li>
-                    <% end -%>
-                  </ol>
-                </div>
-
-                <div class="well">
-                    <h3>Assigned Groups</h3>
-                    <ol>
-                        <% current_user.assigned_groups.each do |item| -%>
-                            <li><%= item %></li>
-                        <% end -%>
-                    </ol>
-                </div>
-
-                <div class="well">
-                    <h3>Assigned Roles</h3>
-                    <ol>
-                        <% current_user.assigned_roles.each do |item| -%>
-                            <li><%= item %></li>
-                        <% end -%>
-                    </ol>
-                </div>
-
-                <div class="well">
-                    <h3>Rendered Access Roles</h3>
-                    <ol>
-                        <% current_user.combined_access_roles.try(:each) do |item| -%>
-                            <li><%= item %></li>
-                        <% end -%>
-                    </ol>
-                </div>
-
-            <% else %>
-                    <div class="alert alert-warning" role="alert">No Authorized User</div>
-            <% end %>
-
-            <div class="well">
-                <h3>Current Session Values</h3>
-                <ol>
-                    <% session.keys.each do |k| -%>
-                        <li> <%= k %>: <%= session[k] %> </li>
-                    <% end -%>
-                </ol>
-            </div>
-
-            <div class="well">
-                <h3>Cookies on Current Request</h3>
-                <ol>
-                    <% cookies.each do |item| -%>
-                        <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
-                    <% end -%>
-                </ol>
-            </div>
-        </div>
-          <% if @page_controls.authenticated_user and @page_controls.apis_enabled %>
-              <div class="well">
-                <%= link_to "Reload AccessRegistry",  api_sysinfo_actions_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
-              </div>
-          <% else %>
-              <div class="alert alert-warning" role="alert">No Authorized User</div>
-          <% end %>
-    </div>
-    </div>
-
-    <div class="panel panel-success" id="obs-panel">
-      <div class="panel-heading" role="tab" id="headingSix">
-        <h4 class="panel-title">
-          <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-            Secure::ObjectStorageContainer
-          </a>
-        </h4>
-      </div>
-      <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-        <div class="panel-body">
-          <% if @page_controls.apis_enabled %>
-              <div class="table-responsive">
-                <table id="storage-table" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                  <caption><h4>Storage Size: <%= @page_controls.storage_size %></h4></caption>
-                  <thead class="bg-primary">
-                    <th>Client Class</th>
-                    <th>Key</th>
-                    <th>Value Class</th>
-                    <th>Reference/Username</th>
-                    <th>Create Time</th>
-                  </thead>
-                  <tbody>
-                  <% @page_controls.storage_keys.each do |item| -%>
-                        <tr>
-                          <td><%= item.klass %></td>
-                          <td><%= item.key %></td>
-                          <td><%= item.vklass %></td>
-                          <td><%= item.ref %></td>
-                          <td><%= item.time %></td>
-                        </tr>
-                  <% end -%>
-                  </tbody>
-                </table>
-              </div>
-          <% else %>
-              <div class="alert alert-warning" role="alert">No Authorized User</div>
-          <% end %>
-        </div>
-        <% if @page_controls.apis_enabled %>
-          <div class="well">
-            <%= link_to "Purge Object Storage items older than 10 minutes",  api_sysinfo_actions_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
+      <div class="panel panel-success">
+          <div class="panel-heading" role="tab" id="headingFive">
+              <h4 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                      Current User Info
+                  </a>
+              </h4>
           </div>
-        <% end %>
+          <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+              <div class="panel-body">
+
+                  <% if @page_controls.authenticated_user %>
+                      <% if @page_controls.xprofile.success %>
+                      <h3>Access Profile</h3>
+                          <div class="table-responsive">
+                              <table id="access-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                  <caption><h4><%= @page_controls.xprofile.display_name %> at <%= @page_controls.xprofile.email %></h4></caption>
+                                  <thead class="bg-primary">
+                                      <th>Profile Type</th>
+                                      <th>Description</th>
+                                      <th>Provider</th>
+                                      <th>PAK</th>
+                                      <th>Username</th>
+                                  </thead>
+                                  <tbody>
+                                  <tr>
+                                      <td><%= @page_controls.xprofile.profile_type %></td>
+                                      <td><%= @page_controls.xprofile.profile_type_description %></td>
+                                      <td><%= @page_controls.xprofile.provider %></td>
+                                      <td><%= @page_controls.xprofile.pak %></td>
+                                      <td><%= @page_controls.xprofile.username %></td>
+                                  </tr>
+                                  <tr>
+                                      <table id="access-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                          <caption><h4>Content Profile Entries</h4></caption>
+                                          <thead class="bg-primary">
+                                              <th>Entry Description</th>
+                                              <th>Content</th>
+                                              <th>Content Description</th>
+                                              <th>Topic</th>
+                                              <th>Topic Value</th>
+                                              <th>Content Value</th>
+                                          </thead>
+                                          <tbody>
+                                          <% @page_controls.xprofile.entries.each do |row| %>
+                                              <tr>
+                                                  <td><%= row.description %></td>
+                                                  <td><%= row.content_type %></td>
+                                                  <td><%= row.content_type_description %></td>
+                                                  <td><%= row.topic_type %></td>
+                                                  <td><%= row.topic_value.join(',') %></td>
+                                                  <% if row.content_value.first.respond_to?(:to_hash) %>
+                                                    <td><%= row.content_value.map(&:to_hash) %></td>
+                                                  <% else %>
+                                                    <td><%= row.content_value.join(",") %></td>
+                                                  <% end %>
+                                              </tr>
+                                          <% end %>
+                                          </tbody>
+                                      </table>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      <% else %>
+                          <div class="alert alert-warning" role="alert"><%= @page_controls.xprofile.message %></div>
+                      <% end %>
+
+                      <% if @page_controls.cprofile.success %>
+                          <h3>Content Profile</h3>
+                          <div class="table-responsive">
+                              <table id="content-profile" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                  <caption><h4><%= @page_controls.cprofile.display_name %> at <%= @page_controls.cprofile.email %></h4></caption>
+                                  <thead class="bg-primary">
+                                      <th>Profile Type</th>
+                                      <th>Description</th>
+                                      <th>Provider</th>
+                                      <th>PAK</th>
+                                      <th>Username</th>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td><%= @page_controls.cprofile.profile_type %></td>
+                                          <td><%= @page_controls.cprofile.profile_type_description %></td>
+                                          <td><%= @page_controls.cprofile.provider %></td>
+                                          <td><%= @page_controls.cprofile.pak %></td>
+                                          <td><%= @page_controls.cprofile.username %></td>
+                                      </tr>
+                                      <tr>
+                                          <table id="content-entries" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                              <caption><h4>Content Profile Entries</h4></caption>
+                                              <thead class="bg-primary">
+                                                  <th>Entry Description</th>
+                                                  <th>Content</th>
+                                                  <th>Content Description</th>
+                                                  <th>Topic</th>
+                                                  <th>Topic Value</th>
+                                                  <th>Content Value</th>
+                                              </thead>
+                                              <tbody>
+                                              <% @page_controls.cprofile.entries.each do |row| %>
+                                                  <tr>
+                                                      <td><%= row.description %></td>
+                                                      <td><%= row.content_type %></td>
+                                                      <td><%= row.content_type_description %></td>
+                                                      <td><%= row.topic_type %></td>
+                                                      <td><%= row.topic_value.join(',') %></td>
+                                                      <td><%= row.content_value.join(',') %></td>
+                                                  </tr>
+                                              <% end %>
+                                              </tbody>
+                                          </table>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      <% else %>
+                          <div class="alert alert-warning" role="alert"><%= @page_controls.cprofile.message %></div>
+                      <% end %>
+
+                      <div class="well">
+                        <h3>User Options</h3>
+                        <ol>
+                          <% current_user.user_options.each do |item| -%>
+                              <li><%= item %></li>
+                          <% end -%>
+                        </ol>
+                      </div>
+
+                      <div class="well">
+                          <h3>Assigned Groups</h3>
+                          <ol>
+                              <% current_user.assigned_groups.each do |item| -%>
+                                  <li><%= item %></li>
+                              <% end -%>
+                          </ol>
+                      </div>
+
+                      <div class="well">
+                          <h3>Assigned Roles</h3>
+                          <ol>
+                              <% current_user.assigned_roles.each do |item| -%>
+                                  <li><%= item %></li>
+                              <% end -%>
+                          </ol>
+                      </div>
+
+                      <div class="well">
+                          <h3>Rendered Access Roles</h3>
+                          <ol>
+                              <% current_user.combined_access_roles.try(:each) do |item| -%>
+                                  <li><%= item %></li>
+                              <% end -%>
+                          </ol>
+                      </div>
+
+                  <% else %>
+                      <div class="alert alert-warning" role="alert">No Authorized User</div>
+                  <% end %>
+              </div>
+
+              <div class="well">
+                  <h3>Current Session Values</h3>
+                  <ol>
+                      <% session.keys.each do |k| -%>
+                          <li> <%= k %>: <%= session[k] %> </li>
+                      <% end -%>
+                  </ol>
+              </div>
+
+              <div class="well">
+                  <h3>Cookies on Current Request</h3>
+                  <ol>
+                      <% cookies.each do |item| -%>
+                          <li>cookie => <%= item[0] %>, Value => <%= item[1][1,16] %>... </li>
+                      <% end -%>
+                  </ol>
+              </div>
+
+              <% if @page_controls.authenticated_user and @page_controls.apis_enabled %>
+                  <div class="well">
+                    <%= link_to "Reload AccessRegistry",  api_sysinfo_actions_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
+                  </div>
+              <% else %>
+                  <div class="alert alert-warning" role="alert">No Authorized User</div>
+              <% end %>
+          </div>
+      </div>
+
+      <div class="panel panel-success" id="obs-panel">
+        <div class="panel-heading" role="tab" id="headingSix">
+          <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse"  href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+              Secure::ObjectStorageContainer
+            </a>
+          </h4>
+        </div>
+        <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+          <div class="panel-body">
+            <% if @page_controls.apis_enabled %>
+                <div class="table-responsive">
+                  <table id="storage-table" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                    <caption><h4>Storage Size: <%= @page_controls.storage_size %></h4></caption>
+                    <thead class="bg-primary">
+                      <th>Client Class</th>
+                      <th>Key</th>
+                      <th>Value Class</th>
+                      <th>Reference/Username</th>
+                      <th>Create Time</th>
+                    </thead>
+                    <tbody>
+                    <% @page_controls.storage_keys.each do |item| -%>
+                          <tr>
+                            <td><%= item.klass %></td>
+                            <td><%= item.key %></td>
+                            <td><%= item.vklass %></td>
+                            <td><%= item.ref %></td>
+                            <td><%= item.time %></td>
+                          </tr>
+                    <% end -%>
+                    </tbody>
+                  </table>
+                </div>
+            <% else %>
+                <div class="alert alert-warning" role="alert">No Authorized User</div>
+            <% end %>
+          </div>
+          <% if @page_controls.apis_enabled %>
+            <div class="well">
+              <%= link_to "Purge Object Storage items older than 10 minutes",  api_sysinfo_actions_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
-
 </article>
 

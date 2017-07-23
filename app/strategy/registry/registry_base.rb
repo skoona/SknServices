@@ -11,7 +11,7 @@ module Registry
 
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
-      Rails.logger.debug("Registry::RegistryBase inherited By #{klass.name}")
+      Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
     def initialize(params={})
@@ -32,6 +32,11 @@ module Registry
     end
 
   protected
+
+    # Not required, simply reduces traffic since it is called often
+    def current_user
+      @current_user ||= registry.current_user
+    end
 
     # Support the regular respond_to? method by
     # answering for any method the controller actually handles

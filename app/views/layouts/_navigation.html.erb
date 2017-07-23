@@ -16,6 +16,7 @@
         <div id="main-nav" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <%= nav_link("About", about_pages_path) %>
+                <%= nav_link("Help", help_pages_path) %>
                 <% if current_user_has_access?('#Management') %>
                     <li class="dropdown">
                         <a id="dLabel" class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
