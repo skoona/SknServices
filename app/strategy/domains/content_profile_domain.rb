@@ -106,11 +106,11 @@ module Domains
         usrs <<  content_profile.merge(profile_exist: content_profile[:success])
       end
       results = {
-        profile_type_options: ProfileType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-        content_type_options: ContentType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-        content_type_opts_options: ContentTypeOpt.option_selects('Commission').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-        topic_type_options: TopicType.option_selects.each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
-        topic_type_opts_options: TopicTypeOpt.option_selects('Branch').each() {|s| s[0] = "#{s[0]} : #{s[2][:data][:description]}"},
+        profile_type_options: ProfileType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        content_type_options: ContentType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        content_type_opts_options: ContentTypeOpt.option_selects('Commission').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        topic_type_options: TopicType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        topic_type_opts_options: TopicTypeOpt.option_selects('Branch').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
         package: usrs
       }
       Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package]}"
@@ -325,10 +325,11 @@ module Domains
 
     ##
     # Supporting ContentProfilesController Actions
+    #  Parameters: {"utf8"=>"✓", "id"=>"75d521ee406b03aee02e2a4bfe05b660", "username"=>"vstester", "profile_type_id"=>"{:data=>{:description=>\"Partner Staff\"}}", "button"=>"content-profile-modal"}
     def create_content_profile_with_profile_type_id(params)
-      pt = ProfileType.find_by(id: params['profile_type_id'])
-      u = get_page_user(params['username'])
-      cp =db_profile_provider.create_content_profile_for(u, pt.name)
+      pt = ProfileType.find_by(id: (params['profile_type_id'] || params[:profile_type_id]))
+      u = get_page_user((params[:username] || params['username']))
+      cp = db_profile_provider.create_content_profile_for(u, pt.name)
       cp.present?
     end
     def update_content_profile_with_profile_type_id(params)
