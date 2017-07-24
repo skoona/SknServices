@@ -8,13 +8,15 @@ Rails.application.configure do
   # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
   # Rake tasks automatically ignore this option for performance.
-  config.eager_load = true
+  config.eager_load = false
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
-  config.action_controller.perform_caching = true
 
   # config.enable_dependency_loading = true
+  config.action_controller.perform_caching = true
+  config.cache_store = :memory_store
+  config.public_file_server.headers = {'Cache-Control' => 'public, max-age=172800'}
 
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
