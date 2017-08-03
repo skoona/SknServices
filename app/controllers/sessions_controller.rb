@@ -3,9 +3,9 @@
 #
 
 class SessionsController < ActionController::Base
-  include Registry::ControllerMethods                 # Development Strategy
+  include Registry::RegistryMethods                 # Development Strategy
   include ApplicationHelper                          # Controller, View Helper
-  include Secure::ControllerAccessControl            # Warden Security
+  include Secure::AccessAuthenticationMethods            # Warden Security
 
   layout "application"
 

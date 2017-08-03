@@ -3,7 +3,7 @@
 #
 #
 module Registry
-  module ControllerMethods
+  module RegistryMethods
     extend ActiveSupport::Concern
 
     def self.included(klass)

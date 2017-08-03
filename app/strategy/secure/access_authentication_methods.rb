@@ -26,7 +26,7 @@
 # Date: 3.13.2013
 
 module Secure
-  module ControllerAccessControl
+  module AccessAuthenticationMethods
 
     def self.included(klass)
       Rails.logger.debug("#{self.name} included By #{klass.name}")
@@ -37,7 +37,7 @@ module Secure
                              :current_user_has_delete?
                             ])
       unless ['SessionsController', 'ActionView::TestCase::TestController'].include?(klass.name)
-        Rails.logger.debug("Secure::ControllerAccessControl Activated! #{klass.name}")
+        Rails.logger.debug("Secure::AccessAuthenticationMethods Activated! #{klass.name}")
         klass.send( :before_action, :login_required)
       end
     end

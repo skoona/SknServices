@@ -56,7 +56,7 @@
        </dl>
         <p>
           <strong>Page Entries</strong> are automatically validated by a security filter provided to the ApplicationController
-            as a part of the <code>ControllerAccessControl#login_required()</code> functionality.  If the user does not have
+            as a part of the <code>AccessAuthenticationMethods#login_required()</code> functionality.  If the user does not have
             a matching role for the current controller_name/action_name then they are redirected to <code>SessionsController#not_authorized</code> method and given
             a 'not authorized' warning; otherwise they pass through to the desired page.
         </p>
