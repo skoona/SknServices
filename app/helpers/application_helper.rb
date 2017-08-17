@@ -118,7 +118,7 @@ module ApplicationHelper
 
   def do_page_actions
     if @page_controls and @page_controls.page_actions?
-      PageActionsBuilder.new(@page_controls.to_hash()[:page_actions], self, false).to_s
+      PageActionsBuilder.new(@page_controls.hash_from(:page_actions), self, false).to_s
     end
   end
 
