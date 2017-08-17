@@ -29,6 +29,7 @@ gem 'gravatar_image_tag'
 gem 'tzinfo-data'
 
 # Use Puma as the app server
+gem 'no_proxy_fix'
 gem 'puma', '~> 3.0'
 
 
