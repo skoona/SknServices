@@ -29,7 +29,7 @@ gem 'gravatar_image_tag'
 gem 'tzinfo-data'
 
 # Use Puma as the app server
-gem 'puma', '= 3.6.0'
+gem 'puma', '3.9.0'
 
 
 # bundle exec rake doc:rails generates the API under doc/api.
