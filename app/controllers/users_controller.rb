@@ -67,7 +67,7 @@ class UsersController < ApplicationController
   # }
   def update
     if @user.update(permitted)
-      redirect_to @user, notice: "Updated user"
+      redirect_to users_url, notice: "Updated user"
     else
       render :edit
     end

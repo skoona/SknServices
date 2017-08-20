@@ -571,6 +571,10 @@ $(function() {
     }
 
     switch (controllerAction) {
+        case 'edit':
+            $('.selectpicker').selectpicker();
+            break;
+
         case 'details_sysinfo':
             /*
              * Initial Establish sections
