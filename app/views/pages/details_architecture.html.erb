@@ -43,17 +43,17 @@
 			        <p class="lead">We do not add business process logic to Models, controllers, or views! (the classic Rails Way)</p>
               <p>We choose to take one step back from Rails code containers, models - views - controllers, and place our code in different containers more appropriate to our application purpose.  This need not be
                 considered a huge departure from the Rails Way, just an alternate approach to building application with Rails.</p>
-			        <p>We consider controller methods as entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code>:service_name.entry_method_name(params)</code>.
-			          Where <code>:service_name</code> is the name of a business process service class associated with the request.
+			        <p>We consider controller methods as entry points into our business logic and those entry points are coded with one-line invocations of our specialty service methods <code class="language-ruby">:service_name.entry_method_name(params)</code>.
+			          Where <code class="language-ruby">:service_name</code> is the name of a business process service class associated with the request.
 			          This service's method will be/is specially designed to accept input via the requests params and return results using a consistent package of values, which can easily be converted into JSON,
-			          or consumed by the view that has been prepared to accept ONE instance variable <code>@page_controls</code> values container.</p>
+			          or consumed by the view that has been prepared to accept ONE instance variable <code class="language-ruby">@page_controls</code> values container.</p>
                 <p>For apps that have some sort of menu-bar or top of page information
-			          section.  We up the instance variable count by one, by allowing a <code>@page_info</code> values container, which would contain all the values needed to populate the top of page information section of
-			          that page thru the page partials prepared for it.  In cases where the return code to the controller method is negative, we maintain the <code>:success, :message</code> keys in the
+			          section.  We up the instance variable count by one, by allowing a <code class="language-ruby">@page_info</code> values container, which would contain all the values needed to populate the top of page information section of
+			          that page thru the page partials prepared for it.  In cases where the return code to the controller method is negative, we maintain the <code class="language-ruby">:success, :message</code> keys in the
 			          values container (i.e. NestedResult) to carry this failure state.  This allows the controller to redirect to the logical next page based on error, or continue to regular destination
 			          on success; message is used for the Flash message when needed.</p>
 
-			          <pre class="pre-scrollable prettyprint lang-rb">
+			          <pre><code class="language-ruby">
 class ProfilesController < ApplicationController
 
   # HTML only response
@@ -70,10 +70,10 @@ class ProfilesController < ApplicationController
 
   ...
 end
-          			</pre>
+          			</code></pre>
 
           			<p class="lead">For models we have a similar approach.  Only add what is relevant and required to effectively use or protect the data record.</p>
-          			<pre class="prettyprint lang-rb pre-scrollable">
+          			<pre><code class="language-ruby">
 ProfileType < ActiveRecord::Base
   has_one :content_profile
   validates_presence_of :name, :description
@@ -84,7 +84,7 @@ ProfileType < ActiveRecord::Base
     end
   end
 end          				
-          			</pre>
+          			</code></pre>
                     <p>In the case of models this means only short methods to help with form option lists, and the model's own validation methods. Nothing more!</p>
           		</div>
        		</div>
@@ -113,7 +113,7 @@ end
                        When changes and enhancements to the business logic are needed, we can make those changes without great concern or constraints being imposed by the delivery mechanism.  This also facilitates
                        easier upgrades of the delivery frameworks; since we have reduced the number of touch points between our application the Rails.</p>
                     <p>Services inherit directly from Domains to further shield our application from the external frameworks; this is easy to see when considering the controller.  Models on the other hand
-                       need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  I've chosen to go one step further and dedicate a <code>&lt;context&gt;Provider</code>
+                       need to be wrapped by Domain methods to prevent their inline introduction or leakage into the Domains.  I've chosen to go one step further and dedicate a <code class="language-ruby">&lt;context&gt;Provider</code>
                        class that wraps all the ActiveRecord IO calls, expecting it to be called by either Domain methods or Services methods.  I have considered using a Repository strategy to add more isolation and to facilitate testing.
                        For now the specialty domain level IO class provides enough isolation.  Ideally we should be able to write RSpec tests for the service/domain classes without invoking the Rails environment, or at least with fewer dependencies.</p>
                     <p>If service objects are focused on transforming domain results to external interfaces, and strategy.domains themselves are focused on the core business logic of a single process.  Then yes, there will
@@ -124,7 +124,7 @@ end
                        our ability to test off-line from Rails, and making the code more portable with greater reuse opportunities.  A task object would completely handle a task step or elements of the logical process flow
                        domain objects are responsible for.  <em>use the force!</em></p>
                 </div>
-              <pre class="pre-scrollable prettyprint lang-rb">
+              <pre><code class="language-ruby">
 class ServiceRegistry < ::Registry::RegistryBase
 
 
@@ -140,8 +140,8 @@ class ServiceRegistry < ::Registry::RegistryBase
 
   ...
 end
-              </pre>
-              <pre class="pre-scrollable prettyprint lang-rb">
+                </code></pre>
+              <pre><code class="language-ruby">
 class ContentService < ::ContentProfileDomain
 
 
@@ -163,10 +163,10 @@ class ContentService < ::ContentProfileDomain
 
   ...
 end
-              </pre>
-              </pre>
-              <pre class="pre-scrollable prettyprint lang-rb">
- class ContentProfileDomain </pre>
+              </code></pre>
+
+              <pre><code class="language-ruby">
+ class ContentProfileDomain </code></pre>
 
             </div>
             <p class="lead">Admittedly, this demonstration has not reached that level of <em>Nirvana</em> yet, but it is the design objective! Refactoring now has a clear target (i.e plan).</p>
@@ -227,7 +227,7 @@ end
                                 <p>During initialization the user's roles are rendered from those assigned via group roles.</p>
                             </dd>
                         <dt>Inheritance</dt>
-                            <dd><p>Secure::UserProfile is a base class with direct access to the memory-based Object Storage Interface Module <code>Registry::ObjectStorageService</code>, capable of keeping references to memory
+                            <dd><p>Secure::UserProfile is a base class with direct access to the memory-based Object Storage Interface Module <code class="language-ruby">Registry::ObjectStorageService</code>, capable of keeping references to memory
                                 objects across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
                                 retention until there usage is complete.</p>
                         <dt>Provides</dt>
@@ -239,48 +239,48 @@ end
                                     User table which contains the persistent Id, individual and group roles.</p>
                                 <p>Static class methods are provided to allow Warden to:<br/>
                                     <dl>
-                                        <dt><code>:find_and_authenticate_user(uname, upass)</code></dt>
+                                        <dt><code class="language-ruby">:find_and_authenticate_user(uname, upass)</code></dt>
                                             <dd>Locate a user with these credentials in whatever user store is available</dd>
-                                        <dt><code>:fetch_remembered_user(token)</code></dt>
+                                        <dt><code class="language-ruby">:fetch_remembered_user(token)</code></dt>
                                             <dd>Locate a user using their remember token</dd>
-                                        <dt><code>:fetch_cached_user(token)</code></dt>
+                                        <dt><code class="language-ruby">:fetch_cached_user(token)</code></dt>
                                             <dd>Locate an existing user exclusively from the inMemory storage facility.</dd>
-                                        <dt><code>:logout(token)</code></dt>
+                                        <dt><code class="language-ruby">:logout(token)</code></dt>
                                             <dd>Log out the user and remove them from the inMemory storage, clear their remember_token and session.</dd>
-                                        <dt><code>:last_login_time_expired?(user_object)</code></dt>
+                                        <dt><code class="language-ruby">:last_login_time_expired?(user_object)</code></dt>
                                             <dd>Update the last time user access the system and if expired, revalidate their credentials.</dd>
-                                        <dt><code>:authenticate?(unencrypted_password)</code></dt>
+                                        <dt><code class="language-ruby">:authenticate?(unencrypted_password)</code></dt>
                                             <dd>Bcryts Authenticate returns self, we need to override that return value to return self instead</dd>
-                                        <dt><code>:enable_authentication_controls</code></dt>
+                                        <dt><code class="language-ruby">:enable_authentication_controls</code></dt>
                                             <dd>After successful login, this method saves the user object into our inMemory storage for later session level retrieval. Also update :last_access.</dd>
-                                        <dt><code>:disable_authentication_controls</code></dt>
+                                        <dt><code class="language-ruby">:disable_authentication_controls</code></dt>
                                             <dd>Remove the user object reference from inMemory storage, updates :last_access.</dd>
                                     </dl>
                                 </p>
                                 <p>Static class methods are provided to facilitate content profile, and testing service to:<br/>
                                     <dl>
-                                        <dt><code>:page_users(context)</code></dt>
+                                        <dt><code class="language-ruby">:page_users(context)</code></dt>
                                             <dd>Retrieve the list of all users without logging them in.  For use with offline operations.</dd>
-                                        <dt><code>:page_user(uname, context)</code></dt>
+                                        <dt><code class="language-ruby">:page_user(uname, context)</code></dt>
                                             <dd>Retrieves a single user object without logging it in, for offline use.</dd>
                                     </dl>
                                 </p>
                                 <p>Instance methods are provided to allow AccessRegistry access control application wide:<br/>
                                 <ul class="">
-                                    <li><code>:has_access?(resource_uri,options)</code></li>
-                                    <li><code>:has_create?(resource_uri,options)</code></li>
-                                    <li><code>:has_read?(resource_uri,options)</code></li>
-                                    <li><code>:has_update?(resource_uri,options)</code></li>
-                                    <li><code>:has_delete?(resource_uri,options)</code></li>
+                                    <li><code class="language-ruby">:has_access?(resource_uri,options)</code></li>
+                                    <li><code class="language-ruby">:has_create?(resource_uri,options)</code></li>
+                                    <li><code class="language-ruby">:has_read?(resource_uri,options)</code></li>
+                                    <li><code class="language-ruby">:has_update?(resource_uri,options)</code></li>
+                                    <li><code class="language-ruby">:has_delete?(resource_uri,options)</code></li>
                                 </ul>
                                 </p>
                                 <p>Instance methods support ApplicationHelper methods for use in view and controller actions:<br/>
                                 <ul class="">
-                                    <li><code>:current_user_has_access?(uri, options)</code></li>
-                                    <li><code>:current_user_has_read?(uri, options)</code></li>
-                                    <li><code>:current_user_has_create?(uri, options)</code></li>
-                                    <li><code>:current_user_has_update?(uri, options)</code></li>
-                                    <li><code>:current_user_has_delete?(uri, options)</code></li>
+                                    <li><code class="language-ruby">:current_user_has_access?(uri, options)</code></li>
+                                    <li><code class="language-ruby">:current_user_has_read?(uri, options)</code></li>
+                                    <li><code class="language-ruby">:current_user_has_create?(uri, options)</code></li>
+                                    <li><code class="language-ruby">:current_user_has_update?(uri, options)</code></li>
+                                    <li><code class="language-ruby">:current_user_has_delete?(uri, options)</code></li>
                                 </ul>
                                 </p>
                                 <p>Designed to be the User's proxy to the whole system.  Working in concert with Authentication and
@@ -307,30 +307,30 @@ end
                     <dl class="dl-horizontal">
                         <dt>Instantiate</dt>
                         <dd>
-                            <p>ServiceRegistry is instantiated by the top level Application Controller using a <code>:before_action</code> callback to a private method
-                                called <code>:establish_domain_services</code>.  There is also a twin to this callback referred to as <code>:manage_domain_services</code>,
-                                called by the <code>:after_action</code> callback.</p>
-                            <p><code>:establish_domain_services</code> and <code>:manage_domain_services</code> work to recover assets from the request session, and to save keys
+                            <p>ServiceRegistry is instantiated by the top level Application Controller using a <code class="language-ruby">:before_action</code> callback to a private method
+                                called <code class="language-ruby">:establish_domain_services</code>.  There is also a twin to this callback referred to as <code class="language-ruby">:manage_domain_services</code>,
+                                called by the <code class="language-ruby">:after_action</code> callback.</p>
+                            <p><code class="language-ruby">:establish_domain_services</code> and <code class="language-ruby">:manage_domain_services</code> work to recover assets from the request session, and to save keys
                                 to those assets into the session just before the controller exits back to the browser.  The ServiceRegistry is lightwieght and would derive no real benefit from being
                                 serialized into a session.  So it is simply created anew with each request/response cycle.</p>
-                            <p>The ServiceRegistry itself is instantiated as <code>@service_registry</code> in the top level ApplicationController, behind a memotizing method <code>service_registry</code>.
-                                To instantiate a processService use: <code>process_service.service_method_name(params)</code>.</p>
-                            <p>The intended use of the <code>service_registry</code> is to provide lazy instantiation and memotization of all strategy components classes in the application. And to additionally
-                                provide them critical facilites, like <code>:current_user</code>, and act as an isolation gateway to the application controller.</p>
-                            <p>Inside a processService, like ContentService or ProfileProviders, reference the service_registry as <code>:registry</code> or <code>:service</code>, as in: <code>registry.content_service.some_method</code> .</p>
+                            <p>The ServiceRegistry itself is instantiated as <code class="language-ruby">@service_registry</code> in the top level ApplicationController, behind a memotizing method <code class="language-ruby">service_registry</code>.
+                                To instantiate a processService use: <code class="language-ruby">process_service.service_method_name(params)</code>.</p>
+                            <p>The intended use of the <code class="language-ruby">service_registry</code> is to provide lazy instantiation and memotization of all strategy components classes in the application. And to additionally
+                                provide them critical facilites, like <code class="language-ruby">:current_user</code>, and act as an isolation gateway to the application controller.</p>
+                            <p>Inside a processService, like ContentService or ProfileProviders, reference the service_registry as <code class="language-ruby">:registry</code> or <code class="language-ruby">:service</code>, as in: <code class="language-ruby">registry.content_service.some_method</code> .</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>ServiceRegistry, inherits from <code>::Registry::RegistryBase</code> which yields a memory-based Object Storage Interface Module <code>Registry::ObjectStorageService</code>, capable of keeping references to memory
+                        <dd><p>ServiceRegistry, inherits from <code class="language-ruby">::Registry::RegistryBase</code> which yields a memory-based Object Storage Interface Module <code class="language-ruby">Registry::ObjectStorageService</code>, capable of keeping references to memory
                             object across the users request/response cycle; much like the session does and for the same reasons. i.e some objects are expensive to create and may benefit from session-like
                             retention until there usage is complete.</p>
                         <dt>Provides</dt>
                         <dd>
-                            <p>ServiceRegistry provides Services with the <code>:current_user</code>, <code>:registry</code> reference, and a <code>:method_missing</code> feature capable of
+                            <p>ServiceRegistry provides Services with the <code class="language-ruby">:current_user</code>, <code class="language-ruby">:registry</code> reference, and a <code class="language-ruby">:method_missing</code> feature capable of
                                 directing :not_found method calls to the controller to be serviced if possible.</p>
                             <p>Services should truly limit their demands of the controller object to zero if possible, and have the service_registry devise a solution to their requirements.  The most often
                                 experienced demand for the controller is when a service needs to resolve a named route or render a template partial to embed in a json response.</p>
                             <p>Let's not recreate the application controller, for those types of requirements use the controller, just wrap those patterns in a method defined in the service_registry or a
-                                controller helper/presenter.  This way it can be easily mocked out later for testing.  In fact, I do use a <code>:page_actions</code> view helper located in the
+                                controller helper/presenter.  This way it can be easily mocked out later for testing.  In fact, I do use a <code class="language-ruby">:page_actions</code> view helper located in the
                                 ApplicationHelper module, to handle rendering and route resolutions from a hashed set of control data from a service.  Basically, outsourcing to the ActionView those things it does best; and totally removing the need for a controller object in the majority of strategy.services and strategy.domains.</p>
                             <p>Engineering objectives shall include, avoidance of the controller in all strategy.services, strategy.domains, and specialty business strategy.services classes.  It is possible and practical, your RSpec tests will demonstrate it later.</p>
                          </dd>
@@ -339,29 +339,29 @@ end
                                     <div class="well-sm">
                                     <p># Saves object to inMemory ObjectStore<br/>
                                        # Returns storage key, needed to retrieve<br/>
-                                        <code>:save_new_object(obj)</code></p>
+                                        <code class="language-ruby">:save_new_object(obj)</code></p>
                                     </div>
                                     <div class="well-sm">
                                      <p># Updates existing container with new object reference<br/>
                                         # returns object<br/>
-                                        <code>:set_existing_object(key, obj)</code></p>
+                                        <code class="language-ruby">:set_existing_object(key, obj)</code></p>
                                     </div>
                                     <div class="well-sm">
                                         <p># Retrieves object from InMemory Storage<br/>
                                         # returns object<br/>
-                                        <code>:get_existing_object(key)</code></p>
+                                        <code class="language-ruby">:get_existing_object(key)</code></p>
                                     </div>
                                     <div class="well-sm">
                                         <p># Releases object from InMemory Storage<br/>
                                         # returns object, if present<br/>
-                                        <code>:remove_existing_object(key)</code></p>
+                                        <code class="language-ruby">:remove_existing_object(key)</code></p>
                                     </div>
                         </dd>
                         <dt>Session API</dt>
                         <dd>
                             <div class="well-sm">
-                                <p><code>:get_session_params(key)</code><br/>
-                                <code>:set_session_params(key, value)</code></p>
+                                <p><code class="language-ruby">:get_session_params(key)</code><br/>
+                                <code class="language-ruby">:set_session_params(key, value)</code></p>
                             </div>
                         </dd>
                         <dt>Named Route Helpers</dt>
@@ -369,10 +369,10 @@ end
                             <div class="well-sm">
                               <p>
                                 Converts named routes to string<br/>
-                                  Basic: <code>[:named_route_path, {options}, '?query_string']</code><br>
-                                  Advanced: <code>{engine: :demo, path: :demo_profiles_path, options: {id:111304},query:'?query_string'}</code><br/>
+                                  Basic: <code class="language-ruby">[:named_route_path, {options}, '?query_string']</code><br>
+                                  Advanced: <code class="language-ruby">{engine: :demo, path: :demo_profiles_path, options: {id:111304},query:'?query_string'}</code><br/>
                                 <br/>
-                                Example: <code>registry.page_action_paths(paths)</code></p>
+                                Example: <code class="language-ruby">registry.page_action_paths(paths)</code></p>
                             </div>
                         </dd>
                     </dl>
@@ -398,23 +398,23 @@ end
                         <dt>Instantiate</dt>
                         <dd>
                             <p>ServiceRegistry provides instantiation strategy.services to any requester in the request/response cycle.</p>
-                            <p>The intended use of processServices object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code>@page_controls</code>, based
-                                on the <code>SknUtils::NestedResult</code> group of result value containers.</p>
+                            <p>The intended use of processServices object methods is to handle all operations for a controller entry point(url), and return a single information bundle <code class="language-ruby">@page_controls</code>, based
+                                on the <code class="language-ruby">SknUtils::NestedResult</code> group of result value containers.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>processServices inherit business logic from the <code>processDomain</code> class.  The processDomain class inherits from the <code>::Registry::DomainsBase</code>,
-                            which yields common initialization strategy.services like the current_user() and access to the service_registry for interaction with the controller helpers if needed.  In particular, the <code>service_registry</code> includes
+                        <dd><p>processServices inherit business logic from the <code class="language-ruby">processDomain</code> class.  The processDomain class inherits from the <code class="language-ruby">::Registry::DomainsBase</code>,
+                            which yields common initialization strategy.services like the current_user() and access to the service_registry for interaction with the controller helpers if needed.  In particular, the <code class="language-ruby">service_registry</code> includes
                             object storage strategy.services and session storage strategy.services through its inheritance chain.</p>
                         <dt>Provides</dt>
                         <dd><p>processServices present customized business logic and standard information packaging for the application entry points assigned to  it.  Where ever used you can be assured of a valid response encoded
-                            in a <code>@page_controls</code> value container, and all exceptions are trapped by this top level method.   PageControl value containers are required to include
-                            <code>success: true|false, message: error_message|success_message|empty, and payload: [domainData]</code> values at a minimum.</p>
+                            in a <code class="language-ruby">@page_controls</code> value container, and all exceptions are trapped by this top level method.   PageControl value containers are required to include
+                            <code class="language-ruby">success: true|false, message: error_message|success_message|empty, and payload: [domainData]</code> values at a minimum.</p>
                             <p>JSON Api or regular HTML methods are hosted by this service.</p>
                         </dd>
                     </dl>
                 </div>
             </div>
-            <p>Instantiated by: <code>service_registry()</code></p>
+            <p>Instantiated by: <code class="language-ruby">service_registry()</code></p>
         </div>
 
         <div class="panel panel-info">
@@ -437,7 +437,7 @@ end
                               strategy.services.</p>
                         </dd>
                         <dt>Inheritance</dt>
-                        <dd><p>processDomains inherit directly from the <code>::Registry::DomainsBase</code> class, and yields business logic methods to higher level service objects.
+                        <dd><p>processDomains inherit directly from the <code class="language-ruby">::Registry::DomainsBase</code> class, and yields business logic methods to higher level service objects.
                             Services take the results of one or more of these <em>business logic complete</em> methods and package them for external exchange in the controller response.</p>
                         <dt>Provides</dt>
                         <dd><p>processDomains have logical access to the service registry and all other peer strategy.services the registry manages.  Typically you would find two to three levels of methods in a Domain class.</p>
@@ -450,13 +450,13 @@ end
                                 <dt>level Three</dt>
                                 <dd>Is rarely needed, but if so would handle very narrow objectives; like I/O or RESTFul routines.</dd>
                             </dl>
-                            <p>This is the best place to exploit object-oriented design principles.  To that end, we include design components to meet the most frequent use cases; namely: <code>domainProviders</code>, and <code>taskProcessor</code>.</p>
+                            <p>This is the best place to exploit object-oriented design principles.  To that end, we include design components to meet the most frequent use cases; namely: <code class="language-ruby">domainProviders</code>, and <code class="language-ruby">taskProcessor</code>.</p>
                         </dd>
                     </dl>
                 </div>
                 <p>The Business Process Interface is here.</p>
             </div>
-            <p>Inherited by: <code>ContentService, ...</code></p>
+            <p>Inherited by: <code class="language-ruby">ContentService, ...</code></p>
         </div>
 
       <div class="panel panel-info">
@@ -477,7 +477,7 @@ end
                 <p>The intended use of a domainProvider object, is to handle all business object persistence related operations for domain context data. It should not interact directly any object aside from the domain object that calls it, and the Database Interface.</p>
               </dd>
               <dt>Inheritance</dt>
-              <dd><p>domainProviders inherit common instantiation service from the <code>Providers::ProvidersBase</code> class.  The Providers::ProvidersBase yields common initialization strategy.services, and object storage strategy.services.</p>
+              <dd><p>domainProviders inherit common instantiation service from the <code class="language-ruby">Providers::ProvidersBase</code> class.  The Providers::ProvidersBase yields common initialization strategy.services, and object storage strategy.services.</p>
               </dd>
               <dt>Provides</dt>
               <dd><p>DBProfileProvider provides contextual data access for content profile data objects with standard data packaging for internal processes.</p>
@@ -487,7 +487,7 @@ end
           </div>
           <p>Currently there are two implementations of this component: XMLProfileProvider and DBProfileProvider classes. </p>
         </div>
-        <p>Instantiated by: <code>service_registry()</code></p>
+        <p>Instantiated by: <code class="language-ruby">service_registry()</code></p>
       </div>
 
       <div class="panel panel-info">
@@ -508,7 +508,7 @@ end
                 <p>The intended use of a Processor is to handle specialized tasks which may include external IO of some sort, for Domains.</p>
               </dd>
               <dt>Inheritance</dt>
-              <dd><p>A task processor inherits directly from the <code>Processors::ProcessorBase</code> class.  The ProcessorBase yields common initialization strategy.services, and access to the service registry.</p>
+              <dd><p>A task processor inherits directly from the <code class="language-ruby">Processors::ProcessorBase</code> class.  The ProcessorBase yields common initialization strategy.services, and access to the service registry.</p>
               </dd>
               <dt>Provides</dt>
               <dd><p>FileSystemAdapter provides logical access to content storage facilities.</p>
@@ -518,7 +518,7 @@ end
           </div>
           <p>Currently there are two implementations of this component: FileSystemAdapter and InlineValueAdapter classes. </p>
         </div>
-        <p>Instantiated by: <code>service_registry()</code>.  However, they are capable of operating independently of the </p>
+        <p>Instantiated by: <code class="language-ruby">service_registry()</code>.  However, they are capable of operating independently of the </p>
       </div>
 
         <div class="panel panel-info">
@@ -532,14 +532,14 @@ end
             <div id="SknUtils" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div class="panel-body">
                     <p>The <strong>skn_utils.gem</strong> contains dynamic base classes inherited to create local value containers or plain old ruby objects (PORO).</p>
-                    <p>Initialized with a Hash of key value pairs: <code>res = SknUtils::NestedResult.new({one: 1, two: [{one: 'one', two: 'two'}]})</code>  The keys become method names that return the associated values.  This
+                    <p>Initialized with a Hash of key value pairs: <code class="language-ruby">res = SknUtils::NestedResult.new({one: 1, two: [{one: 'one', two: 'two'}]})</code>  The keys become method names that return the associated values.  This
                     transformation of the hash continues, during its initialization, to follow nested hashes, arrays of hashes, and arrays of array of hashes.</p>
                     <p>Overall the result of using this gem is an easily used container for transporting or packaging values for use in views, json responses, etc.
-                    Accessing the values in a SknUtil::NestedResult can be done using <code>dot</code> notation, or <code>hash</code> notation:
-                    example: <code>res.one #=> 1</code>, <code>res.two.first.two #=> 'two'</code></p>
-                    <p>If you need to unwrap the container to convert it to json or just to have the hash back;<br/> <code>res.to_hash #=> {one: 1, two: [{one: 'one', two: 'two'}]}</code>, gets the job done.</p>
+                    Accessing the values in a SknUtil::NestedResult can be done using <code class="language-ruby">dot</code> notation, or <code class="language-ruby">hash</code> notation:
+                    example: <code class="language-ruby">res.one #=> 1</code>, <code class="language-ruby">res.two.first.two #=> 'two'</code></p>
+                    <p>If you need to unwrap the container to convert it to json or just to have the hash back;<br/> <code class="language-ruby">res.to_hash #=> {one: 1, two: [{one: 'one', two: 'two'}]}</code>, gets the job done.</p>
                     <p>There are many more logical features built into the package, read more at <a href="https://github.com/skoona/skn_utils">SknUtils</a>. The is one feature that you should know and use:
-                    the present <code>&lt;keyName&gt;?</code> feature.  Example: <code>res.two? #=> true,  res.twenty? #=> false</code></p>
+                    the present <code class="language-ruby">&lt;keyName&gt;?</code> feature.  Example: <code class="language-ruby">res.two? #=> true,  res.twenty? #=> false</code></p>
 
                     <dl class="dl-horizontal">
                         <dt>SknUtils::NestedResult</dt>
@@ -566,12 +566,12 @@ end
                         <dt>PageActionsBuilder</dt>
                         <dd>
                             <p>A Class designed to build page action dropdown menus from an array of hashes contain with keys describing each menu item.</p>
-                            <p>It is initiated by an <code>ApplicationHelper#do_page_actions</code> and assumes it input array is in either <code>@page_controls.page_actions or .package.page_actions</code>.</p>
-                            <p>In your strategy.services routine response you can add a <code>:page_actions</code> array of params, and this helper will create the classic pulldown or action button for you.</p>
+                            <p>It is initiated by an <code class="language-ruby">ApplicationHelper#do_page_actions</code> and assumes it input array is in either <code class="language-ruby">@page_controls.page_actions or .package.page_actions</code>.</p>
+                            <p>In your strategy.services routine response you can add a <code class="language-ruby">:page_actions</code> array of params, and this helper will create the classic pulldown or action button for you.</p>
                         </dd>
                         <dt>#page_action_paths</dt>
                         <dd>
-                            <p>Located in <code>ApplicationHelper#page_action_paths</code>, this methods resolves named routes into strings.  You
+                            <p>Located in <code class="language-ruby">ApplicationHelper#page_action_paths</code>, this methods resolves named routes into strings.  You
                             would use this method to resolve named paths for inclusion in json responses, or anywhere else you might need it.</p>
                         </dd>
                     </dl>
@@ -590,22 +590,22 @@ end
           <div id="RSpecTesting" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
               <div class="panel-body">
                 <p class="lead">RSpec Testing: This Rocks</p>
-                <p>The directory <code>spec/support</code> has a collection of modules and classes to augment testing:</p>
+                <p>The directory <code class="language-ruby">spec/support</code> has a collection of modules and classes to augment testing:</p>
                 <ul>
                   <li>
-                    <code>ServiceRegistryMockController</code> A class used to replace the need for a ApplicationController to initialize the ServiceRegistry with. It contains methods that
+                    <code class="language-ruby">ServiceRegistryMockController</code> A class used to replace the need for a ApplicationController to initialize the ServiceRegistry with. It contains methods that
                     Service or Domain objects might call on the ApplicationController, like: current_user, page_actions, menu_active, etc.  The use of this
                     mock controller has a significant speed increase compared to its alternative <strong>Integration/Controller</strong> tests.
                   </li>
                   <li>
-                    <code>TestUsers</code> contains a collection of methods that will return a testable user_profile object, either fully enabled as the current_user, or simply loaded as an independent record.
+                    <code class="language-ruby">TestUsers</code> contains a collection of methods that will return a testable user_profile object, either fully enabled as the current_user, or simply loaded as an independent record.
                   </li>
                   <li>
-                    <code>TestDataSerializers</code> contains a couple of methods that allow you to save objects to a separate yaml file.  Can be used to capture a <code>@page_controls</code> object to be used latter as mocking data when testing views.
+                    <code class="language-ruby">TestDataSerializers</code> contains a couple of methods that allow you to save objects to a separate yaml file.  Can be used to capture a <code class="language-ruby">@page_controls</code> object to be used latter as mocking data when testing views.
                   </li>
                 </ul>
                 <p>Testing Services with RSpec looks like this:</p>
-                <pre class="pre-scrollable prettyprint lang-rb">
+                <pre class="pre-scrollable"><code class="language-ruby">
 RSpec.describe ContentService, "Service routines of ContentService." do
   let!(:user) {user_bstester}
 
@@ -626,7 +626,7 @@ RSpec.describe ContentService, "Service routines of ContentService." do
   end
 
 end
-                  </pre>
+                  </code></pre>
               </div>
           </div>
           <P>Finished in 10.76 seconds (files took 3.44 seconds to load) </br>
@@ -679,11 +679,11 @@ end
             <h3>To Do</h3>
             <dl class="dl-horizontal">
               <dt>CommandBase</dt>
-                <dd>Processors have two types of implementations based on their intended purpose: Single or Multi Method mode.  Mode is implementation via inheritance; <code>Processors:ProcessorBase</code> class is for multi-method, <code>Processors::CommandBase</code> class is for single-method implementation.  Single mode Processors would live outside of the ServiceRegistry umbrella and be invoke directly by Domains when needed; they are desiged to be invoke via: <code>myCommandProcessor.call(params_hash)</code> </dd>
+                <dd>Processors have two types of implementations based on their intended purpose: Single or Multi Method mode.  Mode is implementation via inheritance; <code class="language-ruby">Processors:ProcessorBase</code> class is for multi-method, <code class="language-ruby">Processors::CommandBase</code> class is for single-method implementation.  Single mode Processors would live outside of the ServiceRegistry umbrella and be invoke directly by Domains when needed; they are desiged to be invoke via: <code class="language-ruby">myCommandProcessor.call(params_hash)</code> </dd>
               <dt>Profile Runtime</dt>
                 <dd>A new class to handle runtime requests for user ContentProfiles and authorization queries, rather than bolting these methods on the UserProfile.  While these features are present in the code, I'd like to organize them better.</dd>
               <dt>AccessRegistry</dt>
-                <dd>There are a lot of direct calles to the <code>Secure:AccessRegistry...</code> class which I would like to corral into a AccessRegistry provider or processor.</dd>
+                <dd>There are a lot of direct calles to the <code class="language-ruby">Secure:AccessRegistry...</code> class which I would like to corral into a AccessRegistry provider or processor.</dd>
               <dt>Clarify</dt>
               <dd>There are three significant and wonderful components in this codeset; as depicted on the homepage.
                 <ol>
