@@ -78,28 +78,28 @@ function handleRailsInfo(ev) {
  * - REQUIRES JQuery-Binary-Transport.js
  */
 function profileTablesGetObject(ev) {
-  var dataPackage = $(ev.currentTarget).data().package,
-      dataResponse,
-      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
+    var dataPackage = $(ev.currentTarget).data().package,
+        dataResponse,
+        objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
-  /*
-   * flag selected in related table */
-  $("table.profile tbody tr").removeClass('success');
-  $(ev.currentTarget).addClass('success');
+    /*
+     * flag selected in related table */
+    $("table.profile tbody tr").removeClass('success');
+    $(ev.currentTarget).addClass('success');
 
-  ev.preventDefault();
+    ev.preventDefault();
 
-  if(dataPackage.hasOwnProperty('id')) {
-    window.open(objectUrl, dataPackage.filename);
-    consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
-  } else {
-    consoleLog("profileTablesGetObject() Not a file based request - skipped");
-  }
+    if(dataPackage.hasOwnProperty('id')) {
+        window.open(objectUrl, dataPackage.filename);
+        consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+    } else {
+        consoleLog("profileTablesGetObject() Not a file based request - skipped");
+    }
 
 
-  /**  Worked but user could not detach
+    /**  Worked but user could not detach
 
-   $.ajax({
+     $.ajax({
     headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
     method: "GET",
     dataType: 'binary',
@@ -113,11 +113,30 @@ function profileTablesGetObject(ev) {
     consoleLog( "profileTablesGetObject("+ dataPackage.username + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
   });
 
-  */
+     */
 
-  consoleLog("profileTablesGetObject(completed) ");
+    consoleLog("profileTablesGetObject(completed) ");
 
-  return false;
+    return false;
+}
+
+function runtimeDemoGetObject(ev) {
+    var dataPackage = $(ev.currentTarget).data().package,
+        dataResponse,
+        objectUrl = $(ev.currentTarget).closest('tbody').data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
+
+    ev.preventDefault();
+
+    if(dataPackage.hasOwnProperty('id')) {
+        window.open(objectUrl, dataPackage.filename);
+        consoleLog("runtimeDemoGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+    } else {
+        consoleLog("runtimeDemoGetObject() Not a file based request - skipped");
+    }
+
+    consoleLog("runtimeDemoGetObject(completed) ");
+
+    return false;
 }
 
 /**
@@ -537,9 +556,6 @@ $(function() {
     /* Save this token for the Ajax calls */
     csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    /* Initialize code pretty print feature */
-    prettyPrint();
-
     /*
      * Only for the ProfilesController based pages */
     if ( controllerName.startsWith('profiles') ) {
@@ -571,6 +587,9 @@ $(function() {
     }
 
     switch (controllerAction) {
+        case 'runtime_demo':
+            $('table tbody tr').on("click", runtimeDemoGetObject);
+            break;
         case 'edit':
             $('.selectpicker').selectpicker();
             break;

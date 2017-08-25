@@ -1,7 +1,7 @@
 <% provide(:title, accessed_page_name) %>
 
 <article>
-  <div class="jumbotron galaxy-stars">
+  <div class="jumbotron galaxy-dunes_mars">
     <h1 class="big-chalk"><%= accessed_page_name %></h1>
     <p>
       This organization's management team has prepared a set of documents related to your business interaction.  This page utilizes
@@ -15,31 +15,47 @@
 
   <h3 class="text-center">Welcome <%= @page_controls.payload.cp.display_name %><br/><small>Secured Documents</small></h3>
 
-  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <section>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
+      <% @page_controls.payload.display_groups.each do |cpe| -%>
 
-    <% @page_controls.payload.cp.entries.each do |cpe| -%>
-
-      <div class="panel panel-success">
-        <div class="panel-heading" role="tab" id="heading<%= cpe.content_type %>">
-          <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= cpe.content_type %>" aria-expanded="true" aria-controls="collapse<%= cpe.content_type %>">
-             <%= cpe.description %>
-            </a>
-          </h4>
-        </div>
-        <div id="collapse<%= cpe.content_type %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= cpe.content_type %>">
-          <div class="panel-body  panel-warning">
-            <p><%= cpe.topic_type %></p>
-            <p><%= cpe.topic_value %></p>
-            <p><%= cpe.content_type %></p>
-            <p><%= cpe.content_value %></p>
+        <div class="col-md-6">
+          <div class="panel panel-success">
+            <div class="panel-heading" role="tab" id="heading<%= cpe.content_type %>">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= cpe.content_type %>" aria-expanded="true" aria-controls="collapse<%= cpe.content_type %>">
+                 <%= cpe.description %>
+                </a>
+              </h4>
+            </div>
+            <div id="collapse<%= cpe.content_type %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= cpe.content_type %>">
+              <!-- Table -->
+              <table id="accessible-<%= cpe.content_type %>" class="table table-hover table-striped table-bordered display responsive no-wrap bg-warning" cellspacing="0" width="100%">
+                <thead>
+                  <th><%= cpe.content_type.eql?('LicensedStates') ? 'Value' : 'Name' %></th>
+                  <th>Source</th>
+                  <th>Created</th>
+                  <th>Size</th>
+                </thead>
+                <tbody data-accessible-url="<%= @page_controls.payload.get_content_object_url %>">
+                <% cpe.content.each do |ctn| -%>
+                <tr data-package="<%= ctn.to_json %>">
+                  <td><%= ctn.filename %></td>
+                  <td><%= ctn.source %></td>
+                  <td><%= ctn.created %></td>
+                  <td><%= ctn.size %></td>
+                </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
-    <% end %>
+      <% end %>
 
-  </div>
+    </div>
+  </section>
 
 </article>

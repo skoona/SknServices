@@ -129,9 +129,19 @@ module Providers
     # ContentProfile
     ##
 
+
     def condense_profile_entries(profile)
       collection = []
+      return nil unless profile.present?
+
       profile[:entries].each do |cpe|
+
+        cpe.merge!({
+                       id: 'content',
+                       username: current_user.username,
+                       user_options: current_user.user_options,
+                       pak: current_user.person_authenticated_key
+                   }) # fixup for accessible list
 
         worker = collection.detect do |x|
           cpe[:topic_type] == x[:topic_type] &&
@@ -146,7 +156,11 @@ module Providers
         end
       end
 
-      profile[:entries] = collection
+      collection.each do |cpe|
+        cpe[:content] = adapter_for_content_profile_entry(cpe).preload_available_content_list(cpe)
+      end
+
+      profile[:display_groups] = collection
       profile
     end
 

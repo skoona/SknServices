@@ -189,7 +189,7 @@
         <description>User Runtime Demonstration</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -234,7 +234,7 @@
         <description>Runtime Demonstration</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
