@@ -31,9 +31,9 @@
             </div>
             <div id="collapse<%= cpe.content_type %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= cpe.content_type %>">
               <!-- Table -->
-              <table id="accessible-<%= cpe.content_type %>" class="table table-hover table-striped table-bordered display responsive no-wrap bg-warning" cellspacing="0" width="100%">
+              <table id="accessible-<%= cpe.content_type %>" class="runtime-demo table table-hover table-striped table-bordered display responsive bg-warning" cellspacing="0" width="100%">
                 <thead>
-                  <th><%= cpe.content_type.eql?('LicensedStates') ? 'Value' : 'Name' %></th>
+                  <th><%= cpe.content_type.eql?('LicensedStates') || cpe.content_type.eql?('Notification') ? 'Value' : 'Name' %></th>
                   <th>Source</th>
                   <th>Created</th>
                   <th>Size</th>
@@ -42,13 +42,33 @@
                 <% cpe.content.each do |ctn| -%>
                 <tr data-package="<%= ctn.to_json %>">
                   <td><%= ctn.filename %></td>
-                  <td><%= ctn.source %></td>
+                  <td><%= ctn.source.gsub('/',' /') %></td>
                   <td><%= ctn.created %></td>
                   <td><%= ctn.size %></td>
                 </tr>
                 <% end %>
                 </tbody>
               </table>
+              <div class="panel-body">
+                  <% cpe.content.each do |ctn| -%>
+
+                    <div class="well well-sm col-md-6">
+                        <div class="text-center">
+                          <% if ctn.filename.include?('pdf') %>
+                            <i class="fa fa-file-pdf-o fa-2x"></i>
+                          <% elsif ctn.filename.include?('jpg') or ctn.filename.include?('png') %>
+                              <i class="fa fa-file-image-o fa-2x"></i>
+                          <% elsif ctn.filename.include?('log') %>
+                              <i class="fa fa-file-text-o fa-2x"></i>
+                          <% else %>
+                              <i class="fa fa-envelope-open-o fa-2x"></i>
+                          <% end %>
+                        </div>
+                        <h5 class="text-center"><%= ctn.filename %><br /><small><%= ctn.size %> | <%= ctn.created %></small><br/><small><%= ctn.source %></small></h5>
+                    </div>
+
+                  <% end %>
+              </div>
             </div>
           </div>
         </div>
@@ -59,3 +79,11 @@
   </section>
 
 </article>
+
+<!--
+  file-image-o
+  file-pdf-o
+  file-text-o
+  envelope-open-o
+
+ -->

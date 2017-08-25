@@ -588,7 +588,16 @@ $(function() {
 
     switch (controllerAction) {
         case 'runtime_demo':
-            $('table tbody tr').on("click", runtimeDemoGetObject);
+            $('table.runtime-demo tbody tr').on("click", runtimeDemoGetObject);
+            $('table.runtime-demo').DataTable({
+                scrollY: "420px",
+                language: {
+                    emptyTable: "No Documents Available!"
+                }
+            });
+            $('div.panel-collapse').on('shown.bs.collapse', function (ev) {
+                $(ev.currentTarget).find('table.runtime-demo').DataTable().draw();
+            });
             break;
         case 'edit':
             $('.selectpicker').selectpicker();
@@ -626,6 +635,23 @@ $(function() {
         default:
             consoleLog("Current Page (" + controllerAction + ") has no custom Javascripts enabled.");
     }
+
+
+    // {alert: :alert, notice: :success, info: :info, secondary: :secondary, success: :success, error: :alert, warning: :warning, primary: :primary }
+    setTimeout(function() { // all except alert
+        var elems = $('div.alert.alert-success,.alert.alert-notice,.alert.alert-info,.alert.alert-warning');
+        $.each( elems, function (index, item) {
+            $(item).fadeOut(1000);
+        });
+    }, 20000); // <-- time in milliseconds
+    setTimeout(function() { // warnings
+        var elems = $('div.alert.alert-danger');
+        $.each( elems, function (index, item) {
+            $(item).fadeOut(1000);
+        });
+    }, 45000); // <-- time in milliseconds
+
+
     consoleLog("Initialization Complete for: " + controllerName + "/" + controllerAction + ".");
 
     return false;
