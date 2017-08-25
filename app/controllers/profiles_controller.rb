@@ -5,6 +5,12 @@ class ProfilesController < ApplicationController
 
   before_action :login_required, except: :api_get_content_object
 
+  def runtime_demo
+    @page_controls = content_service.handle_runtime_demo
+    redirect_to root_path, notice: @page_controls.message and return unless @page_controls.success
+    flash[:notice] = @page_controls.message if @page_controls.message.present?
+  end
+
   def content_profile_demo
     @page_controls = content_service.handle_demo_page(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message.present?

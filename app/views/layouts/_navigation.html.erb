@@ -50,6 +50,11 @@
                             <%= nav_link_icon("glyphicon-eye-open", "ContentProfile", content_profile_demo_profiles_path) %>
                         <% end %>
                     <% end %>
+                  <% if current_user_has_access?('#RuntimeDemonstration') %>
+                      <% if current_user_has_access?('profiles/runtime_demo') %>
+                          <%= nav_link_icon("glyphicon-eye-open", "Runtime", runtime_demo_profiles_path) %>
+                      <% end %>
+                  <% end %>
                 <% end %>
             </ul>
             <ul class="nav navbar-nav navbar-right">

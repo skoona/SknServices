@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '5.0.4'
 gem 'logging'
 # gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
-gem 'pg', platform: :ruby
+gem 'pg', '~> 0.20'
 
 gem "warden"
 gem 'rack-cache'

@@ -30,6 +30,11 @@ module Providers
       beaned ? Utility::ContentProfileBean.new(hsh) : hsh
     end
 
+    def content_profile_for_runtime(user_profile)
+      profile = ContentProfile.find_by(person_authentication_key: user_profile.person_authenticated_key).try(:entry_info)
+      condense_profile_entries(profile)
+    end
+
     ##
     # Creation Methods
     ##
@@ -123,6 +128,27 @@ module Providers
     ##
     # ContentProfile
     ##
+
+    def condense_profile_entries(profile)
+      collection = []
+      profile[:entries].each do |cpe|
+
+        worker = collection.detect do |x|
+          cpe[:topic_type] == x[:topic_type] &&
+              cpe[:content_type] == x[:content_type]
+        end
+
+        if worker
+          worker[:content_value] << cpe[:content_value].first unless worker[:content_value].include?(cpe[:content_value].first)
+          worker[:topic_value] << cpe[:topic_value].first unless worker[:topic_value].include?(cpe[:topic_value].first)
+        else
+          collection << cpe
+        end
+      end
+
+      profile[:entries] = collection
+      profile
+    end
 
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?

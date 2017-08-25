@@ -1,0 +1,45 @@
+<% provide(:title, accessed_page_name) %>
+
+<article>
+  <div class="jumbotron galaxy-stars">
+    <h1 class="big-chalk"><%= accessed_page_name %></h1>
+    <p>
+      This organization's management team has prepared a set of documents related to your business interaction.  This page utilizes
+      features of an advanced content access process to provide you personalized and secure access to those protected documents.
+    </p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="<%= details_content_pages_path %>" role="button">More about ContentProfile</a>
+      <a class="btn btn-primary btn-lg" href="<%= details_access_pages_path %>" role="button">More about AccessProfile</a>
+    </p>
+  </div>
+
+  <h3 class="text-center">Welcome <%= @page_controls.payload.cp.display_name %><br/><small>Secured Documents</small></h3>
+
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+
+    <% @page_controls.payload.cp.entries.each do |cpe| -%>
+
+      <div class="panel panel-success">
+        <div class="panel-heading" role="tab" id="heading<%= cpe.content_type %>">
+          <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= cpe.content_type %>" aria-expanded="true" aria-controls="collapse<%= cpe.content_type %>">
+             <%= cpe.description %>
+            </a>
+          </h4>
+        </div>
+        <div id="collapse<%= cpe.content_type %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= cpe.content_type %>">
+          <div class="panel-body  panel-warning">
+            <p><%= cpe.topic_type %></p>
+            <p><%= cpe.topic_value %></p>
+            <p><%= cpe.content_type %></p>
+            <p><%= cpe.content_value %></p>
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+
+  </div>
+
+</article>
