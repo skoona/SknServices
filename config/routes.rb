@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
   resources :profiles, only: :none do
     collection do
+      get :runtime_demo
       get :content_profile_demo
       get :api_accessible_content
       get :api_get_content_object

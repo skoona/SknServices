@@ -1,19 +1,24 @@
-<section>
+<div class="row">
     <%= simple_form_for(@user_group_role, :html => { :class => 'form form-horizontal', :authenticity_token => true }) do |f| %>
       <%= f.error_notification %>
 
+
         <div class="form-inputs">
+          <fieldset>
             <%= f.input :name %>
             <%= f.input :description %>
             <%= f.input :group_type %>
-            <%= f.association :user_roles, as: :check_boxes, include_blank: false, label: "Roles" %>
+          </fieldset>
+          <fieldset  style="z-index: 4;">
+            <%= f.association :user_roles, as: :check_boxes, include_blank: false, label: "Individual Roles" %>
+          </fieldset>
+
+          <div class="col-md-push-3 col-md-9">
+              <%= f.button :submit, class: 'btn btn-primary submit' %>
+              <%= link_to "Cancel", !action_name.eql?('new') ? user_group_role_path(@user_group_role) : user_group_roles_path, class: 'btn' %>
+          </div>
         </div>
 
-        <div class="form-actions">
-            <div class="col-md-push-3 col-md-9">
-                <%= f.button :submit, class: 'btn btn-primary submit' %>
-                <%= link_to "Cancel", !action_name.eql?('new') ? user_group_role_path(@user_group_role) : user_group_roles_path, class: 'btn' %>
-            </div>
-        </div>
+
     <% end %>
-</section>
+</div>

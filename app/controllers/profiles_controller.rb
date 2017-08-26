@@ -5,6 +5,12 @@ class ProfilesController < ApplicationController
 
   before_action :login_required, except: :api_get_content_object
 
+  def runtime_demo
+    @page_controls = content_service.handle_runtime_demo
+    redirect_to root_path, notice: @page_controls.message and return unless @page_controls.success
+    flash[:notice] = @page_controls.message if @page_controls.message.present?
+  end
+
   def content_profile_demo
     @page_controls = content_service.handle_demo_page(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message.present?
@@ -25,7 +31,7 @@ class ProfilesController < ApplicationController
   # get
   def api_get_content_object
     @page_controls = content_service.api_get_content_object(params.to_unsafe_h)
-    return head(:not_found) unless @page_controls.success
+    return render( plain: "File not available!", status: :not_found ) unless @page_controls.success and @page_controls.package.package.source?
     send_file(@page_controls.package.package.source, filename: @page_controls.package.package.filename, type: @page_controls.package.package.mime, disposition: :inline) and return
   end
 

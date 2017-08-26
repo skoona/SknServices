@@ -82,7 +82,7 @@ class ContentProfile < ApplicationRecord
         username: username,
         display_name: display_name,
         email: email,
-        entries: content_profile_entries.collect(&:entry_info)
+        entries: content_profile_entries.order([:topic_type,:content_type]).collect(&:entry_info)
     }
   end
 end

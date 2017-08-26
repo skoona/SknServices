@@ -55,6 +55,21 @@ module ApplicationHelper
     end
     raw out.join()
   end
+  def choose_content_icons(content)
+    if content.content_type.include?('LicensedStates')
+    '<i class="fa fa-balance-scale fa-2x text-primary"></i>'
+    elsif content.content_type.include?('Notification')
+    '<i class="fa fa-envelope-open-o fa-2x text-primary"></i>'
+    elsif content.filename.include?('pdf')
+      '<i class="fa fa-file-pdf-o fa-2x text-primary"></i>'
+    elsif content.filename.include?('jpg') or content.filename.include?('png')
+      '<i class="fa fa-file-image-o fa-2x text-primary"></i>'
+    elsif content.filename.include?('log')
+      '<i class="fa fa-file-text-o fa-2x text-primary"></i>'
+    else
+      '<i class="fa fa-file-o fa-2x text-primary"></i>'
+    end.html_safe
+  end
 
   def nav_link(link_text, link_path, http_method=nil)
     class_name = current_page?(link_path) ? 'active' : ''

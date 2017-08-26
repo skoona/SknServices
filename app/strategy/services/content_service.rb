@@ -12,6 +12,21 @@ module Services
 
     PROFILE_CONTEXT='content'
 
+    def handle_runtime_demo
+      package = runtime_demo_package
+      SknUtils::NestedResult.new({
+                                     success: package[:cp].present?,
+                                     message: package[:message],
+                                     payload: package
+                                 })
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({
+                                     success: false,
+                                     message: e.message,
+                                     payload: []
+                                 })
+    end
 
     # Controller Entry Point
     def handle_demo_page(params={})

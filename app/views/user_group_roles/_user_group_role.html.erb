@@ -16,13 +16,13 @@
                     <%= link_to 'Show', user_group_role, class: "btn btn-default" %> |
                 <% end %>
                 <% if current_user_has_update?('user_group_roles/edit') %>
-                    <%= link_to 'Edit', edit_user_group_role_path(user_group_role), class: "btn btn-default" %> |
+                   <%= link_to 'Edit', edit_user_group_role_path(user_group_role), class: "btn btn-default" %>
                 <% end %>
                 <% if current_user_has_delete?('user_group_roles/destroy') and action_name.eql?('show') %>
-                    <%= link_to 'Destroy', user_group_role, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %> |
+                   | <%= link_to 'Destroy', user_group_role, class: "btn btn-default", method: :delete, data: { confirm: 'Are you sure?' } %>
                 <% end %>
-                <% if current_user_has_read?('user_group_roles/show') %>
-                    <%= link_to :back, user_group_roles_path, class: "btn btn-default" %>
+                <% if current_user_has_read?('user_group_roles/show')  and action_name.eql?('show') %>
+                  | <%= link_to :back, user_group_roles_path, class: "btn btn-default" %>
                 <% end %>
             </p>
         </div>

@@ -11,6 +11,16 @@ module Domains
 
     PROFILE_CONTEXT=""  # override in service
 
+    def runtime_demo_package
+      profile = db_profile_provider.content_profile_for_runtime(current_user)
+      {
+        message: (profile.present? && profile[:display_groups].present? ? "" : "No Access Provided.  Please contact Customer Service with any questions."),
+        cp: (profile.present? && profile[:display_groups].present? ? profile : {}),
+        display_groups: (profile.present? && profile[:display_groups].present? ? profile.delete(:display_groups) : []),
+        get_content_object_url: page_action_paths([:api_get_content_object_profiles_path])
+      }
+    end
+
     ##
     # Returns a bundle for each available user
     # - includes access/content profile

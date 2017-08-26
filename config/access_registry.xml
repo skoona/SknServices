@@ -185,6 +185,15 @@
         </permission>
     </resource>
     <resource secured="true">
+        <uri>#RuntimeDemonstration</uri>
+        <description>User Runtime Demonstration</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
         <uri>#Demonstration</uri>
         <description>Content Profile In Action</description>
         <permission type="READ">
@@ -216,6 +225,16 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true">
+        <uri>profiles/runtime_demo</uri>
+        <description>Runtime Demonstration</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>

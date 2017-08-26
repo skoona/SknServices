@@ -78,46 +78,48 @@ function handleRailsInfo(ev) {
  * - REQUIRES JQuery-Binary-Transport.js
  */
 function profileTablesGetObject(ev) {
-  var dataPackage = $(ev.currentTarget).data().package,
-      dataResponse,
-      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
+    var dataPackage = $(ev.currentTarget).data().package,
+        dataResponse,
+        objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
-  /*
-   * flag selected in related table */
-  $("table.profile tbody tr").removeClass('success');
-  $(ev.currentTarget).addClass('success');
+    /*
+     * flag selected in related table */
+    $("table.profile tbody tr").removeClass('success');
+    $(ev.currentTarget).addClass('success');
 
-  ev.preventDefault();
+    ev.preventDefault();
 
-  if(dataPackage.hasOwnProperty('id')) {
-    window.open(objectUrl, dataPackage.filename);
-    consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
-  } else {
-    consoleLog("profileTablesGetObject() Not a file based request - skipped");
-  }
+    if(dataPackage.hasOwnProperty('id')) {
+        window.open(objectUrl, dataPackage.filename);
+        consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+    } else {
+        consoleLog("profileTablesGetObject() Not a file based request - skipped");
+    }
 
+    consoleLog("profileTablesGetObject(completed) ");
 
-  /**  Worked but user could not detach
+    return false;
+}
 
-   $.ajax({
-    headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
-    method: "GET",
-    dataType: 'binary',
-    url: objectUrl,
-    processData: false
-  }).done(function(data,textStatus) {
-    window.open( URL.createObjectURL(data) );
-    consoleLog( "profileTablesGetObject("+ dataPackage.username + ":" + dataPackage.id + ") success: " + textStatus );
-  }).fail(function(jqXHR, textStatus, errorThrown) {
-    accessibleTable.clear().draw();
-    consoleLog( "profileTablesGetObject("+ dataPackage.username + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
-  });
+/*
+ * For Runtime Demo Page Selections */
+function runtimeDemoGetObject(ev) {
+    var dataPackage = $(ev.currentTarget).data().package,
+        dataResponse,
+        objectUrl = $('#accordion').data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
-  */
+    ev.preventDefault();
 
-  consoleLog("profileTablesGetObject(completed) ");
+    if(dataPackage.hasOwnProperty('id')) {
+        window.open(objectUrl, dataPackage.filename);
+        consoleLog("runtimeDemoGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+    } else {
+        consoleLog("runtimeDemoGetObject() Not a file based request - skipped");
+    }
 
-  return false;
+    consoleLog("runtimeDemoGetObject(completed) ");
+
+    return false;
 }
 
 /**
@@ -537,9 +539,6 @@ $(function() {
     /* Save this token for the Ajax calls */
     csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    /* Initialize code pretty print feature */
-    prettyPrint();
-
     /*
      * Only for the ProfilesController based pages */
     if ( controllerName.startsWith('profiles') ) {
@@ -571,6 +570,13 @@ $(function() {
     }
 
     switch (controllerAction) {
+        case 'runtime_demo':
+            $('div.well.runtime-item').on("click", runtimeDemoGetObject);
+            break;
+        case 'edit':
+            $('.selectpicker').selectpicker();
+            break;
+
         case 'details_sysinfo':
             /*
              * Initial Establish sections
@@ -603,6 +609,17 @@ $(function() {
         default:
             consoleLog("Current Page (" + controllerAction + ") has no custom Javascripts enabled.");
     }
+
+
+    // {alert: :alert, notice: :success, info: :info, secondary: :secondary, success: :success, error: :alert, warning: :warning, primary: :primary }
+    setTimeout(function() { // all except alert
+        var elems = $('div.alert.alert-success,.alert.alert-notice,.alert.alert-info,.alert.alert-warning');
+        $.each( elems, function (index, item) {
+            $(item).slideUp(3000);
+        });
+    }, 20000); // <-- time in milliseconds
+
+
     consoleLog("Initialization Complete for: " + controllerName + "/" + controllerAction + ".");
 
     return false;

@@ -30,6 +30,11 @@ module Providers
       beaned ? Utility::ContentProfileBean.new(hsh) : hsh
     end
 
+    def content_profile_for_runtime(user_profile)
+      profile = ContentProfile.find_by(person_authentication_key: user_profile.person_authenticated_key).try(:entry_info)
+      condense_profile_entries(profile)
+    end
+
     ##
     # Creation Methods
     ##
@@ -123,6 +128,48 @@ module Providers
     ##
     # ContentProfile
     ##
+
+
+    def condense_profile_entries(profile)
+      collection = []
+      return nil unless profile.present?
+
+      profile[:entries].each do |cpe|
+
+        cpe.merge!({
+                       id: 'content',
+                       username: current_user.username,
+                       user_options: current_user.user_options,
+                       pak: current_user.person_authenticated_key
+                   }) # fixup for accessible list
+
+        worker = collection.detect do |x|
+          cpe[:topic_type] == x[:topic_type] &&
+              cpe[:content_type] == x[:content_type]
+        end
+
+        if worker
+          worker[:content_value] << cpe[:content_value].first unless worker[:content_value].include?(cpe[:content_value].first)
+          worker[:topic_value] << cpe[:topic_value].first unless worker[:topic_value].include?(cpe[:topic_value].first)
+        else
+          collection << cpe
+        end
+      end
+
+      collection.each do |cpe|
+        cpe[:content] = adapter_for_content_profile_entry(cpe).preload_available_content_list(cpe)
+        if cpe[:content].present?
+          cpe[:content].each do |item|
+            if cpe[:content_type].include?('LicensedStates')
+              item[:filename] = long_state_name_from_number(item[:filename]).to_s
+            end
+          end
+        end
+      end
+
+      profile[:display_groups] = collection
+      profile
+    end
 
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
