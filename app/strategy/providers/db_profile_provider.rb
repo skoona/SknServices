@@ -158,6 +158,13 @@ module Providers
 
       collection.each do |cpe|
         cpe[:content] = adapter_for_content_profile_entry(cpe).preload_available_content_list(cpe)
+        if cpe[:content].present?
+          cpe[:content].each do |item|
+            if cpe[:content_type].include?('LicensedStates')
+              item[:filename] = long_state_name_from_number(item[:filename]).to_s
+            end
+          end
+        end
       end
 
       profile[:display_groups] = collection

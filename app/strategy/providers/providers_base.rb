@@ -54,6 +54,10 @@ module Providers
       false
     end
 
+    def long_state_name_from_number(key)
+      return "" unless (key = key.to_i) > 0
+      united_states.detect {|state| state[0] == key }.try(:[],1).try(:titleize)
+    end
 
   protected
 
@@ -126,6 +130,73 @@ module Providers
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
       block_given? ? registry.send(method, *args, block) :
           (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
+    end
+
+    def united_states
+      [
+          [54, "ALASKA        ", "AK"],
+          [1, "ALABAMA       ", "AL"],
+          [3, "ARKANSAS      ", "AR"],
+          [2, "ARIZONA       ", "AZ"],
+          [4, "CALIFORNIA    ", "CA"],
+          [5, "COLORADO      ", "CO"],
+          [6, "CONNECTICUT   ", "CT"],
+          [8, "WASHINGTON DC ", "DC"],
+          [7, "DELAWARE      ", "DE"],
+          [9, "FLORIDA       ", "FL"],
+          [10, "GEORGIA       ", "GA"],
+          [52, "HAWAII        ", "HI"],
+          [14, "IOWA          ", "IA"],
+          [11, "IDAHO         ", "ID"],
+          [12, "ILLINOIS      ", "IL"],
+          [13, "INDIANA       ", "IN"],
+          [15, "KANSAS        ", "KS"],
+          [16, "KENTUCKY      ", "KY"],
+          [17, "LOUISIANA     ", "LA"],
+          [20, "MASSACHUSETTS ", "MA"],
+          [19, "MARYLAND      ", "MD"],
+          [18, "MAINE         ", "ME"],
+          [21, "MICHIGAN      ", "MI"],
+          [22, "MINNESOTA     ", "MN"],
+          [24, "MISSOURI      ", "MO"],
+          [23, "MISSISSIPPI   ", "MS"],
+          [25, "MONTANA       ", "MT"],
+          [32, "NORTH CAROLINA", "NC"],
+          [33, "NORTH DAKOTA  ", "ND"],
+          [26, "NEBRASKA      ", "NE"],
+          [28, "NEW HAMPSHIRE ", "NH"],
+          [29, "NEW JERSEY    ", "NJ"],
+          [30, "NEW MEXICO    ", "NM"],
+          [27, "NEVADA        ", "NV"],
+          [31, "NEW YORK      ", "NY"],
+          [34, "OHIO          ", "OH"],
+          [35, "OKLAHOMA      ", "OK"],
+          [36, "OREGON        ", "OR"],
+          [37, "PENNSYLVANIA  ", "PA"],
+          [38, "RHODE ISLAND  ", "RI"],
+          [39, "SOUTH CAROLINA", "SC"],
+          [40, "SOUTH DAKOTA  ", "SD"],
+          [41, "TENNESSEE     ", "TN"],
+          [42, "TEXAS         ", "TX"],
+          [43, "UTAH          ", "UT"],
+          [45, "VIRGINIA      ", "VA"],
+          [44, "VERMONT       ", "VT"],
+          [46, "WASHINGTON    ", "WA"],
+          [48, "WISCONSIN     ", "WI"],
+          [47, "WEST VIRGINIA ", "WV"],
+          [49, "WYOMING       ", "WY"],
+          [58, "PUERTO RICO   ", "PR"],
+          [81, "A F AMERICAS  ", "AA"],
+          [82, "A F EUROPE    ", "AE"],
+          [83, "A F PACIFIC   ", "AP"],
+          [84, "AMERICAN SAMOA", "AS"],
+          [85, "MICRONESIA    ", "FM"],
+          [86, "GUAM          ", "GU"],
+          [87, "MARSHALL ISL  ", "MH"],
+          [88, "N MARIANA ISL ", "MP"],
+          [89, "PALAU         ", "PW"],
+          [99, "Not Found     ", "NF"]
+      ]
     end
 
   end

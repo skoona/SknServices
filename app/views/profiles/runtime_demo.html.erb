@@ -4,8 +4,8 @@
   <div class="jumbotron galaxy-dunes_mars">
     <h1 class="big-chalk"><%= accessed_page_name %></h1>
     <p>
-      This organization's management team has prepared a set of documents related to your business interaction.  This page utilizes
-      features of an advanced content access process to provide you personalized and secure access to those protected documents.
+      You have been granted access to certain secure documentation resources.  This page demonstrates
+      advanced content access features to provide you personalized and secure access to those protected documents.
     </p>
     <p>
       <a class="btn btn-primary btn-lg" href="<%= details_content_pages_path %>" role="button">More about ContentProfile</a>
@@ -16,53 +16,26 @@
   <h3 class="text-center">Welcome <%= @page_controls.payload.cp.display_name %><br/><small>Secured Documents</small></h3>
 
   <section>
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" data-accessible-url="<%= @page_controls.payload.get_content_object_url %>">
 
-      <% @page_controls.payload.display_groups.each do |cpe| -%>
+      <% @page_controls.payload.display_groups.each_with_index do |cpe, idx| -%>
 
         <div class="col-md-6">
-          <div class="panel panel-success">
-            <div class="panel-heading" role="tab" id="heading<%= cpe.content_type %>">
+          <div class="panel panel-primary">
+            <div class="panel-heading" role="tab" id="heading<%= cpe.topic_type %><%= cpe.content_type %>">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= cpe.content_type %>" aria-expanded="true" aria-controls="collapse<%= cpe.content_type %>">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= cpe.topic_type %><%= cpe.content_type %>" aria-expanded="true" aria-controls="collapse<%= cpe.topic_type %><%= cpe.content_type %>">
                  <%= cpe.description %>
                 </a>
               </h4>
             </div>
-            <div id="collapse<%= cpe.content_type %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= cpe.content_type %>">
-              <!-- Table -->
-              <table id="accessible-<%= cpe.content_type %>" class="runtime-demo table table-hover table-striped table-bordered display responsive bg-warning" cellspacing="0" width="100%">
-                <thead>
-                  <th><%= cpe.content_type.eql?('LicensedStates') || cpe.content_type.eql?('Notification') ? 'Value' : 'Name' %></th>
-                  <th>Source</th>
-                  <th>Created</th>
-                  <th>Size</th>
-                </thead>
-                <tbody data-accessible-url="<%= @page_controls.payload.get_content_object_url %>">
-                <% cpe.content.each do |ctn| -%>
-                <tr data-package="<%= ctn.to_json %>">
-                  <td><%= ctn.filename %></td>
-                  <td><%= ctn.source.gsub('/',' /') %></td>
-                  <td><%= ctn.created %></td>
-                  <td><%= ctn.size %></td>
-                </tr>
-                <% end %>
-                </tbody>
-              </table>
-              <div class="panel-body">
+            <div id="collapse<%= cpe.topic_type %><%= cpe.content_type %>" class="panel-collapse collapse <%= 'in' if idx < 2 %>" role="tabpanel" aria-labelledby="heading<%= cpe.topic_type %><%= cpe.content_type %>">
+              <div class="panel-body bg-warning" style="max-height:298px; overflow: auto;">
                   <% cpe.content.each do |ctn| -%>
 
-                    <div class="well well-sm col-md-6">
+                    <div class="well well-sm col-md-6 runtime-item bg-warning" data-package="<%= ctn.to_json %>">
                         <div class="text-center">
-                          <% if ctn.filename.include?('pdf') %>
-                            <i class="fa fa-file-pdf-o fa-2x"></i>
-                          <% elsif ctn.filename.include?('jpg') or ctn.filename.include?('png') %>
-                              <i class="fa fa-file-image-o fa-2x"></i>
-                          <% elsif ctn.filename.include?('log') %>
-                              <i class="fa fa-file-text-o fa-2x"></i>
-                          <% else %>
-                              <i class="fa fa-envelope-open-o fa-2x"></i>
-                          <% end %>
+                          <%= choose_content_icons(ctn) %>
                         </div>
                         <h5 class="text-center"><%= ctn.filename %><br /><small><%= ctn.size %> | <%= ctn.created %></small><br/><small><%= ctn.source %></small></h5>
                     </div>

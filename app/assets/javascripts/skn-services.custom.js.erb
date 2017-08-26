@@ -120,10 +120,12 @@ function profileTablesGetObject(ev) {
     return false;
 }
 
+/*
+ * For Runtime Demo Page Selections */
 function runtimeDemoGetObject(ev) {
     var dataPackage = $(ev.currentTarget).data().package,
         dataResponse,
-        objectUrl = $(ev.currentTarget).closest('tbody').data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
+        objectUrl = $('#accordion').data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
     ev.preventDefault();
 
@@ -588,16 +590,7 @@ $(function() {
 
     switch (controllerAction) {
         case 'runtime_demo':
-            $('table.runtime-demo tbody tr').on("click", runtimeDemoGetObject);
-            $('table.runtime-demo').DataTable({
-                scrollY: "420px",
-                language: {
-                    emptyTable: "No Documents Available!"
-                }
-            });
-            $('div.panel-collapse').on('shown.bs.collapse', function (ev) {
-                $(ev.currentTarget).find('table.runtime-demo').DataTable().draw();
-            });
+            $('div.well.runtime-item').on("click", runtimeDemoGetObject);
             break;
         case 'edit':
             $('.selectpicker').selectpicker();
@@ -641,13 +634,13 @@ $(function() {
     setTimeout(function() { // all except alert
         var elems = $('div.alert.alert-success,.alert.alert-notice,.alert.alert-info,.alert.alert-warning');
         $.each( elems, function (index, item) {
-            $(item).fadeOut(1000);
+            $(item).fadeOut(3000);
         });
     }, 20000); // <-- time in milliseconds
     setTimeout(function() { // warnings
         var elems = $('div.alert.alert-danger');
         $.each( elems, function (index, item) {
-            $(item).fadeOut(1000);
+            $(item).fadeOut(3000);
         });
     }, 45000); // <-- time in milliseconds
 
