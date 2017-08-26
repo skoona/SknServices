@@ -96,25 +96,6 @@ function profileTablesGetObject(ev) {
         consoleLog("profileTablesGetObject() Not a file based request - skipped");
     }
 
-
-    /**  Worked but user could not detach
-
-     $.ajax({
-    headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
-    method: "GET",
-    dataType: 'binary',
-    url: objectUrl,
-    processData: false
-  }).done(function(data,textStatus) {
-    window.open( URL.createObjectURL(data) );
-    consoleLog( "profileTablesGetObject("+ dataPackage.username + ":" + dataPackage.id + ") success: " + textStatus );
-  }).fail(function(jqXHR, textStatus, errorThrown) {
-    accessibleTable.clear().draw();
-    consoleLog( "profileTablesGetObject("+ dataPackage.username + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
-  });
-
-     */
-
     consoleLog("profileTablesGetObject(completed) ");
 
     return false;
@@ -634,15 +615,9 @@ $(function() {
     setTimeout(function() { // all except alert
         var elems = $('div.alert.alert-success,.alert.alert-notice,.alert.alert-info,.alert.alert-warning');
         $.each( elems, function (index, item) {
-            $(item).fadeOut(3000);
+            $(item).slideUp(3000);
         });
     }, 20000); // <-- time in milliseconds
-    setTimeout(function() { // warnings
-        var elems = $('div.alert.alert-danger');
-        $.each( elems, function (index, item) {
-            $(item).fadeOut(3000);
-        });
-    }, 45000); // <-- time in milliseconds
 
 
     consoleLog("Initialization Complete for: " + controllerName + "/" + controllerAction + ".");
