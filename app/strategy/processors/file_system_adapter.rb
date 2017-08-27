@@ -109,7 +109,7 @@ module Processors
             end
         end
       end
-      registry.update_storage_object("#{PREFIX_CATALOG}-#{content_type}-#{cpe[:pak]}", catalog)
+      update_storage_object("#{PREFIX_CATALOG}-#{content_type}-#{cpe[:pak]}", catalog)
       Rails.logger.debug "#{self.class}##{__method__} CATALOG: #{catalog},   Result: #{result.present?}"
       
       result
@@ -158,7 +158,7 @@ module Processors
           end
         end
       end
-      registry.update_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}", catalog)
+      update_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}", catalog)
       Rails.logger.debug "#{self.class}##{__method__} Catalog: #{catalog}, Result: #{result}"
 
       result
@@ -183,20 +183,20 @@ module Processors
     def retrieve_content_object(params, user_p=nil) # Hash entry result from available_content_list method
       page_user = user_p || (get_page_user(params["username"] || params[:username]))
 
-      catalog = registry.get_storage_object("#{PREFIX_CATALOG}-#{params['content_type']}-#{page_user.person_authenticated_key}")
+      catalog = get_storage_object("#{PREFIX_CATALOG}-#{params['content_type']}-#{page_user.person_authenticated_key}")
       result = {
           success: true,
           package: catalog.try(:[], params[:id]) || {}              # { source:, filename: , mime: }  key should be :id but prior method flipped value to :profile
       }
-      Rails.logger.debug "#{self.class}##{__method__}() Catalog: #{catalog}, Result: #{result}"
+      Rails.logger.debug "#{self.class}##{__method__}() Catalog: #{catalog}, Result: #{result.present?}"
 
       unless result[:package].present?
-        catalog = registry.get_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}")
+        catalog = get_storage_object("#{PREFIX_CATALOG}-#{page_user.person_authenticated_key}")
         result = {
             success: true,
             package: catalog.try(:[], params[:id]) || {}              # { source:, filename: , mime: }  key should be :id but prior method flipped value to :profile
         }
-        Rails.logger.debug "#{self.class}##{__method__}() Catalog: #{catalog}, Result: #{result}"
+        Rails.logger.debug "#{self.class}##{__method__}() Catalog: #{catalog}, Result: #{result.present?}"
       end
 
       result

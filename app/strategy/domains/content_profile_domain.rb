@@ -12,11 +12,14 @@ module Domains
     PROFILE_CONTEXT=""  # override in service
 
     def runtime_demo_package
+      # Secure::ObjectStorageContainer.instance.remove_from_store "Catalog-Commission-#{current_user.person_authenticated_key}", 'Services::ServiceRegistry'
+      delete_storage_object("Catalog-#{current_user.person_authenticated_key}")
       profile = db_profile_provider.content_profile_for_runtime(current_user)
+      success = profile.present? && profile[:display_groups].present?
       {
-        message: (profile.present? && profile[:display_groups].present? ? "" : "No Access Provided.  Please contact Customer Service with any questions."),
-        cp: (profile.present? && profile[:display_groups].present? ? profile : {}),
-        display_groups: (profile.present? && profile[:display_groups].present? ? profile.delete(:display_groups) : []),
+        message: (success ? "" : "No Access Provided.  Please contact Customer Service with any questions."),
+        cp: (success ? profile : {}),
+        display_groups: (success ? profile.delete(:display_groups) : []),
         get_content_object_url: page_action_paths([:api_get_content_object_profiles_path])
       }
     end
@@ -25,6 +28,7 @@ module Domains
     # Returns a bundle for each available user
     # - includes access/content profile
     def get_page_users(context=PROFILE_CONTEXT)
+      delete_storage_object("Catalog-#{current_user.person_authenticated_key}")
       usrs = []
       Secure::UserProfile.page_users(context).each do |u|
         usrs << {username: u.username,

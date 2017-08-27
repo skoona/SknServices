@@ -156,6 +156,7 @@ module Providers
         end
       end
 
+      # get catalog and swap state numbers for their real names
       collection.each do |cpe|
         cpe[:content] = adapter_for_content_profile_entry(cpe).preload_available_content_list(cpe)
         if cpe[:content].present?
