@@ -88,6 +88,24 @@ module Services
     end
 
     # Controller Entry Point
+    def api_get_demo_content_object(params)
+      res = SknUtils::NestedResult.new({
+                                           success: true,
+                                           message: "",
+                                           package: get_demo_content_object_api(params)
+                                       })
+      res.success = res.package.success
+      res
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({
+                                     success: false,
+                                     message: e.message,
+                                     package: {}
+                                 })
+    end
+
+    # Controller Entry Point
     def handle_content_profile_management(params)
       res = SknUtils::NestedResult.new({
                                            success: true,

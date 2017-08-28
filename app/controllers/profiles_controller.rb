@@ -34,6 +34,12 @@ class ProfilesController < ApplicationController
     return render( plain: "File not available!", status: :not_found ) unless @page_controls.success and @page_controls.package.package.source?
     send_file(@page_controls.package.package.source, filename: @page_controls.package.package.filename, type: @page_controls.package.package.mime, disposition: :inline) and return
   end
+  # get
+  def api_get_demo_content_object
+    @page_controls = content_service.api_get_demo_content_object(params.to_unsafe_h)
+    return render( plain: "File not available!", status: :not_found ) unless @page_controls.success and @page_controls.package.package.source?
+    send_file(@page_controls.package.package.source, filename: @page_controls.package.package.filename, type: @page_controls.package.package.mime, disposition: :inline) and return
+  end
 
   ##
   # Manage Content Profiles Page

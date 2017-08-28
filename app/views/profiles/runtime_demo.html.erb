@@ -16,7 +16,7 @@
   <h3 class="text-center">Welcome <%= @page_controls.payload.cp.display_name %><br/><small>Secured Documents</small></h3>
 
   <section>
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" data-accessible-url="<%= @page_controls.payload.get_content_object_url %>">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" data-accessible-url="<%= @page_controls.payload.get_demo_content_object_url %>">
 
       <% @page_controls.payload.display_groups.each_with_index do |cpe, idx| -%>
 

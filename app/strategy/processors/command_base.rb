@@ -15,7 +15,6 @@ module Processors
 
     def self.inherited(klass)
       klass.processor_type = klass.name
-      super
     end
 
     def self.processor_type
