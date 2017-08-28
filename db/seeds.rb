@@ -108,7 +108,7 @@ begin
   control = {
       "Skoona Development" => all_roles,
       "Corporate Manager" => all_roles,
-      "Corporate Admin" => admin_collection,
+      "Department Manager" => admin_collection,
       "Corporate Staff" => limited_collection,
       "Branch Staff"    => public_collection,
       "Partner Admin"    => public_collection,
@@ -149,8 +149,8 @@ begin
   },
    {
        username:              "emtester",
-       name:                  "Corporate Manager",
-       email:                 "appdev@localhost.com",
+       name:                  "Department Manager",
+       email:                 "emtester@localhost.com",
        password:                "nobugs",
        password_confirmation:   "nobugs",
        user_options:            ["Manager", "0034", "0037", "0040", "0099"],

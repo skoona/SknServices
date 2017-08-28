@@ -291,7 +291,7 @@ module Utility
                "0" => {value: "*.pdf", type_name: "Activity", description: "Document store Project Status Report Document Type ID"}
            }
           },
-          {name: "FileDownload",   description: "Project Related Images", value_data_type: "String",
+          {name: "FileDownload",   description: "Project Related Resources", value_data_type: "String",
            content_type_opts_attributes: {
                "0" => {value: "*.png", type_name: "FileDownload", description: "Project Related by Document Type PNG"},
                "1" => {value: "*.jpg", type_name: "FileDownload", description: "Project Related by Document Type JPEG"},
@@ -320,7 +320,8 @@ module Utility
                "3" => {value: "VendorPrimary",     type_name: "UserGroups", description: "Project Workfiles"},
                "4" => {value: "VendorSecondary",   type_name: "UserGroups", description: "Project Workfiles"},
                "5" => {value: "BranchPrimary",     type_name: "UserGroups", description: "Project Workfiles"},
-               "6" => {value: "Developer",         type_name: "UserGroups", description: "Project Workfiles"}
+               "6" => {value: "BranchSecondary",   type_name: "UserGroups", description: "Project Workfiles"},
+               "7" => {value: "Developer",         type_name: "UserGroups", description: "Project Workfiles"}
            }
           }
       ])
