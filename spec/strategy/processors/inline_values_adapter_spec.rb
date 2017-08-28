@@ -68,7 +68,7 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
     end
 
     ## Expected Response
-    # {:source=>"images", :filename=>"galaxy-man.png", :created=>"2016/02/14", :size=>"3.2 MB"}
+    # {:source=>"images", :filename=>"galaxy-man.jpg", :created=>"2016/02/14", :size=>"3.2 MB"}
     it "#available_content_list returns array of options with descriptions. " do
       expect(  @registry.adapter_for_content_profile_entry(cpe).available_content_list({}) ).to be_a Array
       expect(  @registry.adapter_for_content_profile_entry(cpe).available_content_list(cpe).first ).to be_a(Hash)

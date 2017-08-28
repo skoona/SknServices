@@ -17,13 +17,14 @@ begin
       {name: "Services.Action.Admin", description: "Employee Managers"},
       {name: "Services.Action.Primary", description: "Branch Managers"},
       {name: "Services.Action.Developer", description: "Super User or Developer"},
-      {name: "Services.Branch.Commission.PDF.Access", description: "Access Branch Commission Statements"},
-      {name: "Services.Branch.Commission.CSV.Access", description: "Access Branch Commission Data Files"},
-      {name: "Services.Branch.Experience.PDF.Access", description: "Access Branch Experience Report"},
+      {name: "Services.Branch.Commission.Access", description: "Access Branch Commission Statements"},
+      {name: "Services.Branch.Experience.Access", description: "Access Branch Experience Report"},
       {name: "Services.Branch.LicensedStates.Operations.Access", description: "Access Branch Licensed USA States"}]
 
-  all_users =
-      {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"}
+  all_users = [
+      {name: "Services.Action.ResetPassword", description: "Reset Forgotten Password via EMail"},
+      {name: "Services.Action.Use.ContentProfile", description: "Consumer of Authorization Content Profile"}
+  ]
 
   content_profile_p =
       {name: "Services.Action.Admin.ContentProfile",   description: "Administer Authorization Content Profile"}
@@ -64,7 +65,8 @@ begin
 
   all_groups = [
       {name: "Developer",         group_type: "Skoona Development",  description: "Open Source Independent Consultancy"},
-      {name: "EmployeePrimary",   group_type: "Corporate Admin",  description: "Corporate Managers"},
+      {name: "Manager",           group_type: "Corporate Manager",  description: "Corporate Managers"},
+      {name: "EmployeePrimary",   group_type: "Department Manager", description: "Department Manager"},
       {name: "EmployeeSecondary", group_type: "Corporate Staff",  description: "Corporate Staff"},
       {name: "BranchPrimary",     group_type: "Branch Admin",     description: "Branch Manager"},
       {name: "BranchSecondary",   group_type: "Branch Staff",     description: "Branch Staff"},
@@ -105,6 +107,7 @@ begin
 
   control = {
       "Skoona Development" => all_roles,
+      "Corporate Manager" => all_roles,
       "Corporate Admin" => admin_collection,
       "Corporate Staff" => limited_collection,
       "Branch Staff"    => public_collection,
@@ -144,6 +147,16 @@ begin
       assigned_groups:         ["Developer"],
       assigned_roles:          ["Services.Action.Developer"]
   },
+   {
+       username:              "emtester",
+       name:                  "Corporate Manager",
+       email:                 "appdev@localhost.com",
+       password:                "nobugs",
+       password_confirmation:   "nobugs",
+       user_options:            ["Manager", "0034", "0037", "0040", "0099"],
+       assigned_groups:         ["Manager"],
+       assigned_roles:          ["Services.Action.Admin"]
+   },
   {
       username:              "eptester",
       name:                  "Employee Primary User",
@@ -170,7 +183,7 @@ begin
       email:                 "appdev2@localhost.com",
       password:                "nobugs",
       password_confirmation:   "nobugs",
-      user_options:            ["BranchPrimary", "0034", "0037", "0040"],
+      user_options:            ["BranchPrimary", "0034", "0037", "0040","0099"],
       assigned_groups:         ["BranchPrimary"],
       assigned_roles:          ["Services.Action.Primary"]
   },

@@ -23,7 +23,7 @@ if "true".eql?ENV["COVERAGE"] and "test".eql?ENV["RAILS_ENV"]
         src_file.filename.include? 'app/strategy/utility'
     end
     add_group 'Strategy' do |src_file|
-      ['app/strategy/domains','app/strategy/services',
+      ['app/strategy/domains','app/strategy/services','app/strategy/factories',
        'app/strategy/registry','app/strategy/providers',
        'app/strategy/processors', 'app/beans'].any? do |item|
         src_file.filename.include? item

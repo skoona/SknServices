@@ -33,7 +33,7 @@
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.PDF.Access</authorizedRole>
+        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -43,7 +43,7 @@
     <userdata>*.csv</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.CSV.Access</authorizedRole>
+        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -53,7 +53,7 @@
     <userdata>*.log</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.Experience.PDF.Access</authorizedRole>
+        <authorizedRole options="0034,0037,0040">Services.Branch.Experience.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -63,7 +63,7 @@
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole>Services.Branch.Commission.PDF.Access</authorizedRole>
+        <authorizedRole>Services.Branch.Commission.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
