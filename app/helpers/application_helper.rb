@@ -131,9 +131,16 @@ module ApplicationHelper
     '#page_action_error'
   end
 
+  def skn_options_for_select_with_data(items)
+    res = items.each_with_object("") do |item, str|
+      str << content_tag(:option, item[0], {value: item[1] }.merge(item[2]))
+    end
+    raw res
+  end
+
   def do_page_actions
     if @page_controls and @page_controls.page_actions?
-      PageActionsBuilder.new(@page_controls.hash_from(:page_actions), self, false).to_s
+      PageActionsBuilder.new(@page_controls.hash_from(:page_actions)[:page_actions], self, false).to_s
     end
   end
 

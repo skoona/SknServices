@@ -112,7 +112,6 @@ class PageActionsBuilder
     results = {
         html_options: params.delete(:html_options)
     }.merge(params)    # should|could include [:header, :divider, :id, :path, :text, :icon ])
-    Rails.logger.debug "#{self.class.name}.#{__method__}() Results: #{results}"
     results.delete(:html_options) if results[:html_options].nil?
     results
   end

@@ -118,13 +118,13 @@ module Domains
       end
       results = {
         profile_type_options: ProfileType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        content_type_options: ContentType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        content_type_options: ContentType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1], s[2]]},
         content_type_opts_options: ContentTypeOpt.option_selects('Commission').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        topic_type_options: TopicType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        topic_type_options: TopicType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1], s[2]]},
         topic_type_opts_options: TopicTypeOpt.option_selects('Branch').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
         package: usrs
       }
-      Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package]}"
+      Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package].present?}"
 
       results
     end

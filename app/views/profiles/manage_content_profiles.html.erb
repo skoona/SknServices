@@ -154,7 +154,7 @@
                   <label class="col-sm-2 control-label" for="topic-type-id"><abbr class="text-error" title="required">*</abbr> Topic Type</label>
                   <div class="col-sm-4 controls">
                     <select class="form-control" id="topic-type-id" name="topic_type_id" type="select" prompt="Select business entity" required>
-                      <%= options_for_select( @page_controls.topic_type_options ) %>
+                      <%= skn_options_for_select_with_data( @page_controls.topic_type_options ) %>
                     </select>
                   </div>
                   <div class="col-sm-6 controls">
@@ -169,7 +169,7 @@
                   <label class="col-sm-2 control-label" for="content-type-id"><abbr class="text-error" title="required">*</abbr> Content Type</label>
                   <div class="col-sm-4 controls">
                     <select class="form-control" id="content-type-id" name="content_type_id" type="select" prompt="Select Business Document" required>
-                      <%= options_for_select( @page_controls.content_type_options ) %>
+                      <%= skn_options_for_select_with_data( @page_controls.content_type_options ) %>
                     </select>
                   </div>
                   <div class="col-sm-6 controls">
