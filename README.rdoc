@@ -1,6 +1,6 @@
 === SknService
 
-Author: James Scott <jscott@localhost.com>
+Author: James Scott <skoona@gmail.com>
 Date: Dec 2015
 
 This file contains a collection of notes and data used during development
@@ -23,47 +23,47 @@ http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-i
 
 
 === Controller Layout
-                                  Service               Role                Inherts from
-                                  ----------------      ----------------    -----------------------
-sessions_controller                None                  Login/Out           ActionController::Base
-application_controller             service_registry      App/Security        ActionController::Base/Secure::AccessAuthenticationMethods
-users_controller                   access_service        Admin               ApplicationController
-user_group_roles_controller        access_service        Admin               ApplicationController
-password_resets_controller         access_service        Admin               ApplicationController
-pages_controller                   access_service        Public Info         ApplicationController
-profiles_controller                content_service       Features Demo       ApplicationController
+                                      Service               Role                Inherts from
+                                      ----------------      ----------------    -----------------------
+    sessions_controller                None                  Login/Out           ActionController::Base
+    application_controller             service_registry      App/Security        ActionController::Base/Secure::AccessAuthenticationMethods
+    users_controller                   access_service        Admin               ApplicationController
+    user_group_roles_controller        access_service        Admin               ApplicationController
+    password_resets_controller         access_service        Admin               ApplicationController
+    pages_controller                   access_service        Public Info         ApplicationController
+    profiles_controller                content_service       Features Demo       ApplicationController
 
 
 === Services Strategy Components Layout
 
-ServiceRegistry
-    Registry::RegistryBase
-        +Registry::ObjectStorageService
+    ServiceRegistry
+        Registry::RegistryBase
+            +Registry::ObjectStorageService
 
-ContentService
-    ContentProfileDomain
-        Domains::DomainsBase
+    ContentService
+        ContentProfileDomain
+            Domains::DomainsBase
 
-AccessService
-    AccessProfileDomain
-        Domains::DomainsBase
+    AccessService
+        AccessProfileDomain
+            Domains::DomainsBase
 
-Providers::DBProfileProvider
-Providers::XMLProfileProvider
-    Providers::ProvidersBase
-        +Registry::ObjectStorageService
+    Providers::DBProfileProvider
+    Providers::XMLProfileProvider
+        Providers::ProvidersBase
+            +Registry::ObjectStorageService
 
-Processors::InlineValuesAdapter
-Processors::FileSystemAdapter
-    Processors::ProcessorBase (Multiple Purpose)
+    Processors::InlineValuesAdapter
+    Processors::FileSystemAdapter
+        Processors::ProcessorBase (Multiple Purpose)
 
-    Processors::CommandBase (Not Used Yet - Single Purpose)
+        Processors::CommandBase (Not Used Yet - Single Purpose)
 
-Registry::RegistryMethods
-Secure::ObjectStorageContainer
+    Registry::RegistryMethods
+    Secure::ObjectStorageContainer
 
-Utility::ContentProfileBean
-    SknUtils::NestedResult
+    Utility::ContentProfileBean
+        SknUtils::NestedResult
 
 
 ==== Special Helpers
@@ -75,23 +75,24 @@ Utility::ContentProfileBean
 === Authentication and Authorization Components Layout
 ==== Gems Warden, Skn_utils
 
-config/initializers/warden.rb
-SessionsController
-Secure::AccessAuthenticationMethods
-Secure::ObjectStorageContainer
+    config/initializers/warden.rb
+    SessionsController
+    Secure::AccessAuthenticationMethods
+    Secure::ObjectStorageContainer
 
-Secure::UserProfile
-    +Registry::ObjectStorageService
-    +Secure::UserAccessControl
-    (proxy)User
-        +Secure::UserProfileHelper
+    Secure::UserProfile
+        +Registry::ObjectStorageService
+        +Secure::UserAccessControl
+        (proxy)User
+            +Secure::UserProfileHelper
 
-Secure::AccessRegistry
-    Secure::AccessRegistryUtility
-        +config/access_registry.xml
-        +config/access_registry.xsd
-        +config/content_registry.xml
-        +config/content_registry.xsd
+    Secure::AccessRegistry
+        Secure::AccessRegistryUtility
+            +config/access_registry.xml
+            +config/access_registry.xsd
+            +config/content_registry.xml
+            +config/content_registry.xsd
+
 
 ==== UserProfile Required User Object Attributes
 

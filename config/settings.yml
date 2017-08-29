@@ -11,6 +11,18 @@ PostgreSQL:
   password: postgres
   host: localhost
 
+Related:
+  ContentTypesByTopicType:
+   ! Branch:
+   - Commission
+   - Experience
+   - Notification
+   - LicensedStates
+   ! Partner:
+   - Activity
+   ! UserGroups:
+   - FileDownload
+
 access_profile:
   default_unknown_to_unsecure: false
   options_keyword: options

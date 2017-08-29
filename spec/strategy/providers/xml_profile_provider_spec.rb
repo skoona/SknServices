@@ -1,7 +1,7 @@
 # spec/strategy.services/profile_builder_spec.rb
 #
 
-describe Providers::XMLProfileProvider, "Service routines of Providers::XMLProfileProvider."  do
+describe Providers::XMLProfileProvider, "Service routines of described_class."  do
   let(:user) {page_user_developer}
 
   let(:mc) {ServiceRegistryMockController.new(user: user)}
@@ -18,16 +18,16 @@ describe Providers::XMLProfileProvider, "Service routines of Providers::XMLProfi
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Providers::XMLProfileProvider.new }.to raise_error(ArgumentError)
+      expect{ described_class.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :registry as init param." do
-      expect(Providers::XMLProfileProvider.new({registry: service_registry})).to be_a(Providers::XMLProfileProvider)
+      expect(described_class.new({registry: service_registry})).to be_a(described_class)
     end
     it "#new fails when :registry is invalid." do
-      expect{ Providers::XMLProfileProvider.new({registry: nil}) }.to raise_error(ArgumentError)
+      expect{ described_class.new({registry: nil}) }.to raise_error(ArgumentError)
     end
     it "#registry.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Providers::XMLProfileProvider
+      expect( @service ).to be_a described_class
     end
     it "#service #registry and #controller objects to be different." do
       expect( @service.registry ).to be_a Services::ServiceRegistry
@@ -37,8 +37,8 @@ describe Providers::XMLProfileProvider, "Service routines of Providers::XMLProfi
       expect( @service.registry.current_user ).to be_a Secure::UserProfile
       expect( @service.current_user ).to be_a Secure::UserProfile
     end
-    it "#provider_type returns a Access as type." do
-      expect( @service.provider_type ).to eq("Providers::XMLProfileProvider")
+    it "#provider_type returns a XMLProfileProvider as type." do
+      expect( @service.provider_type ).to eq(described_class.to_s)
     end
   end
 
