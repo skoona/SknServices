@@ -663,7 +663,9 @@ $(function() {
                 $(event.currentTarget).addClass('success');
                 event.preventDefault();
                 event.stopPropagation();
-                SknService.go('/profiles/member');
+                var userData = $(event.currentTarget).data().user
+                consoleLog("Selected Row (" + userData + ")");
+                SknService.go('/profiles/member?username=' + userData);
             });
             break;
 

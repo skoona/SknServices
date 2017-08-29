@@ -37,7 +37,7 @@
           </thead>
           <tbody>
           <% ['developer', 'emtester', 'eptester', 'estester', 'bptester', 'bstester', 'bnptester', 'vptester', 'vtester'].each do |item| -%>
-              <tr class="admin">
+              <tr class="admin" data-user="<%= item %>">
                 <td><%= item %></td>
                 <%= choose_column_icons(true, false, true, true, false, false) %>
               </tr>

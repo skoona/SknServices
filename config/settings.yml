@@ -12,6 +12,21 @@ PostgreSQL:
   host: localhost
 
 Related:
+  branches:
+    '0034': South Branch
+    '0037': North Branch
+    '0040': West Branch
+  partners:
+    '0099': Skoona Consulting
+  ! user_groups:
+   - Manager
+   - Developer
+   - EmployeePrimary
+   - EmployeeSecondary
+   - BranchPrimary
+   - BranchSecondary
+   - VendorPrimary
+   - VendorSecondary
   ContentTypesByTopicType:
    ! Branch:
    - Commission
@@ -22,6 +37,8 @@ Related:
    - Activity
    ! UserGroups:
    - FileDownload
+
+
 
 access_profile:
   default_unknown_to_unsecure: false

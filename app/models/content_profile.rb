@@ -51,6 +51,7 @@ class ContentProfile < ApplicationRecord
         provider: authentication_provider,
         username: username,
         display_name: display_name,
+        last_update: updated_at.strftime("%Y-%m-%d %I:%M:%S %p"),
         email: email,
         assigned_group: userp.assigned_groups,
         user_options: userp.user_options,
@@ -66,6 +67,7 @@ class ContentProfile < ApplicationRecord
         provider: authentication_provider,
         username: username,
         display_name: display_name,
+        last_update: updated_at.strftime("%Y-%m-%d %I:%M:%S %p"),
         email: email,
         assigned_group: userp.assigned_groups,
         user_options: userp.user_options,
@@ -81,6 +83,7 @@ class ContentProfile < ApplicationRecord
         provider: authentication_provider,
         username: username,
         display_name: display_name,
+        last_update: updated_at.strftime("%Y-%m-%d %I:%M:%S %p"),
         email: email,
         entries: content_profile_entries.order([:topic_type,:content_type]).collect(&:entry_info)
     }

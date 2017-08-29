@@ -60,13 +60,29 @@ module Domains
     #    - Branch 0040, Commission, Experience, Notification, LicensedStates
     #    * Partner 0099, Activity
     #    * UserGroups:FileDownloads, [ Employee Primary, Employee Secondary, Branch Primary, Branch Secondary, Vendor Primary, Vendor Secondary ]
-    def member_admin_package(params)
-      package = {display_groups: ["Under Construction"]}
-      success = true
+
+    def member_admin_package(params) # username
+      up = get_page_user(params['username'])
+      profile = db_profile_provider.content_profile_for_runtime(up, false)
+
+      partners = []
+      SknSettings.Related.partners.to_h.each_pair {|k,v| partners << ["#{k} | #{v}", k] }
+      branches = []
+      SknSettings.Related.branches.to_h.each_pair {|k,v| branches << ["#{k} | #{v}", k] }
+
+      package = {
+           profile: profile,
+           states: db_profile_provider.long_state_name_options,
+           user_groups: SknSettings.Related.user_groups,
+           partners: partners,
+           branches: branches
+      }
+
+      success = profile.present?
       {
           success: success,
-          message: (success ? "" : "No Groups Available.  Please contact Customer Service with any questions."),
-          display_groups: (success ? package.delete(:display_groups) : [])
+          message: (success ? "" : "No Information available for #{params['username']}.  Please contact Customer Service with any questions."),
+          display_groups: (success ? package : {})
       }
     end
 

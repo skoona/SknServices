@@ -16,11 +16,10 @@
       <div class="col-md-3">
         <div class="well">
           <p>
-            Username<br/>
-            Display Name<br/>
-            Email<br/>
-            Last Changed By:<br/>
-            <br/>
+            UserName: <%= @page_controls.payload.profile.username %><br/>
+            <%= @page_controls.payload.profile.display_name %><br/>
+            <%= @page_controls.payload.profile.email %><br/>
+            Updated: <%= @page_controls.payload.profile.last_update %>
           </p>
         </div>
       </div>
@@ -28,96 +27,36 @@
       <div class="col-md-9">
         <div class="well col-md-12">
 
-          <div class="col-md-4">
-            <div class="well well-sm">
-              <h4>Branch 0034</h4>
-              <hr/>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Commission
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Experience
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Notification
-                </label>
-              </div>
-              <!-- Make this a multi-select -->
-              <div class="form-group">
-                <label for="lc-0034" class="control-label">Licensed States</label>
-                <select id="lc-0034" multiple class="form-control selectpicker">
-                  <option>Michigan</option>
-                  <option>Indiana</option>
-                  <option>Ohio</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="well well-sm">
-              <h4>Branch 0037</h4>
-              <hr/>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Commission
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Experience
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Notification
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="lc-0037" class="control-label">Licensed States</label>
-                <select id="lc-0037" multiple class="form-control selectpicker">
-                  <option>Michigan</option>
-                  <option>Indiana</option>
-                  <option>Ohio</option>
-                </select>
+          <% @page_controls.payload.branches.each do |branch| %>
+            <div class="col-md-4">
+              <div class="well well-sm">
+                <h4><%= branch[0] %></h4>
+                <hr/>
+                <div class="checkbox">
+                  <label>
+                    <input id="com-<%= branch[1] %>" type="checkbox"> Commission
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input id="exp-<%= branch[1] %>" type="checkbox"> Experience
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input id="not-<%= branch[1] %>" type="checkbox"> Notification
+                  </label>
+                </div>
+                <!-- Make this a multi-select -->
+                <div class="form-group">
+                  <label for="lc-<%= branch[1] %>" class="control-label">Licensed States</label>
+                  <select id="lc-<%= branch[1] %>" multiple class="form-control selectpicker">
+                    <%= options_for_select( @page_controls.payload.states ) %>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="well well-sm">
-              <h4>Branch 0040</h4>
-              <hr/>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Commission
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Experience
-                </label>
-              </div>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> Notification
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="lc-0040" class="control-label">Licensed States</label>
-                <select id="lc-0040" multiple class="form-control selectpicker">
-                  <option>Michigan</option>
-                  <option>Indiana</option>
-                  <option>Ohio</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <% end %>
 
           <!-- Add New Branch -->
           <div class="col-md-4">
@@ -125,9 +64,7 @@
               <div class="form-group">
                 <label for="new-branch" class="control-label">Assign Branch</label>
                 <select id="new-branch" class="form-control selectpicker">
-                  <option>Branch 0034</option>
-                  <option>Branch 0037</option>
-                  <option>Branch 0040</option>
+                  <%= options_for_select( @page_controls.payload.branches ) %>
                 </select>
               </div>
               <hr/>
@@ -145,7 +82,7 @@
               <div class="form-group">
                 <label for="partners" class="control-label">Authorized Partners</label>
                 <select id="partners" multiple class="form-control selectpicker">
-                  <option>0099 | Skoona Development</option>
+                  <%= options_for_select( @page_controls.payload.partners ) %>
                 </select>
               </div>
 
@@ -160,12 +97,7 @@
               <div class="form-group">
                 <label for="filedownloads" class="control-label">Allowed UserGroups</label>
                 <select id="filedownloads" multiple class="form-control selectpicker">
-                  <option>Employee Primary</option>
-                  <option>Employee Secondary</option>
-                  <option>Branch Primary</option>
-                  <option>Branch Secondary</option>
-                  <option>Vendor Primary</option>
-                  <option>Vendor Secondary</option>
+                  <%= options_for_select( @page_controls.payload.user_groups ) %>
                 </select>
               </div>
 

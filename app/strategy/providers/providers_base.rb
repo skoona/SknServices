@@ -59,7 +59,13 @@ module Providers
       united_states.detect {|state| state[0] == key }.try(:[],1).try(:titleize)
     end
 
-  protected
+    def long_state_name_options
+      united_states.sort() {|x,y| x[0] <=> y[0]}.map do |state|
+        [state[1].titleize, state[0]]
+      end
+    end
+
+    protected
 
     ##
     # generate xml from a regular hash, with/out arrays

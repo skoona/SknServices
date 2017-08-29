@@ -71,7 +71,8 @@ class ContentProfileEntry < ActiveRecord::Base
       topic_value: topic_value,
       topic_type: topic_type,
       topic_type_description: topic_type_description,
-      description: description
+      description: description,
+      last_update: updated_at.strftime("%Y-%m-%d %I:%M:%S %p")
     }
   end
 end

@@ -30,9 +30,9 @@ module Providers
       beaned ? Utility::ContentProfileBean.new(hsh) : hsh
     end
 
-    def content_profile_for_runtime(user_profile)
+    def content_profile_for_runtime(user_profile, available_resource_catalog=true)
       profile = ContentProfile.find_by(person_authentication_key: user_profile.person_authenticated_key).try(:entry_info)
-      condense_profile_entries(profile)
+      condense_profile_entries(profile, user_profile, available_resource_catalog)
     end
 
     ##
@@ -130,7 +130,7 @@ module Providers
     ##
 
 
-    def condense_profile_entries(profile)
+    def condense_profile_entries(profile, user_profile, avail = true)
       collection = []
       return nil unless profile.present?
 
@@ -138,9 +138,9 @@ module Providers
 
         cpe.merge!({
                        id: 'content',
-                       username: current_user.username,
-                       user_options: current_user.user_options,
-                       pak: current_user.person_authenticated_key
+                       username: user_profile.username,
+                       user_options: user_profile.user_options,
+                       pak: user_profile.person_authenticated_key
                    }) # fixup for accessible list
 
         worker = collection.detect do |x|
@@ -156,7 +156,13 @@ module Providers
         end
       end
 
-      # get catalog and swap state numbers for their real names
+      profile[:display_groups] = append_available_content_for_collection!(collection) if avail
+
+      profile
+    end
+
+    # get catalog and swap state numbers for their real names
+    def append_available_content_for_collection!(collection)
       collection.each do |cpe|
         cpe[:content] = adapter_for_content_profile_entry(cpe).preload_available_content_list(cpe)
         if cpe[:content].present?
@@ -167,10 +173,9 @@ module Providers
           end
         end
       end
-
-      profile[:display_groups] = collection
-      profile
+      collection
     end
+
 
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?

@@ -49,6 +49,7 @@ class ProfilesController < ApplicationController
   def member
     @page_controls = content_service.handle_member(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message?
+    redirect_to members_profiles_url unless @page_controls.success
   end
 
   # GET
