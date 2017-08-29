@@ -3,15 +3,15 @@
 <article>
   <div class="jumbotron earth-snow">
     <h1 class="big-chalk"><%= accessed_page_name %></h1>
-    <p>&:nbsp;<br/>
-      &:nbsp;<br/>
-      &:nbsp;<br/></p>
+    <p>
+      Determine which protected resources each individual user should have access to, and assign those permissions on this page.
+    </p>
     <p>
       <a class="btn btn-primary btn-lg" href="<%= details_content_pages_path %>" role="button">More about ContentProfile</a>
     </p>
   </div>
 
-  <section class="row">
+  <div class="row">
 
       <div class="col-md-3">
         <div class="well">
@@ -27,6 +27,7 @@
 
       <div class="col-md-9">
         <div class="well col-md-12">
+
           <div class="col-md-4">
             <div class="well well-sm">
               <h4>Branch 0034</h4>
@@ -57,6 +58,7 @@
               </div>
             </div>
           </div>
+
           <div class="col-md-4">
             <div class="well well-sm">
               <h4>Branch 0037</h4>
@@ -86,6 +88,7 @@
               </div>
             </div>
           </div>
+
           <div class="col-md-4">
             <div class="well well-sm">
               <h4>Branch 0040</h4>
@@ -112,6 +115,24 @@
                   <option>Indiana</option>
                   <option>Ohio</option>
                 </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add New Branch -->
+          <div class="col-md-4">
+            <div class="well well-sm">
+              <div class="form-group">
+                <label for="new-branch" class="control-label">Assign Branch</label>
+                <select id="new-branch" class="form-control selectpicker">
+                  <option>Branch 0034</option>
+                  <option>Branch 0037</option>
+                  <option>Branch 0040</option>
+                </select>
+              </div>
+              <hr/>
+              <div class="button">
+                <button type="button" class="btn btn-primary btn-block">Assign</button>
               </div>
             </div>
           </div>
@@ -154,7 +175,7 @@
         </div>
       </div>
 
-  </section>
+  </div>
 
 </article>
 
