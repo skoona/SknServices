@@ -42,6 +42,11 @@
                                 <% end %>
                             <% end %>
 
+                          <% if current_user_has_access?('#ContentProfileManagement') %>
+                                  <%= nav_link_icon("glyphicon-cog", "Member(s) Profile", members_profiles_path) %>
+                                  <%= nav_link_icon("glyphicon-cog", "Member Profile", member_profiles_path) %>
+                          <% end %>
+
                             <%= nav_link_icon("glyphicon-cog", "System Information", details_sysinfo_pages_path) %>
                         </ul>
                     </li>

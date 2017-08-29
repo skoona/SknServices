@@ -43,6 +43,26 @@ module Domains
     end
 
 
+    def members_admin_package
+      package = {display_groups: ["Under Construction"]}
+      success = true
+      {
+          success: success,
+          message: (success ? "" : "No Groups Available.  Please contact Customer Service with any questions."),
+          display_groups: (success ? package.delete(:display_groups) : [])
+      }
+    end
+
+    def member_admin_package(params)
+      package = {display_groups: ["Under Construction"]}
+      success = true
+      {
+          success: success,
+          message: (success ? "" : "No Groups Available.  Please contact Customer Service with any questions."),
+          display_groups: (success ? package.delete(:display_groups) : [])
+      }
+    end
+
     # Returns:
     # [
     #   {:pak=>"5f7d8a3fdfff5961deefac65851b77c6",

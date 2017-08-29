@@ -1,0 +1,63 @@
+<% provide(:title, accessed_page_name) %>
+
+<article>
+  <div class="jumbotron earth-valley">
+    <h1 class="big-chalk"><%= accessed_page_name %></h1>
+    <p>
+      You have been granted access to certain secure documentation resources.  This page demonstrates
+      advanced Content Access features, to provide you personalized and secure access to those protected resources.
+    </p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="<%= details_content_pages_path %>" role="button">More about ContentProfile</a>
+    </p>
+  </div>
+
+  <section>
+
+    <div class="well col-md-12">
+
+      <div class="table-responsive">
+        <table id="members-table" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+          <caption><h4>Members</h4></caption>
+          <thead class="bg-primary text-center">
+            <tr class="bg-primary">
+              <th class="bg-default"><em>TopicType</em> &:gt;</th>
+              <th colspan="4" class="text-center">Branch</th>
+              <th class="text-center">Partner</th>
+              <th class="text-center">UserGroups</th>
+            </tr>
+            <tr class="bg-primary">
+              <th class="bg-default"><em>ContentType</em> &:gt;</th>
+              <th class="text-center">Commission</th>
+              <th class="text-center">Experience</th>
+              <th class="text-center">Notification</th>
+              <th class="text-center">LicensedStates</th>
+              <th class="text-center">Activity</th>
+              <th class="text-center">FileDownloads</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% ['developer', 'emtester', 'eptester', 'estester', 'bptester', 'bstester', 'bnptester', 'vptester', 'vtester'].each do |item| -%>
+              <tr class="admin">
+                <td><%= item %></td>
+                <%= choose_column_icons(true, false, true, true, false, false) %>
+              </tr>
+          <% end -%>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </section>
+
+</article>
+
+<!--
+  file-image-o
+  file-pdf-o
+  file-text-o
+  envelope-open-o
+
+ -->
+

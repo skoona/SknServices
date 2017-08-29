@@ -44,6 +44,15 @@ class ProfilesController < ApplicationController
   ##
   # Manage Content Profiles Page
 
+  def members
+    @page_controls = content_service.handle_members
+    flash[:notice] = @page_controls.message if @page_controls.message?
+  end
+  def member
+    @page_controls = content_service.handle_member(params.to_unsafe_h)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+  end
+
   # GET
   def manage_content_profiles
     @page_controls = content_service.handle_content_profile_management(params.to_unsafe_h)

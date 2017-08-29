@@ -217,7 +217,7 @@
     </resource>
 
 
-    <!--============== Profiles Pages  ========== --> profiles/accessible_content
+    <!--============== Profiles Pages  ========== -->
     <resource secured="true">
         <uri>profiles/api_accessible_content</uri>
         <description>AccessibleContent API.JSON</description>
@@ -261,6 +261,29 @@
     <resource secured="true">
         <uri>profiles/content_profile_demo</uri>
         <description>ContentProfile In Action</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true">
+        <uri>profiles/members</uri>
+        <description>Members Administration</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true">
+        <uri>profiles/member</uri>
+        <description>Member Administration</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>

@@ -8,6 +8,7 @@
 
 
 var logEnabled = <%= Rails.env.development? %>,
+    SknService,
     csrfToken,
     controllerAction,
     controllerName,
@@ -18,7 +19,8 @@ var logEnabled = <%= Rails.env.development? %>,
     accessibleTable,
     mcUserTable,
     mcEntriesTable,
-    siStorageTable;
+    siStorageTable,
+    membersTable;
 
 /**
  * Prevents debuging messages from going to console none development mode
@@ -29,6 +31,75 @@ function consoleLog(message) {
         console.log(message);
     }
 }
+
+
+/**
+ * SknServiceUtil
+ *
+ *  - desired usage pattern:
+ *
+ *    var SknService = new SknServiceObject();
+ *    SknService.go('/controller/action');     => redirect to page
+ *    SknService.context('controller/action'); => true|false
+ *
+ */
+;function SknServiceUtil() {
+    this.relativeUrlPath = $('body').data('relative-path');
+    this.controllerName = $('body').data('controller-name');
+    this.controllerAction = $('body').data('controller-action');
+    this.currentPage = ($('body').data('controller-name') + '/' + $('body').data('controller-action'));
+    this.csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    if (typeof this.relativeUrlPath === "undefined")  {
+        this.relativeUrlPath = '';
+    }
+
+};
+
+SknServiceUtil.prototype = {
+    get csrf() {
+        return this.csrfToken;
+    },
+    get page() {
+        return this.currentPage;
+    },
+    get relativePath() {
+        return this.relativeUrlPath;
+    },
+    set relativePath(str) {
+        this.relativeUrlPath = str;
+    },
+    get controller() {
+        return this.controllerName;
+    },
+    get action() {
+        return this.controllerAction;
+    },
+    context: function(path){
+        return this.currentPage === path;
+    },
+    genURL: function(path) {
+        var x = window.location.href.split('/'),
+            urlPath = '',
+            urlBase = '';
+
+        if (this.relativeUrlPath.length > 1) { // is this a controller name or relative prefix
+            if ( path.startsWith(this.relativeUrlPath) ) {
+                urlPath = urlBase.concat(x[0], '//', x[2], path);
+            } else {
+                urlPath = urlBase.concat(x[0], '//', x[2], '/', x[3], path);
+            }
+        } else { // path include leading slash
+            urlPath = urlBase.concat(x[0], '//', x[2], path);
+        }
+        return urlPath;
+
+    },
+    go: function(path) {
+        window.location = this.genURL(path);
+    }
+};
+
 
 /* ********************************************************
  * System Info Page: :details_sysinfo
@@ -534,6 +605,11 @@ function handleManagementPages() {
  */
 $(function() {
 
+    /*
+     * Create the general utility object
+    */
+    SknService = new SknServiceUtil();
+
     controllerAction = $('body').data().controllerAction;
     controllerName = $('body').data().controllerName;
     /* Save this token for the Ajax calls */
@@ -570,9 +646,31 @@ $(function() {
     }
 
     switch (controllerAction) {
+        case 'members':
+            membersTable = $('#members-table').DataTable({
+                dom: 'tr<"bottom align-justify"ip>',
+                order: [[0, 'asc']],
+                ordering: false,
+                paging: true,
+                processing: true,
+                language: {
+                    emptyTable: "Please make a choice from content table above."
+                }
+            });
+
+            $('#members-table tbody tr').on('click', function (event) {
+                $('#members-table tr.admin').removeClass('success');
+                $(event.currentTarget).addClass('success');
+                event.preventDefault();
+                event.stopPropagation();
+                SknService.go('/profiles/member');
+            });
+            break;
+
         case 'runtime_demo':
             $('div.well.runtime-item').on("click", runtimeDemoGetObject);
             break;
+
         case 'edit':
             $('.selectpicker').selectpicker();
             break;
