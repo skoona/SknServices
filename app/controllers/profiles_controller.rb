@@ -3,8 +3,6 @@
 
 class ProfilesController < ApplicationController
 
-  before_action :login_required, except: :api_get_content_object
-
   def runtime_demo
     @page_controls = content_service.handle_runtime_demo
     redirect_to root_path, notice: @page_controls.message and return unless @page_controls.success

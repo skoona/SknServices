@@ -42,7 +42,8 @@ module Domains
       page_user = Secure::UserProfile.page_user(uname, context)
     end
 
-
+    # Username,        Commission, Experience, Notification, LicensedStates, Activity,   FileDownloads
+    #  #display_name   True/False  True/False  True/False    True/False      True/False  True/False
     def members_admin_package
       package = {display_groups: ["Under Construction"]}
       success = true
@@ -53,6 +54,12 @@ module Domains
       }
     end
 
+    # UserInfo
+    #    * Branch 0034, Commission, Experience, Notification, LicensedStates        -- ADD Branch Section needed, + Licensed States is MultiSelect
+    #    - Branch 0037, Commission, Experience, Notification, LicensedStates
+    #    - Branch 0040, Commission, Experience, Notification, LicensedStates
+    #    * Partner 0099, Activity
+    #    * UserGroups:FileDownloads, [ Employee Primary, Employee Secondary, Branch Primary, Branch Secondary, Vendor Primary, Vendor Secondary ]
     def member_admin_package(params)
       package = {display_groups: ["Under Construction"]}
       success = true
