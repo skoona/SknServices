@@ -103,17 +103,20 @@ module Domains
       up = get_page_user(params['username'])
       profile = db_profile_provider.content_profile_for_runtime(up, false)
 
+      branch_preselects = up.user_options.select {|s|  (s.to_i > 0) and (s != '0099') }
       partners = []
       SknSettings.Related.partners.to_h.each_pair {|k,v| partners << ["#{k} | #{v}", k] }
       branches = []
       SknSettings.Related.branches.to_h.each_pair {|k,v| branches << ["#{k} | #{v}", k] }
+      branch_workflow = branches.select {|s| branch_preselects.include?(s[1].to_s) }
 
       package = {
            profile: profile,
            states: db_profile_provider.long_state_name_options,
            user_groups: SknSettings.Related.user_groups,
            partners: partners,
-           branches: branches
+           branches: branches,
+           branch_workflow: branch_workflow
       }
 
       success = profile.present?
@@ -121,6 +124,27 @@ module Domains
           success: success,
           message: (success ? "" : "No Information available for #{params['username']}.  Please contact Customer Service with any questions."),
           display_groups: (success ? package : {})
+      }
+    end
+
+
+    # Parameters: {
+    #   "member"=>{
+    #       "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>"on", "LicensedStates"=>["16", "18", "19", "20"]},
+    #       "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>"on", "LicensedStates"=>["12", "13", "14"]},
+    #       "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>"on", "LicensedStates"=>["3", "5", "13", "14", "23", "24"]},
+    #       "activity"=>{"partners"=>["0099"]},
+    #       "filedownload"=>{"usergroups"=>["EmployeePrimary", "EmployeeSecondary", "BranchPrimary"]}
+    #   },
+    #   "commit"=>"",
+    #   "id"=>"a1ee7b9492e31c922274babeddbc97c5"
+    # }
+    def member_update_package(params)
+      success = true
+      {
+          success: success,
+          message: (success ? "Update Completed" : "Update Failed"),
+          package: {}
       }
     end
 

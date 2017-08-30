@@ -292,6 +292,17 @@
             </authorizedRoles>
         </permission>
     </resource>
+    <resource secured="true">
+        <uri>profiles/member_update</uri>
+        <description>Member Admin Updates</description>
+        <permission type="UPDATE">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
 
     <resource secured="true">
         <uri>profiles/api_content_profiles</uri>

@@ -50,6 +50,19 @@ function consoleLog(message) {
     this.currentPage = ($('body').data('controller-name') + '/' + $('body').data('controller-action'));
     this.csrfToken = $('meta[name="csrf-token"]').attr('content');
 
+    /* #AGENCY-TITLE# #AGENCY-NUM# */
+    this.templateCard =
+        '<div class="col-md-3 branch-entry #AGENCY-NUM#"><div class="well well-sm">' +
+        '<h4>#AGENCY-TITLE#</h4><hr/>' +
+        '<div class="checkbox"><label><input id="com-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Commission]"> Commission</label></div>' +
+        '<div class="checkbox"><label><input id="exp-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Experience]"> Experience</label></div>' +
+        '<div class="checkbox"><label><input id="not-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Notification]"> Notification</label></div>' +
+        '<div class="form-group">' +
+        '<label for="lc-#AGENCY-NUM#" class="control-label">Licensed States</label>' +
+        '<select id="lc-#AGENCY-NUM#" multiple class="form-control selectpicker" data-live-search="true" name="member[#AGENCY-NUM#][LicensedStates][]">' +
+        '</select>' +
+        '</div></div></div>';
+
     if (typeof this.relativeUrlPath === "undefined")  {
         this.relativeUrlPath = '';
     }
@@ -97,7 +110,48 @@ SknServiceUtil.prototype = {
     },
     go: function(path) {
         window.location = this.genURL(path);
+    },
+    /* Fixed to #card-container
+     * - replaces #TITLE# and #AGENCY-NUM#
+     */
+    addCardFor: function (agencyNumber, title) {
+        var workText = '',
+            rc = true,
+            state_options = $("div.branch-entry:last select > option").clone(),
+            after_target = $("div.branch-entry:last"),
+            userOptions = $("#user-anchor").data().userOptions,
+            newCard;
+        try {
+            /* does not exist */
+            if (agencyNumber.length < 1 || title.length < 1 || $('#com-' + agencyNumber).length == 1) {
+                return false;
+            }
+
+            /* is not a contracted agency */
+            if ($.inArray(agencyNumber, userOptions) == -1) {
+                workText = this.templateCard.replace(/#AGENCY-TITLE#/g, title);
+                workText = workText.replace(/#AGENCY-NUM#/g, agencyNumber);
+                $('#apply-branch-container').before(workText);
+                $('#lc-' + agencyNumber).append(state_options).selectpicker({
+                    size: 5,
+                    selectedTextFormat: 'count > 2'
+                });
+            }
+        } catch (e) {}
+        return rc;
+    },
+    removeCardFor: function (agencyNumber) {
+        var userOptions = $('#card-container').data().userOptions,
+            target = $('div.branch-entry.' + agencyNumber + ':first'),
+            rc = true;
+        try {
+            if ($.inArray(agencyNumber, userOptions) == -1) {
+                target.slideUp(1500).remove();
+            }
+        } catch (e) {}
+        return rc;
     }
+
 };
 
 
@@ -661,18 +715,28 @@ $(function() {
                 scroller: true,
                 language: {
                     emptyTable: "Please make a choice from content table above."
+                },
+                drawCallback: function(settings) {
+                    try {
+                        /*
+                         * enable row clicks to member page from members table */
+                      $('#members-table tbody tr').on('click', function(event){
+                          var pkg = $(event.currentTarget).data().package
+
+                          $('#members-table tr.admin').removeClass('success');
+                          $(event.currentTarget).addClass('success');
+                          event.preventDefault();
+                          event.stopPropagation();
+
+                          consoleLog("drawCallback(members) Row Data(" + JSON.stringify(pkg) + ")");
+                          SknService.go('/profiles/' + pkg.id + '/member?username=' + pkg.username + '&display_name=' + pkg.display_name);
+                      });
+                    } catch (e) {
+                        consoleLog("DataTables DrawCallBack Failed " + e);
+                    }
                 }
             });
 
-            $('#members-table tbody tr').on('click', function (event) {
-                $('#members-table tr.admin').removeClass('success');
-                $(event.currentTarget).addClass('success');
-                event.preventDefault();
-                event.stopPropagation();
-                var pkg = $(event.currentTarget).data().package
-                consoleLog("Selected Row (" + JSON.stringify(pkg) + ")");
-                SknService.go('/profiles/' + pkg.id + '/member?username=' + pkg.username + '&:amp;display_name=' + pkg.display_name);
-            });
             break;
 
         case 'member':
@@ -684,6 +748,28 @@ $(function() {
                 size: 4,
                 selectedTextFormat: 'count > 2'
             });
+
+            /**
+             * Manage Add Agency Feature
+             */
+            $('#add-branch-btn').on('click', function(ev) {
+                var selected = $("#new-branch").find('option:selected').first();
+                SknService.addCardFor(selected.val(), selected.text());
+                $(ev.currentTarget).attr("disabled", true);
+                ev.stopPropagation();
+                return false;
+            });
+
+            $('#new-branch').on('changed.bs.select', function (ev, clickedIndex, newValue, oldValue) {
+                /* fires only when changed: new/old are booleans and irrelevant */
+                if (newValue) {
+                    $('#add-branch-btn').removeAttr("disabled");
+                }
+                return false;
+            });
+
+            $('#add-branch-btn').attr("disabled", true);
+
             break;
 
         case 'runtime_demo':

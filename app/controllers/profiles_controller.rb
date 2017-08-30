@@ -52,6 +52,12 @@ class ProfilesController < ApplicationController
     redirect_to members_profiles_url unless @page_controls.success
   end
 
+  def member_update
+    @page_controls = content_service.handle_member_updates(params.to_unsafe_h)
+    flash[:notice] = @page_controls.message if @page_controls.message?
+    redirect_to members_profiles_url
+  end
+
   # GET
   def manage_content_profiles
     @page_controls = content_service.handle_content_profile_management(params.to_unsafe_h)

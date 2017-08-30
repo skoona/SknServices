@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     end
     member do
       get :member
+      put :member_update
     end
   end
 
