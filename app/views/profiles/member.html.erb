@@ -11,111 +11,106 @@
     </p>
   </div>
 
-  <div class="row">
+  <section>
+
+    <div class="col-md-12">
+      <%= link_to members_profiles_path, class: "pull-right" do %>
+          <i class="fa fa-undo" aria-hidden="true"></i> Back
+      <% end %>
+      <h2>
+        Member permissions for <%= @page_controls.payload.profile.display_name %><br/>
+        <small>
+          <i class="fa fa-user" aria-hidden="true"></i> <%= @page_controls.payload.profile.username %>
+          <%= @page_controls.payload.profile.email %>
+          <i class="fa fa-calendar-check-o" aria-hidden="true"></i> <%= @page_controls.payload.profile.last_update %>
+        </small>
+      </h2>
+    </div>
+
+    <div class="well col-md-offset-2 col-md-10">
+
+      <% @page_controls.payload.branches.each do |branch| %>
+        <div class="col-md-3">
+          <div class="well well-sm">
+            <h4><%= branch[0] %></h4>
+            <hr/>
+            <div class="checkbox">
+              <label>
+                <input id="com-<%= branch[1] %>" type="checkbox"> Commission
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input id="exp-<%= branch[1] %>" type="checkbox"> Experience
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input id="not-<%= branch[1] %>" type="checkbox"> Notification
+              </label>
+            </div>
+            <!-- Make this a multi-select -->
+            <div class="form-group">
+              <label for="lc-<%= branch[1] %>" class="control-label">Licensed States</label>
+              <select id="lc-<%= branch[1] %>" multiple class="form-control selectpicker" data-live-search="true">
+                <%= options_for_select( @page_controls.payload.states ) %>
+              </select>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="well col-md-offset-2 col-md-10">
+
+      <!-- Add New Branch -->
+      <div class="col-md-3">
+        <div class="well well-sm">
+          <h4>Branch Assignment</h4>
+          <hr/>
+          <div class="form-group">
+            <label for="new-branch" class="control-label">Assign Branch</label>
+            <select id="new-branch" class="form-control">
+              <%= options_for_select( @page_controls.payload.branches ) %>
+            </select>
+          </div>
+          <hr/>
+          <div class="button">
+            <button type="button" class="btn btn-primary btn-block">Assign</button>
+          </div>
+        </div>
+      </div>
 
       <div class="col-md-3">
-        <div class="well">
-          <p>
-            UserName: <%= @page_controls.payload.profile.username %><br/>
-            <%= @page_controls.payload.profile.display_name %><br/>
-            <%= @page_controls.payload.profile.email %><br/>
-            Updated: <%= @page_controls.payload.profile.last_update %>
-          </p>
+        <div class="well well-sm">
+          <h4>Activity</h4>
+          <hr/>
+          <div class="form-group">
+            <label for="partners" class="control-label">Authorized Partners</label>
+            <select id="partners" multiple class="form-control selectpicker">
+              <%= options_for_select( @page_controls.payload.partners ) %>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div class="col-md-9">
-        <div class="well col-md-12">
-
-          <% @page_controls.payload.branches.each do |branch| %>
-            <div class="col-md-4">
-              <div class="well well-sm">
-                <h4><%= branch[0] %></h4>
-                <hr/>
-                <div class="checkbox">
-                  <label>
-                    <input id="com-<%= branch[1] %>" type="checkbox"> Commission
-                  </label>
-                </div>
-                <div class="checkbox">
-                  <label>
-                    <input id="exp-<%= branch[1] %>" type="checkbox"> Experience
-                  </label>
-                </div>
-                <div class="checkbox">
-                  <label>
-                    <input id="not-<%= branch[1] %>" type="checkbox"> Notification
-                  </label>
-                </div>
-                <!-- Make this a multi-select -->
-                <div class="form-group">
-                  <label for="lc-<%= branch[1] %>" class="control-label">Licensed States</label>
-                  <select id="lc-<%= branch[1] %>" multiple class="form-control selectpicker">
-                    <%= options_for_select( @page_controls.payload.states ) %>
-                  </select>
-                </div>
-              </div>
-            </div>
-          <% end %>
-
-          <!-- Add New Branch -->
-          <div class="col-md-4">
-            <div class="well well-sm">
-              <div class="form-group">
-                <label for="new-branch" class="control-label">Assign Branch</label>
-                <select id="new-branch" class="form-control selectpicker">
-                  <%= options_for_select( @page_controls.payload.branches ) %>
-                </select>
-              </div>
-              <hr/>
-              <div class="button">
-                <button type="button" class="btn btn-primary btn-block">Assign</button>
-              </div>
-            </div>
+      <div class="col-md-3">
+        <div class="well well-sm">
+          <h4>FileDownloads</h4>
+          <hr/>
+          <div class="form-group">
+            <label for="filedownloads" class="control-label">Allowed UserGroups</label>
+            <select id="filedownloads" multiple class="form-control selectpicker">
+              <%= options_for_select( @page_controls.payload.user_groups ) %>
+            </select>
           </div>
-
-          <div class="col-md-4">
-            <div class="well well-sm">
-              <h4>Activity</h4>
-              <hr/>
-
-              <div class="form-group">
-                <label for="partners" class="control-label">Authorized Partners</label>
-                <select id="partners" multiple class="form-control selectpicker">
-                  <%= options_for_select( @page_controls.payload.partners ) %>
-                </select>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="well well-sm">
-              <h4>FileDownloads</h4>
-              <hr/>
-
-              <div class="form-group">
-                <label for="filedownloads" class="control-label">Allowed UserGroups</label>
-                <select id="filedownloads" multiple class="form-control selectpicker">
-                  <%= options_for_select( @page_controls.payload.user_groups ) %>
-                </select>
-              </div>
-
-            </div>
-          </div>
-
         </div>
       </div>
 
-  </div>
+    </div>
+
+  </section>
 
 </article>
-
-<!--
-  file-image-o
-  file-pdf-o
-  file-text-o
-  envelope-open-o
-
- -->
 

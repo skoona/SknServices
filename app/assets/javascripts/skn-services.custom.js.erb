@@ -648,11 +648,17 @@ $(function() {
     switch (controllerAction) {
         case 'members':
             membersTable = $('#members-table').DataTable({
-                dom: 'tr<"bottom align-justify"ip>',
+                dom: "<'row'<'small-6 columns'B><'small-6 columns'f>>tr<'row'<'small-12 columns'ip>>",// dom: 'tr<"bottom align-justify"ip>',
                 order: [[0, 'asc']],
+                lengthChange: false,
                 ordering: false,
                 paging: true,
                 processing: true,
+                searching: true,
+                scrollY: "",
+                pageLength: 6,
+                scrollCollapse: false,
+                scroller: true,
                 language: {
                     emptyTable: "Please make a choice from content table above."
                 }
@@ -663,14 +669,21 @@ $(function() {
                 $(event.currentTarget).addClass('success');
                 event.preventDefault();
                 event.stopPropagation();
-                var userData = $(event.currentTarget).data().user
-                consoleLog("Selected Row (" + userData + ")");
-                SknService.go('/profiles/member?username=' + userData);
+                var pkg = $(event.currentTarget).data().package
+                consoleLog("Selected Row (" + JSON.stringify(pkg) + ")");
+                SknService.go('/profiles/' + pkg.id + '/member?username=' + pkg.username + '&:amp;display_name=' + pkg.display_name);
             });
             break;
 
         case 'member':
-            $('.selectpicker').selectpicker();
+            $('.selectpicker').selectpicker({
+                size: 5,
+                selectedTextFormat: 'count > 2'
+            });
+            $("select#new-branch").selectpicker({
+                size: 4,
+                selectedTextFormat: 'count > 2'
+            });
             break;
 
         case 'runtime_demo':
@@ -715,7 +728,9 @@ $(function() {
     }
 
 
-    // {alert: :alert, notice: :success, info: :info, secondary: :secondary, success: :success, error: :alert, warning: :warning, primary: :primary }
+    /* Timeout non-Error Flash messages
+     * { alert: :alert, notice: :success, info: :info, secondary: :secondary, success: :success, error: :alert, warning: :warning, primary: :primary }
+     */
     setTimeout(function() { // all except alert
         var elems = $('div.alert.alert-success,.alert.alert-notice,.alert.alert-info,.alert.alert-warning');
         $.each( elems, function (index, item) {

@@ -32,13 +32,15 @@ Rails.application.routes.draw do
       get :api_get_content_object
       get :api_get_demo_content_object
       get :members
-      get :member
       get :manage_content_profiles
       post :create_profile_for_user
       post :update_profile_for_user
       delete :delete_profile_for_user
       post :create_entries_for_user
       delete :delete_entry_for_user
+    end
+    member do
+      get :member
     end
   end
 

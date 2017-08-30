@@ -50,11 +50,12 @@ module ApplicationHelper
   def choose_column_icons(*show)
     #show is_a?(Array)
     out = show.inject([]) do |res,item|
-      icon = (item ? "glyphicon-ok-circle" : "glyphicon-remove-circle")
+      icon = (item ? "glyphicon-ok-circle text-primary" : "glyphicon-remove-circle text-danger")
       res << content_tag(:td, tag(:span, class: ["glyphicon", icon, "btn-lg"]), class: "text-center")
     end
     raw out.join()
   end
+
   def choose_content_icons(content)
     if content.content_type.include?('LicensedStates')
     '<i class="fa fa-balance-scale fa-2x text-primary"></i>'

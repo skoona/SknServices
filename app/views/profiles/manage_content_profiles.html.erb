@@ -100,8 +100,8 @@
             value: <em>Profile Type</em>.  This value documents a person's role or relationship to the business.</p>
           <fieldset>
             <div class="form-group">
-              <label class="col-sm-4 col-sm-4 control-label" for="profile-type-id"><abbr class="text-error" title="required">*</abbr> Profile Type</label>
-              <div class="col-sm-6">
+              <label class="col-md-4 col-md-4 control-label" for="profile-type-id"><abbr class="text-error" title="required">*</abbr> Profile Type</label>
+              <div class="col-md-6">
                 <select class="form-control"
                         id="profile-type-id"
                         name="profile_type_id"
@@ -116,7 +116,7 @@
         </div>
         <div class="modal-footer">
           <div class="form-group">
-            <div class="col-sm-offset-4 col-sm-6">
+            <div class="col-md-offset-4 col-md-6">
               <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
               <%= button_tag "Save", type: :submit, value: "content-profile-modal", class: "btn btn-primary btn-large", id: "create-button" %>
             </div>
@@ -143,21 +143,21 @@
               <p class="lead">Content Profile Entries are permission objects, create as many as needed to express authorizations.</p>
               <fieldset>
                 <div class="form-group">
-                  <label class="col-sm-2 control-label" for="description"><abbr class="text-error" title="required">*</abbr> Description</label>
-                  <div class="col-sm-10 controls">
+                  <label class="col-md-2 control-label" for="description"><abbr class="text-error" title="required">*</abbr> Description</label>
+                  <div class="col-md-10 controls">
                     <textarea rows="3" class="form-control" id="description" name="description" type="textarea" placeholder="describe permission being granted" required></textarea>
                   </div>
                 </div>
               </fieldset>
               <fieldset>
                 <div class="form-group">
-                  <label class="col-sm-2 control-label" for="topic-type-id"><abbr class="text-error" title="required">*</abbr> Topic Type</label>
-                  <div class="col-sm-4 controls">
+                  <label class="col-md-2 control-label" for="topic-type-id"><abbr class="text-error" title="required">*</abbr> Topic Type</label>
+                  <div class="col-md-4 controls">
                     <select class="form-control" id="topic-type-id" name="topic_type_id" type="select" prompt="Select business entity" required>
                       <%= skn_options_for_select_with_data( @page_controls.topic_type_options ) %>
                     </select>
                   </div>
-                  <div class="col-sm-6 controls">
+                  <div class="col-md-6 controls">
                     <select multiple class="form-control" id="topic-type-value-id" name="topic_type_value[]" type="select" placeholder="Select " required>
                       <%#= options_for_select( @page_controls.topic_type_opts_options ) %>
                     </select>
@@ -166,13 +166,13 @@
               </fieldset>
               <fieldset>
                 <div class="form-group">
-                  <label class="col-sm-2 control-label" for="content-type-id"><abbr class="text-error" title="required">*</abbr> Content Type</label>
-                  <div class="col-sm-4 controls">
+                  <label class="col-md-2 control-label" for="content-type-id"><abbr class="text-error" title="required">*</abbr> Content Type</label>
+                  <div class="col-md-4 controls">
                     <select class="form-control" id="content-type-id" name="content_type_id" type="select" prompt="Select Business Document" required>
                       <%= skn_options_for_select_with_data( @page_controls.content_type_options ) %>
                     </select>
                   </div>
-                  <div class="col-sm-6 controls">
+                  <div class="col-md-6 controls">
                     <select multiple class="form-control" id="content-type-value-id" name="content_type_value[]" type="select" placeholder="Select" required>
                       <%#= options_for_select( @page_controls.content_type_opts_options ) %>
                     </select>
@@ -182,7 +182,7 @@
             </div>
             <div class="modal-footer">
               <div class="form-group">
-                <div class="col-sm-offset-4 col-sm-6">
+                <div class="col-md-offset-4 col-md-6">
                   <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
                   <%= button_tag "Save", type: :submit, value: "content-entry-modal", class: "btn btn-primary btn-large", id: "create-button" %>
                 </div>

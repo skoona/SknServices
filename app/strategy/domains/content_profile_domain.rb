@@ -45,12 +45,50 @@ module Domains
     # Username,        Commission, Experience, Notification, LicensedStates, Activity,   FileDownloads
     #  #display_name   True/False  True/False  True/False    True/False      True/False  True/False
     def members_admin_package
-      package = {display_groups: ["Under Construction"]}
-      success = true
+      package = []
+
+      Secure::UserProfile.page_users(PROFILE_CONTEXT).each do |u|
+
+        content_profile = nil
+
+        content_profile = db_profile_provider.content_profile_for_runtime(u, false)
+
+        unless content_profile.present?
+          content_profile = {
+              success: false,
+              username: u.username,
+              display_name: u.display_name,
+              email: u.email,
+              pak: u.person_authenticated_key,
+              authentication_provider: 'SknService::Bcrypt',
+              assigned_group: u.assigned_groups,
+              user_options: u.user_options,
+              profile_type_description: "",
+              entries: []
+          }
+        end
+
+        # :pak, :username, :display_name, booleans
+        package <<  {
+            package: {
+              id: content_profile[:pak],
+              username: content_profile[:username],
+              display_name: content_profile[:display_name],
+            },
+            commission: !!content_profile[:entries].detect {|entry| 'Commission'.eql?(entry[:content_type]) },
+            experience: !!content_profile[:entries].detect {|entry| 'Experience'.eql?(entry[:content_type]) },
+            notification: !!content_profile[:entries].detect {|entry| 'Notification'.eql?(entry[:content_type]) },
+            licensedstates: !!content_profile[:entries].detect {|entry| 'LicensedStates'.eql?(entry[:content_type]) },
+            activity: !!content_profile[:entries].detect {|entry| 'Activity'.eql?(entry[:content_type]) },
+            filedownloads: !!content_profile[:entries].detect {|entry| 'FileDownload'.eql?(entry[:content_type]) }
+        }
+      end
+
+      success = package.present?
       {
           success: success,
-          message: (success ? "" : "No Groups Available.  Please contact Customer Service with any questions."),
-          display_groups: (success ? package.delete(:display_groups) : [])
+          message: (success ? "" : "No Information Available.  Please contact Customer Service with any questions."),
+          display_groups: (success ? package : [])
       }
     end
 
