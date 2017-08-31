@@ -50,7 +50,7 @@
               <div class="form-group">
                 <label for="not-<%= branch[1] %>" class="control-label">Notification</label>
                 <select id="not-<%= branch[1] %>" multiple class="form-control selectpicker" name="member[<%= branch[1] %>][Notification][]">
-                  <%= options_for_select(['AdvCancel', 'FutCancel', 'Cancel']) %>
+                  <%= options_for_select( @page_controls.payload.notify_opts ) %>
                 </select>
               </div>
               <!-- Make this a multi-select -->

@@ -104,18 +104,21 @@ module Domains
       profile = db_profile_provider.content_profile_for_runtime(up, false)
 
       branch_preselects = up.user_options.select {|s|  (s.to_i > 0) and (s != '0099') }
+
       partners = []
-      SknSettings.Related.partners.to_h.each_pair {|k,v| partners << ["#{k} | #{v}", k] }
+      SknSettings.Related.partners.to_h.each_pair {|k,v| partners << ["#{k.to_s} | #{v}", k.to_s] }
+
       branches = []
-      SknSettings.Related.branches.to_h.each_pair {|k,v| branches << ["#{k} | #{v}", k] }
-      branch_workflow = branches.select {|s| branch_preselects.include?(s[1].to_s) }
+      SknSettings.Related.branches.to_h.each_pair {|k,v| branches << ["#{k.to_s} | #{v}", k.to_s] }
+
+      branch_workflow = branches.select {|s| !!branch_preselects.detect {|c| c == s[1]} }
 
       package = {
            profile: profile,
            states: db_profile_provider.long_state_name_options,
            user_groups: SknSettings.Related.user_groups,
            partners: partners,
-           branches: branches,
+           branches: branches.select {|s| !branch_preselects.include?(s[1]) },
            branch_workflow: branch_workflow,
            notify_opts: ['AdvCancel', 'FutCancel', 'Cancel']
       }
