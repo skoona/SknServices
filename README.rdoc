@@ -2,6 +2,7 @@
 
 Author: James Scott <skoona@gmail.com>
 Date: Dec 2015
+Images: Some Images were sourced from https://apod.nasa.gov/apod/lib/about_apod.html
 
 This file contains a collection of notes and data used during development
 The Readme.md file is more like documentation; outside of the app itself.
