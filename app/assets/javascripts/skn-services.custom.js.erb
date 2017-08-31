@@ -52,16 +52,19 @@ function consoleLog(message) {
 
     /* #AGENCY-TITLE# #AGENCY-NUM# */
     this.templateCard =
-        '<div class="col-md-3 branch-entry #AGENCY-NUM#"><div class="well well-sm">' +
-        '<h4>#AGENCY-TITLE#</h4><hr/>' +
+        '<div class="col-md-3 branch-entry #AGENCY-NUM#"><div class="well well-sm" data-mh="entry-group">' +
+        '<a data-branch="#AGENCY-NUM#" href="#" class="pull-right"><i class="fa fa-trash" aria-hidden="true"></i></a><h4>#AGENCY-TITLE#</h4><hr/>' +
         '<div class="checkbox"><label><input id="com-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Commission]"> Commission</label></div>' +
         '<div class="checkbox"><label><input id="exp-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Experience]"> Experience</label></div>' +
-        '<div class="checkbox"><label><input id="not-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Notification]"> Notification</label></div>' +
+        '<div class="form-group">' +
+        '<label for="not-#AGENCY-NUM#" class="control-label">Notification</label>' +
+        '<select id="not-#AGENCY-NUM#" multiple class="form-control selectpicker" data-live-search="true" name="member[#AGENCY-NUM#][Notification][]">' +
+        '</select></div>' +
         '<div class="form-group">' +
         '<label for="lc-#AGENCY-NUM#" class="control-label">Licensed States</label>' +
         '<select id="lc-#AGENCY-NUM#" multiple class="form-control selectpicker" data-live-search="true" name="member[#AGENCY-NUM#][LicensedStates][]">' +
-        '</select>' +
-        '</div></div></div>';
+        '</select></div>' +
+        '</div></div>';
 
     if (typeof this.relativeUrlPath === "undefined")  {
         this.relativeUrlPath = '';
@@ -117,10 +120,14 @@ SknServiceUtil.prototype = {
     addCardFor: function (agencyNumber, title) {
         var workText = '',
             rc = true,
-            state_options = $("div.branch-entry:last select > option").clone(),
-            after_target = $("div.branch-entry:last"),
+            state_options = $("div.branch-entry:last select:last > option").clone(),
+            statesArray = $('#user-anchor').data().statesArray,
             userOptions = $("#user-anchor").data().userOptions,
+            notifyArray = $('#user-anchor').data().notifyArray,
+            notify_options = $("div.branch-entry:last select:first > option").clone(),
+            choices = [],
             newCard;
+
         try {
             /* does not exist */
             if (agencyNumber.length < 1 || title.length < 1 || $('#com-' + agencyNumber).length == 1) {
@@ -132,22 +139,49 @@ SknServiceUtil.prototype = {
                 workText = this.templateCard.replace(/#AGENCY-TITLE#/g, title);
                 workText = workText.replace(/#AGENCY-NUM#/g, agencyNumber);
                 $('#apply-branch-container').before(workText);
+
+                if (state_options.length == 0) {
+                    choices = [];
+                    $.each(statesArray, function(index, row) {
+                        choices.push('<option value="' + row[1] + '">' + row[0] + '</option>');
+                    });
+                    state_options = $(choices.join());
+                }
                 $('#lc-' + agencyNumber).append(state_options).selectpicker({
                     size: 5,
                     selectedTextFormat: 'count > 2'
                 });
+
+                if (notify_options.length == 0) {
+                    choices = [];
+                    $.each(notifyArray, function(index, row) {
+                        choices.push('<option value="' + row + '">' + row + '</option>');
+                    });
+                    notify_options = $(choices.join());
+                }
+                $('#not-' + agencyNumber).append(notify_options).selectpicker({
+                    size: 5,
+                    selectedTextFormat: 'count > 2'
+                });
+
+                $('div.well-sm[data-mh="entry-group"]').matchHeight();
+                $.fn.matchHeight._update();
             }
         } catch (e) {}
         return rc;
     },
     removeCardFor: function (agencyNumber) {
-        var userOptions = $('#card-container').data().userOptions,
-            target = $('div.branch-entry.' + agencyNumber + ':first'),
+        var userOptions = $('#user-anchor').data().userOptions,
+            target = $('div.branch-entry.' + agencyNumber),
             rc = true;
         try {
             if ($.inArray(agencyNumber, userOptions) == -1) {
                 target.slideUp(1500).remove();
+            } else {
+                consoleLog('removeCardFor(' + agencyNumber + ') not found!');
             }
+            $('div.well-sm[data-mh="entry-group"]').matchHeight();
+            $.fn.matchHeight._update();
         } catch (e) {}
         return rc;
     }
@@ -652,6 +686,18 @@ function handleManagementPages() {
     return true;
 } // end function
 
+function branchRemovalSetup() {
+    $('div.branch-entry > div.well-sm > a').on('click', function(ev) {
+        var branch = $(this).data().branch;
+        ev.stopPropagation();
+        SknService.removeCardFor(branch);
+
+        $('div.well-sm[data-mh="entry-group"]').matchHeight();
+        consoleLog('onClick() fired for Trashcan! branch: ' + branch);
+
+        return false;
+    });
+}
 
 /* ********************************************************
  * JQuery Enabled Processing
@@ -740,11 +786,16 @@ $(function() {
             break;
 
         case 'member':
+            /* Setup dropdown lists */
             $('.selectpicker').selectpicker({
                 size: 5,
                 selectedTextFormat: 'count > 2'
             });
             $("select#new-branch").selectpicker({
+                size: 4,
+                selectedTextFormat: 'count > 2'
+            });
+            $("select#filedownload").selectpicker({
                 size: 4,
                 selectedTextFormat: 'count > 2'
             });
@@ -754,9 +805,18 @@ $(function() {
              */
             $('#add-branch-btn').on('click', function(ev) {
                 var selected = $("#new-branch").find('option:selected').first();
+                if (selected.val() == 'blank') {
+                    return false;
+                }
                 SknService.addCardFor(selected.val(), selected.text());
                 $(ev.currentTarget).attr("disabled", true);
                 ev.stopPropagation();
+                $('div.branch-entry > div.well-sm').matchHeight();
+                $.fn.matchHeight._update();
+
+                /* allow for added card to be removed */
+                branchRemovalSetup()
+
                 return false;
             });
 
@@ -769,6 +829,11 @@ $(function() {
             });
 
             $('#add-branch-btn').attr("disabled", true);
+
+
+            /* Keep Container at same height */
+            $('div.well-sm[data-mh="entry-group"]').matchHeight();
+            $.fn.matchHeight._update();
 
             break;
 

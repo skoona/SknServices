@@ -29,12 +29,13 @@
 
   <section>
     <%= form_tag(member_update_profile_path(id: @page_controls.payload.profile.pak), method: :put) do -%>
-      <div id="user-anchor" class="well col-md-offset-1 col-md-10" data-user-options="<%= @page_controls.payload.profile.entries.first.user_options %>">
+      <div id="user-anchor" class="well col-md-offset-1 col-md-10" data-user-options="<%= @page_controls.payload.profile.entries.first.user_options %>" data-states-array="<%= @page_controls.payload.states %>" data-notify-array="<%= @page_controls.payload.notify_opts %>">
 
         <% @page_controls.payload.branch_workflow.each do |branch| %>
           <div class="col-md-3 branch-entry <%= branch[1] %>">
-            <div class="well well-sm">
-              <h4><%= branch[0] %></h4>
+            <div class="well well-sm" data-mh="entry-group">
+              <h4 class="pull-left"><%= branch[0] %></h4>
+
               <hr/>
               <div class="checkbox">
                 <label>
@@ -46,10 +47,11 @@
                   <input id="exp-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Experience]"> Experience
                 </label>
               </div>
-              <div class="checkbox">
-                <label>
-                  <input id="not-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Notification]"> Notification
-                </label>
+              <div class="form-group">
+                <label for="not-<%= branch[1] %>" class="control-label">Notification</label>
+                <select id="not-<%= branch[1] %>" multiple class="form-control selectpicker" name="member[<%= branch[1] %>][Notification][]">
+                  <%= options_for_select(['AdvCancel', 'FutCancel', 'Cancel']) %>
+                </select>
               </div>
               <!-- Make this a multi-select -->
               <div class="form-group">
@@ -64,18 +66,18 @@
 
         <!-- Add New Branch -->
         <div id="apply-branch-container" class="col-md-3">
-          <div class="well well-sm">
+          <div class="well well-sm" data-mh="entry-group">
             <h4>Branch Assignment</h4>
             <hr/>
             <div class="form-group">
               <label for="new-branch" class="control-label">Assign Branch</label>
               <select id="new-branch" class="form-control">
-                <%= options_for_select( @page_controls.payload.branches ) %>
+                <%= options_for_select( @page_controls.payload.branches.unshift( ['Choose Branch', 'blank'] ) ) %>
               </select>
             </div>
             <hr/>
-            <div style="text-align: center;">
-              <i class="fa fa-cubes" aria-hidden="true"></i>
+            <div style="text-align: center; padding-bottom: 6px; color: blue;">
+              <i class="fa fa-cubes fa-2x" aria-hidden="true"></i>
             </div>
             <div class="button">
               <button id="add-branch-btn" type="button" class="btn btn-info btn-block">Apply</button>
@@ -86,7 +88,7 @@
 
 
         <div class="col-md-3">
-          <div class="well well-sm">
+          <div class="well well-sm" data-mh="entry-group">
             <h4>Activity</h4>
             <hr/>
             <div class="form-group">
@@ -99,7 +101,7 @@
         </div>
 
         <div class="col-md-3">
-          <div class="well well-sm">
+          <div class="well well-sm" data-mh="entry-group">
             <h4>FileDownloads</h4>
             <hr/>
             <div class="form-group">
@@ -117,7 +119,7 @@
         <% if current_user_has_access?('#ContentProfileManagement') %>
             <div class="form-group">
               <div class="col-md-3  pull-right">
-                <button type="submit" name="commit" class="btn btn-primary btn-block">Update</button>
+                <button type="submit" name="commit" value="<%= @page_controls.payload.profile.username %>" class="btn btn-primary btn-block">Update</button>
               </div>
             </div>
         <% end %>

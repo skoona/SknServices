@@ -116,7 +116,8 @@ module Domains
            user_groups: SknSettings.Related.user_groups,
            partners: partners,
            branches: branches,
-           branch_workflow: branch_workflow
+           branch_workflow: branch_workflow,
+           notify_opts: ['AdvCancel', 'FutCancel', 'Cancel']
       }
 
       success = profile.present?
@@ -130,15 +131,17 @@ module Domains
 
     # Parameters: {
     #   "member"=>{
-    #       "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>"on", "LicensedStates"=>["16", "18", "19", "20"]},
-    #       "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>"on", "LicensedStates"=>["12", "13", "14"]},
-    #       "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>"on", "LicensedStates"=>["3", "5", "13", "14", "23", "24"]},
+    #       "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+    #       "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+    #       "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+    #       "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
     #       "activity"=>{"partners"=>["0099"]},
     #       "filedownload"=>{"usergroups"=>["EmployeePrimary", "EmployeeSecondary", "BranchPrimary"]}
     #   },
-    #   "commit"=>"",
+    #   "commit"=>"bstester",
     #   "id"=>"a1ee7b9492e31c922274babeddbc97c5"
     # }
+    # Absent if not clicked
     def member_update_package(params)
       success = true
       {

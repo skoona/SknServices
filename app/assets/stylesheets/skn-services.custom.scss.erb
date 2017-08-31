@@ -4,6 +4,9 @@
  *
  */
 
+/*
+ * Base Styling
+*/
 html {
   position: relative;
   min-height: 100%;
@@ -98,8 +101,21 @@ img {
   padding: 0 0 0 0;
 }
 
+/*
+ * Turn off JQuery.maxHeight on small screen
+ * Ref: https://scotch.io/quick-tips/different-tricks-on-how-to-make-bootstrap-columns-all-the-same-height
+*/
+@media only screen and (max-width: 768px) {
+  .box {
+    height: auto !important;
+  }
+}
 
 @media only screen and (min-width: 768px) {
+  .box {
+    height: auto !important;
+  }
+
   .galaxy-home { // .jumbotron.galaxy
     position: relative;
     background: #000 url("<%= image_path('galaxy-view-2007.jpg') %>") center center;
