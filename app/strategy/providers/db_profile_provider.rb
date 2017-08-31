@@ -35,6 +35,10 @@ module Providers
       condense_profile_entries(profile, user_profile, available_resource_catalog)
     end
 
+    def select_options_values_for_content_type(name)
+      ContentType.option_selects_by_type(name).first.last[:data][:opts].collect {|c| c.first }
+    end
+
     ##
     # Creation Methods
     ##

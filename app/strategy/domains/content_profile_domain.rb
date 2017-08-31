@@ -68,6 +68,8 @@ module Domains
           }
         end
 
+        content_enabled = content_profile[:entries].collect {|e| e[:content_type] }.uniq
+
         # :pak, :username, :display_name, booleans
         package <<  {
             package: {
@@ -75,12 +77,12 @@ module Domains
               username: content_profile[:username],
               display_name: content_profile[:display_name],
             },
-            commission: !!content_profile[:entries].detect {|entry| 'Commission'.eql?(entry[:content_type]) },
-            experience: !!content_profile[:entries].detect {|entry| 'Experience'.eql?(entry[:content_type]) },
-            notification: !!content_profile[:entries].detect {|entry| 'Notification'.eql?(entry[:content_type]) },
-            licensedstates: !!content_profile[:entries].detect {|entry| 'LicensedStates'.eql?(entry[:content_type]) },
-            activity: !!content_profile[:entries].detect {|entry| 'Activity'.eql?(entry[:content_type]) },
-            filedownloads: !!content_profile[:entries].detect {|entry| 'FileDownload'.eql?(entry[:content_type]) }
+            commission: content_enabled.include?('Commission'),
+            experience: content_enabled.include?('Experience'),
+            notification: content_enabled.include?('Notification'),
+            licensedstates: content_enabled.include?('LicensedStates'),
+            activity: content_enabled.include?('Activity'),
+            filedownloads: content_enabled.include?('FileDownload')
         }
       end
 
@@ -99,28 +101,49 @@ module Domains
     #    * Partner 0099, Activity
     #    * UserGroups:FileDownloads, [ Employee Primary, Employee Secondary, Branch Primary, Branch Secondary, Vendor Primary, Vendor Secondary ]
 
+    # Outputs
+    # package[:page] = {
+    #   :branch=>{
+    #       "0034"=>{:commission=>true, :experience=>true, :notification=>["AdvCancel", "FutCancel"], :licensed_states=>["21"]},
+    #       "0037"=>{:commission=>false, :experience=>false, :notification=>[], :licensed_states=>[]},
+    #       "0040"=>{:commission=>true, :experience=>true, :notification=>["AdvCancel", "FutCancel"], :licensed_states=>[]}},
+    #   :partner=>["0099"],
+    #   :user_groups=>["BranchPrimary", "EmployeeSecondary"]
+    # }
     def member_admin_package(params) # username
       up = get_page_user(params['username'])
       profile = db_profile_provider.content_profile_for_runtime(up, false)
 
       branch_preselects = up.user_options.select {|s|  (s.to_i > 0) and (s != '0099') }
+      partners = TopicTypeOpt.option_selects('Partner').collect {|tt| ["#{tt.first} | #{tt.last[:data][:description]}", tt.first] }
+      branches = TopicTypeOpt.option_selects('Branch').collect {|tt| ["#{tt.first} | #{tt.last[:data][:description]}", tt.first] }
+      branch_workflow = branches.select {|s| !!branch_preselects.detect {|c| c == s.second} }
+      notify_opts = db_profile_provider.select_options_values_for_content_type('Notification')
 
-      partners = []
-      SknSettings.Related.partners.to_h.each_pair {|k,v| partners << ["#{k.to_s} | #{v}", k.to_s] }
-
-      branches = []
-      SknSettings.Related.branches.to_h.each_pair {|k,v| branches << ["#{k.to_s} | #{v}", k.to_s] }
-
-      branch_workflow = branches.select {|s| !!branch_preselects.detect {|c| c == s[1]} }
+      items = {}
+      branch_preselects.each do |branch|
+        cpes = profile_cpes_for_topic(profile, branch, 'Branch')
+        items[branch] = {
+            commission: content_presence_from_profile_cpes_by_content_type( cpes, 'Commission'),
+            experience: content_presence_from_profile_cpes_by_content_type( cpes, 'Experience'),
+            notification: content_values_from_profile_cpes_by_content_type( cpes, 'Notification'),
+            licensed_states: content_values_from_profile_cpes_by_content_type( cpes, 'LicensedStates')
+        }
+      end
 
       package = {
+           page: {
+               branch: items,
+               partner: topic_values_from_profile_by_content_and_topic_types(profile, 'Activity', 'Partner'),
+               user_groups: topic_values_from_profile_by_content_and_topic_types(profile, 'FileDownload', 'UserGroups')
+           },
            profile: profile,
            states: db_profile_provider.long_state_name_options,
            user_groups: SknSettings.Related.user_groups,
            partners: partners,
            branches: branches.select {|s| !branch_preselects.include?(s[1]) },
            branch_workflow: branch_workflow,
-           notify_opts: ['AdvCancel', 'FutCancel', 'Cancel']
+           notify_opts: notify_opts
       }
 
       success = profile.present?
@@ -131,10 +154,22 @@ module Domains
       }
     end
 
+    def profile_cpes_for_topic(profile, topic_value, topic_type) # *, '0034', 'Branch'
+      profile[:entries].select {|p| p[:topic_value].include?(topic_value) and p[:topic_type].eql?(topic_type) }
+    end
+    def content_values_from_profile_cpes_by_content_type(cpes, content_type) # Notification, LicensedStates,
+      cpes.collect {|s| s[:content_value] if s[:content_type].eql?(content_type) }.compact.flatten.uniq
+    end
+    def content_presence_from_profile_cpes_by_content_type(cpes, content_type) # Commission, Experience
+      !!cpes.detect {|s| s[:content_type].eql?(content_type) }
+    end
+    def topic_values_from_profile_by_content_and_topic_types(profile, content_type, topic_type) # Activity::Partner, FileDownload::UserGroups
+      return [] unless profile.present? and profile[:entries].present?
+      profile[:entries].collect {|s| s[:topic_value] if s[:content_type].eql?(content_type) and s[:topic_type].eql?(topic_type) }.compact.flatten.uniq
+    end
 
     # Parameters: {
     #   "member"=>{
-    #       "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
     #       "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
     #       "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
     #       "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
@@ -144,7 +179,7 @@ module Domains
     #   "commit"=>"bstester",
     #   "id"=>"a1ee7b9492e31c922274babeddbc97c5"
     # }
-    # Absent if not clicked
+    # Absent if not clicked or selected
     def member_update_package(params)
       success = true
       {

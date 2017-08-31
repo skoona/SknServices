@@ -803,34 +803,37 @@ $(function() {
             /**
              * Manage Add Agency Feature
              */
-            $('#add-branch-btn').on('click', function(ev) {
-                var selected = $("#new-branch").find('option:selected').first();
-                if (selected.val() == 'blank') {
-                    return false;
-                }
-                SknService.addCardFor(selected.val(), selected.text());
-                $(ev.currentTarget).attr("disabled", true);
-                ev.stopPropagation();
-                $('div.branch-entry > div.well-sm').matchHeight();
-                $.fn.matchHeight._update();
 
-                /* allow for added card to be removed */
-                branchRemovalSetup()
+            if ($('#apply-branch-container').length == 0) {
 
-                return false;
-            });
+              $('#add-branch-btn').on('click', function (ev) {
+                  var selected = $("#new-branch").find('option:selected').first();
+                  if (selected.val() == 'blank') {
+                      return false;
+                  }
+                  SknService.addCardFor(selected.val(), selected.text());
+                  $(ev.currentTarget).attr("disabled", true);
+                  ev.stopPropagation();
+                  $('div.branch-entry > div.well-sm').matchHeight();
+                  $.fn.matchHeight._update();
 
-            $('#new-branch').on('changed.bs.select', function (ev, clickedIndex, newValue, oldValue) {
-                /* fires only when changed: new/old are booleans and irrelevant */
-                if (newValue) {
-                    $('#add-branch-btn').removeAttr("disabled");
-                }
-                return false;
-            });
+                  /* allow for added card to be removed */
+                  branchRemovalSetup()
 
-            $('#add-branch-btn').attr("disabled", true);
+                  return false;
+              });
 
+              $('#new-branch').on('changed.bs.select', function (ev, clickedIndex, newValue, oldValue) {
+                  /* fires only when changed: new/old are booleans and irrelevant */
+                  if (newValue) {
+                      $('#add-branch-btn').removeAttr("disabled");
+                  }
+                  return false;
+              });
 
+              $('#add-branch-btn').attr("disabled", true);
+
+            }
             /* Keep Container at same height */
             $('div.well-sm[data-mh="entry-group"]').matchHeight();
             $.fn.matchHeight._update();

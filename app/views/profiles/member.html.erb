@@ -39,25 +39,25 @@
               <hr/>
               <div class="checkbox">
                 <label>
-                  <input id="com-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Commission]"> Commission
+                  <input id="com-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Commission]" <%= @page_controls.payload.page.branch[branch[1]].commission ? 'checked' : '' %>> Commission
                 </label>
               </div>
               <div class="checkbox">
                 <label>
-                  <input id="exp-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Experience]"> Experience
+                  <input id="exp-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Experience]" <%= @page_controls.payload.page.branch[branch[1]].experience ? 'checked' : '' %>> Experience
                 </label>
               </div>
               <div class="form-group">
                 <label for="not-<%= branch[1] %>" class="control-label">Notification</label>
                 <select id="not-<%= branch[1] %>" multiple class="form-control selectpicker" name="member[<%= branch[1] %>][Notification][]">
-                  <%= options_for_select( @page_controls.payload.notify_opts ) %>
+                  <%= options_for_select( @page_controls.payload.notify_opts, @page_controls.payload.page.branch[branch[1]].notification ) %>
                 </select>
               </div>
               <!-- Make this a multi-select -->
               <div class="form-group">
                 <label for="lc-<%= branch[1] %>" class="control-label">Licensed States</label>
                 <select id="lc-<%= branch[1] %>" multiple class="form-control selectpicker" data-live-search="true" name="member[<%= branch[1] %>][LicensedStates][]">
-                  <%= options_for_select( @page_controls.payload.states ) %>
+                  <%= options_for_select( @page_controls.payload.states, @page_controls.payload.page.branch[branch[1]].licensed_states ) %>
                 </select>
               </div>
             </div>
@@ -65,25 +65,27 @@
         <% end %>
 
         <!-- Add New Branch -->
-        <div id="apply-branch-container" class="col-md-3">
-          <div class="well well-sm" data-mh="entry-group">
-            <h4>Branch Assignment</h4>
-            <hr/>
-            <div class="form-group">
-              <label for="new-branch" class="control-label">Assign Branch</label>
-              <select id="new-branch" class="form-control">
-                <%= options_for_select( @page_controls.payload.branches.unshift( ['Choose Branch', 'blank'] ) ) %>
-              </select>
-            </div>
-            <hr/>
-            <div style="text-align: center; padding-bottom: 6px; color: blue;">
-              <i class="fa fa-cubes fa-2x" aria-hidden="true"></i>
-            </div>
-            <div class="button">
-              <button id="add-branch-btn" type="button" class="btn btn-info btn-block">Apply</button>
+        <% if @page_controls.payload.branches.size > 0 %>
+          <div id="apply-branch-container" class="col-md-3">
+            <div class="well well-sm" data-mh="entry-group">
+              <h4>Branch Assignment</h4>
+              <hr/>
+              <div class="form-group">
+                <label for="new-branch" class="control-label">Assign Branch</label>
+                <select id="new-branch" class="form-control">
+                  <%= options_for_select( @page_controls.payload.branches.unshift( ['Choose Branch', 'blank'] ) ) %>
+                </select>
+              </div>
+              <hr/>
+              <div style="text-align: center; padding-bottom: 6px; color: blue;">
+                <i class="fa fa-cubes fa-2x" aria-hidden="true"></i>
+              </div>
+              <div class="button">
+                <button id="add-branch-btn" type="button" class="btn btn-info btn-block">Apply</button>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
 
 
 
@@ -94,7 +96,7 @@
             <div class="form-group">
               <label for="partners" class="control-label">Authorized Partners</label>
               <select id="partners" multiple class="form-control selectpicker" name="member[activity][partners][]">
-                <%= options_for_select( @page_controls.payload.partners ) %>
+                <%= options_for_select( @page_controls.payload.partners, @page_controls.payload.page.partner ) %>
               </select>
             </div>
           </div>
@@ -107,7 +109,7 @@
             <div class="form-group">
               <label for="filedownload" class="control-label">Allowed UserGroups</label>
               <select id="filedownload" multiple class="form-control selectpicker" name="member[filedownload][usergroups][]">
-                <%= options_for_select( @page_controls.payload.user_groups ) %>
+                <%= options_for_select( @page_controls.payload.user_groups, @page_controls.payload.page.user_groups ) %>
               </select>
             </div>
           </div>
