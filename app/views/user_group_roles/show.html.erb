@@ -1,19 +1,20 @@
 <% provide(:title, accessed_page_name) %>
 
-<header class="page-header">
-    <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
-
 <article>
-    <%= render @user_group_role %>
+  <section>
+      <h1 class="text-center"><%= accessed_page_name %></h1>
+  </section>
 
-    <% if action_name.eql?('show') %>
-        <section>
-            <% @user_group_role.user_roles.each do |usrr| %>
-                <%= render 'user_role', entry: usrr  %>
-            <% end %>
-        </section>
-    <% end %>
+  <section>
+      <%= render @user_group_role %>
 
+      <% if action_name.eql?('show') %>
+          <section>
+              <% @user_group_role.user_roles.each do |usrr| %>
+                  <%= render 'user_role', entry: usrr  %>
+              <% end %>
+          </section>
+      <% end %>
+  </section>
 </article>
 

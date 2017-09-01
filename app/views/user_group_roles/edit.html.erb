@@ -1,10 +1,11 @@
 <% provide(:title, accessed_page_name) %>
 
+<article>
+  <section>
+      <h1 class="text-center"><%= accessed_page_name %></h1>
+  </section>
 
-<header class="page-header">
-    <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
-
-<section>
-  <%= render 'form' %>
-</section>
+  <section>
+    <%= render 'form' %>
+  </section>
+</article>
