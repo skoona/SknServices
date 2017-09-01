@@ -237,7 +237,6 @@
             </authorizedRoles>
         </permission>
     </resource>
-
     <resource secured="true">
         <uri>profiles/api_get_content_object</uri>
         <description>Retrieve Inspection Content</description>
@@ -247,10 +246,21 @@
             </authorizedRoles>
         </permission>
     </resource>
+    <resource secured="true">
+        <uri>profiles/api_content_profiles</uri>
+        <description>Profile Manipulation Services API.JSON</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
 
     <resource secured="true">
         <uri>profiles/runtime_demo</uri>
-        <description>Runtime Demonstration</description>
+        <description>ContentProfiles In Action</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.ResetPassword</authorizedRole>
@@ -260,7 +270,7 @@
 
     <resource secured="true">
         <uri>profiles/content_profile_demo</uri>
-        <description>ContentProfile In Action</description>
+        <description>Profiles In Action</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
@@ -272,7 +282,7 @@
 
     <resource secured="true">
         <uri>profiles/members</uri>
-        <description>Members Administration</description>
+        <description>Members Admin</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
@@ -283,7 +293,7 @@
     </resource>
     <resource secured="true">
         <uri>profiles/member</uri>
-        <description>Member Administration</description>
+        <description>Member Admin</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
@@ -305,20 +315,8 @@
     </resource>
 
     <resource secured="true">
-        <uri>profiles/api_content_profiles</uri>
-        <description>Profile Manipulation Services API.JSON</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
-    <resource secured="true">
         <uri>profiles/manage_content_profiles</uri>
-        <description>Manage Content Profiles</description>
+        <description>ContentProfile Management</description>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>

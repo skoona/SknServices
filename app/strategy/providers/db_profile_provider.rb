@@ -38,10 +38,103 @@ module Providers
     def select_options_values_for_content_type(name)
       ContentType.option_selects_by_type(name).first.last[:data][:opts].collect {|c| c.first }
     end
+    def select_options_by_topic_name(name)
+      TopicTypeOpt.option_selects(name).collect {|tt| ["#{tt.first} | #{tt.last[:data][:description]}", tt.first] }
+    end
 
     ##
     # Creation Methods
     ##
+
+    def parse_member_update_params(params)
+      # c_name, [c_value], t_type, [t_value]
+      choices = []
+
+      activity = params['member'].delete('activity') if params.dig('member', 'activity')
+      if activity
+        content_values = ContentTypeOpt.where(type_name: 'Activity').pluck(:value)
+        activity['partners'].each do |a|
+          if content_values.size < 2
+            choices << [ 'Activity', content_values, 'Partner', [a] ]
+          else
+            content_values.each {|x| choices << [ 'Activity', [x], 'Partner', [a] ] }
+          end
+        end
+      end
+
+      filedownload = params['member'].delete('filedownload') if params.dig('member', 'filedownload')
+      if filedownload
+        content_values = ContentTypeOpt.where(type_name: 'FileDownload').pluck(:value)
+        filedownload['usergroups'].each do |a|
+          if content_values.size < 2
+            choices << ['FileDownload', content_values, 'UserGroups', [a]]
+          else
+            content_values.each {|x| choices << ['FileDownload', [x], 'UserGroups', [a]] }
+          end
+        end
+      end
+
+      params['member'].each_pair do |cv,pkg|
+        pkg.each_pair do |k,v|
+          case k
+            when 'Commission', 'Experience'
+              vals = ContentTypeOpt.where(type_name: k).pluck(:value)
+              if vals.size < 2
+                choices << [ k, vals , 'Branch', [cv] ]
+              else
+                vals.each {|x| choices << [ k, [x] , 'Branch', [cv] ] }
+              end
+            when 'Notification', 'LicensedStates'
+              if v.size < 2
+                choices << [ k, v , 'Branch', [cv] ]
+              else
+                v.each {|x| choices << [ k, [x], 'Branch', [cv] ] }
+              end
+            else
+              puts "IGNORED: #{k} => #{v}"
+          end
+        end
+      end
+
+      choices
+    end
+
+    # [
+    #   [ c_name, [c_value], t_type, [t_value] ]
+    # ]
+    # Expects ?_values to be max-size of 1
+    def apply_member_updates(pak, choices)
+      content_profile = ContentProfile.find_by(person_authentication_key: pak)
+      return false unless content_profile
+      cpes = []
+      choices.each do |choice|
+        things = []
+        things = ContentProfileEntry.where(topic_type: choice[2], content_type: choice[0]).select do |s|
+          choice[3].eql?(s.topic_value) and choice[1].eql?(s.content_value)
+        end
+        if things.present?
+          cpes << things.compact.first    # only need one
+        else
+          cdesc = ContentType.find_by(name: choice.first).try(:description)
+          tdesc = TopicType.find_by(name: choice[2]).try(:description)
+          desc = "#{cdesc} for #{choice[2]}"
+          cpes << ContentProfileEntry.create!({
+              description: desc,
+              content_value: choice[1],
+              content_type: choice[0],
+              content_type_description: cdesc,
+              topic_value: choice[3],
+              topic_type: choice[2],
+              topic_type_description: tdesc
+          })
+        end
+      end
+      rc = content_profile.content_profile_entries = cpes.flatten
+      Rails.logger.debug "#{self.class.name}.#{__method__}() saving: #{choices.size} entries returned #{rc.present?}"
+
+      rc.present?
+    end
+
 
     #   "id"=>"profile entry id",
     #   "pak"=>"72930134e6222904010dd4d6fb5f1887",
@@ -132,6 +225,7 @@ module Providers
     ##
     # ContentProfile
     ##
+
 
 
     def condense_profile_entries(profile, user_profile, avail = true)

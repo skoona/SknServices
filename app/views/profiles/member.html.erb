@@ -29,7 +29,7 @@
 
   <section>
     <%= form_tag(member_update_profile_path(id: @page_controls.payload.profile.pak), method: :put) do -%>
-      <div id="user-anchor" class="well col-md-offset-1 col-md-10" data-user-options="<%= @page_controls.payload.profile.entries.first.user_options %>" data-states-array="<%= @page_controls.payload.states %>" data-notify-array="<%= @page_controls.payload.notify_opts %>">
+      <div id="user-anchor" class="well col-md-12" data-user-options="<%= @page_controls.payload.user_options %>" data-states-array="<%= @page_controls.payload.states %>" data-notify-array="<%= @page_controls.payload.notify_opts %>">
 
         <% @page_controls.payload.branch_workflow.each do |branch| %>
           <div class="col-md-3 branch-entry <%= branch[1] %>">
@@ -88,7 +88,6 @@
         <% end %>
 
 
-
         <div class="col-md-3">
           <div class="well well-sm" data-mh="entry-group">
             <h4>Activity</h4>
@@ -117,7 +116,7 @@
 
       </div>
 
-      <div class="col-md-11">
+      <div class="col-md-12">
         <% if current_user_has_access?('#ContentProfileManagement') %>
             <div class="form-group">
               <div class="col-md-3  pull-right">

@@ -20,7 +20,7 @@ class TopicType < ApplicationRecord
   def self.option_selects
     options = []
     self.find_each do |tts|
-      options << [tts.name, tts.id, {data: {description: tts.description, opts: tts.option_selects.to_json}}]
+      options << [tts.name, tts.id, {data: {description: tts.description, opts: tts.option_selects}}]
     end
     options
   end

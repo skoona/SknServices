@@ -20,7 +20,7 @@
       <% @page_controls.payload.display_groups.each_with_index do |cpe, idx| -%>
 
         <div class="col-md-6">
-          <div class="panel panel-primary">
+          <div class="panel panel-primary" style="padding-bottom: 6px;" >
             <div class="panel-heading" role="tab" id="heading<%= cpe.topic_type %><%= cpe.content_type %>">
               <h4 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= cpe.topic_type %><%= cpe.content_type %>" aria-expanded="true" aria-controls="collapse<%= cpe.topic_type %><%= cpe.content_type %>">
@@ -32,7 +32,7 @@
               <div class="panel-body bg-warning" style="max-height:298px; overflow: auto;">
                   <% cpe.content.each do |ctn| -%>
 
-                    <div class="well well-sm col-md-6 runtime-item bg-warning" data-package="<%= ctn.to_json %>">
+                    <div class="well well-sm col-md-6 runtime-item bg-warning" data-package="<%= ctn.to_json %>"  data-mh="files-group">
                         <div class="text-center">
                           <%= choose_content_icons(ctn) %>
                         </div>

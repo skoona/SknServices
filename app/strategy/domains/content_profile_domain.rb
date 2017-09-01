@@ -46,6 +46,7 @@ module Domains
     #  #display_name   True/False  True/False  True/False    True/False      True/False  True/False
     def members_admin_package
       package = []
+      msg = ""
 
       Secure::UserProfile.page_users(PROFILE_CONTEXT).each do |u|
 
@@ -54,18 +55,9 @@ module Domains
         content_profile = db_profile_provider.content_profile_for_runtime(u, false)
 
         unless content_profile.present?
-          content_profile = {
-              success: false,
-              username: u.username,
-              display_name: u.display_name,
-              email: u.email,
-              pak: u.person_authenticated_key,
-              authentication_provider: 'SknService::Bcrypt',
-              assigned_group: u.assigned_groups,
-              user_options: u.user_options,
-              profile_type_description: "",
-              entries: []
-          }
+          db_profile_provider.create_content_profile_for(u, u.user_options.first.is_a?(String) ? u.user_options.first : 'EmployeeSecondary' )
+          content_profile = db_profile_provider.content_profile_for_runtime(u, false)
+          msg = "Created ContentProfile for #{u.display_name}"
         end
 
         content_enabled = content_profile[:entries].collect {|e| e[:content_type] }.uniq
@@ -89,7 +81,7 @@ module Domains
       success = package.present?
       {
           success: success,
-          message: (success ? "" : "No Information Available.  Please contact Customer Service with any questions."),
+          message: (success ? msg : "No Information Available.  Please contact Customer Service with any questions."),
           display_groups: (success ? package : [])
       }
     end
@@ -109,14 +101,15 @@ module Domains
     #       "0040"=>{:commission=>true, :experience=>true, :notification=>["AdvCancel", "FutCancel"], :licensed_states=>[]}},
     #   :partner=>["0099"],
     #   :user_groups=>["BranchPrimary", "EmployeeSecondary"]
-    # }
+    # } ...
     def member_admin_package(params) # username
+      msg = ""
       up = get_page_user(params['username'])
       profile = db_profile_provider.content_profile_for_runtime(up, false)
 
       branch_preselects = up.user_options.select {|s|  (s.to_i > 0) and (s != '0099') }
-      partners = TopicTypeOpt.option_selects('Partner').collect {|tt| ["#{tt.first} | #{tt.last[:data][:description]}", tt.first] }
-      branches = TopicTypeOpt.option_selects('Branch').collect {|tt| ["#{tt.first} | #{tt.last[:data][:description]}", tt.first] }
+      partners = db_profile_provider.select_options_by_topic_name('Partner')
+      branches = db_profile_provider.select_options_by_topic_name('Branch')
       branch_workflow = branches.select {|s| !!branch_preselects.detect {|c| c == s.second} }
       notify_opts = db_profile_provider.select_options_values_for_content_type('Notification')
 
@@ -143,13 +136,14 @@ module Domains
            partners: partners,
            branches: branches.select {|s| !branch_preselects.include?(s[1]) },
            branch_workflow: branch_workflow,
-           notify_opts: notify_opts
+           notify_opts: notify_opts,
+           user_options: up.user_options
       }
 
       success = profile.present?
       {
           success: success,
-          message: (success ? "" : "No Information available for #{params['username']}.  Please contact Customer Service with any questions."),
+          message: (success ? msg : "No Information available for #{params['username']}.  Please contact Customer Service with any questions."),
           display_groups: (success ? package : {})
       }
     end
@@ -180,14 +174,20 @@ module Domains
     #   "id"=>"a1ee7b9492e31c922274babeddbc97c5"
     # }
     # Absent if not clicked or selected
+    #
     def member_update_package(params)
-      success = true
+      # c_name, [c_value], t_type, [t_value]
+      choices = db_profile_provider.parse_member_update_params(params)
+
+      success = db_profile_provider.apply_member_updates(params['id'], choices)
       {
           success: success,
           message: (success ? "Update Completed" : "Update Failed"),
           package: {}
       }
     end
+
+
 
     # Returns:
     # [
@@ -352,7 +352,7 @@ module Domains
       else
         res[:message] = "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}"
       end
-      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
+      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res.size}"
 
       res
     end
@@ -426,7 +426,7 @@ module Domains
       else
         res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}, Options=#{user_profile.user_options.join(',')}"
       end
-      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
+      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res.size}"
 
       res
     end

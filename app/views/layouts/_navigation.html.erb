@@ -38,26 +38,27 @@
 
                             <% if current_user_has_access?('#ContentProfileManagement') %>
                                 <% if current_user_has_access?('profiles/manage_content_profiles') %>
-                                    <%= nav_link_icon("glyphicon-cog", "Build Content Profiles", manage_content_profiles_profiles_path) %>
+                                    <%= nav_link_icon("glyphicon-cog", "Developer's In Depth", manage_content_profiles_profiles_path) %>
                                 <% end %>
                             <% end %>
 
-                          <% if current_user_has_access?('#ContentProfileManagement') %>
-                                  <%= nav_link_icon("glyphicon-cog", "Member(s) Profile", members_profiles_path) %>
-                          <% end %>
+                            <% if current_user_has_access?('#Demonstration') %>
+                                <% if current_user_has_access?('profiles/content_profile_demo') %>
+                                    <%= nav_link_icon("glyphicon-cog", "Developer's In Action", content_profile_demo_profiles_path) %>
+                                <% end %>
+                            <% end %>
 
                             <%= nav_link_icon("glyphicon-cog", "System Information", details_sysinfo_pages_path) %>
                         </ul>
                     </li>
-                    <% if current_user_has_access?('#Demonstration') %>
-                        <% if current_user_has_access?('profiles/content_profile_demo') %>
-                            <%= nav_link_icon("glyphicon-eye-open", "ContentProfile", content_profile_demo_profiles_path) %>
-                        <% end %>
+                    <% if current_user_has_access?('#ContentProfileManagement') %>
+                        <%= nav_link_icon("glyphicon-eye-open", "Admin's View", members_profiles_path) %>
                     <% end %>
                 <% end %>
+
                 <% if current_user_has_access?('#RuntimeDemonstration') %>
                     <% if current_user_has_access?('profiles/runtime_demo') %>
-                        <%= nav_link_icon("glyphicon-eye-open", "Runtime", runtime_demo_profiles_path) %>
+                        <%= nav_link_icon("glyphicon-eye-open", "User's View", runtime_demo_profiles_path) %>
                     <% end %>
                 <% end %>
             </ul>

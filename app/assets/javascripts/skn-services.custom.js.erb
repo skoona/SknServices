@@ -842,6 +842,14 @@ $(function() {
 
         case 'runtime_demo':
             $('div.well.runtime-item').on("click", runtimeDemoGetObject);
+
+            $('div.well-sm[data-mh="files-group"]').matchHeight();
+            $.fn.matchHeight._update();
+
+            $('#accordion').on('show.bs.collapse', function() {
+                $.fn.matchHeight._update();
+            });
+
             break;
 
         case 'edit':

@@ -269,3 +269,47 @@ end
       {:content_value=>["*.jpg"], :content_type=>"FileDownload", :content_type_description=>"Project Related Resources", :topic_value=>["EmployeePrimary"], :topic_type=>"UserGroups", :topic_type_description=>"Shared access to project working files", :description=>"Shared access to project working files", :last_update=>"2017-08-30 09:46:02 AM", :id=>"content", :username=>"eptester", :user_options=>["EmployeePrimary", "0034", "0037", "0040", "0099"], :pak=>"5fc3c2432723209561e8a5f6e08ad22d"}
   ]
 }
+
+CPE CHOICES => [
+    ["Activity", ["*.pdf"], "Partner", ["0099"]],
+    ["FileDownload", "*.png", "UserGroups", ["EmployeePrimary"]],
+    ["FileDownload", "*.jpg", "UserGroups", ["EmployeePrimary"]],
+    ["FileDownload", "*.pdf", "UserGroups", ["EmployeePrimary"]],
+    ["FileDownload", "*.log", "UserGroups", ["EmployeePrimary"]],
+    ["Commission", ["*.pdf"], "Branch", ["0034"]],
+    ["Commission", ["*.csv"], "Branch", ["0034"]],
+    ["Experience", ["*.log"], "Branch", ["0034"]],
+    ["Notification", ["AdvCancel"], "Branch", ["0034"]],
+    ["Notification", ["FutCancel"], "Branch", ["0034"]],
+    ["Notification", ["Cancel"], "Branch", ["0034"]],
+    ["LicensedStates", ["9"], "Branch", ["0034"]],
+    ["LicensedStates", ["21"], "Branch", ["0034"]],
+    ["LicensedStates", ["23"], "Branch", ["0034"]],
+    ["Commission", ["*.pdf"], "Branch", ["0037"]],
+    ["Commission", ["*.csv"], "Branch", ["0037"]],
+    ["Experience", ["*.log"], "Branch", ["0037"]],
+    ["Notification", ["AdvCancel"], "Branch", ["0037"]],
+    ["Notification", ["FutCancel"], "Branch", ["0037"]],
+    ["Notification", ["Cancel"], "Branch", ["0037"]],
+    ["LicensedStates", ["21"], "Branch", ["0037"]],
+    ["LicensedStates", ["23"], "Branch", ["0037"]],
+    ["Commission",   ["*.pdf"], "Branch", ["0040"]],
+    ["Commission",   ["*.csv"], "Branch", ["0040"]],
+    ["Experience",   ["*.log"], "Branch", ["0040"]],
+    ["Notification", ["AdvCancel"], "Branch", ["0040"]],
+    ["Notification", ["FutCancel"], "Branch", ["0040"]],
+    ["Notification", ["Cancel"], "Branch", ["0040"]]
+]
+from
+
+Parameters: {
+    "member"=>{
+        "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["AdvCancel", "FutCancel", "Cancel"], "LicensedStates"=>["9", "21", "23"]},
+        "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["AdvCancel", "FutCancel", "Cancel"], "LicensedStates"=>["21", "23"]},
+        "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["AdvCancel", "FutCancel", "Cancel"]},
+        "activity"=>{"partners"=>["0099"]},
+        "filedownload"=>{"usergroups"=>["EmployeePrimary"]}
+    },
+    "commit"=>"eptester",
+    "id"=>"c1e40f082c968124ccacea27bf74c306"
+}
