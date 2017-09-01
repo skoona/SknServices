@@ -38,10 +38,6 @@ module Domains
       usrs
     end
 
-    def get_page_user(uname, context=PROFILE_CONTEXT)
-      page_user = Secure::UserProfile.page_user(uname, context)
-    end
-
     # Username,        Commission, Experience, Notification, LicensedStates, Activity,   FileDownloads
     #  #display_name   True/False  True/False  True/False    True/False      True/False  True/False
     def members_admin_package
@@ -108,10 +104,10 @@ module Domains
       profile = db_profile_provider.content_profile_for_runtime(up, false)
 
       branch_preselects = up.user_options.select {|s|  (s.to_i > 0) and (s != '0099') }
-      partners = db_profile_provider.select_options_by_topic_name('Partner')
-      branches = db_profile_provider.select_options_by_topic_name('Branch')
+      partners = db_profile_provider.member_topic_type_opts_select_options_with_description('Partner')
+      branches = db_profile_provider.member_topic_type_opts_select_options_with_description('Branch')
       branch_workflow = branches.select {|s| !!branch_preselects.detect {|c| c == s.second} }
-      notify_opts = db_profile_provider.select_options_values_for_content_type('Notification')
+      notify_opts = db_profile_provider.select_option_values_for_content_type('Notification')
 
       items = {}
       branch_preselects.each do |branch|
@@ -130,15 +126,17 @@ module Domains
                partner: topic_values_from_profile_by_content_and_topic_types(profile, 'Activity', 'Partner'),
                user_groups: topic_values_from_profile_by_content_and_topic_types(profile, 'FileDownload', 'UserGroups')
            },
-           profile: profile,
+           profile: profile.except(:entries),
            states: db_profile_provider.long_state_name_options,
-           user_groups: SknSettings.Related.user_groups,
+           user_groups: db_profile_provider.select_option_values_for_topic_type('UserGroups'),
            partners: partners,
            branches: branches.select {|s| !branch_preselects.include?(s[1]) },
            branch_workflow: branch_workflow,
            notify_opts: notify_opts,
            user_options: up.user_options
       }
+
+      pp package
 
       success = profile.present?
       {
@@ -178,7 +176,6 @@ module Domains
     def member_update_package(params)
       # c_name, [c_value], t_type, [t_value]
       choices = db_profile_provider.parse_member_update_params(params)
-
       success = db_profile_provider.apply_member_updates(params['id'], choices)
       {
           success: success,
@@ -263,14 +260,16 @@ module Domains
         usrs <<  content_profile.merge(profile_exist: content_profile[:success])
       end
       results = {
-        profile_type_options: ProfileType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        content_type_options: ContentType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1], s[2]]},
-        content_type_opts_options: ContentTypeOpt.option_selects('Commission').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        topic_type_options: TopicType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1], s[2]]},
-        topic_type_opts_options: TopicTypeOpt.option_selects('Branch').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        profile_type_options:       db_profile_provider.profile_type_select_options_with_description,
+        content_type_options:       db_profile_provider.content_type_select_options_with_description,
+        content_type_opts_options:  db_profile_provider.content_type_opts_select_options_with_description('Commission'),
+        topic_type_options:         db_profile_provider.topic_type_select_options_with_description,
+        topic_type_opts_options:    db_profile_provider.topic_type_opts_select_options_with_description('Branch'),
         package: usrs
       }
       Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package].present?}"
+
+      pp results
 
       results
     end

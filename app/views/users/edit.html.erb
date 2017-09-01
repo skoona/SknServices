@@ -1,31 +1,33 @@
 <% provide(:title, accessed_page_name) %>
 
-<header class="page-header">
-    <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
+<article>
+  <section>
+      <h1 class="text-center"><%= accessed_page_name %></h1>
+  </section>
 
 
-<div class="row">
-    <div class="form-control-static">
-        <%= gravatar_for(@user, size: 96, class: "img-responsive", alt: user.username) %>
-    </div>
-    <div class="form-control-static text-center">
-        <a href ="http://gravatar.com/emails">Change Picture</a>
-    </div>
-</div>
+  <section>
+      <div class="form-control-static">
+          <%= gravatar_for(@user, size: 96, class: "img-responsive", alt: user.username) %>
+      </div>
+      <div class="form-control-static text-center">
+          <a href ="http://gravatar.com/emails">Change Picture</a>
+      </div>
+  </section>
 
-<div class="row">
-    <%= simple_form_for(@user, :html => { :class => 'form form-horizontal' }) do |f| %>
-        <%= f.error_notification %>
+  <section>
+      <%= simple_form_for(@user, :html => { :class => 'form form-horizontal' }) do |f| %>
+          <%= f.error_notification %>
 
-        <div class="form-inputs">
-            <%= render 'fields', f:  f %>
-        </div>
+          <div class="form-inputs">
+              <%= render 'fields', f:  f %>
+          </div>
 
-        <div class="col-md-push-3 col-md-9">
-            <%= f.button :submit, class: 'btn btn-primary submit' %>
-            <%= link_to "Cancel", users_path, class: 'btn' %>
-        </div>
-    <% end %>
-</div>
+          <div class="col-md-push-3 col-md-9">
+              <%= f.button :submit, class: 'btn btn-primary submit' %>
+              <%= link_to "Cancel", users_path, class: 'btn' %>
+          </div>
+      <% end %>
+  </section>
 
+</article>

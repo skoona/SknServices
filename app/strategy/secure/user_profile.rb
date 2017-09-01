@@ -88,7 +88,14 @@ module Secure
     def dup_string_array(str_ary)
       [str_ary].flatten.reject(&:blank?).map() {|s| "#{s}"}
     end
-
+    def update_user_options!(options_to_add)
+      worker = proxy_u.user_options + @user_options + options_to_add
+      @user_options = worker.flatten.uniq
+      proxy_u.user_options = @user_options
+      rc = proxy_u.save
+      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{rc}) Saving update: #{@user_options}")
+      rc
+    end
 
     # Authenticate returns self, we need to override that return value to return us instead
     #   user.authenticate('notright')      # => false

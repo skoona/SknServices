@@ -27,5 +27,12 @@ class ContentTypeOpt < ApplicationRecord
     end
     options
   end
+  def self.option_selects_with_desc(name)
+    options = []
+    self.where(type_name: name).find_each do |r|
+      options << [ "#{r.value} : #{r.description}", r.id, {data: {description: r.description}}]
+    end
+    options
+  end
 
 end

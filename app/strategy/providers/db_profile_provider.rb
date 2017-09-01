@@ -35,13 +35,34 @@ module Providers
       condense_profile_entries(profile, user_profile, available_resource_catalog)
     end
 
-    def select_options_values_for_content_type(name)
+    def select_option_values_for_content_type(name)
       ContentType.option_selects_by_type(name).first.last[:data][:opts].collect {|c| c.first }
     end
     def select_options_by_topic_name(name)
       TopicTypeOpt.option_selects(name).collect {|tt| ["#{tt.first} | #{tt.last[:data][:description]}", tt.first] }
     end
+    def select_option_values_for_topic_type(name)
+      TopicTypeOpt.where(type_name: name).pluck(:value)
+    end
 
+    def profile_type_select_options_with_description
+      ProfileType.option_selects_with_desc
+    end
+    def content_type_select_options_with_description
+      ContentType.option_selects_with_desc
+    end
+    def topic_type_select_options_with_description
+      TopicType.option_selects_with_desc
+    end
+    def content_type_opts_select_options_with_description(name)
+      ContentTypeOpt.option_selects_with_desc(name)
+    end
+    def topic_type_opts_select_options_with_description(name)
+      TopicTypeOpt.option_selects_with_desc(name)
+    end
+    def member_topic_type_opts_select_options_with_description(name)
+      TopicTypeOpt.member_option_selects_with_desc(name)
+    end
     ##
     # Creation Methods
     ##
@@ -49,6 +70,7 @@ module Providers
     def parse_member_update_params(params)
       # c_name, [c_value], t_type, [t_value]
       choices = []
+      user_options_list = []
 
       activity = params['member'].delete('activity') if params.dig('member', 'activity')
       if activity
@@ -64,7 +86,7 @@ module Providers
 
       filedownload = params['member'].delete('filedownload') if params.dig('member', 'filedownload')
       if filedownload
-        content_values = ContentTypeOpt.where(type_name: 'FileDownload').pluck(:value)
+        content_values = ContentTypeOpt.where(type_name: 'FileDownload').pluck(:value).flatten
         filedownload['usergroups'].each do |a|
           if content_values.size < 2
             choices << ['FileDownload', content_values, 'UserGroups', [a]]
@@ -74,7 +96,9 @@ module Providers
         end
       end
 
-      params['member'].each_pair do |cv,pkg|
+
+      params['member'] && params['member'].each_pair do |cv,pkg|
+        user_options_list << cv
         pkg.each_pair do |k,v|
           case k
             when 'Commission', 'Experience'
@@ -96,24 +120,32 @@ module Providers
         end
       end
 
-      choices
+      if choices.empty?
+        []
+      else
+        choices.unshift(user_options_list)
+      end
+
     end
 
-    # [
+    # [ user_options_list,
     #   [ c_name, [c_value], t_type, [t_value] ]
     # ]
     # Expects ?_values to be max-size of 1
     def apply_member_updates(pak, choices)
       content_profile = ContentProfile.find_by(person_authentication_key: pak)
       return false unless content_profile
+      user_options_list = choices.shift unless choices.empty? || choices.first.try(:[], 1).is_a?(Array)
       cpes = []
+      rc = false
       choices.each do |choice|
         things = []
         things = ContentProfileEntry.where(topic_type: choice[2], content_type: choice[0]).select do |s|
           choice[3].eql?(s.topic_value) and choice[1].eql?(s.content_value)
-        end
+        end.compact
+
         if things.present?
-          cpes << things.compact.first    # only need one
+          cpes << things.first    # only need one
         else
           cdesc = ContentType.find_by(name: choice.first).try(:description)
           tdesc = TopicType.find_by(name: choice[2]).try(:description)
@@ -129,7 +161,18 @@ module Providers
           })
         end
       end
-      rc = content_profile.content_profile_entries = cpes.flatten
+      if cpes.flatten.compact.empty?
+        content_profile.content_profile_entries.clear
+        rc = true
+      else
+        rc = content_profile.content_profile_entries = cpes.flatten
+      end
+      if rc.present? and !!defined?(user_options_list)
+        user_profile = get_page_user(content_profile.username)
+        user_profile.update_user_options!( user_options_list )
+      end
+      delete_storage_object(pak)
+
       Rails.logger.debug "#{self.class.name}.#{__method__}() saving: #{choices.size} entries returned #{rc.present?}"
 
       rc.present?

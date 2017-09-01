@@ -65,6 +65,10 @@ module Providers
       end
     end
 
+    def get_page_user(uname, context=provider_type())
+      Secure::UserProfile.page_user(uname, context)
+    end
+
     protected
 
     ##

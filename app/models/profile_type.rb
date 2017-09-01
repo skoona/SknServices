@@ -22,4 +22,12 @@ class ProfileType < ApplicationRecord
     options
   end
 
+  def self.option_selects_with_desc
+    options = []
+    self.find_each do |pts|
+      options << ["#{pts.name} : #{pts.description}", pts.id]
+    end
+    options
+  end
+
 end

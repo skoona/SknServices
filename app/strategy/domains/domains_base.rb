@@ -65,6 +65,10 @@ module Domains
       @current_user ||= registry.current_user
     end
 
+    def get_page_user(uname, context=self.class.to_s)
+      Secure::UserProfile.page_user(uname, context)
+    end
+
   private
 
     # Easier to code than delegation, or forwarder

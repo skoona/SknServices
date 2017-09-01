@@ -131,6 +131,7 @@ SknServiceUtil.prototype = {
         try {
             /* does not exist */
             if (agencyNumber.length < 1 || title.length < 1 || $('#com-' + agencyNumber).length == 1) {
+                consoleLog('addCardFor(' + agencyNumber + ') Invalid!');
                 return false;
             }
 
@@ -166,6 +167,7 @@ SknServiceUtil.prototype = {
 
                 $('div.well-sm[data-mh="entry-group"]').matchHeight();
                 $.fn.matchHeight._update();
+                consoleLog('addCardFor(' + agencyNumber + ') Processed!');
             }
         } catch (e) {}
         return rc;
@@ -638,7 +640,10 @@ function handleManagementPages() {
     $('#mc-users-table tbody tr.profile').on('click', function (event) {
       var dataPackage = $(event.currentTarget).data().package;
 
-      /* maintain selected item on users table */
+
+      $('section h1 > small').text(dataPackage.display_name)
+
+        /* maintain selected item on users table */
       $('#mc-users-table tbody tr.profile').removeClass('success');
       $(event.currentTarget).addClass('success');
 
@@ -804,7 +809,7 @@ $(function() {
              * Manage Add Agency Feature
              */
 
-            if ($('#apply-branch-container').length == 0) {
+            if ($('#apply-branch-container').length > 0) {
 
               $('#add-branch-btn').on('click', function (ev) {
                   var selected = $("#new-branch").find('option:selected').first();
@@ -816,6 +821,8 @@ $(function() {
                   ev.stopPropagation();
                   $('div.branch-entry > div.well-sm').matchHeight();
                   $.fn.matchHeight._update();
+
+                  consoleLog('New Branch Button(' + selected.val() + ') called!');
 
                   /* allow for added card to be removed */
                   branchRemovalSetup()
