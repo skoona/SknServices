@@ -31,12 +31,12 @@ module Registry
       @registry.session[key] = value
     end
 
-  protected
-
     # Not required, simply reduces traffic since it is called often
     def current_user
       @current_user ||= registry.current_user
     end
+
+    protected
 
     # Support the regular respond_to? method by
     # answering for any method the controller actually handles

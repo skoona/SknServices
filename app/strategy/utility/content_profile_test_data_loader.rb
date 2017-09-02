@@ -310,7 +310,7 @@ module Utility
           },
           {name: "Partner", description: "This Corporate Account",  value_based_y_n: "N",
            topic_type_opts_attributes: {
-               "0" => {value: "0099", type_name: "Partner", description: "Skoona Development Account"}}
+               "0" => {value: "0099", type_name: "Partner", description: "Skoona Consulting Account"}}
           },
           {name: "UserGroups", description: "Shared access to project working files",  value_based_y_n: "N",
            topic_type_opts_attributes: {

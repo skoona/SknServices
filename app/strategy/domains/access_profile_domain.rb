@@ -7,6 +7,9 @@ module Domains
 
   class AccessProfileDomain < DomainsBase
 
+    PROFILE_CONTEXT='access'
+
+
     def reload_access_registry
       # hash = Secure::AccessRegistry.get_ar_permissions_hash
       # puts generate_xml_from_hash(hash, 'my_stuff', 'FileDownload/UserGroups/Pdf')

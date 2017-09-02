@@ -9,7 +9,7 @@ module Domains
   class ContentProfileDomain < DomainsBase
 
 
-    PROFILE_CONTEXT=""  # override in service
+    PROFILE_CONTEXT="content"  # override in service -- get_page_user(s) is affected by missing PROFILE_CONTEXT defined in Services, when testing domain directly rather than thru Service
 
     def runtime_demo_package
       profile = db_profile_provider.content_profile_for_runtime(current_user)
@@ -32,7 +32,10 @@ module Domains
                  display_name: u.display_name,
                  user_options: u.user_options || [],
                  get_content_object_url: page_action_paths([:api_get_content_object_profiles_path]),
-                 package: [ access_profile_package(u), content_profile_package(u) ]
+                 package: [
+                     access_profile_package(u),
+                     content_profile_package(u)
+                 ]
         }
       end
       usrs
@@ -337,21 +340,16 @@ module Domains
       @accessible_type = "access" # [:access, :content]
         raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
 
+      package = xml_profile_provider.content_profile_for_user(user_profile)
       res = {
-             success: true,
-             message: "",
+             success: package[:entries].present?,
+             message: package[:entries].present? ? package[:message] : "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}",
              user_options: (user_profile.user_options || []),
              accessible_content_url: page_action_paths([:api_accessible_content_profiles_path, {id: 'access', format: :json}]),
              page_user: user_profile.username,
-             access_profile: xml_profile_provider.content_profile_for_user(user_profile)
+             access_profile: package
       }
-      res[:success] = res[:access_profile][:entries].empty? ? false : true
-      unless res[:success]
-        res[:message] = res[:access_profile][:message]
-      else
-        res[:message] = "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}"
-      end
-      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res.size}"
+      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{package[:entries].size}"
 
       res
     end
@@ -411,20 +409,15 @@ module Domains
       @accessible_type = "content" # [:access, :content]
         raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
 
+      package = db_profile_provider.content_profile_for_user(user_profile)
       res = {
-         success: true,
-         message: "",
+         success: package[:entries].present?,
+         message: package[:entries].present? ? package[:message] : "ContentProfile Entry for #{user_profile.username}, #{package[:profile_type]}:#{package[:profile_type_description]}, Options=#{user_profile.user_options.join(',')}",
          user_options: (user_profile.user_options || []),
          accessible_content_url: page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
          page_user: user_profile.username,
-         content_profile: db_profile_provider.content_profile_for_user(user_profile)
+         content_profile: package
       }
-      res[:success] = res[:content_profile][:entries].empty? ? false : true
-      unless res[:success]
-        res[:message] = res[:content_profile][:message]
-      else
-        res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}, Options=#{user_profile.user_options.join(',')}"
-      end
       Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res.size}"
 
       res

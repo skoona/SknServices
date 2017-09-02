@@ -147,7 +147,7 @@ module Providers
       arobj = get_existing_profile(user_profile)
       return  arobj if arobj
 
-      results = {
+      package = {
           success: true,
           entries: collect_context_profile_entry(user_profile) || [],
           pak: user_profile.person_authenticated_key,
@@ -160,26 +160,26 @@ module Providers
           display_name: user_profile.display_name,
           email: user_profile.email
       }
-      if results[:entries].empty?
-        results = {
+      if package[:entries].empty?
+        package = {
             success: false,
             message: "No access profile data available for #{user_profile.display_name}",
             username: user_profile.username,
             entries:[]
         }
       end
-      unless results[:entries].empty?
-        results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
+      unless package[:entries].empty?
+        package[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      update_storage_object(user_profile.person_authenticated_key, results) if results[:success]
-      
-      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{results.to_hash.keys}")
-      results
-      
+      update_storage_object(user_profile.person_authenticated_key, package) if package[:success]
+
+      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{package.to_hash.keys}")
+      package
+
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       delete_storage_object(user_profile.person_authenticated_key) if user_profile.present?
-      results = {
+      package = {
           success: false,
           message: e.message,
           username: "unknown",
@@ -189,6 +189,70 @@ module Providers
 
     def collect_context_profile_entry(usrp)
       Secure::AccessRegistry.get_resource_content_entries(usrp.combined_access_roles, usrp.user_options )
+    end
+
+    ##
+    # generate xml from a regular hash, with/out arrays
+    def generate_xml_from_hash(hash, base_type, collection_key)
+      builder = Nokogiri::XML::Builder.new do |xml|
+        xml.send(base_type) { process_simple_array(collection_key, hash, xml) }
+      end
+
+      builder.to_xml
+    end
+
+    ##
+    # generate xml from a hash of hashes or array of hashes
+    def generate_xml_from_nested_hashes(data, parent = false, opt = {})
+      return if data.to_s.empty?
+      return unless data.is_a?(Hash)
+
+      unless parent
+        # assume that if the hash has a single key that it should be the root
+        root, data = (data.length == 1) ? data.shift : ["root", data]
+        builder = Nokogiri::XML::Builder.new(opt) do |xml|
+          xml.send(root) {
+            generate_xml(data, xml)
+          }
+        end
+
+        return builder.to_xml
+      end
+
+      data.each { |label, value|
+        if value.is_a?(Hash)
+          attrs = value.fetch('@attributes', {})
+          # also passing 'text' as a key makes nokogiri do the same thing
+          text = value.fetch('@text', '')
+          parent.send(label, attrs, text) {
+            value.delete('@attributes')
+            value.delete('@text')
+            generate_xml(value, parent)
+          }
+
+        elsif value.is_a?(Array)
+          value.each { |el|
+            # lets trick the above into firing so we do not need to rewrite the checks
+            el = {label => el}
+            generate_xml(el, parent)
+          }
+
+        else
+          parent.send(label, value)
+        end
+      }
+    end
+
+    private
+
+    # support for #generate_xml_from_hash
+    def process_simple_array(label,array,xml)
+      array.each do |hash|
+        kids,attrs = hash.partition{ |k,v| v.is_a?(Array) }
+        xml.send(label,Hash[attrs]) do
+          kids.each{ |k,v| process_array(k,v,xml) }
+        end
+      end
     end
 
   end

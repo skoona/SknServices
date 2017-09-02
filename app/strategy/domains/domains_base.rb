@@ -60,12 +60,7 @@ module Domains
       Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
-    # Not required, simply reduces traffic since it is called often
-    def current_user
-      @current_user ||= registry.current_user
-    end
-
-    def get_page_user(uname, context=self.class.to_s)
+    def get_page_user(uname, context=self.class.name)
       Secure::UserProfile.page_user(uname, context)
     end
 
