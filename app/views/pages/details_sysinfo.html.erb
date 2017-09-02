@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-default sys-table">
             <div class="panel-heading" role="tab" id="headingThree">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
@@ -96,7 +96,7 @@
                 <div class="panel-body">
                     <h4 id="access">XML AccessRegistry Resource Listing </h4>
                 </div>
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover sys-table">
                     <thead class="bg-primary">
                       <th>Index</th>
                       <th>URI</th>
@@ -117,7 +117,7 @@
                 </table>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-default sys-table">
             <div class="panel-heading" role="tab" id="headingFour">
                 <h4 class="panel-title">
                     <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseTwo">
@@ -130,7 +130,7 @@
                 <div class="panel-body">
                     <h4 id="access">XML AccessRegistry Content Listing </h4>
                 </div>
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover sys-table">
                     <thead class="bg-primary">
                       <th>Index</th>
                       <th>URI</th>
@@ -374,22 +374,23 @@
                 <div class="alert alert-warning" role="alert">No Authorized User</div>
             <% end %>
           </div>
-          <% if @page_controls.apis_enabled %>
-            <div class="well">
-              <%= link_to "Purge Object Storage items older than 10 minutes",  api_sysinfo_actions_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
-            </div>
-          <% end %>
-
-          <% if @page_controls.authenticated_user and @page_controls.apis_enabled %>
-              <div class="well">
-                <%= link_to "Reload AccessRegistry",  api_sysinfo_actions_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
-              </div>
-          <% else %>
-              <div class="alert alert-warning" role="alert">No Authorized User</div>
-          <% end %>
-
         </div>
       </div>
     </div>
+
+    <% if @page_controls.apis_enabled %>
+        <div class="well">
+          <%= link_to "Purge Object Storage items older than 10 minutes",  api_sysinfo_actions_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
+        </div>
+    <% end %>
+
+    <% if @page_controls.authenticated_user and @page_controls.apis_enabled %>
+        <div class="well">
+          <%= link_to "Reload AccessRegistry",  api_sysinfo_actions_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
+        </div>
+    <% else %>
+        <div class="alert alert-warning" role="alert">No Authorized User</div>
+    <% end %>
+
 </article>
 

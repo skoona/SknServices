@@ -92,7 +92,7 @@ module Secure
       worker = proxy_u.user_options + @user_options + options_to_add
       @user_options = worker.flatten.uniq
       proxy_u.user_options = @user_options
-      rc = proxy_u.save
+      rc = proxy_u.save!
       Rails.logger.debug("  #{self.class.name}.#{__method__}(#{rc}) Saving update: #{@user_options}")
       rc
     end
@@ -110,7 +110,7 @@ module Secure
       return self if prepare_only
       self.last_access = Time.zone.now
       delete_storage_object(person_authenticated_key.to_sym)
-      proxy_u.save
+      proxy_u.save!
       true
     end
 

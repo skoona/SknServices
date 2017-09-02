@@ -136,7 +136,7 @@ module Domains
            user_options: up.user_options
       }
 
-      pp package
+      # pp package
 
       success = profile.present?
       {
@@ -269,7 +269,7 @@ module Domains
       }
       Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package].present?}"
 
-      pp results
+      # pp results
 
       results
     end

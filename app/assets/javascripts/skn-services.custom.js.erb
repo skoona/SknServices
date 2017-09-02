@@ -753,19 +753,19 @@ $(function() {
     switch (controllerAction) {
         case 'members':
             membersTable = $('#members-table').DataTable({
-                dom: "<'row'<'small-6 columns'B><'small-6 columns'f>>tr<'row'<'small-12 columns'ip>>",// dom: 'tr<"bottom align-justify"ip>',
+                dom: "<'row'<'col-md-offset-4 col-md-4'f>>tr<'row'<'col-md-12'ip>>",// dom: 'tr<"bottom align-justify"ip>',
                 order: [[0, 'asc']],
-                lengthChange: false,
+                lengthChange: true,
                 ordering: false,
                 paging: true,
                 processing: true,
                 searching: true,
                 scrollY: "",
-                pageLength: 6,
+                pageLength: 10,
                 scrollCollapse: false,
                 scroller: true,
                 language: {
-                    emptyTable: "Please make a choice from content table above."
+                    emptyTable: "No Profiles to Display!"
                 },
                 drawCallback: function(settings) {
                     try {
@@ -874,16 +874,25 @@ $(function() {
             $('h2 > a.btn-lg').on('click', handleRailsInfo);
 
 
-          siStorageTable = $('#storage-table').DataTable({
-            scrollY: "420px",
-            language: {
-              emptyTable: "ObjectStorage is Empty!"
-            }
-          });
+            siStorageTable = $('#storage-table').DataTable({
+              scrollY: "420px",
+              language: {
+                emptyTable: "ObjectStorage is Empty!"
+              }
+            });
 
-          $('#obs-panel').on('shown.bs.collapse', function () {
-            siStorageTable.draw();
-          });
+            $('table.sys-table').DataTable({
+                scrollY: "",
+                language: {
+                    emptyTable: "No Profiles to Display!"
+                }
+            });
+
+            $('#obs-panel, div.panel.sys-table').on('shown.bs.collapse', function () {
+              siStorageTable.draw();
+                $('table.sys-table').DataTable().draw();
+                consoleLog("Draw() on Panel Shown for DataTables");
+            });
 
             break;
         case 'manage_content_profiles':

@@ -13,6 +13,7 @@ module Services
     ##
 
     def get_user_form_options
+      pp __method__, params
       SknUtils::NestedResult.new({
          groups: group_select_options,
          roles: role_select_options
@@ -20,6 +21,7 @@ module Services
     end
 
     def handle_users_index
+      pp __method__, params
       result = { counter: 0,
                  users: User.paginate(page: params[:page], :per_page => 16)
       }
@@ -32,6 +34,7 @@ module Services
 
 
     def reset_password(params)
+      pp __method__, params
       user = User.find(params[:id])  # id is a :password_reset_token
       if user.password_reset_date > 2.hours.ago       # MEANS LESS THAN TWO HOURS AGO
         user.regenerate_remember_token!
@@ -57,12 +60,8 @@ module Services
       SknUtils::NestedResult.new(bean)
     end
 
-    def permitted(params)
-      params.required(:user).permit(:password_confirmation, :password,
-                                    :remember_token, :remember_token_digest)
-    end
-
     def reset_requested(params)
+      pp __method__, params
       usr = User.find_by(username: params[:user][:username])
       raise Utility::Errors::InvalidCredentialError, "Sorry, your username cannot be found." if usr.nil?
       send_password_reset(usr)
@@ -80,26 +79,16 @@ module Services
       })
     end
 
-    def send_password_reset(user)
-      user.generate_unique_token(:password_reset_token)
-      user.regenerate_remember_token!
-      user.password_reset_date = Time.zone.now
-      user.save!
-      password_mailer(user)
-    end
-
-    def password_mailer(user)
-      UserMailer.password_reset(user).deliver_now
-    end
-
     ##
     # Pages Controller Methods
     ##
 
     def handle_system_information_api(params)
+      pp __method__, params
+      package = system_actions_api(params)
       SknUtils::NestedResult.new({
-                                     success: true,
-                                     message: system_actions_api(params)
+                                     success: package.present?,
+                                     message: package
                                  })
     rescue Exception => e
       Rails.logger.warn "#{self.class.name}.#{__method__}(#{params['id']}) Klass: #{e.class.name}, Cause: #{e.message}, stack: #{e.backtrace[0..8]}"
@@ -110,8 +99,9 @@ module Services
     end
 
     def handle_system_information(params)
-
-      SknUtils::NestedResult.new( generate_system_info_bundle )
+      pp __method__, params
+      package = generate_system_info_bundle
+      SknUtils::NestedResult.new( package )
 
     rescue Exception => e
       Rails.logger.warn "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message}, stack: #{e.backtrace[0..8]}"
@@ -125,6 +115,26 @@ module Services
           resource_entries: [],
           content_entries: []
       })
+    end
+
+    # Protected from Here
+
+    def permitted(params)
+      params.required(:user).permit(:password_confirmation, :password,
+                                    :remember_token, :remember_token_digest)
+    end
+
+    def send_password_reset(user)
+      user.generate_unique_token(:password_reset_token)
+      user.regenerate_remember_token!
+      user.password_reset_date = Time.zone.now
+      user.save!
+      password_mailer(user)
+    end
+
+    def password_mailer(user)
+      pp __method__, params
+      UserMailer.password_reset(user).deliver_now
     end
 
 

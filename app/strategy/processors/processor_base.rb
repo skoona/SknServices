@@ -36,23 +36,6 @@ module Processors
       Mime::Type.lookup_by_extension(extname).to_str rescue 'application/octet-stream'
     end
 
-    ##
-    # Transaction request enables caller to execute public methods on this object
-    #
-    # provider.transaction_request(self) do |prov|
-    #   prov.provider_method(params)
-    #   prov.special_provider_method_that_needs_a_callback(callback, params)
-    # end
-    #
-    def transaction_request(callback, &block)
-      block.call(self)
-      Rails.logger.debug "transaction_request(Complete) for #{callback.class.name}"
-      true
-    rescue Exception => e
-      Rails.logger.debug "transaction_request(EXCEPTION) #{e.class.name.to_s} #{e.message} #{e.backtrace[0..3].join("\n")}"
-      false
-    end
-
   protected
 
     def get_page_user(uname, context=nil)

@@ -133,6 +133,7 @@ module Providers
     # ]
     # Expects ?_values to be max-size of 1
     def apply_member_updates(pak, choices)
+      rc = false
       content_profile = ContentProfile.find_by(person_authentication_key: pak)
       return false unless content_profile
 
@@ -144,37 +145,42 @@ module Providers
         return true    # early exit if nothing to do
       end
 
-      cpes = []
-      rc = false
-      choices.each do |choice|
-        things = []
-        things = ContentProfileEntry.where(topic_type: choice[2], content_type: choice[0]).select do |s|
-          choice[3].eql?(s.topic_value) and choice[1].eql?(s.content_value)
-        end.compact
+      ActiveRecord::Base.transaction do
 
-        if things.present?
-          cpes << things.first    # only need one
-        else
-          cdesc = ContentType.find_by(name: choice.first).try(:description)
-          tdesc = TopicType.find_by(name: choice[2]).try(:description)
-          desc = "#{cdesc} for #{choice[2]}"
-          cpes << ContentProfileEntry.create!({
-              description: desc,
-              content_value: choice[1],
-              content_type: choice[0],
-              content_type_description: cdesc,
-              topic_value: choice[3],
-              topic_type: choice[2],
-              topic_type_description: tdesc
-          })
+        cpes = []
+        rc = false
+        choices.each do |choice|
+          things = []
+          things = ContentProfileEntry.where(topic_type: choice[2], content_type: choice[0]).select do |s|
+            choice[3].eql?(s.topic_value) and choice[1].eql?(s.content_value)
+          end.compact
+
+          if things.present?
+            cpes << things.first    # only need one
+          else
+            cdesc = ContentType.find_by(name: choice.first).try(:description)
+            tdesc = TopicType.find_by(name: choice[2]).try(:description)
+            desc = "#{cdesc} for #{choice[2]}"
+            cpes << ContentProfileEntry.create!({
+                description: desc,
+                content_value: choice[1],
+                content_type: choice[0],
+                content_type_description: cdesc,
+                topic_value: choice[3],
+                topic_type: choice[2],
+                topic_type_description: tdesc
+            })
+          end
         end
-      end
 
-      rc = content_profile.content_profile_entries = cpes.flatten
-      if rc.present? and !!defined?(user_options_list)
-        user_profile = get_page_user(content_profile.username)
-        user_profile.update_user_options!( user_options_list )
-      end
+        rc = content_profile.content_profile_entries = cpes.flatten
+        if rc.present? and !!defined?(user_options_list)
+          user_profile = get_page_user(content_profile.username)
+          user_profile.update_user_options!( user_options_list )
+        end
+
+        true
+      end # end transaction
 
       Rails.logger.debug "#{self.class.name}.#{__method__}() saving: #{choices.size} entries returned #{rc.present?}"
 

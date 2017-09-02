@@ -21,7 +21,8 @@ module Domains
     end
 
     def system_actions_api(params)
-      case params['id']
+      id_val = params[:id] || params['id']
+      case id_val.to_s
         when 'xml'
           reload_access_registry
           "AccessRegistry Reloaded"
