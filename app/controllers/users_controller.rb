@@ -1,26 +1,3 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                       :integer          not null, primary key
-#  username                 :string
-#  name                     :string
-#  email                    :string
-#  password_digest          :string
-#  remember_token           :string
-#  password_reset_token     :string
-#  password_reset_date      :datetime
-#  assigned_groups          :string
-#  roles                    :string
-#  active                   :boolean          default(TRUE)
-#  file_access_token        :string
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  person_authenticated_key :string
-#  assigned_roles           :string
-#  remember_token_digest    :string
-#  user_options             :string
-#
 
 class UsersController < ApplicationController
   before_action :target_object, only: [:show, :edit, :update, :destroy]
@@ -50,21 +27,6 @@ class UsersController < ApplicationController
     @page_controls = access_service.get_user_form_options
   end
 
-  # Parameters: {
-  #   "user"=>{
-  #       "name"=>"Branch Secondary User",
-  #       "username"=>"astester",
-  #       "email"=>"appdev3@localhost.com",
-  #       "password"=>"[FILTERED]",
-  #       "password_confirmation"=>"[FILTERED]",
-  #       "user_options"=>["BranchSecondary", "0037", ""],
-  #       "assigned_groups"=>["BranchSecondary", ""],
-  #       "assigned_roles"=>["Test.Branch.Commission.Statement.CSV.Access", "Test.Branch.Commission.Experience.PDF.Access", "Services.Action.ResetPassword", ""],
-  #       "active"=>"1"
-  #   },
-  #   "commit"=>"Update User",
-  #   "id"=>"5"
-  # }
   def update
     if @user.update(permitted)
       redirect_to users_url, notice: "Updated user"
