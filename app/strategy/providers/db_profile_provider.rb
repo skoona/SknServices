@@ -121,7 +121,7 @@ module Providers
       end
 
       if choices.empty?
-        []
+        [[]]
       else
         choices.unshift(user_options_list)
       end
@@ -135,7 +135,15 @@ module Providers
     def apply_member_updates(pak, choices)
       content_profile = ContentProfile.find_by(person_authentication_key: pak)
       return false unless content_profile
-      user_options_list = choices.shift unless choices.empty? || choices.first.try(:[], 1).is_a?(Array)
+
+      delete_storage_object(pak)
+
+      user_options_list = choices.shift
+      if choices.empty?
+        content_profile.content_profile_entries.clear
+        return true    # early exit if nothing to do
+      end
+
       cpes = []
       rc = false
       choices.each do |choice|
@@ -161,17 +169,12 @@ module Providers
           })
         end
       end
-      if cpes.flatten.compact.empty?
-        content_profile.content_profile_entries.clear
-        rc = true
-      else
-        rc = content_profile.content_profile_entries = cpes.flatten
-      end
+
+      rc = content_profile.content_profile_entries = cpes.flatten
       if rc.present? and !!defined?(user_options_list)
         user_profile = get_page_user(content_profile.username)
         user_profile.update_user_options!( user_options_list )
       end
-      delete_storage_object(pak)
 
       Rails.logger.debug "#{self.class.name}.#{__method__}() saving: #{choices.size} entries returned #{rc.present?}"
 
