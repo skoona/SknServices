@@ -13,7 +13,7 @@ module Services
     PROFILE_CONTEXT='content'
 
     def handle_runtime_demo
-      pp __method__, params
+
       package = runtime_demo_package
       SknUtils::NestedResult.new({
                                      success: package[:cp].present?,
@@ -31,7 +31,7 @@ module Services
 
     # Controller Entry Point
     def handle_demo_page(params={})
-      pp __method__, params
+
       package = get_page_users(PROFILE_CONTEXT)
       SknUtils::NestedResult.new({
                                      success: package.present?,
@@ -50,7 +50,7 @@ module Services
 
     # Controller Entry Point
     def handle_api_accessible_content(params)
-      pp __method__, params
+
       package = handle_accessible_content_api(params)
       SknUtils::NestedResult.new({
                                      package: {
@@ -75,7 +75,7 @@ module Services
 
     # Controller Entry Point
     def api_get_content_object(params)
-      pp __method__, params
+
       package = get_content_object_api(params)
       res = SknUtils::NestedResult.new({
                                            success:  package[:success],
@@ -93,7 +93,7 @@ module Services
 
     # Controller Entry Point
     def api_get_demo_content_object(params)
-      pp __method__, params
+
       package = get_demo_content_object_api(params)
       SknUtils::NestedResult.new({
                                            success: package[:success],
@@ -110,7 +110,7 @@ module Services
     end
 
     def handle_members
-      pp __method__, params
+
       package = members_admin_package
       SknUtils::NestedResult.new({
                                      success: package[:success],
@@ -127,7 +127,7 @@ module Services
     end
 
     def handle_member(params)
-      pp __method__, params
+
       package = member_admin_package(params)
       SknUtils::NestedResult.new({
                                      success: package[:success],
@@ -144,7 +144,7 @@ module Services
     end
 
     def handle_member_updates(params)
-      pp __method__, params
+
       package = member_update_package(params)
       SknUtils::NestedResult.new({
                                      success: package[:success],
@@ -162,7 +162,7 @@ module Services
 
     # Controller Entry Point
     def handle_content_profile_management(params)
-      pp __method__, params
+
       package = management_page_users_package(PROFILE_CONTEXT)
       SknUtils::NestedResult.new({
                                            success: package.present?,
@@ -188,7 +188,7 @@ module Services
     end
 
     def handle_content_profile_create(params)
-      pp __method__, params
+
       package = create_content_profile_with_profile_type_id(params)
       SknUtils::NestedResult.new({
                                    success: package,
@@ -203,7 +203,7 @@ module Services
     end
 
     def handle_content_profile_update(params)
-      pp __method__, params
+
       package = update_content_profile_with_profile_type_id(params)
       SknUtils::NestedResult.new({
                                    success: package,
@@ -218,7 +218,7 @@ module Services
     end
 
     def handle_content_profile_destroy(params)
-      pp __method__, params
+
       package = destroy_content_profile_by_pak(params)
       SknUtils::NestedResult.new({
                                    success: package,
@@ -234,7 +234,7 @@ module Services
 
     # POST
     def handle_content_profile_entries_create(params)
-      pp __method__, params
+
       raise Utility::Errors::IncompleteSelectionFailure, "Please make Topic and/or Content selection!" unless params['topic_type_value']
       package = create_content_profile_entries(params)
       SknUtils::NestedResult.new({
@@ -251,7 +251,7 @@ module Services
 
     # POST
     def handle_content_profile_entry_destroy(params)
-      pp __method__, params
+
       package = destroy_content_profile_entry(params)
       SknUtils::NestedResult.new({
                                    success: package,

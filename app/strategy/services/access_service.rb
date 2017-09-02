@@ -13,7 +13,7 @@ module Services
     ##
 
     def get_user_form_options
-      pp __method__, params
+      
       SknUtils::NestedResult.new({
          groups: group_select_options,
          roles: role_select_options
@@ -21,7 +21,7 @@ module Services
     end
 
     def handle_users_index
-      pp __method__, params
+      
       result = { counter: 0,
                  users: User.paginate(page: params[:page], :per_page => 16)
       }
@@ -34,7 +34,7 @@ module Services
 
 
     def reset_password(params)
-      pp __method__, params
+      
       user = User.find(params[:id])  # id is a :password_reset_token
       if user.password_reset_date > 2.hours.ago       # MEANS LESS THAN TWO HOURS AGO
         user.regenerate_remember_token!
@@ -61,7 +61,7 @@ module Services
     end
 
     def reset_requested(params)
-      pp __method__, params
+      
       usr = User.find_by(username: params[:user][:username])
       raise Utility::Errors::InvalidCredentialError, "Sorry, your username cannot be found." if usr.nil?
       send_password_reset(usr)
@@ -84,7 +84,7 @@ module Services
     ##
 
     def handle_system_information_api(params)
-      pp __method__, params
+      
       package = system_actions_api(params)
       SknUtils::NestedResult.new({
                                      success: package.present?,
@@ -99,7 +99,7 @@ module Services
     end
 
     def handle_system_information(params)
-      pp __method__, params
+      
       package = generate_system_info_bundle
       SknUtils::NestedResult.new( package )
 
@@ -133,7 +133,7 @@ module Services
     end
 
     def password_mailer(user)
-      pp __method__, params
+      
       UserMailer.password_reset(user).deliver_now
     end
 
