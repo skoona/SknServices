@@ -67,7 +67,8 @@ chdir APP_ROOT do
   system!('cp -v controlled/downloads/pdf/VendorPrimary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorPrimary/FileDownload/')
   system!('cp -v controlled/downloads/pdf/VendorSecondary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorSecondary/FileDownload/')
 
-  system!('cp -v controlled/downloads/pdf/{Skoona,SknServices}*.pdf controlled/projects/Partner/0099/Activity/')
+  system!('cp -v controlled/downloads/pdf/Skoona*.pdf controlled/projects/Partner/0099/Activity/')
+  system!('cp -v controlled/downloads/pdf/SknServices*.pdf controlled/projects/Partner/0099/Activity/')
 
   puts "\n== Preparing databases =="
   
