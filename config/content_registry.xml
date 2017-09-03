@@ -73,7 +73,7 @@
     <userdata>"21|9|23|"</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034">Services.Branch.LicensedStates.Operations.Access</authorizedRole>
+        <authorizedRole options="0034,0037,0040">Services.Branch.LicensedStates.Operations.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -83,7 +83,9 @@
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0099">Services.Action.Use.FileDownload.Pdf</authorizedRole>
+        <authorizedRole options="0099">Services.UserGroups.Use.FileDownload.Datafile</authorizedRole>
+        <authorizedRole options="0099">Services.UserGroups.Use.FileDownload.Image</authorizedRole>
+        <authorizedRole options="0099">Services.UserGroups.Use.FileDownload.Pdf</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -93,8 +95,8 @@
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Pdf</authorizedRole>
-        <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Pdf</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.Use.FileDownload.Pdf</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.Admin.FileDownload.Pdf</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -104,8 +106,8 @@
     <userdata>*.log</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Datafile</authorizedRole>
-        <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Datafile</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.Use.FileDownload.Datafile</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.Admin.FileDownload.Datafile</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -115,8 +117,8 @@
     <userdata>*.png|*.jpg</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="VendorSecondary,VendorPrimary,EmployeeSecondary">Services.Action.Use.FileDownload.Image</authorizedRole>
-        <authorizedRole options="Developer,EmployeePrimary">Services.Action.Admin.FileDownload.Image</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.Use.FileDownload.Image</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.Admin.FileDownload.Image</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>

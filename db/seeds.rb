@@ -23,7 +23,8 @@ begin
 
   all_users = [
       {name: "Services.Action.ResetPassword",                    description: "Reset Forgotten Password via EMail"},
-      {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"}
+      {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"},
+      {name: "Services.Action.Use.UserRecords",                  description: "Consumer of User Records"}
   ]
 
   content_profile_p =
@@ -33,11 +34,7 @@ begin
       {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"}
 
   group_manage_p = [
-      {name: "Services.Action.Admin.UserAuthorizationGroups",    description: "Administer Authorization Group"},
       {name: "Services.Branch.LicensedStates.Operations.Access", description: "Access Branch Licensed USA States"}]
-
-  group_manage_s =
-      {name: "Services.Action.Use.UserAuthorizationGroups",      description: "Consumer of Authorization Groups"}
 
   user_manage_p =
       {name: "Services.Action.Admin.UserRecords",                description: "Administer User Records"}
@@ -46,18 +43,18 @@ begin
       {name: "Services.Action.Use.UserRecords",                  description: "Consumer of User Records"}
 
   file_manage_p = [
-      {name: "Services.Action.Admin.FileDownload.Datafile",      description: "Administer Datafile Downloads"},
-      {name: "Services.Action.Admin.FileDownload.Image",         description: "Administer Image Downloads"},
-      {name: "Services.Action.Admin.FileDownload.Pdf",           description: "Administer Pdf Downloads"}
+      {name: "Services.UserGroups.Admin.FileDownload.Datafile",      description: "Administer Datafile Downloads"},
+      {name: "Services.UserGroups.Admin.FileDownload.Image",         description: "Administer Image Downloads"},
+      {name: "Services.UserGroups.Admin.FileDownload.Pdf",           description: "Administer Pdf Downloads"}
   ]
 
   file_manage_s = [
-      {name: "Services.Action.Use.FileDownload.Datafile",        description: "Consumer of Datafile Downloads"},
-      {name: "Services.Action.Use.FileDownload.Image",           description: "Consumer of Image Downloads"},
-      {name: "Services.Action.Use.FileDownload.Pdf",             description: "Consumer of Pdf Downloads"}
+      {name: "Services.UserGroups.Use.FileDownload.Datafile",        description: "Consumer of Datafile Downloads"},
+      {name: "Services.UserGroups.Use.FileDownload.Image",           description: "Consumer of Image Downloads"},
+      {name: "Services.UserGroups.Use.FileDownload.Pdf",             description: "Consumer of Pdf Downloads"}
   ]
 
-  all_roles = [ all_admin , all_users , file_manage_p, file_manage_s, content_profile_p ,  content_profile_s , group_manage_p ,  group_manage_s , user_manage_p , user_manage_s ].flatten.uniq
+  all_roles = [ all_admin , all_users , file_manage_p, file_manage_s, content_profile_p ,  content_profile_s , group_manage_p ,  user_manage_p , user_manage_s ].flatten.uniq
 
   all_groups = [
       {name: "Developer",         group_type: "Skoona Consulting",  description: "Open Source Independent Consultancy"},
@@ -72,7 +69,7 @@ begin
 
   admin_collection =        [ all_users , all_admin , content_profile_p , group_manage_p , user_manage_p, file_manage_p ].flatten.uniq
   branch_admin_collection = [ all_users , user_manage_p , group_manage_p , content_profile_s, file_manage_s ].flatten.uniq
-  limited_collection =      [ all_users , user_manage_s , group_manage_s , content_profile_s, file_manage_s ].flatten.uniq
+  limited_collection =      [ all_users , user_manage_s , content_profile_s, file_manage_s ].flatten.uniq
   public_collection =       [ all_users, file_manage_s ].flatten.uniq
 
   control = {

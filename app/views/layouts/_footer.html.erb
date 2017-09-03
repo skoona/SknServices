@@ -9,7 +9,7 @@
                 <% end %>
             </div>
             <div class="col-md-4 text-center">
-                <span>&copy;&nbsp;2015-2016 Skoona Consulting</span>
+                <span>&copy;&nbsp;2015-2017 Skoona Consulting</span>
             </div>
             <div class="col-md-4">
                 <%= link_to "#top", class: "pull-right" do %>
@@ -19,23 +19,31 @@
             </div>
         </div>
         <div class="row">
+
+          <% if current_user_has_access?('#SystemsInformation') %>
             <div class="col-md-4">
                 <%= link_to details_sysinfo_pages_path, class: "text-left pull-left" do %>
                     <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                     <span>&nbsp;System Information</span>
                 <% end %>
             </div>
-            <div class="col-md-4 text-center">
-                <span><em>SknServices Release Version: <%= Utility::BuildVersion.build_version %></em></span>
-            </div>
+          <% else %>
             <div class="col-md-4">
-                <% unless accessed_page.eql?('pages/home') %>
-                    <%= link_to home_pages_path, class: "pull-right" do %>
-                        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                        <span>&nbsp;Home</span>
-                    <% end %>
-                <% end %>
+                 <span> </span>
             </div>
+          <% end %>
+          <div class="col-md-4 text-center">
+              <span><em>SknServices Release Version: <%= Utility::BuildVersion.build_version %></em></span>
+          </div>
+          <div class="col-md-4">
+              <% unless accessed_page.eql?('pages/home') %>
+                  <%= link_to home_pages_path, class: "pull-right" do %>
+                      <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                      <span>&nbsp;Home</span>
+                  <% end %>
+              <% end %>
+          </div>
+
         </div>
     </div>
 </footer>

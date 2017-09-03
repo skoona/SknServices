@@ -146,72 +146,74 @@
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Primary</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>#UserProfileManagement</uri>
-        <description>Authentication Admin</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>#AccessProfileManagement</uri>
-        <description>AccessProfile Admin</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>#ContentProfileManagement</uri>
-        <description>ContentProfile Admin</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
                 <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
+        <resource secured="true">
+            <uri>#UserProfileManagement</uri>
+            <description>Authentication Admin</description>
+            <permission type="READ">
+                <authorizedRoles>
+                    <authorizedRole>Services.Action.Admin</authorizedRole>
+                    <authorizedRole>Services.Action.Developer</authorizedRole>
+                    <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+                </authorizedRoles>
+            </permission>
+        </resource>
+        <resource secured="true">
+            <uri>#AccessProfileManagement</uri>
+            <description>AccessProfile Admin</description>
+            <permission type="READ">
+                <authorizedRoles>
+                    <authorizedRole>Services.Action.Admin</authorizedRole>
+                    <authorizedRole>Services.Action.Developer</authorizedRole>
+                    <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
+                    <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+                </authorizedRoles>
+            </permission>
+        </resource>
+        <resource secured="true">
+            <uri>#ContentProfileManagement</uri>
+            <description>ContentProfile Admin</description>
+            <permission type="READ">
+                <authorizedRoles>
+                    <authorizedRole>Services.Action.Admin</authorizedRole>
+                    <authorizedRole>Services.Action.Developer</authorizedRole>
+                    <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+                </authorizedRoles>
+            </permission>
+        </resource>
+        <resource secured="true">
+            <uri>#SystemsManagement</uri>
+            <description>Ability to Change Internal Controls and State</description>
+            <permission type="READ">
+                <authorizedRoles>
+                    <authorizedRole>Services.Action.Admin</authorizedRole>
+                    <authorizedRole>Services.Action.Developer</authorizedRole>
+                </authorizedRoles>
+            </permission>
+        </resource>
+
     <resource secured="true">
         <uri>#RuntimeDemonstration</uri>
         <description>User Runtime Demonstration</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
+                <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
     <resource secured="true">
-        <uri>#Demonstration</uri>
-        <description>Profiles In Action</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>#SystemInformation</uri>
+        <uri>#SystemsInformation</uri>
         <description>Current Application State/Status</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -223,8 +225,7 @@
         <description>AccessibleContent API.JSON</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -233,7 +234,9 @@
         <description>Retrieve Demo Content</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
+                <authorizedRole>Services.Action.Admin</authorizedRole>
+                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -242,18 +245,7 @@
         <description>Retrieve Inspection Content</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-    <resource secured="true">
-        <uri>profiles/api_content_profiles</uri>
-        <description>Profile Manipulation Services API.JSON</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -263,7 +255,8 @@
         <description>Profiles In Action</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.ResetPassword</authorizedRole>
+                <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -571,19 +564,6 @@
         </permission>
     </resource>
 
-    <!--=========================  Content Profile Process  ============================ -->
-    <resource secured="true">
-        <uri>content_profiles/index</uri>
-        <description>Content Profiles</description>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
     <!--=========================  Access Profile  ============================ -->
     <resource secured="true">
         <uri>user_group_roles/index</uri>
@@ -592,6 +572,7 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -603,8 +584,8 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
-                <authorizedRole>Services.Action.Use.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -615,6 +596,7 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -626,6 +608,7 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -637,6 +620,7 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -648,6 +632,7 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
@@ -659,7 +644,6 @@
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.UserAuthorizationGroups</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -671,8 +655,7 @@
         <userdata>drawerid:27655173|filetype:27635476|foldertype:27637844|doctype:955</userdata>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
