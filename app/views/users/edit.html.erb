@@ -25,7 +25,9 @@
 
           <div class="col-md-push-3 col-md-9">
               <%= f.button :submit, class: 'btn btn-primary submit' %>
-              <%= link_to "Cancel", users_path, class: 'btn' %>
+
+              <%= link_to "Cancel", (current_user_has_access?('/user/index') ? users_path : root_path) , class: 'btn' %>
+
           </div>
       <% end %>
   </section>

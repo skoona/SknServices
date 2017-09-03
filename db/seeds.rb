@@ -43,15 +43,11 @@ begin
       {name: "Services.Action.Use.UserRecords",                  description: "Consumer of User Records"}
 
   file_manage_p = [
-      {name: "Services.UserGroups.Admin.FileDownload.Datafile",      description: "Administer Datafile Downloads"},
-      {name: "Services.UserGroups.Admin.FileDownload.Image",         description: "Administer Image Downloads"},
-      {name: "Services.UserGroups.Admin.FileDownload.Pdf",           description: "Administer Pdf Downloads"}
+      {name: "Services.UserGroups.Admin.FileDownload",           description: "Administer Datafile Downloads"}
   ]
 
   file_manage_s = [
-      {name: "Services.UserGroups.Use.FileDownload.Datafile",        description: "Consumer of Datafile Downloads"},
-      {name: "Services.UserGroups.Use.FileDownload.Image",           description: "Consumer of Image Downloads"},
-      {name: "Services.UserGroups.Use.FileDownload.Pdf",             description: "Consumer of Pdf Downloads"}
+      {name: "Services.UserGroups.Use.FileDownload",                 description: "Consumer of Datafile Downloads"}
   ]
 
   all_roles = [ all_admin , all_users , file_manage_p, file_manage_s, content_profile_p ,  content_profile_s , group_manage_p ,  user_manage_p , user_manage_s ].flatten.uniq
@@ -221,6 +217,7 @@ end
 #  Access Levels -->   Public,  AllAuthorized,  Admin,  Developer
 #  Users v
 # ------------------------------------------------------------------------------------------------
+# QPublic
 # developer
 # emtester
 # eptester
@@ -230,3 +227,38 @@ end
 # bnptester
 # vptester
 # vstester
+#
+#
+
+#  Page / User                                                  vs,  vp,  bs,  bp,  es,  ep,
+# ---------------------------------------------------------------------------------------------------------------------
+# Home
+# About
+# Help
+# System Architecture
+# UserProfile
+# AccessProfile
+# ContentProfile
+# NotAuthenticated
+# NotAuthorized
+# SignIn
+# SignOut
+#
+# UsersView[profiles/runtime_demo]                            -np    X    X    X    X    X
+#      -depends: profiles/api_get_demo_content_object          X     X    X    X    X
+# SystemInformation[pages/details_sysinfo]                     X     X    X    X    X
+# User/Show                                                    X     X    X    X    X
+# User/Edit                                                    X     X    X    X    X
+# User/Update                                                  X     X    X    X    X
+# ForgottenPassword[password_resets/new]                       X     X    X    X    X
+#
+# User/Index                                                   -     -    -    X    -    X
+# Administration Menu                                          -     -    -    X    -    X
+# Full Admin Menu                                                                        X
+# user_group_roles/                                                                      X
+# AdminView[profiles/members]                                                            X
+# InDepth[profiles/manage_content_profiles]                                              X
+# InAction[profiles/content_profile_demo]                                                X
+# SystemInformation[pages/details_sysinfo] APIs Enabled                                  X
+#
+#

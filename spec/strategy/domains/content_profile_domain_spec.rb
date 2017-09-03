@@ -79,7 +79,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
                          "content_type_description"=>"Branch Commission CSV Datafiles"}
       }
       let!(:vsa_parms) {{"id"=>"access", "username"=>"vstester", "user_options"=>["VendorSecondary", "0099"],
-                         "uri"=>"Activity/Partner/0099", "resource_options"=>{"uri"=>"Activity/Partner/0099", "role"=>"Services.UserGroups.Use.FileDownload.Pdf",
+                         "uri"=>"Activity/Partner/0099", "resource_options"=>{"uri"=>"Activity/Partner/0099", "role"=>"Services.UserGroups.Use.FileDownload",
                                                                               "role_opts"=>["0099"]},
                          "content_type"=>"Activity", "content_value"=>["*.pdf"], "topic_type"=>"Partner", "topic_value"=>["0099"],
                          "description"=>"Partner Relationship Reports", "topic_type_description"=>"Partner Relationship Reports",

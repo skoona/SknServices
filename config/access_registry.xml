@@ -226,17 +226,17 @@
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
     <resource secured="true">
         <uri>profiles/api_get_demo_content_object</uri>
-        <description>Retrieve Demo Content</description>
+        <description>Retrieve Demo Content for Runtime Demo</description>
         <permission type="READ">
             <authorizedRoles>
-                <authorizedRole>Services.Action.Admin</authorizedRole>
-                <authorizedRole>Services.Action.Developer</authorizedRole>
-                <authorizedRole>Services.Action.Admin.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -246,6 +246,7 @@
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -527,6 +528,7 @@
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>
@@ -538,6 +540,7 @@
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
                 <authorizedRole>Services.Action.Admin.UserRecords</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
             </authorizedRoles>
         </permission>
     </resource>

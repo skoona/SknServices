@@ -32,7 +32,9 @@ module Providers
 
     def content_profile_for_runtime(user_profile, available_resource_catalog=true)
       profile = ContentProfile.find_by(person_authentication_key: user_profile.person_authenticated_key).try(:entry_info)
-      condense_profile_entries(profile, user_profile, available_resource_catalog)
+      cprofile = condense_profile_entries(profile, user_profile, available_resource_catalog)
+      Rails.logger.debug "#{self.class.name}.#{__method__}() ContentProfile: #{cprofile.present? ? 'Found' : 'Not Found'}"
+      cprofile
     end
 
     def select_option_values_for_content_type(name)

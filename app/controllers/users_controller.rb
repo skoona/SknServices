@@ -29,6 +29,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(permitted)
+      redirect_to root_url, notice: "Updated user" and return unless current_user_has_access?('users/index')
       redirect_to users_url, notice: "Updated user"
     else
       render :edit

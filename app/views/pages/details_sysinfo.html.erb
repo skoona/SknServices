@@ -378,19 +378,15 @@
       </div>
     </div>
 
-    <% if @page_controls.apis_enabled %>
+    <% if @page_controls.authenticated_user and @page_controls.apis_enabled %>
         <div class="well">
           <%= link_to "Purge Object Storage items older than 10 minutes",  api_sysinfo_actions_pages_path(id: 'purge'), class: 'btn btn-danger btn-lg btn-block' %>
         </div>
-    <% end %>
 
-    <% if @page_controls.authenticated_user and @page_controls.apis_enabled %>
         <div class="well">
           <%= link_to "Reload AccessRegistry",  api_sysinfo_actions_pages_path(id: 'xml'), class: 'btn btn-danger btn-lg btn-block' %>
         </div>
-    <% else %>
-        <div class="alert alert-warning" role="alert">No Authorized User</div>
-    <% end %>
+     <% end %>
 
 </article>
 
