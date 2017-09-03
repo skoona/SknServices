@@ -14,14 +14,6 @@ class ProfileType < ApplicationRecord
 
   validates_presence_of :name, :description
 
-  def self.option_selects
-    options = []
-    self.find_each do |pts|
-      options << [pts.name, pts.id, {data: {description: pts.description}}]
-    end
-    options
-  end
-
   def self.option_selects_with_desc
     options = []
     self.find_each do |pts|

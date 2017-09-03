@@ -17,24 +17,10 @@ class TopicType < ApplicationRecord
 
   validates_presence_of :name, :description
 
-  def self.option_selects
-    options = []
-    self.find_each do |tts|
-      options << [tts.name, tts.id, {data: {description: tts.description, opts: tts.option_selects}}]
-    end
-    options
-  end
   def self.option_selects_with_desc
     options = []
     self.find_each do |tts|
       options << ["#{tts.name} : #{tts.description}", tts.id, {data: {description: tts.description, opts: tts.option_selects}}]
-    end
-    options
-  end
-  def self.option_selects_by_type(name)
-    options = []
-    self.where(name: name).find_each do |tts|
-      options << [tts.name, tts.id, {data: {description: tts.description, opts: tts.option_selects}}]
     end
     options
   end

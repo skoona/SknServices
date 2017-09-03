@@ -12,7 +12,7 @@ feature "Authentication process for all users.", js: true do
       fill_in 'Password', :with =>  "nobugs"
       click_button 'Sign in'
       expect(current_path).to eq home_pages_path
-      expect(page).to have_title("Welcome")
+      expect(page).to have_title("SknServices")
     end
 
     scenario "Required to sign in when page is secured." do

@@ -250,17 +250,17 @@ app/strategy/services/access_service.rb
      handle_system_information(params)            #==> Hash :success
 
 app/strategy/services/content_service.rb
-     handle_runtime_demo                           #==> Hash :present?
-     handle_demo_page(params={})                   #==> ArrayOfHash :present?
-     handle_api_accessible_content(params)         #==> ArrayOfHash :present?
-     api_get_content_object(params)                #==> Hash :success
-     api_get_demo_content_object(params)           #==> Hash :success
-     handle_members                                #==> Hash :success
-     handle_member(params)                         #==> Hash :success
-     handle_member_updates(params)                 #==> Hash :success
-     handle_content_profile_management(params)     #==> Hash
-     handle_content_profile_create(params)         #==> true
-     handle_content_profile_update(params)         #==> true
-     handle_content_profile_destroy(params)        #==> true
-     handle_content_profile_entries_create(params) #==> true
-     handle_content_profile_entry_destroy(params)  #==> true
+     *handle_in_action                              #==> Hash :present?
+     *handle_in_action_admin(params={})             #==> ArrayOfHash :present?
+     *handle_api_accessible_content(params)         #==> ArrayOfHash :present?
+     *api_get_content_object(params)                #==> Hash :success
+     *api_get_demo_content_object(params)           #==> Hash :success
+     *handle_members                                #==> Hash :success
+     *handle_member(params)                         #==> Hash :success
+     *handle_member_updates(params)                 #==> Hash :success
+     *handle_content_profile_management(params)     #==> Hash
+     *handle_content_profile_create(params)         #==> true
+     *handle_content_profile_update(params)         #==> true
+     *handle_content_profile_destroy(params)        #==> true
+     *handle_content_profile_entries_create(params) #==> true
+     *handle_content_profile_entry_destroy(params)  #==> true

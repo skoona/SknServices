@@ -101,10 +101,10 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
 
   end
 
-  context "Demo methods return proper results. " do
+  context "Developers In Action Pages. " do
 
-    scenario "#handle_demo_page" do
-      result = service.handle_demo_page({})
+    scenario "#handle_in_action_admin" do
+      result = service.handle_in_action_admin({})
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
     end
@@ -130,11 +130,65 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       parms = {"id"=>"0:0:1",
                "username"=>"developer"}
       result = service.api_get_content_object(parms)
-      # catalog is not built, look for result and false
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.package.success).to be true
+    end
+
+  end
+
+  context "Users In Action Pages. " do
+
+    scenario "#handle_in_action" do
+      result = service.handle_in_action()
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+    end
+
+    scenario "#api_get_demo_content_object " do
+      parms = {"id"=>"0:0:1",
+               "username"=>"developer"}
+      result = service.api_get_demo_content_object(parms)
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.package.success).to be true
     end
   end
 
+  context "Administrators In Action Pages. " do
+
+    scenario "#handle_members" do
+      result = service.handle_members()
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+    end
+
+    scenario "#handle_member" do
+      parms = {
+          "username"=>"bstester",
+          "display_name"=>"Branch Secondary User",
+          "id"=>user.person_authenticated_key
+      }
+      result = service.handle_member(parms)
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+    end
+
+    scenario "#handle_member_updates " do
+      parms = {
+            "member"=>{
+                "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+                "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+                "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+                "activity"=>{"partners"=>["0099"]},
+                "filedownload"=>{"usergroups"=>["EmployeePrimary", "EmployeeSecondary", "BranchPrimary"]}
+            },
+            "commit"=>"bstester",
+            "id"=> user.person_authenticated_key
+          }
+
+      result = service.handle_member_updates(parms)
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+    end
+  end
 
 end

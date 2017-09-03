@@ -37,17 +37,6 @@ module Processors
       page_user = Secure::UserProfile.page_user(uname, context)
     end
 
-    def sanitize(filename)
-      value = filename
-      # Remove any leading navigation
-      value = value[2..-1] if value.start_with?('..')
-      value = value[2..-1] if value.start_with?('./')
-      value = value[1..-1] if value.start_with?('/')
-      # Remove any character that aren't 0-9, A-Z, or a-z
-      value = value.gsub(/[^0-9A-Z]/i, '_')
-      value
-    end
-
     # Rails should have a 'number_to_human_size()' in some version ???
     def human_filesize(value)
       {

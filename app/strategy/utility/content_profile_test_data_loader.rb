@@ -329,18 +329,19 @@ module Utility
 
       cpe_developer = []
       [
-          ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0034'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
-          ['LicensedStates', ['21','9'],    'Branch',  ['0034'], 'Licensed to operate in state'],
+          ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
+          ['LicensedStates', ['9'],         'Branch',  ['0034'], 'Licensed to operate in state'],
           ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
-          ['Experience',     ['*.log'],     'Branch',  ['0037'], 'Branch Experience Statements'],
-          ['Commission',     ['*.csv'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0037'], 'Branch Experience Statements'],
+          ['Commission',     ['*.pdf'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
           ['Notification',   ['Cancel'],    'Branch',  ['0037'], 'Notify Branch of Policy Events'],
           ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
 
-          ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0040'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
@@ -357,18 +358,19 @@ module Utility
 
       cpe_primary = []
       [
-       ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
+       ['Experience',     ['*.pdf'],     'Branch',  ['0034'], 'Branch Experience Statements'],
        ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
        ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
-       ['LicensedStates', ['21','9'],    'Branch',  ['0034'], 'Licensed to operate in state'],
+       ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
+       ['LicensedStates', ['9'],         'Branch',  ['0034'], 'Licensed to operate in state'],
        ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
-       ['Experience',     ['*.log'],     'Branch',  ['0037'], 'Branch Experience Statements'],
+       ['Experience',     ['*.pdf'],     'Branch',  ['0037'], 'Branch Experience Statements'],
        ['Commission',     ['*.csv'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
        ['Notification',   ['Cancel'],    'Branch',  ['0037'], 'Notify Branch of Policy Events'],
        ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
 
-       ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+       ['Experience',     ['*.pdf'],     'Branch',  ['0040'], 'Branch Experience Statements'],
        ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
        ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 
@@ -385,13 +387,13 @@ module Utility
 
       cpe_sec = []
       [
-          ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0034'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
           ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
           ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
-          ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0040'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 

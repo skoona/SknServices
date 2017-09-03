@@ -20,7 +20,7 @@ module Services
       })
     end
 
-    def handle_users_index
+    def handle_users_index(params)
       
       result = { counter: 0,
                  users: User.paginate(page: params[:page], :per_page => 16)

@@ -244,21 +244,21 @@ end
 # SignIn
 # SignOut
 #
-# UsersView[profiles/runtime_demo]                            -np    X    X    X    X    X
-#      -depends: profiles/api_get_demo_content_object          X     X    X    X    X
-# SystemInformation[pages/details_sysinfo]                     X     X    X    X    X
-# User/Show                                                    X     X    X    X    X
-# User/Edit                                                    X     X    X    X    X
-# User/Update                                                  X     X    X    X    X
-# ForgottenPassword[password_resets/new]                       X     X    X    X    X
+# UsersView[profiles/in_action]                               -np    X    X    X    X    X    X    X
+#      -depends: profiles/api_get_demo_content_object          X     X    X    X    X    X    X    X
+# SystemInformation[pages/details_sysinfo]                     X     X    X    X    X    X    X    X
+# User/Show                                                    X     X    X    X    X    X    X    X
+# User/Edit                                                    X     X    X    X    X    X    X    X
+# User/Update                                                  X     X    X    X    X    X    X    X
+# ForgottenPassword[password_resets/new]                       X     X    X    X    X    X    X    X
 #
-# User/Index                                                   -     -    -    X    -    X
-# Administration Menu                                          -     -    -    X    -    X
-# Full Admin Menu                                                                        X
-# user_group_roles/                                                                      X
-# AdminView[profiles/members]                                                            X
-# InDepth[profiles/manage_content_profiles]                                              X
-# InAction[profiles/content_profile_demo]                                                X
-# SystemInformation[pages/details_sysinfo] APIs Enabled                                  X
+# User/Index                                                   -     -    -    X    -    X    X    X
+# Administration Menu                                          -     -    -    X    -    X    X    X
+# Full Admin Menu                                              -     -    -    -    -    X    X    X
+# user_group_roles/                                            -     -    -    -    -    X    X    X
+# AdminView[profiles/members]                                  -     -    -    -    -    X    X    X
+# InDepth[profiles/in_depth]                                   -     -    -    -    -    X    X    X
+# InAction[profiles/in_action_admin]                           -     -    -    -    -    X    X    X
+# SystemInformation[pages/details_sysinfo] APIs Enabled        -     -    -    -    -    X    X    X
 #
 #

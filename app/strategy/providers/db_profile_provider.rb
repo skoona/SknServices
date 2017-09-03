@@ -40,9 +40,6 @@ module Providers
     def select_option_values_for_content_type(name)
       ContentType.option_selects_by_type(name).first.last[:data][:opts].collect {|c| c.first }
     end
-    def select_options_by_topic_name(name)
-      TopicTypeOpt.option_selects(name).collect {|tt| ["#{tt.first} | #{tt.last[:data][:description]}", tt.first] }
-    end
     def select_option_values_for_topic_type(name)
       TopicTypeOpt.where(type_name: name).pluck(:value)
     end
@@ -340,24 +337,6 @@ module Providers
       profile_obj.content_profile_entries.reload
       delete_storage_object(profile_obj.person_authentication_key)
       profile_obj
-    end
-
-    def remove_dates_and_ids_from_choices(choices)
-      targets = ["id", "created_at", "updated_at", "content_type_id", "topic_type_id"]
-      choices.each do |choice|
-        choice[:type].delete_if {|k,v| k.in?(targets) }
-        choice[:opts].each {|opt| opt.delete_if {|k,v| k.in?(targets)}}
-      end
-      choices
-    end
-
-    def remove_dates_from_choices(choices)
-      targets = ["created_at", "updated_at"]
-      choices.each do |choice|
-        choice[:type].delete_if {|k,v| k.in?(targets) }
-        choice[:opts].each {|opt| opt.delete_if {|k,v| k.in?(targets)}}
-      end
-      choices
     end
 
     # Retrieves users content profile in ResultBean

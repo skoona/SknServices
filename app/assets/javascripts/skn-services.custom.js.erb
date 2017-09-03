@@ -228,7 +228,7 @@ function handleRailsInfo(ev) {
 }
 
 /* ********************************************************
- * ContentProfileDemo Page: :content_profile_demo
+ * ContentProfileDemo Page: :in_action_admin
  * ********************************************************
  */
 
@@ -533,7 +533,7 @@ function handleDemoPages() {
 
 
 /* ********************************************************
- * ManageContentProfiles Page: :manage_content_profiles
+ * ManageContentProfiles Page: :in_depth
  * ********************************************************
  */
 
@@ -847,7 +847,7 @@ $(function() {
 
             break;
 
-        case 'runtime_demo':
+        case 'in_action':
             $('div.well.runtime-item').on("click", runtimeDemoGetObject);
 
             $('div.well-sm[data-mh="files-group"]').matchHeight();
@@ -895,10 +895,10 @@ $(function() {
             });
 
             break;
-        case 'manage_content_profiles':
+        case 'in_depth':
             handleManagementPages();
             break;
-        case 'content_profile_demo':
+        case 'in_action_admin':
             handleDemoPages();
             break;
         default:

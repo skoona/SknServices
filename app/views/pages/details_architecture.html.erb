@@ -57,8 +57,8 @@
 class ProfilesController < ApplicationController
 
   # HTML only response
-  def content_profile_demo
-    @page_controls = content_service.handle_demo_page(params)
+  def in_action_admin
+    @page_controls = content_service.handle_in_action_admin(params)
     flash.notice.now = @page_controls.message if @page_controls.message.present?
   end
 
@@ -146,7 +146,7 @@ class ContentService < ::ContentProfileDomain
 
 
   # Controller Entry Point
-  def handle_demo_page(params={})
+  def handle_in_action_admin(params={})
     SknUtils::NestedResult.new({
                                    success: true,
                                    message: "",

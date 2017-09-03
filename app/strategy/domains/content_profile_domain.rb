@@ -11,7 +11,7 @@ module Domains
 
     PROFILE_CONTEXT="content"  # override in service -- get_page_user(s) is affected by missing PROFILE_CONTEXT defined in Services, when testing domain directly rather than thru Service
 
-    def runtime_demo_package
+    def in_action_package
       profile = db_profile_provider.content_profile_for_runtime(current_user)
       success = profile.present? && profile[:display_groups].present?
       {

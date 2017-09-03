@@ -227,7 +227,7 @@ end
 #
 #<div class="btn-group pull-left" role: "group">
 #   <div class="dropdown" role="group">
-#     <a data-samples="test data" class="btn btn-primary " href="/profiles/manage_content_profiles">
+#     <a data-samples="test data" class="btn btn-primary " href="/profiles/in_depth">
 #       <span class="glyphicon glyphicon-refresh" />&nbsp;
 #       <span>Refresh</span>
 #     </a>
@@ -245,7 +245,7 @@ end
 #     </a>
 #     <ul class="dropdown-menu" role="menu">
 #       <li>
-#         <a data-samples="test data" href="/profiles/manage_content_profiles">
+#         <a data-samples="test data" href="/profiles/in_depth">
 #           <span class="glyphicon glyphicon-refresh"></span>&nbsp;
 #           <span>Refresh</span>
 #         </a>
@@ -255,17 +255,17 @@ end
 #         <span>Header Test</span>
 #       </li>
 #       <li>
-#         <a href="/profiles/manage_content_profiles">
+#         <a href="/profiles/in_depth">
 #           <span>Refresh 2</span>
 #         </a>
 #       </li>
 #       <li>
-#         <a href="/profiles/manage_content_profiles">
+#         <a href="/profiles/in_depth">
 #           <span>Refresh 3</span>
 #         </a>
 #       </li>
 #       <li>
-#         <a href="/profiles/manage_content_profiles">
+#         <a href="/profiles/in_depth">
 #           <span>Refresh 4</span>
 #         </a>
 #       </li>
@@ -286,15 +286,15 @@ end
 #     <ul class="dropdown-menu" role="menu">
 #       <li class="dropdown-header"><span>I am a Header</span></li>
 #       <li class="divider"></li>
-#       <li><a href="/profiles/manage_content_profiles"><span>Refresh</span></a></li>
-#       <li><a class="something" data-target="#" data-package="[&quot;someData&quot;]" data-method="get" href="/profiles/manage_content_profiles"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></a></li>
+#       <li><a href="/profiles/in_depth"><span>Refresh</span></a></li>
+#       <li><a class="something" data-target="#" data-package="[&quot;someData&quot;]" data-method="get" href="/profiles/in_depth"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></a></li>
 #       <li class="divider" />
 #       <li class="dropdown-submenu" role="menu">
 #         <a href="#" class="btn" role="button" data-toggle="dropdown" data-target="#">
 #           <span>Rspec Testing</span>
 #         </a>
 #         <ul class="dropdown-menu" role="menu">
-#           <li><a data-samples="test data" href="/profiles/manage_content_profiles"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></a></li>
+#           <li><a data-samples="test data" href="/profiles/in_depth"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></a></li>
 #         </ul>
 #       </li>
 #     </ul>

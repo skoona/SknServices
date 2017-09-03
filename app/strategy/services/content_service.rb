@@ -12,9 +12,9 @@ module Services
 
     PROFILE_CONTEXT='content'
 
-    def handle_runtime_demo
+    def handle_in_action
 
-      package = runtime_demo_package
+      package = in_action_package
       SknUtils::NestedResult.new({
                                      success: package[:cp].present?,
                                      message: package[:message],
@@ -30,7 +30,7 @@ module Services
     end
 
     # Controller Entry Point
-    def handle_demo_page(params={})
+    def handle_in_action_admin(params={})
 
       package = get_page_users(PROFILE_CONTEXT)
       SknUtils::NestedResult.new({
@@ -168,7 +168,7 @@ module Services
                                            success: package.present?,
                                            message: "",
                                            page_actions: [{
-                                              path: :manage_content_profiles_profiles_path,
+                                              path: :in_depth_profiles_path,
                                               text: "Refresh",
                                               icon: 'fa fa-refresh',
                                               html_options: {

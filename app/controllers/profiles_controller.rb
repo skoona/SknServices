@@ -3,14 +3,14 @@
 
 class ProfilesController < ApplicationController
 
-  def runtime_demo
-    @page_controls = content_service.handle_runtime_demo
+  def in_action
+    @page_controls = content_service.handle_in_action
     redirect_to root_path, notice: @page_controls.message and return unless @page_controls.success
     flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
-  def content_profile_demo
-    @page_controls = content_service.handle_demo_page(params.to_unsafe_h)
+  def in_action_admin
+    @page_controls = content_service.handle_in_action_admin(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message.present?
   end
 
@@ -63,7 +63,7 @@ class ProfilesController < ApplicationController
   end
 
   # GET
-  def manage_content_profiles
+  def in_depth
     @page_controls = content_service.handle_content_profile_management(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message?
   end
@@ -79,21 +79,21 @@ class ProfilesController < ApplicationController
   def create_profile_for_user
       @page_controls = content_service.handle_content_profile_create(params.to_unsafe_h)
       flash[:notice] = @page_controls.message if @page_controls.message?
-      redirect_to manage_content_profiles_profiles_url
+      redirect_to in_depth_profiles_url
   end
   # POST
   # Requires userName and ProfileTypeName
   def update_profile_for_user
     @page_controls = content_service.handle_content_profile_update(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to manage_content_profiles_profiles_url
+    redirect_to in_depth_profiles_url
   end
   # DELETE
   # Requires Entry
   def delete_profile_for_user
     @page_controls = content_service.handle_content_profile_destroy(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to manage_content_profiles_profiles_url
+    redirect_to in_depth_profiles_url
   end
 
   # POST
@@ -101,13 +101,13 @@ class ProfilesController < ApplicationController
   def create_entries_for_user
     @page_controls = content_service.handle_content_profile_entries_create(params.to_unsafe_h)
     flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to manage_content_profiles_profiles_url
+    redirect_to in_depth_profiles_url
   end
   # DELETE
   # Requires Entry
   def delete_entry_for_user
     @page_controls = content_service.handle_content_profile_entry_destroy(params.to_unsafe_h)
-    redirect_to manage_content_profiles_profiles_url, notice: @page_controls.message?
+    redirect_to in_depth_profiles_url, notice: @page_controls.message?
   end
 
 end

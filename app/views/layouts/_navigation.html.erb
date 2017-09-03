@@ -35,11 +35,11 @@
                             <% end %>
 
                             <% if current_user_has_access?('#ContentProfileManagement') %>
-                                <% if current_user_has_access?('profiles/manage_content_profiles') %>
-                                    <%= nav_link_icon("glyphicon-cog", "Profiles In Depth", manage_content_profiles_profiles_path) %>
+                                <% if current_user_has_access?('profiles/in_depth') %>
+                                    <%= nav_link_icon("glyphicon-cog", "Profiles In Depth", in_depth_profiles_path) %>
                                 <% end %>
-                                <% if current_user_has_access?('profiles/content_profile_demo') %>
-                                    <%= nav_link_icon("glyphicon-cog", "Profiles In Action", content_profile_demo_profiles_path) %>
+                                <% if current_user_has_access?('profiles/in_action_admin') %>
+                                    <%= nav_link_icon("glyphicon-cog", "Profiles In Action", in_action_admin_profiles_path) %>
                                 <% end %>
                             <% end %>
 
@@ -54,8 +54,8 @@
                 <% end %>
 
                 <% if current_user_has_access?('#RuntimeDemonstration') %>
-                    <% if current_user_has_access?('profiles/runtime_demo') %>
-                        <%= nav_link_icon("glyphicon-eye-open", "User's View", runtime_demo_profiles_path) %>
+                    <% if current_user_has_access?('profiles/in_action') %>
+                        <%= nav_link_icon("glyphicon-eye-open", "User's View", in_action_profiles_path) %>
                     <% end %>
                 <% end %>
             </ul>

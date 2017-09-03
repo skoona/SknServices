@@ -19,8 +19,4 @@ class UserRole < ApplicationRecord
       [r.name, r.id, {'data-description': r.description}]
     end
   end
-
-  def role_info
-    [name, id, {'data-description': description}]
-  end
 end

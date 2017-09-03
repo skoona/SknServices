@@ -16,8 +16,10 @@
 	 * Development Resources            Secured pages which show system activity or state
 
 -->
+    <!--============================================================================= -->
+    <!--============================== RSpec Test Data  ============================= -->
+    <!--============================================================================= -->
 
-    <!--============== RSpec Test Data  ========== -->
     <resource secured="false">
         <uri>testing/public</uri>
         <description>Unsecured or Public Resource. (Hash)</description>
@@ -252,7 +254,7 @@
     </resource>
 
     <resource secured="true">
-        <uri>profiles/runtime_demo</uri>
+        <uri>profiles/in_action</uri>
         <description>Profiles In Action</description>
         <permission type="READ">
             <authorizedRoles>
@@ -263,7 +265,7 @@
     </resource>
 
     <resource secured="true">
-        <uri>profiles/content_profile_demo</uri>
+        <uri>profiles/in_action_admin</uri>
         <description>Profiles In Action</description>
         <permission type="READ">
             <authorizedRoles>
@@ -309,7 +311,7 @@
     </resource>
 
     <resource secured="true">
-        <uri>profiles/manage_content_profiles</uri>
+        <uri>profiles/in_depth</uri>
         <description>ContentProfile Management</description>
         <permission type="READ">
             <authorizedRoles>
@@ -323,7 +325,7 @@
     <resource secured="true">
         <uri>profiles/create_profile_for_user</uri>
         <description>Create Content Profile</description>
-        <permission type="READ">
+        <permission type="CREATE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -334,7 +336,7 @@
     <resource secured="true">
         <uri>profiles/update_profile_for_user</uri>
         <description>Update Content Profile</description>
-        <permission type="READ">
+        <permission type="UPDATE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -345,7 +347,7 @@
     <resource secured="true">
         <uri>profiles/delete_profile_for_user</uri>
         <description>Delete Content Profile</description>
-        <permission type="READ">
+        <permission type="DELETE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -356,7 +358,7 @@
     <resource secured="true">
         <uri>profiles/create_entries_for_user</uri>
         <description>Create Content Profile Entry</description>
-        <permission type="READ">
+        <permission type="CREATE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -367,7 +369,7 @@
     <resource secured="true">
         <uri>profiles/delete_entry_for_user</uri>
         <description>Delete Content Profile Entry</description>
-        <permission type="READ">
+        <permission type="DELETE">
             <authorizedRoles>
                 <authorizedRole>Services.Action.Admin</authorizedRole>
                 <authorizedRole>Services.Action.Developer</authorizedRole>
@@ -415,7 +417,7 @@
     </resource>
     <resource secured="false">
         <uri>pages/home</uri>
-        <description>Welcome to SknServices</description>
+        <description>SknServices</description>
     </resource>
     <resource secured="false">
         <uri>pages/help</uri>

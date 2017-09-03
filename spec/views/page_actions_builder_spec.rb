@@ -8,7 +8,7 @@
 describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdowns near top of selected pages." do
   let(:single) { [{
                     id: "test-action",
-                    path: [:manage_content_profiles_profiles_path],
+                    path: [:in_depth_profiles_path],
                     text: "Refresh",
                     icon: 'glyphicon-refresh',
                     html_options: {
@@ -21,7 +21,7 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
 
   let(:basic) { [{
                       id: "test-action",
-                      path: [:manage_content_profiles_profiles_path],
+                      path: [:in_depth_profiles_path],
                       text: "Refresh",
                       icon: 'glyphicon-refresh',
                       html_options: {
@@ -35,13 +35,13 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
                        header: true,
                        text: "Header Test"
                   },{
-                       path: [:manage_content_profiles_profiles_path],
+                       path: [:in_depth_profiles_path],
                        text: "Refresh 2",
                   },{
-                      path: [:manage_content_profiles_profiles_path],
+                      path: [:in_depth_profiles_path],
                       text: "Refresh 3",
                   },{
-                      path: [:manage_content_profiles_profiles_path],
+                      path: [:in_depth_profiles_path],
                       text: "Refresh 4",
                   }]
   }
@@ -59,13 +59,13 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
                 },
                 { # Regular Dropdown Entry
                     id: "test-action3",
-                    path: [:manage_content_profiles_profiles_path],
+                    path: [:in_depth_profiles_path],
                     text: "Refresh",
                 },
                 { # Fully Dressed Entry
                     divider: true,       # appears after :li entry
                     id: "test-action4",
-                    path: [:manage_content_profiles_profiles_path],
+                    path: [:in_depth_profiles_path],
                     text: "Refresh",
                     icon: 'glyphicon-refresh',     # icons appear before text with seperating space
                     html_options: {                # applied to :link_to
