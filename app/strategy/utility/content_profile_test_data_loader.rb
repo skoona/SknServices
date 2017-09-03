@@ -208,7 +208,8 @@ module Utility
       ContentType.create!([
           {name: "Experience",   description: "Monthly Experience Reports and Files", value_data_type: "String",
            content_type_opts_attributes: {
-               "0" => {value: "*.log", type_name: "Experience", description: "Document store Experience Document Type ID" } }
+               "0" => {value: "*.log", type_name: "Experience", description: "Document store Experience Logs" },
+               "1" => {value: "*.pdf", type_name: "Experience", description: "Document store Experience PDF Type" }}
           },
           {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "String",
            content_type_opts_attributes: {
@@ -310,7 +311,7 @@ module Utility
           },
           {name: "Partner", description: "This Corporate Account",  value_based_y_n: "N",
            topic_type_opts_attributes: {
-               "0" => {value: "0099", type_name: "Partner", description: "Skoona Consulting Account"}}
+               "0" => {value: "0099", type_name: "Partner", description: "Skoona Consulting"}}
           },
           {name: "UserGroups", description: "Shared access to project working files",  value_based_y_n: "N",
            topic_type_opts_attributes: {

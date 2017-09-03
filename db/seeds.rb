@@ -221,7 +221,7 @@ begin
 end
 
 
-#  Pages -->
+#  Access Levels -->   Public,  AllAuthorized,  Admin,  Developer
 #  Users v
 # ------------------------------------------------------------------------------------------------
 # developer
