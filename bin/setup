@@ -58,16 +58,16 @@ chdir APP_ROOT do
   system!("cp -v controlled/downloads/datafiles/* controlled/downloads/pdf/Experience*-0040.pdf controlled/projects/Branch/0040/Experience/")
   system!("cp -v controlled/downloads/datafiles/* controlled/downloads/images/* controlled/downloads/pdf/Commission*-0040.pdf controlled/projects/Branch/0040/Commission/")
 
-  system!("cp -v controlled/downloads/pdf/{Developer}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/Developer/FileDownload/")
-  system!("cp -v controlled/downloads/pdf/{Manager}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/Manager/FileDownload/")
-  system!("cp -v controlled/downloads/pdf/{EmployeePrimary}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/")
-  system!("cp -v controlled/downloads/pdf/{EmployeeSecondary}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeeSecondary/FileDownload/")
-  system!("cp -v controlled/downloads/pdf/{BranchPrimary}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/BranchPrimary/FileDownload/")
-  system!("cp -v controlled/downloads/pdf/{BranchSecondary}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/BranchSecondary/FileDownload/")
-  system!("cp -v controlled/downloads/pdf/{VendorPrimary}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorPrimary/FileDownload/")
-  system!("cp -v controlled/downloads/pdf/{VendorSecondary}*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorSecondary/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/Developer*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/Developer/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/Manager*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/Manager/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/EmployeePrimary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/EmployeeSecondary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeeSecondary/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/BranchPrimary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/BranchPrimary/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/BranchSecondary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/BranchSecondary/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/VendorPrimary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorPrimary/FileDownload/")
+  system!("cp -v controlled/downloads/pdf/VendorSecondary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorSecondary/FileDownload/")
 
-  system!("cp -v controlled/downloads/pdf/{SknServices}*.pdf controlled/projects/Partner/0099/Activity/")
+  system!("cp -v controlled/downloads/pdf/SknServices*.pdf controlled/projects/Partner/0099/Activity/")
 
   puts "\n== Preparing databases =="
   
