@@ -98,8 +98,8 @@ module Secure
 
     CRUD_MODES = ["CREATE","READ","UPDATE","DELETE"].freeze
     @@ar_permissions = (
-        Secure::AccessRegistryUtility.new(SknSettings.access_profile.access_registry_filename.basename).from_xml().merge(
-          Secure::AccessRegistryUtility.new(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml())
+        Secure::AccessRegistryUtility.call(SknSettings.access_profile.access_registry_filename.basename).merge(
+          Secure::AccessRegistryUtility.call(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry'))
     )
     @@ar_strict_mode = SknSettings.access_profile.default_unknown_to_unsecure
 

@@ -46,7 +46,8 @@
 
 RSpec.describe Secure::AccessRegistry, "Authorization management" do
 
-  let(:admin) {["Test.Action.Create", "Test.Action.Read", "Test.Action.Update", "Test.Action.Delete"]}
+  let(:admin) {["Test.Action.Create", "Test.Action.Read",
+                "Test.Action.Update", "Test.Action.Delete"]}
   let(:employee) {["Test.Action.Read"]}
   let(:manager) {["Test.Action.Delete"]}
   let(:bad) {["Bad User Role"]}
@@ -58,9 +59,7 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
 
   let(:in_branch_option) {["0037"]}
   let(:out_branch_option) {["1162"]}
-  let(:commission_all) {["Services.Branch.Commission.Access",
-                         "Services.Branch.Commission.Access",
-                         "Services.Branch.Experience.Access"]}
+  let(:commission_all) {["Services.Branch.Commission.Access", "Services.Branch.Experience.Access"]}
   let(:commission_expr) {["Services.Branch.Experience.Access"]}
 
   let(:resource_unknown) {"any value will do"}
