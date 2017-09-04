@@ -60,11 +60,13 @@ begin
       {name: "Services.Action.Use.UserRecords",                  description: "Consumer of User Records"}
 
   file_manage_p = [
+      {name: "Services.UserGroups.FileDownload.Access",          description: "Access Shared UserGroup Resources"},
       {name: "Services.UserGroups.Admin.FileDownload",           description: "Administer Datafile Downloads"}
   ]
 
   file_manage_s = [
-      {name: "Services.UserGroups.Use.FileDownload",                 description: "Consumer of Datafile Downloads"}
+      {name: "Services.UserGroups.FileDownload.Access",          description: "Access Shared UserGroup Resources"},
+      {name: "Services.UserGroups.Use.FileDownload",             description: "Consumer of Datafile Downloads"}
   ]
 
   all_roles = [ all_admin , all_users , file_manage_p, file_manage_s, content_profile_p ,  content_profile_s , group_manage_p ,  user_manage_p , user_manage_s ].flatten.uniq
