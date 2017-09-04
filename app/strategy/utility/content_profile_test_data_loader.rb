@@ -208,7 +208,6 @@ module Utility
       ContentType.create!([
           {name: "Experience",   description: "Monthly Experience Reports and Files", value_data_type: "String",
            content_type_opts_attributes: {
-               "0" => {value: "*.log", type_name: "Experience", description: "Document store Experience Logs" },
                "1" => {value: "*.pdf", type_name: "Experience", description: "Document store Experience PDF Type" }}
           },
           {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "String",
