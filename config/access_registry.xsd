@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema attributeFormDefault="unqualified"
-	elementFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://skoona.net/SknServices/AccessRegistry"
-	xmlns:tns="http://skoona.net/SknServices/AccessRegistry">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://skoona.net/SknServices/AccessRegistry"
+           xmlns="http://skoona.net/SknServices/AccessRegistry"
+            elementFormDefault="unqualified"
+            attributeFormDefault="unqualified" >
 
 	<xs:element name="accessRegistry">
-		<xs:complexType mixed="true">
+		<xs:complexType>
 			<xs:sequence>
-				<xs:annotation>
-					<xs:documentation><![CDATA[config/access_registry.xml
+                <xs:element ref="resource" maxOccurs="unbounded" minOccurs="0">
+				    <xs:annotation>
+					    <xs:documentation><![CDATA[config/access_registry.xml
 
    Along with class Secure::AccessRegistry and module AccessControl, this file describes those
    application resources that should be both secured and un-secured. This file is pre-processed
@@ -68,10 +70,10 @@
 
 
               -*-*-*-   Table of Contents  -*-*-*-
-   
+
    * Menu Page Registry         All pages accessable from a menu
    * GLOBAL System Resources      Unsecured (login, logout, etc.)
-   
+
    * GLOBAL User Pages            Unsecured (home )
    * PROTECTED Task Links       Secured Navigation Links.  (Create Account, Admin, etc.)
 
@@ -79,7 +81,7 @@
 
 
    * FULL RESOURCE SYNTAX **********************************************
-    
+
     <resource secured="true|false" content="true|false">
         <uri>anyString</uri>
         <description></description>
@@ -92,12 +94,12 @@
             </authorizedRoles>
         </permission>
     </resource>
-    
-    
-    
+
+
+
    * PARTIAL RESOURCE SYNTAX *******************************************
-    
-    <resource secured="false"> 
+
+    <resource secured="false">
         <uri>anyString</uri>
         <description>Any String can be a URI.</description>
         <userdata>"foldertype:27637844|doctype:955"</userdata>
@@ -113,63 +115,71 @@
 =============================================================================
 ========================= RESOURCE REGISTRY  ================================
 =============================================================================]]>
-					</xs:documentation>
-				</xs:annotation>
-				<xs:element name="resource" maxOccurs="unbounded"
-					minOccurs="0">
-					<xs:complexType>
-						<xs:sequence>
-							<xs:element name="uri" type="tns:UriType" minOccurs="1" />
-							<xs:element name="description" type="xs:string"
-								minOccurs="1" />
-							<xs:element name="userdata" type="xs:string"
-								minOccurs="0" />
-							<xs:element name="permission" type="tns:PermissionType"
-								maxOccurs="4" minOccurs="0" />
-						</xs:sequence>
-						<xs:attribute type="xs:boolean" name="secured" use="required" />
-						<xs:attribute type="xs:boolean" name="content" use="optional" />
-					</xs:complexType>
-				</xs:element>
+					    </xs:documentation>
+				    </xs:annotation>
+                </xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:complexType name="PermissionType">
-		<xs:sequence>
-			<xs:element name="authorizedRoles" type="tns:AuthorizedRolesType" />
-		</xs:sequence>
-		<xs:attribute name="type" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="CREATE" />
-					<xs:enumeration value="READ" />
-					<xs:enumeration value="UPDATE" />
-					<xs:enumeration value="DELETE" />
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType>
+    <xs:element name="authorizedRole">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute type="xs:string" name="options" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:simpleType name="UriType">
-		<xs:restriction base="xs:string">
-			<xs:pattern value=".+/[:alnum:]+" />
-		</xs:restriction>
-	</xs:simpleType>
+    <xs:element name="authorizedRoles">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="authorizedRole" maxOccurs="unbounded" minOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-  <xs:complexType name="AuthorizedRolesType">
-    <xs:sequence>
-      <xs:element name="authorizedRole" type="tns:AuthorizedRoleType"
-        maxOccurs="unbounded" minOccurs="1" />
-    </xs:sequence>
-  </xs:complexType>
+    <xs:element name="permission">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="authorizedRoles" minOccurs="1" />
+            </xs:sequence>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="CREATE" />
+                        <xs:enumeration value="READ" />
+                        <xs:enumeration value="UPDATE" />
+                        <xs:enumeration value="DELETE" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:complexType name="AuthorizedRoleType">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute type="xs:string" name="options" use="optional" />
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
+    <xs:element name="uri">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:pattern value="[/]?[A-Za-z0-9_/]+?" />
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+    <xs:element name="description" type="xs:string" />
+    <xs:element name="userdata" type="xs:string"/>
+
+    <xs:element name="resource">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="uri" minOccurs="1" />
+                <xs:element ref="description" minOccurs="1" />
+                <xs:element ref="userdata" minOccurs="0" />
+                <xs:element ref="permission" maxOccurs="4" minOccurs="0" />
+            </xs:sequence>
+            <xs:attribute type="xs:boolean" name="secured" use="required" />
+            <xs:attribute type="xs:boolean" name="content" />
+        </xs:complexType>
+    </xs:element>
 
 </xs:schema>
