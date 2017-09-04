@@ -91,7 +91,7 @@ begin
       "Department Manager" => admin_collection,
       "Corporate Staff"    => limited_collection,
       "Branch Admin"       => branch_admin_collection,
-      "Branch Staff"       => public_collection,
+      "Branch Staff"       => limited_collection,
       "Partner Admin"      => public_collection,
       "Partner Staff"      => public_collection
   }
@@ -174,7 +174,7 @@ begin
         email:                 "appdev3@localhost.com",
         password:                "nobugs",
         password_confirmation:   "nobugs",
-        user_options:            ["BranchSecondary", "0037"],
+        user_options:            ["BranchSecondary", "0037", "0099"],
         assigned_groups:         ["BranchSecondary"],
         assigned_roles:          []
     },
