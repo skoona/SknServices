@@ -74,6 +74,11 @@ module Providers
             xml.permission('type' => 'READ') do
               xml.authorizedRoles do
                 xml.authorizedRole(@optionsKeyword => role_opts) do
+                  # ToDo: The TopicType/ContentType elements are largely fixed at development time and should not require admins to create more roles beyond the original set
+                  xml.text "Services.#{a}.#{b}.Access"
+                end
+                xml.authorizedRole(@optionsKeyword => role_opts) do
+                  # ToDo: Too Detailed, the third qualifier(c) will force repeated role creation by admins : Ignored for now
                   xml.text "Services.#{a}.#{b}.#{c}.Access"
                 end
               end

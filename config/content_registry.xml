@@ -75,7 +75,7 @@
     <userdata>"21|9|23|"</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.LicensedStates.Operations.Access</authorizedRole>
+        <authorizedRole options="0034,0037,0040">Services.Branch.LicensedStates.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -85,7 +85,7 @@
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0099">Services.UserGroups.Use.FileDownload</authorizedRole>
+        <authorizedRole options="0099">Services.Partner.Activity.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -95,8 +95,8 @@
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.Use.FileDownload</authorizedRole>
-        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.Admin.FileDownload</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.FileDownload.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -106,8 +106,8 @@
     <userdata>*.log</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.Use.FileDownload</authorizedRole>
-        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.Admin.FileDownload</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.FileDownload.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
@@ -117,8 +117,8 @@
     <userdata>*.png|*.jpg</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.Use.FileDownload</authorizedRole>
-        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.Admin.FileDownload</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.FileDownload.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>

@@ -10,6 +10,9 @@ begin
   #
   # Authorization Group and User level Roles
   # Resource Sets
+  # XML Specific: Services.<TopicType>.<ContentType>.Access
+  #  -   TopicTypes: Branch, Partner, UserGroups
+  #  - ContentTypes: Commission, Experience, LicensedStates, Activity, FileDownload
   ##
   Rails.logger.info "Defining UserGroup Management process tables"
   # requires user_group_role_id: ''
@@ -19,22 +22,36 @@ begin
       {name: "Services.Action.Developer",                        description: "Super User or Developer"},
       {name: "Services.Branch.Commission.Access",                description: "Access Branch Commission Statements"},
       {name: "Services.Branch.Experience.Access",                description: "Access Branch Experience Report"},
-      {name: "Services.Branch.LicensedStates.Operations.Access", description: "Access Branch Licensed USA States"}]
+      {name: "Services.Branch.LicensedStates.Access",            description: "Access Branch Licensed USA States"},
+      {name: "Services.UserGroups.FileDownload.Access",          description: "Access Shared UserGroup Resources"},
+      {name: "Services.Partner.Activity.Access",                 description: "Access Partner Project Resources"}
+  ]
 
   all_users = [
       {name: "Services.Action.ResetPassword",                    description: "Reset Forgotten Password via EMail"},
       {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"},
-      {name: "Services.Action.Use.UserRecords",                  description: "Consumer of User Records"}
+      {name: "Services.Action.Use.UserRecords",                  description: "Consumer of User Records"},
+      # XML Content Profile Permission, controlled by combination of :user_options and presence of one of these roles.
+      {name: "Services.UserGroups.FileDownload.Access",          description: "Access Shared UserGroup Resources"},
+      {name: "Services.Partner.Activity.Access",                 description: "Access Partner Project Resources"}
   ]
 
-  content_profile_p =
-      {name: "Services.Action.Admin.ContentProfile",             description: "Administer Authorization Content Profile"}
+  content_profile_p = [
+      {name: "Services.Action.Admin.ContentProfile",             description: "Administer Authorization Content Profile"},
+      {name: "Services.Branch.Commission.Access",                description: "Access Branch Commission Statements"},
+      {name: "Services.Branch.Experience.Access",                description: "Access Branch Experience Report"},
+      {name: "Services.Branch.LicensedStates.Access",            description: "Access Branch Licensed USA States"}
+  ]
 
-  content_profile_s =
-      {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"}
+  content_profile_s = [
+      {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"},
+      {name: "Services.Branch.Commission.Access",                description: "Access Branch Commission Statements"},
+      {name: "Services.Branch.Experience.Access",                description: "Access Branch Experience Report"},
+      {name: "Services.Branch.LicensedStates.Access",            description: "Access Branch Licensed USA States"}
+  ]
 
   group_manage_p = [
-      {name: "Services.Branch.LicensedStates.Operations.Access", description: "Access Branch Licensed USA States"}]
+      {name: "Services.Branch.LicensedStates.Access",            description: "Access Branch Licensed USA States"}]
 
   user_manage_p =
       {name: "Services.Action.Admin.UserRecords",                description: "Administer User Records"}
