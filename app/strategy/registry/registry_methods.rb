@@ -51,7 +51,7 @@ module Registry
       flash_message(:notice, warden.message) if warden.message.present?
       flash_message(:alert, warden.errors.full_messages) unless warden.errors.empty?
       # your code here
-      Rails.logger.debug "#{self.class.name}.#{__method__}() Called for session.id=#{request.session_options[:id]}, Original-URL: #{request.original_url}"
+      Rails.logger.debug "#{self.class.name}.#{__method__}() Called for session.id=#{request.session_options[:id]}"
       true
     end
 

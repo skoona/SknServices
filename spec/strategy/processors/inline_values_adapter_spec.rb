@@ -44,10 +44,10 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
   context "Core methods delivery as designed." do
     let(:cpe) {
                 { :id=>"access",
-                  :uri=>"LicensedStates/Branch/Operations",
+                  :uri=>"LicensedStates/Branch/0037",
                   :resource_options=>{
-                      :uri=>"LicensedStates/Branch/Operations",
-                      :role=>"Test.Branch.Operations.LicensedStates.USA",
+                      :uri=>"LicensedStates/Branch/0037",
+                      :role=>"Test.Branch.LicensedStates.Access",
                       :role_opts=>["0037"]
                   },
                   'content_type' =>"LicensedStates",

@@ -45,7 +45,7 @@ module Providers
 
     # Arrays of the following hash
     # parms = {
-    #  "uri"=>"ContentType/TopicType/TopicOpt",   FileDownload/UserGroups/BranchPrimary
+    #  "uri"=>"ContentType/TopicType/TopicValue",   FileDownload/UserGroups/BranchPrimary
     #  "content_type"=>"ContentType",
     #  "content_value"=>{:docType=>123, :drawerType=>4312},
     #  "topic_type"=>"TopicType",

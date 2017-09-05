@@ -462,7 +462,8 @@ module Domains
 
       cpe[:profile] = cpe[:id]
       cpe[:id] = pg_u.id
-      Rails.logger.debug "#{self.class}##{__method__} results => #{cpe}"
+      cpe[:pak] = pg_u.person_authenticated_key
+      Rails.logger.debug "#{self.class}##{__method__} results => #{cpe.present?}"
 
       # Returns an empty Array on Error, or Array of Hashes on Success
       [adapter_for_content_profile_entry(cpe).available_content_list(cpe), pg_u.display_name]

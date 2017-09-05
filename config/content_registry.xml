@@ -79,12 +79,15 @@
     </resource>
 
     <!-- ========================================== -->
-    <!--     Notification by Branch Permissions     -->
+    <!--     Notification by Branch
+            is data related to a specific branch, and not a permission;
+            maybe it should not be represented in this structure
+    -->
     <!-- ========================================== -->
   <resource secured="true" content="true">
     <uri>Notification/Branch/0034</uri>
     <description>South Branch Notification Emails</description>
-    <userdata>*.pdf</userdata>
+      <userdata>AdvCancel|FutCancel|Cancel|</userdata>
     <permission type="READ">
       <authorizedRoles>
         <authorizedRole options="Developer,Manager,EmployeePrimary,0034">Services.Branch.Notification.Access</authorizedRole>
@@ -94,7 +97,7 @@
     <resource secured="true" content="true">
         <uri>Notification/Branch/0037</uri>
         <description>North Branch Notification Emails</description>
-        <userdata>*.pdf</userdata>
+        <userdata>AdvCancel|FutCancel|Cancel|</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="Developer,Manager,EmployeePrimary,0037">Services.Branch.Notification.Access</authorizedRole>
@@ -104,7 +107,7 @@
     <resource secured="true" content="true">
         <uri>Notification/Branch/0040</uri>
         <description>West Branch Notification Emails</description>
-        <userdata>*.pdf</userdata>
+        <userdata>AdvCancel|FutCancel|Cancel|</userdata>
         <permission type="READ">
             <authorizedRoles>
                 <authorizedRole options="Developer,Manager,EmployeePrimary,0040">Services.Branch.Notification.Access</authorizedRole>
@@ -147,7 +150,10 @@
     </resource>
 
     <!-- ========================================== -->
-    <!--     LicensedStates by Branch Permissions   -->
+    <!--     LicensedStates by Branch Permissions
+            is data related to a specific branch, and not a permission;
+            maybe it should not be represented in this structure
+    -->
     <!-- ========================================== -->
   <resource secured="true" content="true">
     <uri>LicensedStates/Branch/0034</uri>
