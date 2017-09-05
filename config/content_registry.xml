@@ -28,95 +28,254 @@
                                         Select user_options = authorizedRole(options)
       =============================================================================
       -->
-  <!--============== Content Profile Adaptation  ========== -->
+
+    <!--============== RSpec Test Data  ========== -->
+    <resource secured="true" content="true">
+        <uri>Commission/Branch/BAD</uri>
+        <description>Test where RoleName has no Options</description>
+        <userdata>*.pdf</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Branch.Commission.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+
+  <!--============== Content Profile Adaptation in XML ========== -->
+
+    <!-- ========================================== -->
+    <!--     Experience by Branch Permissions       -->
+    <!-- ========================================== -->
   <resource secured="true" content="true">
-    <uri>Commission/Branch/PDF</uri>
-    <description>Branch Commission Statements</description>
+    <uri>Commission/Branch/0034</uri>
+    <description>South Branch Commission Statements</description>
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,0034">Services.Branch.Commission.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
+    <resource secured="true" content="true">
+        <uri>Commission/Branch/0037</uri>
+        <description>North Branch Commission Statements</description>
+        <userdata>*.pdf</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0037">Services.Branch.Commission.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true" content="true">
+        <uri>Commission/Branch/0040</uri>
+        <description>West Branch Commission Statements</description>
+        <userdata>*.pdf</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0040">Services.Branch.Commission.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <!-- ========================================== -->
+    <!--     Notification by Branch Permissions     -->
+    <!-- ========================================== -->
   <resource secured="true" content="true">
-    <uri>Commission/Branch/CSV</uri>
-    <description>Branch Commission CSV Datafiles</description>
-    <userdata>*.csv</userdata>
-    <permission type="READ">
-      <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.Commission.Access</authorizedRole>
-      </authorizedRoles>
-    </permission>
-  </resource>
-  <resource secured="true" content="true">
-    <uri>Experience/Branch/PDF</uri>
-    <description>Branch Experience Statements</description>
+    <uri>Notification/Branch/0034</uri>
+    <description>South Branch Notification Emails</description>
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.Experience.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,0034">Services.Branch.Notification.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
-  <resource secured="true" content="true">
-    <uri>Commission/Branch/BAD</uri>
-    <description>Test where RoleName has no Options</description>
+    <resource secured="true" content="true">
+        <uri>Notification/Branch/0037</uri>
+        <description>North Branch Notification Emails</description>
+        <userdata>*.pdf</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0037">Services.Branch.Notification.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true" content="true">
+        <uri>Notification/Branch/0040</uri>
+        <description>West Branch Notification Emails</description>
+        <userdata>*.pdf</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0040">Services.Branch.Notification.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <!-- ========================================== -->
+    <!--     Experience by Branch Permissions       -->
+    <!-- ========================================== -->
+    <resource secured="true" content="true">
+    <uri>Experience/Branch/0034</uri>
+    <description>South Branch Experience Statements</description>
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole>Services.Branch.Commission.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,0034">Services.Branch.Experience.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
+    <resource secured="true" content="true">
+        <uri>Experience/Branch/0037</uri>
+        <description>North Branch Experience Statements</description>
+        <userdata>*.pdf</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0037">Services.Branch.Experience.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true" content="true">
+        <uri>Experience/Branch/0040</uri>
+        <description>West Branch Experience Statements</description>
+        <userdata>*.pdf</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0040">Services.Branch.Experience.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <!-- ========================================== -->
+    <!--     LicensedStates by Branch Permissions   -->
+    <!-- ========================================== -->
   <resource secured="true" content="true">
-    <uri>LicensedStates/Branch/Operations</uri>
-    <description>Producer Licensed States</description>
-    <userdata>"21|9|23|"</userdata>
+    <uri>LicensedStates/Branch/0034</uri>
+    <description>South Branch State Licenses</description>
+    <userdata>"21|12|13|"</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0034,0037,0040">Services.Branch.LicensedStates.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,0034">Services.Branch.LicensedStates.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
+    <resource secured="true" content="true">
+        <uri>LicensedStates/Branch/0037</uri>
+        <description>North Branch State Licenses</description>
+        <userdata>"34|37|31|"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0037">Services.Branch.LicensedStates.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+    <resource secured="true" content="true">
+        <uri>LicensedStates/Branch/0040</uri>
+        <description>West Branch State Licenses</description>
+        <userdata>"24|14|3|"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0040">Services.Branch.LicensedStates.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <!-- =============================== -->
+    <!--     Partner Permissions   -->
+    <!-- =============================== -->
   <resource secured="true" content="true">
     <uri>Activity/Partner/0099</uri>
     <description>Partner Relationship Reports</description>
     <userdata>*.pdf</userdata>
     <permission type="READ">
       <authorizedRoles>
-        <authorizedRole options="0099">Services.Partner.Activity.Access</authorizedRole>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,0099">Services.Partner.Activity.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+
+    <!-- =============================== -->
+    <!--     userGroup  Permissions      -->
+    <!-- =============================== -->
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/Developer</uri>
+    <description>Permission to Download Developer Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="Developer,Manager">Services.UserGroups.FileDownload.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
   <resource secured="true" content="true">
-    <uri>FileDownload/UserGroups/Pdf</uri>
-    <description>Permission to Download PDF Files</description>
-    <userdata>*.pdf</userdata>
+    <uri>FileDownload/UserGroups/Manager</uri>
+    <description>Permission to Download Manager Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="Developer,Manager">Services.UserGroups.FileDownload.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/EmployeePrimary</uri>
+    <description>Permission to Download EmployeePrimary Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="Developer,Manager,EmployeePrimary">Services.UserGroups.FileDownload.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/EmployeeSecondary</uri>
+    <description>Permission to Download EmployeeSecondary Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/BranchPrimary</uri>
+    <description>Permission to Download BranchPrimary Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary">Services.UserGroups.FileDownload.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/BranchSecondary</uri>
+    <description>Permission to Download BranchSecondary Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/VendorPrimary</uri>
+    <description>Permission to Download VendorPrimary Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
+    <permission type="READ">
+      <authorizedRoles>
+        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary">Services.UserGroups.FileDownload.Access</authorizedRole>
+      </authorizedRoles>
+    </permission>
+  </resource>
+  <resource secured="true" content="true">
+    <uri>FileDownload/UserGroups/VendorSecondary</uri>
+    <description>Permission to Download VendorSecondary Files</description>
+    <userdata>*.png|*.jpg|*.pdf|*.log</userdata>
     <permission type="READ">
       <authorizedRoles>
         <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
       </authorizedRoles>
     </permission>
   </resource>
-  <resource secured="true" content="true">
-    <uri>FileDownload/UserGroups/Datafiles</uri>
-    <description>Permission to Download Data Files</description>
-    <userdata>*.log</userdata>
-    <permission type="READ">
-      <authorizedRoles>
-        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
-      </authorizedRoles>
-    </permission>
-  </resource>
-  <resource secured="true" content="true">
-    <uri>FileDownload/UserGroups/Images</uri>
-    <description>Permission to Download Image Files</description>
-    <userdata>*.png|*.jpg</userdata>
-    <permission type="READ">
-      <authorizedRoles>
-        <authorizedRole options="Developer,Manager,EmployeePrimary,EmployeeSecondary,BranchPrimary,BranchSecondary,VendorPrimary,VendorSecondary">Services.UserGroups.FileDownload.Access</authorizedRole>
-      </authorizedRoles>
-    </permission>
-  </resource>
+
 </contentRegistry>

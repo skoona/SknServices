@@ -22,6 +22,7 @@ begin
       {name: "Services.Action.Developer",                        description: "Super User or Developer"},
       {name: "Services.Branch.Commission.Access",                description: "Access Branch Commission Statements"},
       {name: "Services.Branch.Experience.Access",                description: "Access Branch Experience Report"},
+      {name: "Services.Branch.Notification.Access",              description: "Access Branch Notification Mailings"},
       {name: "Services.Branch.LicensedStates.Access",            description: "Access Branch Licensed USA States"},
       {name: "Services.UserGroups.FileDownload.Access",          description: "Access Shared UserGroup Resources"},
       {name: "Services.Partner.Activity.Access",                 description: "Access Partner Project Resources"}
@@ -32,13 +33,13 @@ begin
       {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"},
       {name: "Services.Action.Use.UserRecords",                  description: "Consumer of User Records"},
       # XML Content Profile Permission, controlled by combination of :user_options and presence of one of these roles.
-      {name: "Services.UserGroups.FileDownload.Access",          description: "Access Shared UserGroup Resources"},
       {name: "Services.Partner.Activity.Access",                 description: "Access Partner Project Resources"}
   ]
 
   content_profile_p = [
       {name: "Services.Action.Admin.ContentProfile",             description: "Administer Authorization Content Profile"},
       {name: "Services.Branch.Commission.Access",                description: "Access Branch Commission Statements"},
+      {name: "Services.Branch.Notification.Access",              description: "Access Branch Notification Mailings"},
       {name: "Services.Branch.Experience.Access",                description: "Access Branch Experience Report"},
       {name: "Services.Branch.LicensedStates.Access",            description: "Access Branch Licensed USA States"}
   ]
@@ -46,6 +47,7 @@ begin
   content_profile_s = [
       {name: "Services.Action.Use.ContentProfile",               description: "Consumer of Authorization Content Profile"},
       {name: "Services.Branch.Commission.Access",                description: "Access Branch Commission Statements"},
+      {name: "Services.Branch.Notification.Access",              description: "Access Branch Notification Mailings"},
       {name: "Services.Branch.Experience.Access",                description: "Access Branch Experience Report"},
       {name: "Services.Branch.LicensedStates.Access",            description: "Access Branch Licensed USA States"}
   ]
