@@ -221,7 +221,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    skn_utils (3.3.12)
+    skn_utils (3.4.0)
       deep_merge (~> 1.1)
     slop (3.6.0)
     sprockets (3.7.1)
