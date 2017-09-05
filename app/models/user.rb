@@ -64,10 +64,6 @@ class User < ApplicationRecord
   validates( :password, confirmation: true, length: { :within => 6..40 }, if: :need_password? )
   validates( :password_confirmation, presence: true, if: :need_password?)
 
-  def display_name
-    self.name
-  end
-
   def need_password?
     self.password.present? || new_record?
   end

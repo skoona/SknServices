@@ -28,10 +28,6 @@ module Registry
       payload[:username] = current_user.present? ? current_user.username :  'no-user'
     end
 
-    def json_request?
-      request.format.json?
-    end
-
     def accessed_page_name
       Secure::AccessRegistry.get_resource_description(accessed_page) || ""
     end

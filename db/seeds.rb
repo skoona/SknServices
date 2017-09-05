@@ -91,7 +91,7 @@ begin
       "Skoona Consulting" => all_roles,
       "Corporate Manager"  => all_roles,
       "Department Manager" => admin_collection,
-      "Corporate Staff"    => limited_collection,
+      "Corporate Staff"    => branch_admin_collection,
       "Branch Admin"       => branch_admin_collection,
       "Branch Staff"       => limited_collection,
       "Partner Admin"      => public_collection,

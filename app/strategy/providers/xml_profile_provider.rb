@@ -45,11 +45,11 @@ module Providers
 
     # Arrays of the following hash
     # parms = {
-    #  "uri"=>"ContentType/TopicType/SomeKey",
+    #  "uri"=>"ContentType/TopicType/TopicOpt",   FileDownload/UserGroups/BranchPrimary
     #  "content_type"=>"ContentType",
     #  "content_value"=>{:docType=>123, :drawerType=>4312},
     #  "topic_type"=>"TopicType",
-    #  "topic_value"=>["0034", "0037", "0040"],
+    #  "topic_value"=>["BranchPrimary", 0034", "0037", "0040"],
     #  "description"=>"XML Testing Data"
     # }
     # Create an XML version of a ContentProfileEntry from parms
@@ -194,70 +194,6 @@ module Providers
 
     def collect_context_profile_entry(usrp)
       Secure::AccessRegistry.get_resource_content_entries(usrp.combined_access_roles, usrp.user_options )
-    end
-
-    ##
-    # generate xml from a regular hash, with/out arrays
-    def generate_xml_from_hash(hash, base_type, collection_key)
-      builder = Nokogiri::XML::Builder.new do |xml|
-        xml.send(base_type) { process_simple_array(collection_key, hash, xml) }
-      end
-
-      builder.to_xml
-    end
-
-    ##
-    # generate xml from a hash of hashes or array of hashes
-    def generate_xml_from_nested_hashes(data, parent = false, opt = {})
-      return if data.to_s.empty?
-      return unless data.is_a?(Hash)
-
-      unless parent
-        # assume that if the hash has a single key that it should be the root
-        root, data = (data.length == 1) ? data.shift : ["root", data]
-        builder = Nokogiri::XML::Builder.new(opt) do |xml|
-          xml.send(root) {
-            generate_xml(data, xml)
-          }
-        end
-
-        return builder.to_xml
-      end
-
-      data.each { |label, value|
-        if value.is_a?(Hash)
-          attrs = value.fetch('@attributes', {})
-          # also passing 'text' as a key makes nokogiri do the same thing
-          text = value.fetch('@text', '')
-          parent.send(label, attrs, text) {
-            value.delete('@attributes')
-            value.delete('@text')
-            generate_xml(value, parent)
-          }
-
-        elsif value.is_a?(Array)
-          value.each { |el|
-            # lets trick the above into firing so we do not need to rewrite the checks
-            el = {label => el}
-            generate_xml(el, parent)
-          }
-
-        else
-          parent.send(label, value)
-        end
-      }
-    end
-
-    private
-
-    # support for #generate_xml_from_hash
-    def process_simple_array(label,array,xml)
-      array.each do |hash|
-        kids,attrs = hash.partition{ |k,v| v.is_a?(Array) }
-        xml.send(label,Hash[attrs]) do
-          kids.each{ |k,v| process_array(k,v,xml) }
-        end
-      end
     end
 
   end

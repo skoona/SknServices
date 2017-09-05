@@ -86,23 +86,6 @@ module Secure
       counter
     end
 
-    # Assumes object is a Secure::UserProfile
-    # Returns array of arrays where [[key-without-context, username],...]
-    def get_warden_stored_user_profile_keys(context=CDEFAULT)
-      results = []
-      @objects_storage_container.each_pair do |k,v|
-        next unless v.first.is_a?(Secure::UserProfile)
-        parts = k.to_s.split(".")
-        if context.eql?(COVERRIDE)
-          results << {parts[1].to_sym => v.first.username}
-        elsif parts[0].eql?(context)
-          results << {parts[1].to_sym => v.first.username}
-        end
-      end
-      Rails.logger.debug "#{self.class.name}.#{__method__}(#{context}) Results=#{results}"
-      results
-    end
-
     #
     # Returns array of arrays where [[key-without-context, username],...]
     def list_storage_keys_and_value_class()
