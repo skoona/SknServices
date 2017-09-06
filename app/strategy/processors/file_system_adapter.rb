@@ -73,6 +73,7 @@ module Processors
     def preload_available_content_list(cpe)
       result = []
       catalog = {}
+      content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
 
       content_list(cpe, catalog, result)
       update_storage_object("#{PREFIX_CATALOG}-#{content_type}-#{cpe[:pak]}", catalog)
@@ -87,6 +88,7 @@ module Processors
     def available_content_list(cpe)
       result = []
       catalog = {}
+      content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
 
       content_list(cpe, catalog, result)
       update_storage_object("#{PREFIX_CATALOG}-#{cpe[:pak]}", catalog)

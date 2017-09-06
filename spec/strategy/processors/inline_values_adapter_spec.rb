@@ -45,12 +45,12 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
     let(:cpe) {
                 { :id=>"access",
                   :uri=>"LicensedStates/Branch/0037",
-                  :resource_options=>{
+                  :resource_options=>{ "0" => {
                       :uri=>"LicensedStates/Branch/0037",
-                      :role=>"Test.Branch.LicensedStates.Access",
-                      :role_opts=>["0037"]
+                      :role=>"Services.Branch.LicensedStates.Access",
+                      :role_opts=>["0037"]}
                   },
-                  'content_type' =>"LicensedStates",
+                  :content_type=>"LicensedStates",
                   :content_value=>["21"],
                   :topic_type=>"Branch",
                   :topic_value=>["0037"],

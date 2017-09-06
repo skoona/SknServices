@@ -2,7 +2,7 @@
 #
 
 RSpec.describe Services::ContentService, "Service routines of Services::ContentService." do
-  let!(:user) {user_bstester}
+  let!(:user) {user_developer}
   let!(:userp) {page_user_bnptester}
 
   let(:mc) {ServiceRegistryMockController.new(user: user)}
@@ -127,11 +127,28 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
     end
 
     scenario "#api_get_content_object" do
-      parms = {"id"=>"0:0:1",
-               "username"=>"developer"}
+      parms = {"id"=>"content",
+               "username"=>"developer",
+               "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
+               "content_type"=>"Commission",
+               "content_value"=>["68613"],
+               "topic_type"=>"Branch",
+               "topic_value"=>["0038"],
+               "description"=>"Determine which branch documents can be seen",
+               "topic_type_description"=>"Branch Actions for a specific branch",
+               "content_type_description"=>"Monthly Commission Reports and Files"
+      }
+      catalog = service.handle_api_accessible_content(parms)
+      expect(catalog.package.success).to be true
+
+      parms = {"id"=>"0:0:0",
+               "username"=>"developer",
+               "content_type"=>"Commission"
+      }
+
       result = service.api_get_content_object(parms)
       expect(result).to be_a(SknUtils::NestedResult)
-      expect(result.package.success).to be true
+      expect(result.success).to be true
     end
 
   end
@@ -145,11 +162,16 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
     end
 
     scenario "#api_get_demo_content_object " do
-      parms = {"id"=>"0:0:1",
-               "username"=>"developer"}
+      parms = {"id"=>"0:0:0",
+               "username"=>"developer",
+               'content_type'=>"Commission"
+      }
+      catalog = service.handle_in_action()
+      expect(catalog.success).to be true
+
       result = service.api_get_demo_content_object(parms)
       expect(result).to be_a(SknUtils::NestedResult)
-      expect(result.package.success).to be true
+      expect(result.success).to be true
     end
   end
 

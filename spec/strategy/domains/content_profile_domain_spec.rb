@@ -72,15 +72,15 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
                          "description"=>"Relationship Activity Reports", "topic_type_description"=>"This Corporate Account",
                          "content_type_description"=>"This Corporate Account"}}
       let!(:bpa_parms) {{"id"=>"access", "username"=>"bptester", "user_options"=>["BranchSecondary", "0037", "USA"],
-                         "uri"=>"Commission/Branch/CSV", "resource_options"=>{"uri"=>"Commission/Branch/CSV",
-                                                                              "role"=>"Test.Branch.Commission.Statement.CSV.Access", "role_opts"=>["0037"]},
+                         "uri"=>"Commission/Branch/0037", "resource_options"=>{"0" => {"uri"=>"Commission/Branch/CSV",
+                                                                              "role"=>"Test.Branch.Commission.Statement.CSV.Access", "role_opts"=>["0037"]}},
                          "content_type"=>"Commission", "content_value"=>["*.log", "*.csv"], "topic_type"=>"Branch",
                          "topic_value"=>["0037"], "description"=>"Branch Commission CSV Datafiles", "topic_type_description"=>"Branch Commission CSV Datafiles",
                          "content_type_description"=>"Branch Commission CSV Datafiles"}
       }
       let!(:vsa_parms) {{"id"=>"access", "username"=>"vstester", "user_options"=>["VendorSecondary", "0099"],
-                         "uri"=>"Activity/Partner/0099", "resource_options"=>{"uri"=>"Activity/Partner/0099", "role"=>"Services.UserGroups.Use.FileDownload",
-                                                                              "role_opts"=>["0099"]},
+                         "uri"=>"Activity/Partner/0099", "resource_options"=>{"0" => {"uri"=>"Activity/Partner/0099", "role"=>"Services.UserGroups.Use.FileDownload",
+                                                                              "role_opts"=>["0099"]}},
                          "content_type"=>"Activity", "content_value"=>["*.pdf"], "topic_type"=>"Partner", "topic_value"=>["0099"],
                          "description"=>"Partner Relationship Reports", "topic_type_description"=>"Partner Relationship Reports",
                          "content_type_description"=>"Partner Relationship Reports"}
