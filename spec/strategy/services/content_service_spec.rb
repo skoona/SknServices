@@ -55,6 +55,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                "id"=>userp.person_authenticated_key
       }
       expect(service.handle_content_profile_create(parms).success).to be true
+      expect(service.handle_content_profile_create({}).success).to be false
     end
 
     scenario "#handle_content_profile_update" do
@@ -64,6 +65,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                "id"=>user.person_authenticated_key
       }
       expect(service.handle_content_profile_update(parms).success).to be true
+      expect(service.handle_content_profile_update({}).success).to be false
     end
 
     scenario "#handle_content_profile_destroy" do
@@ -73,6 +75,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                "id"=>ContentProfile.first.person_authentication_key.to_s
       }
       expect(service.handle_content_profile_destroy(parms).success).to be true
+      expect(service.handle_content_profile_destroy({}).success).to be false
     end
 
     scenario "#handle_content_profile_entries_create" do
@@ -88,6 +91,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
             "button"=>"content-entry-modal"
       }
       expect(service.handle_content_profile_entries_create(parms).success).to be true
+      expect(service.handle_content_profile_entries_create({}).success).to be false
     end
 
     scenario "#handle_content_profile_entry_destroy" do
@@ -97,6 +101,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                'pak' => user.person_authenticated_key
       }
       expect(service.handle_content_profile_entry_destroy(parms).success).to be true
+      expect(service.handle_content_profile_entry_destroy({}).success).to be false
     end
 
   end
@@ -124,6 +129,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       result = service.handle_api_accessible_content(parms)
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.package.success).to be true
+      expect(service.handle_api_accessible_content({}).package.success).to be false
     end
 
     scenario "#api_get_content_object" do
@@ -149,6 +155,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       result = service.api_get_content_object(parms)
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
+      expect(service.api_get_content_object({}).success).to be false
     end
 
   end
@@ -172,6 +179,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       result = service.api_get_demo_content_object(parms)
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
+      expect(service.api_get_demo_content_object({}).success).to be false
     end
   end
 
@@ -192,6 +200,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       result = service.handle_member(parms)
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
+      expect(service.handle_member({}).success).to be false
     end
 
     scenario "#handle_member_updates " do
@@ -210,6 +219,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       result = service.handle_member_updates(parms)
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
+      expect(service.handle_member_updates(false).success).to be false
     end
   end
 
