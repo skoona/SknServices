@@ -91,7 +91,7 @@ module Secure
     def list_storage_keys_and_value_class()
       results = []
       @objects_storage_container.each_pair do |k,v|
-        name = v.first.try(:username) || v.first.try(:[], :username) || v.first.values[0].try(:[], :filename) || "not found"
+        name = v.first.try(:username) || v.first.try(:[], :username) || "not found"
         parts = k.to_s.split('.')
           results << {
               klass: parts[0],

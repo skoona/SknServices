@@ -155,6 +155,17 @@
             maybe it should not be represented in this structure
     -->
     <!-- ========================================== -->
+    <resource secured="true" content="true" topicValueRegex="^\d{4}">
+        <uri>LicensedStates/Branch/0000</uri>
+        <description>South Branch State Licenses</description>
+        <userdata>"21|12|13|"</userdata>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole options="Developer,Manager,EmployeePrimary,0034">Services.Branch.LicensedStates.Access</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
   <resource secured="true" content="true">
     <uri>LicensedStates/Branch/0034</uri>
     <description>South Branch State Licenses</description>
@@ -165,7 +176,7 @@
       </authorizedRoles>
     </permission>
   </resource>
-    <resource secured="true" content="true">
+  <resource secured="true" content="true">
         <uri>LicensedStates/Branch/0037</uri>
         <description>North Branch State Licenses</description>
         <userdata>"34|37|31|"</userdata>
@@ -174,8 +185,8 @@
                 <authorizedRole options="Developer,Manager,EmployeePrimary,0037">Services.Branch.LicensedStates.Access</authorizedRole>
             </authorizedRoles>
         </permission>
-    </resource>
-    <resource secured="true" content="true">
+  </resource>
+  <resource secured="true" content="true">
         <uri>LicensedStates/Branch/0040</uri>
         <description>West Branch State Licenses</description>
         <userdata>"24|14|3|"</userdata>
@@ -184,7 +195,7 @@
                 <authorizedRole options="Developer,Manager,EmployeePrimary,0040">Services.Branch.LicensedStates.Access</authorizedRole>
             </authorizedRoles>
         </permission>
-    </resource>
+  </resource>
 
     <!-- =============================== -->
     <!--     Partner Permissions   -->

@@ -256,7 +256,7 @@ module Secure
         results << result unless result.empty?
       end
       # Rails.logger.debug("#{self.name}.#{__method__}() opts=#{opts}, roles=#{roles}, result=#{results}") if Rails.logger.present?
-      Rails.logger.debug("#{self.name}.#{__method__}() Entries=#{results}") if Rails.logger.present?
+      Rails.logger.debug("#{self.name}.#{__method__}() Entries=#{results.size}") if Rails.logger.present?
       results
     end
 
@@ -279,15 +279,18 @@ module Secure
         #
         # user_options are a primary filter for XML version of content profile
         # Multiple Roles per CRUD are collected and verified against :user_options
+        # -- options are :user_options, topic_opts is specified topic_value from URI,
+        # -- and :role_opts are those from the current permission role.
+        # 1. :topic_opts must equal a value in :options
+        # 2. elsif :role_opts exists, it must have a value in :options
         topic_value = []
         opts.each do |choice|
           topics = choice.fetch(:role_opts,[])
-          if options.present?
-            chosen = topics.select {|m| options.include?(m)}
-            topic_value << chosen unless chosen.empty?
+          if options.try(:include?, topic_opts) || topics.try(:any?) {|m| options.include?(m) }
+            topic_value << topic_opts
           end
         end
-        topic_value.flatten!
+        topic_value = topic_value.flatten.uniq
 
         unless topic_value.empty?                                           # if there are no options remaining DO NOT return this entry
           results = {
@@ -296,7 +299,7 @@ module Secure
               content_type: content_type,
               content_value: bundle[:userdata].is_a?(Array) ? bundle[:userdata] : [bundle[:userdata]],
               topic_type: topic_type,
-              topic_value: [topic_opts], # topic_value,   # role_opts are now required for use as Topic Options Values -- [topic_opts],
+              topic_value: topic_value,   # role_opts are now required for use as Topic Options Values -- [topic_opts],
               description: bundle[:description],
               topic_type_description: bundle[:description],
               content_type_description: bundle[:description]

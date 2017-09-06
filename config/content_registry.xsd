@@ -13,13 +13,13 @@
                * REQUIRED RESOURCE SYNTAX **********************************************
                                   ** Note: :options are now required for TopicOpts values
 
-                <resource secured="true|false" content="true|false">
-                    <uri>CONTENT/TOPIC/anyString</uri>
+                <resource secured="true|false" content="true|false" topicValueRegex="">
+                    <uri>CONTENT/TOPIC/TOPIC_VALUE</uri>
                     <description></description>
                     <userdata>CONTENT_VALUE</userdata>
                     <permission type="READ">
                         <authorizedRoles>
-                            <authorizedRole options="TOPIC_VALUE RequiredCommaSepTopicValues">security-role-name</authorizedRole>
+                            <authorizedRole options="TOPIC_VALUE RequiredCommaSepTopicValues">Services.CONTENT.TOPIC.Access</authorizedRole>
                         </authorizedRoles>
                     </permission>
                 </resource>
@@ -52,7 +52,7 @@
   <xs:element name="authorizedRoles">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="authorizedRole" maxOccurs="unbounded" minOccurs="1"/>
+        <xs:element ref="authorizedRole" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -60,7 +60,7 @@
   <xs:element name="permission">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="authorizedRoles" minOccurs="1" />
+        <xs:element ref="authorizedRoles"/>
       </xs:sequence>
       <xs:attribute name="type" use="required">
         <xs:simpleType>
@@ -86,13 +86,14 @@
   <xs:element name="resource">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="uri" minOccurs="1" />
-        <xs:element ref="description" minOccurs="1" />
-        <xs:element ref="userdata" minOccurs="1"/>
+        <xs:element ref="uri"/>
+        <xs:element ref="description"/>
+        <xs:element ref="userdata"/>
         <xs:element ref="permission" maxOccurs="4" minOccurs="1"/>
       </xs:sequence>
       <xs:attribute type="xs:boolean" name="secured" use="required"/>
       <xs:attribute type="xs:boolean" name="content" use="required"/>
+      <xs:attribute type="xs:string" name="topicValueRegex" />
     </xs:complexType>
   </xs:element>
 </xs:schema>

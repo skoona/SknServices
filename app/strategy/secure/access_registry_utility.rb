@@ -35,6 +35,7 @@
 #    "uri" = {
 #      "secured" => true,
 #      "content" => true,
+#      "topic_value_regex" => "^\d{4}",
 #      "userdata" => 'String,Array,Hash',
 #      "description" => "some description",
 #      "CREATE" => {
@@ -78,7 +79,7 @@ module Secure
 
     def self.call(xml_filename, rootPath='accessRegistry')
       xml_hash = new(xml_filename, rootPath).call()
-      # pp self.class.name, __method__, xml_hash
+      # pp self.class, __method__, xml_hash
       xml_hash
     end
 
@@ -104,6 +105,8 @@ module Secure
 
         resource_hash[resource_uri]["content"] = false
         resource_hash[resource_uri]["content"] = resource["content"] = true if resource["content"].present? and resource["content"].eql?("true")
+
+        resource_hash[resource_uri]["topic_value_regex"] = resource["topicValueRegex"] if resource["topicValueRegex"].present?
 
         # siblings
         resource.children.each  do |sibl|

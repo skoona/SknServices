@@ -156,7 +156,6 @@ RSpec.describe Services::AccessService, "Service routines of AccessProfile and A
 
     scenario "#handle_system_information returns information bundle." do
       expect(service.handle_system_information({}).success).to be true
-      expect(service.handle_system_information({}).success).to be true
     end
   end
 
