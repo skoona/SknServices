@@ -27,11 +27,6 @@ module Processors
 
     def initialize(params={})
       super(params)
-      @topic_values = {
-          datafiles: './controlled/downloads/datafiles/',
-          images: './controlled/downloads/images/',
-          pdf: './controlled/downloads/pdf/'
-      }
       @file_system = Pathname('./controlled/projects')
     end
 
@@ -103,12 +98,12 @@ module Processors
     def content_list(cpe, catalog={}, result=[])
       paths = []
 
-      base_path = cpe[:base_path] || @file_system.to_path
-      topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
-      content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
-      topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
+      base_path     = cpe[:base_path]     || @file_system.to_path
+      topic_type    = cpe[:topic_type]    || cpe["topic_type"]  # should always be an array
+      content_type  = cpe[:content_type]  || cpe["content_type"]  # should always be an array
+      topic_value   = cpe[:topic_value]   || cpe["topic_value"]  # should always be an array
       content_value = cpe[:content_value] || cpe["content_value"]  # should always be an array
-      user_options = cpe[:user_options] || [] # many times this value is nil
+      user_options  = cpe[:user_options]  || [] # many times this value is nil
 
       ##
       # This is another security check to see if user options include these topic ids for XML Entries only
@@ -205,10 +200,10 @@ module Processors
 
     # Composes a new path from the CPE
     def create_new_content_entry_path(cpe={}, opts={}) # ContentProfileEntry Hash, { noop: true, mode: 0700, verbose: true }
-      base_path = cpe[:base_path] || @file_system.to_path
-      topic_type = cpe[:topic_type] || cpe["topic_type"]  # should always be an array
+      base_path    = cpe[:base_path]    || @file_system.to_path
+      topic_type   = cpe[:topic_type]   || cpe["topic_type"]  # should always be an array
       content_type = cpe[:content_type] || cpe["content_type"]  # should always be an array
-      topic_value = cpe[:topic_value] || cpe["topic_value"]  # should always be an array
+      topic_value  = cpe[:topic_value]  || cpe["topic_value"]  # should always be an array
       paths = topic_value.map {|topic_id| Pathname.new("#{base_path}/#{topic_type}/#{topic_id}/#{content_type}") }
       paths.each do |path|
         FileUtils.mkpath(path.to_path, opts) unless path.exist?

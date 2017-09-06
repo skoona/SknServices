@@ -155,17 +155,6 @@
             maybe it should not be represented in this structure
     -->
     <!-- ========================================== -->
-    <resource secured="true" content="true" topicValueRegex="^\d{4}">
-        <uri>LicensedStates/Branch/0000</uri>
-        <description>South Branch State Licenses</description>
-        <userdata>"21|12|13|"</userdata>
-        <permission type="READ">
-            <authorizedRoles>
-                <authorizedRole options="Developer,Manager,EmployeePrimary,0034">Services.Branch.LicensedStates.Access</authorizedRole>
-            </authorizedRoles>
-        </permission>
-    </resource>
-
   <resource secured="true" content="true">
     <uri>LicensedStates/Branch/0034</uri>
     <description>South Branch State Licenses</description>

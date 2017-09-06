@@ -255,7 +255,6 @@ module Secure
         result = get_resource_content_entry(roles, uri, opts)
         results << result unless result.empty?
       end
-      # Rails.logger.debug("#{self.name}.#{__method__}() opts=#{opts}, roles=#{roles}, result=#{results}") if Rails.logger.present?
       Rails.logger.debug("#{self.name}.#{__method__}() Entries=#{results.size}") if Rails.logger.present?
       results
     end
@@ -303,8 +302,6 @@ module Secure
               description: bundle[:description],
               topic_type_description: bundle[:description],
               content_type_description: bundle[:description]
-              # Todo: role options are considered Topic Option Values
-              # Todo: Only READ is supported and present in Content Entries
           }
         end
       else

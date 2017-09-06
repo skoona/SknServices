@@ -62,6 +62,7 @@ module Providers
     def member_topic_type_opts_select_options_with_description(name)
       TopicTypeOpt.member_option_selects_with_desc(name)
     end
+
     ##
     # Creation Methods
     ##
