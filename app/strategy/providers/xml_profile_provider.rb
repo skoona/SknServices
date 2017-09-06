@@ -153,6 +153,7 @@ module Providers
       return  arobj if arobj
 
       package = {
+          message: "XML Entries for: #{user_profile.display_name}, UserOptions=#{user_profile.user_options}",
           success: true,
           entries: collect_context_profile_entry(user_profile) || [],
           pak: user_profile.person_authenticated_key,

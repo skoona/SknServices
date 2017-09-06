@@ -349,7 +349,8 @@ module Providers
       ctxp = ContentProfile.includes(:content_profile_entries).find_by( person_authentication_key: user_profile.person_authenticated_key)
 
       unless ctxp.nil?
-        results =  ctxp.entry_info_with_username(user_profile).merge({ success: true })
+        msg = "DB Entries for: #{user_profile.display_name}, UserOptions=#{user_profile.user_options}"
+        results =  ctxp.entry_info_with_username(user_profile).merge({ success: true, message: msg })
       else
         results = {
             success: false,

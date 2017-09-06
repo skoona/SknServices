@@ -265,25 +265,3 @@ app/strategy/services/content_service.rb
      *handle_content_profile_entries_create(params) #==> true
      *handle_content_profile_entry_destroy(params)  #==> true
 
-
-{
-    "id"=>"access",
-    "uri"=>"FileDownload/UserGroups/VendorPrimary",
-    "resource_options"=>{
-        "0"=>{
-            "uri"=>"FileDownload/UserGroups/VendorPrimary",
-            "role"=>"Services.UserGroups.FileDownload.Access",
-            "role_opts"=>["Developer", "Manager", "EmployeePrimary", "EmployeeSecondary",
-                          "BranchPrimary", "BranchSecondary", "VendorPrimary"]
-            }
-    },
-    "content_type"=>"FileDownload",
-    "content_value"=>["*.png", "*.jpg", "*.pdf", "*.log"],
-    "topic_type"=>"UserGroups",
-    "topic_value"=>["EmployeeSecondary"],
-    "description"=>"Permission to Download VendorPrimary Files",
-    "topic_type_description"=>"Permission to Download VendorPrimary Files",
-    "content_type_description"=>"Permission to Download VendorPrimary Files",
-    "username"=>"estester",
-    "user_options"=>["EmployeeSecondary", "0037", "0099"]
-}
