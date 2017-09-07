@@ -9,9 +9,6 @@
 
 var logEnabled = <%= Rails.env.development? %>,
     SknService,
-    csrfToken,
-    controllerAction,
-    controllerName,
     accessibleUrl,
     userTable,
     accessTable,
@@ -186,6 +183,19 @@ SknServiceUtil.prototype = {
             $.fn.matchHeight._update();
         } catch (e) {}
         return rc;
+    },
+    branchRemovalSetup: function() {
+      $('div.branch-entry > div.well-sm > a').on('click', function(ev) {
+          var branch = $(this).data().branch;
+          ev.stopPropagation();
+          SknService.removeCardFor(branch);
+
+          $('div.well-sm[data-mh="entry-group"]').matchHeight();
+          consoleLog('onClick() fired for Trashcan! branch: ' + branch);
+
+          return false;
+      });
+      return true;
     }
 
 };
@@ -206,7 +216,7 @@ function handleRailsInfo(ev) {
     console.log( "handleRailsInfo() init: " + JSON.stringify(pkg));
 
     $.ajax({
-        headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+        headers: {'X-CSRF-Token': SknService.csrf, 'X-XSRF-Token': SknService.csrf },
         method: "GET",
         url: '/' + pkg.url
     }).done(function(data,textStatus, jqXHR) {
@@ -311,7 +321,7 @@ function profileTablesRequester(ev) {
     $(ev.currentTarget).addClass('success');
 
     $.ajax({
-        headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+        headers: {'X-CSRF-Token': SknService.csrf, 'X-XSRF-Token': SknService.csrf },
         method: "GET",
         dataType: "json",
         contentType: 'json',
@@ -691,18 +701,163 @@ function handleManagementPages() {
     return true;
 } // end function
 
-function branchRemovalSetup() {
-    $('div.branch-entry > div.well-sm > a').on('click', function(ev) {
-        var branch = $(this).data().branch;
-        ev.stopPropagation();
-        SknService.removeCardFor(branch);
+/**
+ * Initialization of Members and Member Page
+ */
 
-        $('div.well-sm[data-mh="entry-group"]').matchHeight();
-        consoleLog('onClick() fired for Trashcan! branch: ' + branch);
+function handle_members() {
+    membersTable = $('#members-table').DataTable({
+        dom: "<'row'<'col-md-offset-4 col-md-4'f>>tr<'row'<'col-md-12'ip>>",// dom: 'tr<"bottom align-justify"ip>',
+        order: [[0, 'asc']],
+        lengthChange: true,
+        ordering: false,
+        paging: true,
+        processing: true,
+        searching: true,
+        scrollY: "",
+        pageLength: 10,
+        scrollCollapse: false,
+        scroller: true,
+        language: {
+            emptyTable: "No Profiles to Display!"
+        },
+        drawCallback: function(settings) {
+            try {
+                /*
+                 * enable row clicks to member page from members table */
+                $('#members-table tbody tr').on('click', function(event){
+                    var pkg = $(event.currentTarget).data().package
 
+                    $('#members-table tr.admin').removeClass('success');
+                    $(event.currentTarget).addClass('success');
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    consoleLog("drawCallback(members) Row Data(" + JSON.stringify(pkg) + ")");
+                    SknService.go('/profiles/' + pkg.id + '/member?username=' + pkg.username + '&display_name=' + pkg.display_name);
+                });
+            } catch (e) {
+                consoleLog("DataTables DrawCallBack Failed " + e);
+            }
+        }
+    });
+
+ return true;
+}
+
+function handle_member() {
+    /* Setup dropdown lists */
+    $('.selectpicker').selectpicker({
+        size: 5,
+        selectedTextFormat: 'count > 2'
+    });
+    $("select#new-branch").selectpicker({
+        size: 4,
+        selectedTextFormat: 'count > 2'
+    });
+    $("select#filedownload").selectpicker({
+        size: 4,
+        selectedTextFormat: 'count > 2'
+    });
+
+    /**
+     * Manage Add Agency Feature
+     */
+
+    if ($('#apply-branch-container').length > 0) {
+
+        $('#add-branch-btn').on('click', function (ev) {
+            var selected = $("#new-branch").find('option:selected').first();
+            if (selected.val() == 'blank') {
+                return false;
+            }
+            SknService.addCardFor(selected.val(), selected.text());
+            $(ev.currentTarget).attr("disabled", true);
+            ev.stopPropagation();
+            $('div.branch-entry > div.well-sm').matchHeight();
+            $.fn.matchHeight._update();
+
+            consoleLog('New Branch Button(' + selected.val() + ') called!');
+
+            /* allow for added card to be removed */
+            SknService.branchRemovalSetup();
+
+            return false;
+        });
+
+        $('#new-branch').on('changed.bs.select', function (ev, clickedIndex, newValue, oldValue) {
+            /* fires only when changed: new/old are booleans and irrelevant */
+            if (newValue) {
+                $('#add-branch-btn').removeAttr("disabled");
+            }
+            return false;
+        });
+
+        $('#add-branch-btn').attr("disabled", true);
+
+    }
+    /* Keep Container at same height */
+    $('div.well-sm[data-mh="entry-group"]').matchHeight();
+    $.fn.matchHeight._update();
+
+    return true;
+}
+
+/**
+ * Handle System Information page initialization
+ * @returns {boolean}
+ */
+function handle_details_sysinfo() {
+    /*
+     * Initial Establish sections
+     * id="about" -  <a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">
+     *     target: <div id="about-content" style="display: none"></div>
+     * id="routes" - <a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false;">
+     *     target: <div id="route-content" style="display: none"></div>
+     */
+    $('h2 > a.btn-lg').on('click', handleRailsInfo);
+
+
+    siStorageTable = $('#storage-table').DataTable({
+        scrollY: "420px",
+        language: {
+            emptyTable: "ObjectStorage is Empty!"
+        }
+    });
+
+    $('table.sys-table').DataTable({
+        scrollY: "",
+        language: {
+            emptyTable: "No Profiles to Display!"
+        }
+    });
+
+    $('#obs-panel, div.panel.sys-table').on('shown.bs.collapse', function () {
+        siStorageTable.draw();
+        $('table.sys-table').DataTable().draw();
+        consoleLog("Draw() on Panel Shown for DataTables");
         return false;
     });
+
+    return true;
 }
+
+/**
+ * Handle In Action page Initialization
+ */
+function handle_in_action() {
+    $('div.well.runtime-item').on("click", runtimeDemoGetObject);
+
+    $('div.well-sm[data-mh="files-group"]').matchHeight();
+    $.fn.matchHeight._update();
+
+    $('#accordion').on('show.bs.collapse', function() {
+        $.fn.matchHeight._update();
+    });
+
+    return true;
+}
+
 
 /* ********************************************************
  * JQuery Enabled Processing
@@ -715,14 +870,9 @@ $(function() {
     */
     SknService = new SknServiceUtil();
 
-    controllerAction = $('body').data().controllerAction;
-    controllerName = $('body').data().controllerName;
-    /* Save this token for the Ajax calls */
-    csrfToken = $('meta[name="csrf-token"]').attr('content');
-
     /*
      * Only for the ProfilesController based pages */
-    if ( controllerName.startsWith('profiles') ) {
+    if ( SknService.controllerName.startsWith('profiles') ) {
         /*
          * Initial Establish the dataTables */
         try {
@@ -750,113 +900,17 @@ $(function() {
         }
     }
 
-    switch (controllerAction) {
+    switch (SknService.action) {
         case 'members':
-            membersTable = $('#members-table').DataTable({
-                dom: "<'row'<'col-md-offset-4 col-md-4'f>>tr<'row'<'col-md-12'ip>>",// dom: 'tr<"bottom align-justify"ip>',
-                order: [[0, 'asc']],
-                lengthChange: true,
-                ordering: false,
-                paging: true,
-                processing: true,
-                searching: true,
-                scrollY: "",
-                pageLength: 10,
-                scrollCollapse: false,
-                scroller: true,
-                language: {
-                    emptyTable: "No Profiles to Display!"
-                },
-                drawCallback: function(settings) {
-                    try {
-                        /*
-                         * enable row clicks to member page from members table */
-                      $('#members-table tbody tr').on('click', function(event){
-                          var pkg = $(event.currentTarget).data().package
-
-                          $('#members-table tr.admin').removeClass('success');
-                          $(event.currentTarget).addClass('success');
-                          event.preventDefault();
-                          event.stopPropagation();
-
-                          consoleLog("drawCallback(members) Row Data(" + JSON.stringify(pkg) + ")");
-                          SknService.go('/profiles/' + pkg.id + '/member?username=' + pkg.username + '&display_name=' + pkg.display_name);
-                      });
-                    } catch (e) {
-                        consoleLog("DataTables DrawCallBack Failed " + e);
-                    }
-                }
-            });
-
+            handle_members();
             break;
 
         case 'member':
-            /* Setup dropdown lists */
-            $('.selectpicker').selectpicker({
-                size: 5,
-                selectedTextFormat: 'count > 2'
-            });
-            $("select#new-branch").selectpicker({
-                size: 4,
-                selectedTextFormat: 'count > 2'
-            });
-            $("select#filedownload").selectpicker({
-                size: 4,
-                selectedTextFormat: 'count > 2'
-            });
-
-            /**
-             * Manage Add Agency Feature
-             */
-
-            if ($('#apply-branch-container').length > 0) {
-
-              $('#add-branch-btn').on('click', function (ev) {
-                  var selected = $("#new-branch").find('option:selected').first();
-                  if (selected.val() == 'blank') {
-                      return false;
-                  }
-                  SknService.addCardFor(selected.val(), selected.text());
-                  $(ev.currentTarget).attr("disabled", true);
-                  ev.stopPropagation();
-                  $('div.branch-entry > div.well-sm').matchHeight();
-                  $.fn.matchHeight._update();
-
-                  consoleLog('New Branch Button(' + selected.val() + ') called!');
-
-                  /* allow for added card to be removed */
-                  branchRemovalSetup()
-
-                  return false;
-              });
-
-              $('#new-branch').on('changed.bs.select', function (ev, clickedIndex, newValue, oldValue) {
-                  /* fires only when changed: new/old are booleans and irrelevant */
-                  if (newValue) {
-                      $('#add-branch-btn').removeAttr("disabled");
-                  }
-                  return false;
-              });
-
-              $('#add-branch-btn').attr("disabled", true);
-
-            }
-            /* Keep Container at same height */
-            $('div.well-sm[data-mh="entry-group"]').matchHeight();
-            $.fn.matchHeight._update();
-
+            handle_member();
             break;
 
         case 'in_action':
-            $('div.well.runtime-item').on("click", runtimeDemoGetObject);
-
-            $('div.well-sm[data-mh="files-group"]').matchHeight();
-            $.fn.matchHeight._update();
-
-            $('#accordion').on('show.bs.collapse', function() {
-                $.fn.matchHeight._update();
-            });
-
+            handle_in_action();
             break;
 
         case 'edit':
@@ -864,36 +918,7 @@ $(function() {
             break;
 
         case 'details_sysinfo':
-            /*
-             * Initial Establish sections
-             * id="about" -  <a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">
-             *     target: <div id="about-content" style="display: none"></div>
-             * id="routes" - <a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false;">
-             *     target: <div id="route-content" style="display: none"></div>
-             */
-            $('h2 > a.btn-lg').on('click', handleRailsInfo);
-
-
-            siStorageTable = $('#storage-table').DataTable({
-              scrollY: "420px",
-              language: {
-                emptyTable: "ObjectStorage is Empty!"
-              }
-            });
-
-            $('table.sys-table').DataTable({
-                scrollY: "",
-                language: {
-                    emptyTable: "No Profiles to Display!"
-                }
-            });
-
-            $('#obs-panel, div.panel.sys-table').on('shown.bs.collapse', function () {
-              siStorageTable.draw();
-                $('table.sys-table').DataTable().draw();
-                consoleLog("Draw() on Panel Shown for DataTables");
-            });
-
+            handle_details_sysinfo();
             break;
         case 'in_depth':
             handleManagementPages();
@@ -902,7 +927,7 @@ $(function() {
             handleDemoPages();
             break;
         default:
-            consoleLog("Current Page (" + controllerAction + ") has no custom Javascripts enabled.");
+            consoleLog("Current Page (" + SknService.page + ") has no custom Javascripts enabled.");
     }
 
 
@@ -917,7 +942,7 @@ $(function() {
     }, 20000); // <-- time in milliseconds
 
 
-    consoleLog("Initialization Complete for: " + controllerName + "/" + controllerAction + ".");
+    consoleLog("Initialization Complete for: " + SknService.page + ".");
 
     return false;
 });
