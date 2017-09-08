@@ -4,7 +4,6 @@
 #
 module Registry
   module RegistryMethods
-    extend ActiveSupport::Concern
 
     def self.included(klass)
       Rails.logger.debug("#{self.name} included By #{klass.name}")
