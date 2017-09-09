@@ -19,7 +19,7 @@ module Registry
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceRegistry: Missing required initialization param!" if @registry.nil?
+      raise ArgumentError, "#{self.class.name}: Missing required initialization param!" if @registry.nil?
     end
 
     # User Session Handler
@@ -51,7 +51,7 @@ module Registry
     # Easier to code than delegation, or forwarder; @registry assumed to equal @controller
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      if registry.respond_to?(method)
+      if registry.public_methods.try(:include?, method)
         block_given? ? registry.send(method, *args, block) :
             (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
       else

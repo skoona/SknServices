@@ -1,6 +1,6 @@
 
 
-RSpec.describe Processors::FileSystemAdapter, 'Content Adapter for File Systems' do
+RSpec.describe Processors::FileSystemProcessor, 'Content Adapter for File Systems' do
 
   let(:user) { page_user_developer }
   let(:mc) {ServiceRegistryMockController.new(user: user)}
@@ -15,16 +15,16 @@ RSpec.describe Processors::FileSystemAdapter, 'Content Adapter for File Systems'
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Processors::FileSystemAdapter.new }.to raise_error(ArgumentError)
+      expect{ Processors::FileSystemProcessor.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :registry as init param." do
-      expect(Processors::FileSystemAdapter.new({registry: @registry})).to be_a(Processors::FileSystemAdapter)
+      expect(Processors::FileSystemProcessor.new({registry: @registry})).to be_a(Processors::FileSystemProcessor)
     end
     it "#new fails when :registry is invalid." do
-      expect{ Processors::FileSystemAdapter.new({registry: nil}) }.to raise_error(ArgumentError)
+      expect{ Processors::FileSystemProcessor.new({registry: nil}) }.to raise_error(ArgumentError)
     end
     it "#registry.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Processors::FileSystemAdapter
+      expect( @service ).to be_a Processors::FileSystemProcessor
     end
     it "#registry and #controller objects to be different." do
       expect( @service.registry ).to be_a Services::ServiceRegistry

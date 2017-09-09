@@ -50,13 +50,13 @@ module Services
     ##
 
     def content_adapter_file_system
-      @sf_content_adapter_file_system ||= Processors::FileSystemAdapter.new({registry: self})
+      @sf_content_adapter_file_system ||= Processors::FileSystemProcessor.new({registry: self})
       yield @sf_content_adapter_file_system if block_given?
       @sf_content_adapter_file_system
     end
 
     def content_adapter_inline_values
-      @sf_content_adapter_inline_values ||= Processors::InlineValuesAdapter.new({registry: self})
+      @sf_content_adapter_inline_values ||= Processors::InlineValuesProcessor.new({registry: self})
       yield @sf_content_adapter_inline_values if block_given?
       @sf_content_adapter_inline_values
     end

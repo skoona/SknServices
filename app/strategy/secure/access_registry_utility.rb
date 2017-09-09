@@ -62,6 +62,13 @@ module Secure
   class AccessRegistryUtility
     @@ar_options_keyword = SknSettings.access_profile.options_keyword
 
+
+    def self.call(xml_filename, rootPath)
+      xml_hash = new(xml_filename, rootPath).call()
+      # pp self.class, __method__, xml_hash
+      xml_hash
+    end
+
     # Initialize object and load the xmlFile
     def initialize (xml_filename, rootPath='accessRegistry')
       relative_xpath = "//xmlns:#{rootPath}/xmlns:resource"
@@ -77,10 +84,8 @@ module Secure
       true
     end
 
-    def self.call(xml_filename, rootPath='accessRegistry')
-      xml_hash = new(xml_filename, rootPath).call()
-      # pp self.class, __method__, xml_hash
-      xml_hash
+    def call()
+      from_xml()
     end
 
     # Convert xml to Hash format
@@ -153,7 +158,6 @@ module Secure
 
       resource_hash
     end  # end from_xml()
-    alias_method :call, :from_xml
 
     # UserData Required format/syntax is:
     #   value|value|...
