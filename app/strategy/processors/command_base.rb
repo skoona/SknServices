@@ -25,8 +25,8 @@ module Processors
       @processor_prefix = klass_name
     end
 
-    def self.call(param1={})
-      new(param1).call
+    def self.call(parms={})
+      new(parms).call
     end
 
     def call

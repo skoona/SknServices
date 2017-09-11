@@ -376,7 +376,7 @@ end
                             </div>
                         </dd>
                     </dl>
-                    <p>All Components, like ContentService, AccessService, DBProfileProvider, XMLProfileProvider, FileSystemAdapter, and InlineValuesAdapter
+                    <p>All Components, like ContentService, AccessService, DBProfileProvider, XMLProfileProvider, FileSystemProcessor, and InlineValuesProcessor
                       are instantiated via the service_registry facilities.  And primary utility objects can also be supported via the service registry.</p>
                 </div>
             </div>
@@ -511,12 +511,12 @@ end
               <dd><p>A task processor inherits directly from the <code class="language-ruby">Processors::ProcessorBase</code> class.  The ProcessorBase yields common initialization strategy.services, and access to the service registry.</p>
               </dd>
               <dt>Provides</dt>
-              <dd><p>FileSystemAdapter provides logical access to content storage facilities.</p>
+              <dd><p>FileSystemProcessor provides logical access to content storage facilities.</p>
                 <p>taskProcessor by design are expected to handle a complete and single task step of a larger process flow, and have no dependencies.  However to complete their assigned task they may engage other task processors, strategy.services, and providers; thus they do benefit from access to the </p>
               </dd>
             </dl>
           </div>
-          <p>Currently there are two implementations of this component: FileSystemAdapter and InlineValueAdapter classes. </p>
+          <p>Currently there are two implementations of this component: FileSystemProcessor and InlineValueAdapter classes. </p>
         </div>
         <p>Instantiated by: <code class="language-ruby">service_registry()</code>.  However, they are capable of operating independently of the </p>
       </div>

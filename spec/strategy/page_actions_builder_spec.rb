@@ -5,7 +5,7 @@
 #
 ##
 
-describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdowns near top of selected pages." do
+describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdowns near top of selected pages.", type: :view do
   let(:single) { [{
                     id: "test-action",
                     path: [:in_depth_profiles_path],
@@ -97,33 +97,33 @@ describe PageActionsBuilder, "Builder of the Page Actions stack of menu dropdown
   }
 
   it "Can be initialized properly" do
-    expect( PageActionsBuilder.new(single, view, true )).to be
+    expect( described_class.new(single, view, true )).to be
   end
 
   context "Builds a single button menu from one entry. " do
     it "#generate produces a single button given only a single array element." do
-      expect( PageActionsBuilder.new(single, view, true ).generate ).to be_a String
+      expect( described_class.new(single, view, true ).generate ).to be_a String
     end
     it "#to_s generates string output with normal specification." do
-      str =  PageActionsBuilder.new(single, view, true ).to_s
+      str =  described_class.new(single, view, true ).to_s
       expect(str).to include '/a'
     end
     it "#to_s generates string output with maximum specification." do
-      str =  PageActionsBuilder.new(single, view, true ).to_s
+      str =  described_class.new(single, view, true ).to_s
       expect(str).to include 'refresh'
     end
   end
 
   context "Builds basic level menu" do
     it "#to_s generates string output with normal specification." do
-      str =  PageActionsBuilder.new(basic, view, true ).to_s
+      str =  described_class.new(basic, view, true ).to_s
       expect(str).to include 'Refresh 4'
     end
   end
 
   context "Builds multi level menu" do
     it "#to_s generates string output with normal specification." do
-      str =  PageActionsBuilder.new(nested, view, true ).to_s
+      str =  described_class.new(nested, view, true ).to_s
       expect(str).to include 'test data'
     end
   end

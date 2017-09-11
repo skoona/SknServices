@@ -1,5 +1,5 @@
 ##
-# lib/providers/file_system_adapter.rb
+# lib/providers/file_system_processor.rb
 #
 # Builds filelists
 #
@@ -19,7 +19,7 @@
 # end
 
 module Processors
-  class FileSystemAdapter < ProcessorBase
+  class FileSystemProcessor < ProcessorBase
 
     PREFIX_CONTENT = 'content'
     PREFIX_ACCESS  = 'access'

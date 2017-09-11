@@ -53,7 +53,7 @@ module Domains
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceRegistry: Missing required initialization param!" if @registry.nil?
+      raise ArgumentError, "#{self.class.name}: Missing required initialization param!" if @registry.nil?
     end
 
     def self.inherited(klass)

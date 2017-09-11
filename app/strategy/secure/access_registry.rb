@@ -98,7 +98,7 @@ module Secure
 
     CRUD_MODES = ["CREATE","READ","UPDATE","DELETE"].freeze
     @@ar_permissions = (
-        Secure::AccessRegistryUtility.call(SknSettings.access_profile.access_registry_filename.basename).merge(
+        Secure::AccessRegistryUtility.call(SknSettings.access_profile.access_registry_filename.basename, 'accessRegistry').merge(
           Secure::AccessRegistryUtility.call(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry'))
     )
     @@ar_strict_mode = SknSettings.access_profile.default_unknown_to_unsecure
@@ -115,13 +115,13 @@ module Secure
       CRUD_MODES
     end
     def self.get_resource_description(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:description] : ""
+      @@ar_permissions.dig(resource_uri, :description)
     end
     def self.get_resource_type(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:content] : false
+      @@ar_permissions.dig(resource_uri, :content)
     end
     def self.get_resource_userdata(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:userdata] : ""
+      @@ar_permissions.dig(resource_uri, :userdata)
     end
     def self.get_resource_options(resource_uri)
       return [] unless @@ar_permissions.key?(resource_uri)
@@ -229,8 +229,8 @@ module Secure
     end
 
     def self.ar_reload_configuration_file
-      access_registry = Secure::AccessRegistryUtility.new(SknSettings.access_profile.access_registry_filename.basename).from_xml()
-      content_registry = Secure::AccessRegistryUtility.new(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml()
+      access_registry = Secure::AccessRegistryUtility.call(SknSettings.access_profile.access_registry_filename.basename, 'accessRegistry')
+      content_registry = Secure::AccessRegistryUtility.call(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry')
       @@ar_permissions = access_registry.merge(content_registry)
       Rails.logger.info("#{self.name}.#{__method__}() Configuration file reloaded!") if Rails.logger.present?
       true

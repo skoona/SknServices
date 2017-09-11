@@ -1,6 +1,6 @@
 
 
-RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based AccessRegistry' do
+RSpec.describe Processors::InlineValuesProcessor, 'Content Adapter for XML Based AccessRegistry' do
 
   let(:user) { page_user_developer }
   let(:mc) {ServiceRegistryMockController.new(user: user)}
@@ -15,16 +15,16 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Processors::InlineValuesAdapter.new }.to raise_error(ArgumentError)
+      expect{ described_class.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :registry as init param." do
-      expect(Processors::InlineValuesAdapter.new({registry: @registry})).to be_a(Processors::InlineValuesAdapter)
+      expect(described_class.new({registry: @registry})).to be_a(described_class)
     end
     it "#new fails when :registry is invalid." do
-      expect{ Processors::InlineValuesAdapter.new({registry: nil}) }.to raise_error(ArgumentError)
+      expect{ described_class.new({registry: nil}) }.to raise_error(ArgumentError)
     end
     it "#registry.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Processors::InlineValuesAdapter
+      expect( @service ).to be_a described_class
     end
     it "#registry and #controller objects to be different." do
       expect( @service.registry ).to be_a Services::ServiceRegistry

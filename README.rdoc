@@ -54,8 +54,8 @@ http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-i
         Providers::ProvidersBase
             +Registry::ObjectStorageService
 
-    Processors::InlineValuesAdapter
-    Processors::FileSystemAdapter
+    Processors::InlineValuesProcessor
+    Processors::FileSystemProcessor
         Processors::ProcessorBase (Multiple Purpose)
 
         Processors::CommandBase (Not Used Yet - Single Purpose)
