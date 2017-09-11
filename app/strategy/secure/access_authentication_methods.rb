@@ -18,7 +18,7 @@
 #
 #   before_filter :login_required
 #
-#  depends on: rails_warden.gem
+#  depends on: config/initializaers/warden.rb
 #     ref: https://github.com/hassox/rails_warden
 #
 #

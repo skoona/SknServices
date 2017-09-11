@@ -1,5 +1,5 @@
 ##
-# Controller Mixin
+# ApplicationController Mixin
 #
 #
 module Registry
@@ -71,6 +71,8 @@ module Registry
     end
 
     # Easier to code than delegation, or forwarder
+    # While :establish_domain_services invokes the service_factory to initialize it,
+    # be sure to call the :service_factory method rather than the instance method here.
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method.inspect}")
       if service_registry.public_methods.try(:include?, method)

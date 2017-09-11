@@ -3,7 +3,7 @@
 # Replace registry helpers with Registry Object from DomainsBase
 # - Domain strategy.services live for one request cycle and are expensive to create, this object memoitizes them
 # - This registry is available in the namespace of all services, domains, and multi-method processors
-# - Should make testing easier
+# - Should make testing easier, see: ServiceRegistryMockController in spec/support dir.
 #
 
 # self is registry

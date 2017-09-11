@@ -1,6 +1,7 @@
 # lib/registry/factories_base.rb
 #
-# Common Base for all Services oriented Classes, without Domains
+# Common Base for ServiceRegistry oriented Classes
+# - Expect to have one ServiceRegistry per Engine or App
 #
 
 module Registry
