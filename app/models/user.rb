@@ -61,7 +61,7 @@ class User < ApplicationRecord
       uniqueness: { case_sensitive: false })
 
   # Automatically create the virtual attribute 'password_confirmation'.
-  validates( :password, confirmation: true, length: { :within => 6..40 }, if: :need_password? )
+  validates( :password, confirmation: true, length: { :within => 4..40 }, if: :need_password? )
   validates( :password_confirmation, presence: true, if: :need_password?)
 
   def need_password?
