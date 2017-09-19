@@ -9,7 +9,7 @@ feature "Authentication process for all users.", js: true do
     scenario "Sign in with username and password credentials." do
       visit signin_url
       fill_in 'Username', :with =>  user.username
-      fill_in 'Password', :with =>  "nobugs"
+      fill_in 'Password', :with =>  "demos"
       click_button 'Sign in'
       expect(current_path).to eq home_pages_path
       expect(page).to have_title("SknServices")
@@ -34,7 +34,7 @@ feature "Authentication process for all users.", js: true do
       expect(page).to have_alert_message("You must sign in before accessing")
       visit signin_url
       fill_in 'Username', :with => user.username
-      fill_in 'Password', :with => "nobugs"
+      fill_in 'Password', :with => "demos"
       click_button 'Sign in'
 
       expect(current_path).to eq users_path
@@ -48,7 +48,7 @@ feature "Authentication process for all users.", js: true do
       expect(page).to have_alert_message("You must sign in before accessing")
       visit signin_url
       fill_in 'Username', :with =>  user.username
-      fill_in 'Password', :with =>  "nobugs"
+      fill_in 'Password', :with =>  "demos"
       click_button 'Sign in'
       expect(current_path).to eq not_authorized_sessions_path
       expect(page).to have_alert_message "You are not authorized"
@@ -62,7 +62,7 @@ feature "Authentication process for all users.", js: true do
       expect(page).to have_alert_message("You must sign in before accessing")
       visit signin_url
       fill_in 'Username', :with => user.username
-      fill_in 'Password', :with => "nobugs"
+      fill_in 'Password', :with => "demos"
       click_button 'Sign in'
 
       expect(current_path).to eq users_path
@@ -78,7 +78,7 @@ feature "Authentication process for all users.", js: true do
     scenario "Cannot sign in with incorrect username." do
       visit signin_url
       fill_in 'Username', :with => "LastNameInitial"
-      fill_in 'Password', :with => "nobugs"
+      fill_in 'Password', :with => "demos"
       click_button 'Sign in'
       expect(current_path).to eq sessions_path
       expect(page).to have_notice_message("Your Credentials are invalid or expired")
