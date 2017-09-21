@@ -4,14 +4,11 @@
 class ProfilesController < ApplicationController
 
   def in_action
-    @page_controls = content_service.handle_in_action
-    redirect_to root_path, notice: @page_controls.message and return unless @page_controls.success
-    flash[:notice] = @page_controls.message if @page_controls.message.present?
+    wrap_html_response content_service.handle_in_action, root_path
   end
 
   def in_action_admin
-    @page_controls = content_service.handle_in_action_admin(params.to_unsafe_h)
-    flash[:notice] = @page_controls.message if @page_controls.message.present?
+    wrap_html_response content_service.handle_in_action_admin(params.to_unsafe_h)
   end
 
   # json api, requires :username and access: [:access, :content]
@@ -22,8 +19,7 @@ class ProfilesController < ApplicationController
   # Parameters: {"user_options"=>nil, "description"=>"Determine which branch documents can be seen", "username"=>"developer", "topic_value"=>"Branch", "content_value"=>["68601", "68602", "68603"], "content_type"=>"Commission", "content_type_description"=>"Monthly Commission Reports and Files", "topic_type"=>"Branch", "topic_type_description"=>"Branch Actions", "authenticity_token"=>"7jvrpk4eamg4grn04KQt73TwKY6PG2A05w7d7EqMKKRz3hngxrrVxLyNx7oUU5QhMQ1Htj8afhtUfk4IjLNe0Q==",
   #             }
   def api_accessible_content
-    @page_controls = content_service.handle_api_accessible_content(params.to_unsafe_h)
-    render(json: @page_controls.to_hash, status: (@page_controls.package.success ? :accepted : :not_found), layout: false, content_type: :json) and return
+    wrap_json_response content_service.handle_api_accessible_content(params.to_unsafe_h)
   end
 
   # get
@@ -44,28 +40,22 @@ class ProfilesController < ApplicationController
 
   #GET
   def members
-    @page_controls = content_service.handle_members
-    flash[:notice] = @page_controls.message if @page_controls.message?
+    wrap_html_response content_service.handle_members
   end
 
   # GET
   def member
-    @page_controls = content_service.handle_member(params.to_unsafe_h)
-    flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to members_profiles_url unless @page_controls.success
+    wrap_html_response content_service.handle_member(params.to_unsafe_h), members_profiles_url
   end
 
   # PUT
   def member_update
-    @page_controls = content_service.handle_member_updates(params.to_unsafe_h)
-    flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to members_profiles_url
+    wrap_html_and_redirect_response content_service.handle_member_updates(params.to_unsafe_h), members_profiles_url
   end
 
   # GET
   def in_depth
-    @page_controls = content_service.handle_content_profile_management(params.to_unsafe_h)
-    flash[:notice] = @page_controls.message if @page_controls.message?
+    wrap_html_response content_service.handle_content_profile_management(params.to_unsafe_h)
   end
 
   # POST
@@ -77,37 +67,27 @@ class ProfilesController < ApplicationController
   #  "id"=>"55da964b58249094b2c65959faf9e559"
   # }
   def create_profile_for_user
-      @page_controls = content_service.handle_content_profile_create(params.to_unsafe_h)
-      flash[:notice] = @page_controls.message if @page_controls.message?
-      redirect_to in_depth_profiles_url
+    wrap_html_and_redirect_response content_service.handle_content_profile_create(params.to_unsafe_h), in_depth_profiles_url
   end
   # POST
   # Requires userName and ProfileTypeName
   def update_profile_for_user
-    @page_controls = content_service.handle_content_profile_update(params.to_unsafe_h)
-    flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to in_depth_profiles_url
+    wrap_html_and_redirect_response content_service.handle_content_profile_update(params.to_unsafe_h), in_depth_profiles_url
   end
   # DELETE
   # Requires Entry
   def delete_profile_for_user
-    @page_controls = content_service.handle_content_profile_destroy(params.to_unsafe_h)
-    flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to in_depth_profiles_url
+    wrap_html_and_redirect_response content_service.handle_content_profile_destroy(params.to_unsafe_h), in_depth_profiles_url
   end
-
   # POST
   # Requires Entry Description, and topic_value with content choices
   def create_entries_for_user
-    @page_controls = content_service.handle_content_profile_entries_create(params.to_unsafe_h)
-    flash[:notice] = @page_controls.message if @page_controls.message?
-    redirect_to in_depth_profiles_url
+    wrap_html_and_redirect_response content_service.handle_content_profile_entries_create(params.to_unsafe_h), in_depth_profiles_url
   end
   # DELETE
   # Requires Entry
   def delete_entry_for_user
-    @page_controls = content_service.handle_content_profile_entry_destroy(params.to_unsafe_h)
-    redirect_to in_depth_profiles_url, notice: @page_controls.message?
+    wrap_html_and_redirect_response content_service.handle_content_profile_entry_destroy(params.to_unsafe_h), in_depth_profiles_url
   end
 
 end
