@@ -39,6 +39,7 @@ module Secure
       unless ['SessionsController', 'ActionView::TestCase::TestController'].include?(klass.name)
         Rails.logger.debug("Secure::AccessAuthenticationMethods Activated! #{klass.name}")
         klass.send( :before_action, :login_required)
+        klass.send( :protect_from_forgery )
       end
     end
 
@@ -61,6 +62,13 @@ module Secure
         flash.delete(:notice) if !!flash.notice and !flash.notice.first.nil? and flash.notice.include?("Please sign in to continue")
       end
       Rails.logger.debug("#{self.class.name}##{__method__}(public:#{public_page}): Page '#{accessed_page}' accessed by user '#{current_user.name  if current_user.present?}'")
+    end
+
+    # Force signout to prevent CSRF attacks
+    def handle_unverified_request
+      logout()
+      flash_message(:alert, "An unverified request was received! For security reasons you have been signed out.  ApplicationController#handle_unverified_request")
+      super
     end
 
     def redirect_to_target_or_default(default, *args)

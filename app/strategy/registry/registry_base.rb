@@ -13,6 +13,7 @@ module Registry
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
       Rails.logger.debug("#{self.name} inherited By #{klass.name}")
+      nil
     end
 
     def initialize(params={})
@@ -21,6 +22,7 @@ module Registry
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
       raise ArgumentError, "#{self.class.name}: Missing required initialization param!" if @registry.nil?
+      nil
     end
 
     # User Session Handler

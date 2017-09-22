@@ -9,22 +9,10 @@ module Registry
       Rails.logger.debug("#{self.name} included By #{klass.name}")
       klass.send( :helper_method, [ :accessed_page_name, :accessed_page])
 
-      unless ['SessionsController', 'ActionView::TestCase::TestController'].include?( klass.name )
-        klass.send( :protect_from_forgery )
-      end
-
-      Rails.logger.info("#{self.name} Activated!")
       klass.send( :before_action, :establish_domain_services)
       klass.send( :after_action,  :persist_domain_services)
-    end
-
-    # Enhance the PERF Logger output
-    # see: config/initializers/notification_logger.rb
-    def append_info_to_payload(payload)
-      super
-      payload[:session_id] = request.session_options[:id] || 'na'
-      payload[:uuid] = request.uuid || 'na'
-      payload[:username] = current_user.present? ? current_user.username :  'no-user'
+      Rails.logger.info("#{self.name} Activated!")
+      nil
     end
 
     def accessed_page_name
@@ -38,15 +26,29 @@ module Registry
     # New Services extension
     def service_registry
       @service_registry ||= Services::ServiceRegistry.new({registry: self})
-      yield @service_registry if block_given?
-      @service_registry
     end
 
     protected
 
+    def wrap_html_response(service_response, redirect_path=root_path)
+      @page_controls = service_response
+      flash[:notice] = @page_controls.message if @page_controls.message.present?
+      redirect_to redirect_path, notice: @page_controls.message and return unless @page_controls.success
+    end
+
+    def wrap_html_and_redirect_response(service_response, redirect_path=root_path)
+      @page_controls = service_response
+      flash[:notice] = @page_controls.message if @page_controls.message.present?
+      redirect_to redirect_path, notice: @page_controls.message and return
+    end
+
+    def wrap_json_response(service_response)
+      @page_controls = service_response
+      render(json: @page_controls.to_hash, status: (@page_controls.package.success ? :accepted : :not_found), layout: false, content_type: :json) and return
+    end
+
     # Call or Restore app services
     def establish_domain_services
-      service_registry
       flash_message(:notice, warden.message) if warden.message.present?
       flash_message(:alert, warden.errors.full_messages) unless warden.errors.empty?
       # your code here
@@ -61,13 +63,6 @@ module Registry
         Rails.logger.debug "#{self.class.name}.#{__method__}() Called for session.id=#{request.session_options[:id]}"
       end
       true
-    end
-
-    # Force signout to prevent CSRF attacks
-    def handle_unverified_request
-      logout()
-      flash_message(:alert, "An unverified request was received! For security reasons you have been signed out.  ApplicationController#handle_unverified_request")
-      super
     end
 
     # Easier to code than delegation, or forwarder
