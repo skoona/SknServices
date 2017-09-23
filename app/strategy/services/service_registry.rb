@@ -18,11 +18,15 @@ module Services
     ##
 
     def access_service
-      @sf_access_service ||= AccessService.new({registry: self})       # First call will execute this set of code
+      @sr_access_service ||= AccessService.new({registry: self})       # First call will execute this set of code
     end
 
     def content_service
-      @sf_content_service ||= ContentService.new({registry: self})
+      @sr_content_service ||= ContentService.new({registry: self})
+    end
+
+    def password_reset_use_case
+      @sr_password_reset_use_case ||= ::UseCases::PasswordResetUseCase.new({registry: self})
     end
 
     ##
@@ -30,11 +34,11 @@ module Services
     ##
 
     def xml_profile_provider
-      @sf_xml_profile_builder ||= Providers::XMLProfileProvider.new({registry: self})
+      @sr_xml_profile_builder ||= Providers::XMLProfileProvider.new({registry: self})
     end
 
     def db_profile_provider
-      @sf_db_profile_builder ||= Providers::DBProfileProvider.new({registry: self})
+      @sr_db_profile_builder ||= Providers::DBProfileProvider.new({registry: self})
     end
 
     ##
@@ -42,11 +46,11 @@ module Services
     ##
 
     def content_adapter_file_system
-      @sf_content_adapter_file_system ||= Processors::FileSystemProcessor.new({registry: self})
+      @sr_content_adapter_file_system ||= Processors::FileSystemProcessor.new({registry: self})
     end
 
     def content_adapter_inline_values
-      @sf_content_adapter_inline_values ||= Processors::InlineValuesProcessor.new({registry: self})
+      @sr_content_adapter_inline_values ||= Processors::InlineValuesProcessor.new({registry: self})
     end
 
     ##

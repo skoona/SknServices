@@ -1,23 +1,22 @@
 ##
-#
+# <root>/app/strategy/use_cases/password_reset_use_case.rb
 #
 class PasswordResetsController < ApplicationController
 	
   def new
-		@user = User.new
+		wrap_html_response  password_reset_use_case.empty_user_to_get_username, root_url
   end
 
   def create
-		@page_controls = access_service.reset_requested(params.to_unsafe_h)
-		redirect_to home_pages_url, notice: @page_controls.message
+		wrap_html_and_redirect_response  password_reset_use_case.reset_requested(params.to_unsafe_h), home_pages_url
   end
 
   def edit
-		@user = User.find_by(password_reset_token: params[:id])
+		wrap_html_response  password_reset_use_case.edit_new_password(params[:id]), root_url
   end
 
   def update
-		@page_controls = access_service.reset_password(params.to_unsafe_h)
+		@page_controls = password_reset_use_case.reset_password(params.to_unsafe_h)
 		if @page_controls.success
 			redirect_to signin_url, notice: @page_controls.message
 		else

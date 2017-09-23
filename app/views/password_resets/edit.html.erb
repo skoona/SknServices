@@ -1,18 +1,27 @@
-<% provide(:title, 'Reset Password') %>
+<% provide(:title, 'Assign Password') %>
 
-<header class="page-header">
+
+<article>
+  <section>
     <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
+  </section>
 
-<%= simple_form_for(@user, :url => password_reset_path(@user), :html => { :class => 'form form-horizontal' }) do |f| %>
+  <section>
+    <% user = @page_controls.user %>
 
-	  	<%= f.input :password, autofocus: true %>
-	  	<%= f.input :password_confirmation, label: 'Confirmation' %>
+    <%= simple_form_for(user, :url => password_reset_path(user), :html => { :class => 'form form-horizontal' }) do |f| %>
 
-    <div class="form-actions">
-        <div class="col-md-push-3 col-md-9">
-            <%= f.button :submit, "Update Password", class: 'btn btn-primary submit' %>
-            <%= link_to "Cancel", root_path(), class: 'btn' %>
+          <%= f.input :password, autofocus: true %>
+          <%= f.input :password_confirmation, label: 'Confirmation' %>
+
+        <div class="form-actions">
+            <div class="col-md-push-3 col-md-9">
+                <%= f.button :submit, "Update Password", class: 'btn btn-primary submit' %>
+                <%= link_to "Cancel", root_path(), class: 'btn' %>
+            </div>
         </div>
-    </div>
-<% end %>
+    <% end %>
+
+  </section>
+
+</article>
