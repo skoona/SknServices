@@ -1,9 +1,9 @@
-<% provide(:title, 'Reset Request') %>
+<% provide(:title, 'Reset Password Request') %>
 
 <article>
-  <section>
+  <header class="page-header">
     <h1 class="text-center"><%= accessed_page_name %></h1>
-  </section>
+  </header>
 
   <section>
     <% user = @page_controls.user %>
@@ -13,7 +13,7 @@
         
         <div class="form-actions">
           <div class="col-md-push-3 col-md-9">
-            <%= f.button :submit, class: 'btn btn-primary submit' %>
+            <%= f.button :submit, "Request Password Reset", class: 'btn btn-primary submit' %>
             <%= link_to "Cancel", root_path, class: 'btn' %>
           </div>
         </div>
