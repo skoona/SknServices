@@ -246,6 +246,8 @@ end
 
 </code>
                 </pre>
+                
+                <%= image_tag("SknService-RegistryMethod.png", alt: "UseCases", class: "huge-image") %>
                 <h4>UseCase/Services Class</h4>
                 <p>UseCase classes are assumed to have multiple entry-point methods related to the page/request-oriented steps of the usecase.  Service classes are generally expected to
                   have only one entry-method, which is suggested to be <code>#call</code>.  Whichever pattern you choose the entry-method is <em>required to</em>:
@@ -519,7 +521,6 @@ end
               <div class="panel-body">
                 <p class="lead">Transpose your UseCases into a sequence of url-request steps.  Each url-request will flow through your application code in a fashion similar to the following.</p>
                 <%= image_tag("SFFlow.png", alt: "Flow Path", class: "huge-image") %>
-
 
                 <p>This strategy provides basic containers for your application logic, by making instances of application classes available from the ServiceRegistry, centralizing the initialization
                   of core classes, and establishing a directory structure.  However, you have the freedom to implement your business logic using any application architecture you choose; Clean, Hexagonal, Domain-Driven,
