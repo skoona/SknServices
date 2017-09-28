@@ -1,6 +1,6 @@
 ---
 Packaging:
-  pomVersion: 2.2.0.3
+  pomVersion: 2.2.0.4
   isDeveloper: false
   isDevelopment: true
   isProduction: false
