@@ -15,8 +15,8 @@ RSpec.feature "Profile Demo Process.", {js: true} do
       # click_button 'Sign in'
       # expect(current_path).to eq home_pages_path
 
-      visit content_profile_demo_profiles_url
-      expect(current_path).to eq content_profile_demo_profiles_path
+      visit in_action_admin_profiles_url
+      expect(current_path).to eq in_action_admin_profiles_path
 
       # find('#users-table tbody tr').first.click
       expect(page).to have_css('#content-table tbody')

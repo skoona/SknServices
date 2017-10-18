@@ -21,26 +21,12 @@ class ContentProfile < ApplicationRecord
 
   validates :person_authentication_key, uniqueness: true, on: [:create, :update]
 
-  def self.option_selects
-    options
-    self.find_each do |cps|
-      options << [cps.username, cps.id, {'data-description': "#{cps.display_name} <#{cps.email}>"}]
-    end
-    options
-  end
 
   def profile_type_name
     profile_type.try(:name)
   end
   def profile_type_description
     profile_type.try(:description)
-  end
-
-  # options_for_select(tt_instance.option_selects, selected)  -- single selection
-  def option_selects
-    content_profile_entries.map do |cpe|
-      [cpe.description, cpe.id, {'data-description': "#{cpe.content_type}:#{cpe.topic_type}"} ]
-    end
   end
 
   def entry_info_with_username(userp)
@@ -51,25 +37,11 @@ class ContentProfile < ApplicationRecord
         provider: authentication_provider,
         username: username,
         display_name: display_name,
+        last_update: updated_at.strftime("%Y-%m-%d %I:%M:%S %p"),
         email: email,
         assigned_group: userp.assigned_groups,
         user_options: userp.user_options,
         entries: content_profile_entries.collect {|cpe| cpe.entry_info_with_username(userp)}
-    }
-  end
-
-  def entry_info_with_selects(userp)
-    {
-        pak: person_authentication_key,
-        profile_type: profile_type_name,
-        profile_type_description: profile_type_description,
-        provider: authentication_provider,
-        username: username,
-        display_name: display_name,
-        email: email,
-        assigned_group: userp.assigned_groups,
-        user_options: userp.user_options,
-        entries: content_profile_entries.collect {|cpe| cpe.entry_info_with_selects(userp)}
     }
   end
 
@@ -81,8 +53,9 @@ class ContentProfile < ApplicationRecord
         provider: authentication_provider,
         username: username,
         display_name: display_name,
+        last_update: updated_at.strftime("%Y-%m-%d %I:%M:%S %p"),
         email: email,
-        entries: content_profile_entries.collect(&:entry_info)
+        entries: content_profile_entries.order([:topic_type,:content_type]).collect(&:entry_info)
     }
   end
 end

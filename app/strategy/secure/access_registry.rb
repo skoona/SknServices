@@ -98,8 +98,8 @@ module Secure
 
     CRUD_MODES = ["CREATE","READ","UPDATE","DELETE"].freeze
     @@ar_permissions = (
-        Secure::AccessRegistryUtility.new(SknSettings.access_profile.access_registry_filename.basename).from_xml().merge(
-          Secure::AccessRegistryUtility.new(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml())
+        Secure::AccessRegistryUtility.call(SknSettings.access_profile.access_registry_filename.basename, 'accessRegistry').merge(
+          Secure::AccessRegistryUtility.call(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry'))
     )
     @@ar_strict_mode = SknSettings.access_profile.default_unknown_to_unsecure
 
@@ -115,13 +115,13 @@ module Secure
       CRUD_MODES
     end
     def self.get_resource_description(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:description] : ""
+      @@ar_permissions.dig(resource_uri, :description)
     end
     def self.get_resource_type(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:content] : false
+      @@ar_permissions.dig(resource_uri, :content)
     end
     def self.get_resource_userdata(resource_uri)
-      @@ar_permissions.key?(resource_uri) ? @@ar_permissions[resource_uri][:userdata] : ""
+      @@ar_permissions.dig(resource_uri, :userdata)
     end
     def self.get_resource_options(resource_uri)
       return [] unless @@ar_permissions.key?(resource_uri)
@@ -229,8 +229,8 @@ module Secure
     end
 
     def self.ar_reload_configuration_file
-      access_registry = Secure::AccessRegistryUtility.new(SknSettings.access_profile.access_registry_filename.basename).from_xml()
-      content_registry = Secure::AccessRegistryUtility.new(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry').from_xml()
+      access_registry = Secure::AccessRegistryUtility.call(SknSettings.access_profile.access_registry_filename.basename, 'accessRegistry')
+      content_registry = Secure::AccessRegistryUtility.call(SknSettings.access_profile.content_registry_filename.basename, 'contentRegistry')
       @@ar_permissions = access_registry.merge(content_registry)
       Rails.logger.info("#{self.name}.#{__method__}() Configuration file reloaded!") if Rails.logger.present?
       true
@@ -255,8 +255,7 @@ module Secure
         result = get_resource_content_entry(roles, uri, opts)
         results << result unless result.empty?
       end
-      # Rails.logger.debug("#{self.name}.#{__method__}() opts=#{opts}, roles=#{roles}, result=#{results}") if Rails.logger.present?
-      Rails.logger.debug("#{self.name}.#{__method__}() Entries=#{results}") if Rails.logger.present?
+      Rails.logger.debug("#{self.name}.#{__method__}() Entries=#{results.size}") if Rails.logger.present?
       results
     end
 
@@ -279,15 +278,18 @@ module Secure
         #
         # user_options are a primary filter for XML version of content profile
         # Multiple Roles per CRUD are collected and verified against :user_options
+        # -- options are :user_options, topic_opts is specified topic_value from URI,
+        # -- and :role_opts are those from the current permission role.
+        # 1. :topic_opts must equal a value in :options
+        # 2. elsif :role_opts exists, it must have a value in :options
         topic_value = []
         opts.each do |choice|
           topics = choice.fetch(:role_opts,[])
-          if options.present?
-            chosen = topics.select {|m| options.include?(m)}
-            topic_value << chosen unless chosen.empty?
+          if options.try(:include?, topic_opts) || topics.try(:any?) {|m| options.include?(m) }
+            topic_value << topic_opts
           end
         end
-        topic_value.flatten!
+        topic_value = topic_value.flatten.uniq
 
         unless topic_value.empty?                                           # if there are no options remaining DO NOT return this entry
           results = {
@@ -300,8 +302,6 @@ module Secure
               description: bundle[:description],
               topic_type_description: bundle[:description],
               content_type_description: bundle[:description]
-              # Todo: role options are considered Topic Option Values
-              # Todo: Only READ is supported and present in Content Entries
           }
         end
       else

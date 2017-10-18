@@ -12,13 +12,31 @@ module Services
 
     PROFILE_CONTEXT='content'
 
+    def handle_in_action
+
+      package = in_action_package
+      SknUtils::NestedResult.new({
+                                     success: package[:cp].present?,
+                                     message: package[:message],
+                                     payload: package
+                                 })
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({
+                                     success: false,
+                                     message: e.message,
+                                     payload: []
+                                 })
+    end
 
     # Controller Entry Point
-    def handle_demo_page(params={})
+    def handle_in_action_admin(params={})
+
+      package = get_page_users(PROFILE_CONTEXT)
       SknUtils::NestedResult.new({
-                                     success: true,
+                                     success: package.present?,
                                      message: "",
-                                     page_users: get_page_users(PROFILE_CONTEXT)
+                                     page_users: package
                                  })
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
@@ -32,15 +50,16 @@ module Services
 
     # Controller Entry Point
     def handle_api_accessible_content(params)
-      payload = handle_accessible_content_api(params)
+
+      package = handle_accessible_content_api(params)
       SknUtils::NestedResult.new({
                                      package: {
-                                         success: true,
+                                         success: package.present?,
                                          message: params[:content_type_description],
                                          content: params[:id],
                                          username: params[:username],
-                                         display_name: payload[1],
-                                         payload: payload[0]
+                                         display_name: package[1],
+                                         payload: package[0]
                                      }
                                  })
     rescue Exception => e
@@ -56,13 +75,13 @@ module Services
 
     # Controller Entry Point
     def api_get_content_object(params)
+
+      package = get_content_object_api(params)
       res = SknUtils::NestedResult.new({
-                                           success: true,
+                                           success:  package[:success],
                                            message: "",
-                                           package: get_content_object_api(params)
+                                           package: package
                                        })
-      res.success = res.package.success
-      res
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       SknUtils::NestedResult.new({
@@ -73,12 +92,83 @@ module Services
     end
 
     # Controller Entry Point
+    def api_get_demo_content_object(params)
+
+      package = get_demo_content_object_api(params)
+      SknUtils::NestedResult.new({
+                                           success: package[:success],
+                                           message: "",
+                                           package: package
+                                       })
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({
+                                     success: false,
+                                     message: e.message,
+                                     package: {}
+                                 })
+    end
+
+    def handle_members
+
+      package = members_admin_package
+      SknUtils::NestedResult.new({
+                                     success: package[:success],
+                                     message: package[:message],
+                                     payload: package[:display_groups]
+                                 })
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({
+                                     success: false,
+                                     message: e.message,
+                                     payload: []
+                                 })
+    end
+
+    def handle_member(params)
+
+      package = member_admin_package(params)
+      SknUtils::NestedResult.new({
+                                     success: package[:success],
+                                     message: package[:message],
+                                     payload: package[:display_groups]
+                                 })
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({
+                                     success: false,
+                                     message: e.message,
+                                     payload: []
+                                 })
+    end
+
+    def handle_member_updates(params)
+
+      package = member_update_package(params)
+      SknUtils::NestedResult.new({
+                                     success: package[:success],
+                                     message: package[:message],
+                                     payload: package[:package]
+                                 })
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({
+                                     success: false,
+                                     message: e.message,
+                                     payload: []
+                                 })
+    end
+
+    # Controller Entry Point
     def handle_content_profile_management(params)
-      res = SknUtils::NestedResult.new({
-                                           success: true,
+
+      package = management_page_users_package(PROFILE_CONTEXT)
+      SknUtils::NestedResult.new({
+                                           success: package.present?,
                                            message: "",
                                            page_actions: [{
-                                              path: :manage_content_profiles_profiles_path,
+                                              path: :in_depth_profiles_path,
                                               text: "Refresh",
                                               icon: 'fa fa-refresh',
                                               html_options: {
@@ -86,11 +176,8 @@ module Services
                                                   class: ' refresh'
                                               }
                                            }]
-                                       }.merge(
-                                          management_page_users_package(PROFILE_CONTEXT)
-                                       )
+                                       }.merge( package )
       )
-      res
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       SknUtils::NestedResult.new({
@@ -101,8 +188,10 @@ module Services
     end
 
     def handle_content_profile_create(params)
+
+      package = create_content_profile_with_profile_type_id(params)
       SknUtils::NestedResult.new({
-                                   success: create_content_profile_with_profile_type_id(params),
+                                   success: package,
                                    message: 'Content Profile was successfully created.'
                                })
     rescue Exception => e
@@ -114,8 +203,10 @@ module Services
     end
 
     def handle_content_profile_update(params)
+
+      package = update_content_profile_with_profile_type_id(params)
       SknUtils::NestedResult.new({
-                                   success: update_content_profile_with_profile_type_id(params),
+                                   success: package,
                                    message: 'Content profile was successfully updated.'
                                })
     rescue Exception => e
@@ -127,8 +218,10 @@ module Services
     end
 
     def handle_content_profile_destroy(params)
+
+      package = destroy_content_profile_by_pak(params)
       SknUtils::NestedResult.new({
-                                   success: destroy_content_profile_by_pak(params),
+                                   success: package,
                                    message: 'Content profile was successfully destroyed.'
                                })
     rescue Exception => e
@@ -139,22 +232,13 @@ module Services
                                })
     end
 
-    # Parameters: {"utf8"=>"✓",
-    #   "id"=>"profile entry id",
-    #   "pak"=>"72930134e6222904010dd4d6fb5f1887",
-    #   "username"=>"bptester",
-    #   "description_id"=>"Samples",
-    #   "topic_type_id"=>"1",
-    #   "topic_type_value"=>["1"],
-    #   "content_type_id"=>"3",
-    #   "content_type_value"=>["9", "8", "7"],
-    #   "button"=>"content-entry-modal"
-    # }
     # POST
     def handle_content_profile_entries_create(params)
+
       raise Utility::Errors::IncompleteSelectionFailure, "Please make Topic and/or Content selection!" unless params['topic_type_value']
+      package = create_content_profile_entries(params)
       SknUtils::NestedResult.new({
-                                  success: create_content_profile_entries(params),
+                                  success: package,
                                   message: 'Content profile entry was successfully created.'
                                })
     rescue Exception => e
@@ -165,15 +249,13 @@ module Services
                                  })
     end
 
-    # Parameters: {"utf8"=>"✓",
-    #   "id"=>"profile entry id",
-    #   "pak"=>"72930134e6222904010dd4d6fb5f1887"
-    # }
+    # POST
     def handle_content_profile_entry_destroy(params)
-      result = destroy_content_profile_entry(params)
+
+      package = destroy_content_profile_entry(params)
       SknUtils::NestedResult.new({
-                                   success: result,
-                                   message: result ?
+                                   success: package,
+                                   message: package ?
                                        'Destroy Content profile entry was successfully' :
                                        'Destroy Content profile entry failed!'
                                })

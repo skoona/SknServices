@@ -35,6 +35,7 @@
 #    "uri" = {
 #      "secured" => true,
 #      "content" => true,
+#      "topic_value_regex" => "^\d{4}",
 #      "userdata" => 'String,Array,Hash',
 #      "description" => "some description",
 #      "CREATE" => {
@@ -61,14 +62,30 @@ module Secure
   class AccessRegistryUtility
     @@ar_options_keyword = SknSettings.access_profile.options_keyword
 
+
+    def self.call(xml_filename, rootPath)
+      xml_hash = new(xml_filename, rootPath).call()
+      # pp self.class, __method__, xml_hash
+      xml_hash
+    end
+
     # Initialize object and load the xmlFile
     def initialize (xml_filename, rootPath='accessRegistry')
-      relative_xpath = "/#{rootPath}/resource"
+      relative_xpath = "//xmlns:#{rootPath}/xmlns:resource"
       relative_xmlfile = "#{Rails.root}/config/#{xml_filename}.xml"
       raise AccessRegistryError, "No such file or directory - #{relative_xmlfile}" unless File.exist? relative_xmlfile
 
-      @xml_doc =  Nokogiri::XML(File.open(relative_xmlfile, "r")).xpath(relative_xpath)
+      @xml_doc =  Nokogiri::XML(File.open(relative_xmlfile, "r")) do |config|
+        config.strict.noblanks
+      end.xpath(relative_xpath)
+      # TODO: As an alternate to using the Namespaces (xmlns:node), you remove all namespaces with:
+      # TODO: - doc.remove_namespaces!
       Rails.logger.debug "Processing xml file => [#{relative_xmlfile}]"
+      true
+    end
+
+    def call()
+      from_xml()
     end
 
     # Convert xml to Hash format
@@ -83,16 +100,18 @@ module Secure
       key = ""
 
       xml_node_set.each do |resource|
-        next unless resource.xpath("uri").present? or !resource.name.eql?("text")
+        next unless resource.xpath("xmlns:uri").present? or !resource.name.eql?("text")
 
         # populate the head of resource hash
-        resource_uri = resource.xpath("uri").text.squish
+        resource_uri = resource.xpath("xmlns:uri").text.squish
         resource_hash[resource_uri] = {}
         resource_hash[resource_uri]["secured"] = false
         resource_hash[resource_uri]["secured"] = resource["secured"] = true if resource["secured"].present? and resource["secured"].eql?("true")
 
         resource_hash[resource_uri]["content"] = false
         resource_hash[resource_uri]["content"] = resource["content"] = true if resource["content"].present? and resource["content"].eql?("true")
+
+        resource_hash[resource_uri]["topic_value_regex"] = resource["topicValueRegex"] if resource["topicValueRegex"].present?
 
         # siblings
         resource.children.each  do |sibl|
@@ -106,7 +125,7 @@ module Secure
             key = sibl["type"]
             resource_hash[resource_uri][key] = {}
 
-            sibl.xpath("authorizedRoles/authorizedRole").each do |authorized|
+            sibl.xpath("xmlns:authorizedRoles/xmlns:authorizedRole").each do |authorized|
               next unless authorized.text.present?
 
               name = authorized.text

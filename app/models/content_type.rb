@@ -17,13 +17,14 @@ class ContentType < ApplicationRecord
 
   validates_presence_of :name, :description
 
-  def self.option_selects
+  def self.option_selects_with_desc
     options = []
     self.find_each do |cts|
-      options << [cts.name, cts.id, {data: {description: cts.description, opts: cts.option_selects.to_json}}]
+      options << [ "#{cts.name} : #{cts.description}", cts.id, {data: {description: cts.description, opts: cts.option_selects}}]
     end
     options
   end
+
   def self.option_selects_by_type(name)
     options = []
     self.where(name: name).find_each do |cts|

@@ -1,0 +1,53 @@
+<% provide(:title, accessed_page_name) %>
+
+<article>
+  <div class="jumbotron galaxy-dunes_mars">
+    <h1 class="big-chalk"><%= accessed_page_name %></h1>
+    <p>
+      You have been granted access to certain secure documentation resources.  This page demonstrates
+      advanced ContentProfile features used to provide you personalized and secure access to protected resources.
+    </p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="<%= details_content_pages_path %>" role="button">More about ContentProfile</a>
+    </p>
+  </div>
+
+  <h3 class="text-center">Welcome <%= @page_controls.payload.cp.display_name %><br/><small>Secured Documents</small></h3>
+
+  <section>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" data-accessible-url="<%= @page_controls.payload.get_demo_content_object_url %>">
+
+      <% @page_controls.payload.display_groups.each_with_index do |cpe, idx| -%>
+
+        <div class="col-md-6">
+          <div class="panel panel-primary" style="padding-bottom: 6px;" >
+            <div class="panel-heading" role="tab" id="heading<%= cpe.topic_type %><%= cpe.content_type %>">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= cpe.topic_type %><%= cpe.content_type %>" aria-expanded="true" aria-controls="collapse<%= cpe.topic_type %><%= cpe.content_type %>">
+                 <%= cpe.description %>
+                </a>
+              </h4>
+            </div>
+            <div id="collapse<%= cpe.topic_type %><%= cpe.content_type %>" class="panel-collapse collapse <%= 'in' if idx < 2 %>" role="tabpanel" aria-labelledby="heading<%= cpe.topic_type %><%= cpe.content_type %>">
+              <div class="panel-body bg-warning" style="max-height:298px; overflow: auto;">
+                  <% cpe.content.each do |ctn| -%>
+
+                    <div class="well well-sm col-md-6 runtime-item bg-warning" data-package="<%= ctn.to_json %>"  data-mh="files-group">
+                        <div class="text-center">
+                          <%= choose_content_icons(ctn) %>
+                        </div>
+                        <h5 class="text-center"><%= ctn.filename %><br /><small><%= ctn.size %> | <%= ctn.created %></small><br/><small><%= ctn.source %></small></h5>
+                    </div>
+
+                  <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <% end %>
+
+    </div>
+  </section>
+
+</article>

@@ -2,86 +2,95 @@
 
 
 <article>
-    <div class="jumbotron test-squeez">
-        <h2 class="page-header"><%= accessed_page_name %></h2>
-        <%= image_tag("SknService-PageMap.png", alt: "Main Path", class: "") %>
+
+  <div class="jumbotron test-squeez">
+    <h2 class="page-header"><%= accessed_page_name %></h2>
+    <%= image_tag("SknService-Actors.png", alt: "Main Path", class: "") %>
+  </div>
+
+  <section>
+    <p class="lead">
+      The fullest demonstration is enabled via users with the <code>:demo</code> attribute, as it provides access to the admin pages.
+      All users have access to the <code>:runtime</code> enabled pages like <em>User's View</em> page that shows the accessible documents based on profiles in place.
+    </p>
+    <p>
+      Since this is a security based application it might be worthwhile to see what happens when you attempt to compromise it by; using bookmarks, or
+      trying to navigate via URL.
+    </p>
+  </section>
+
+  <h4>Predefined Demo Users</h4>
+
+  <section>
+    <div class="col-md-3">
+      <div class="well">
+          <h4>Username: <code>developer</code></h4>
+          <p>password: <code>developer99</code></p>
+          <p>Super User</p>
+          <code>:admin, :demo</code>
+      </div>
     </div>
-
-    <section>
-        <p class="lead">
-          The fullest demonstration is enabled via users with the <code>:demo</code> attribute.  Since this is
-          a security based application it might be worthwhile to see what happens when you attempt to compromise it, using book marks or
-          the way a typical user might mistakenly attempt to use a URL they saw someone else use.
-        </p>
-
-        <h4>Predefined Demo Users</h4>
-        <div class="col-md-offset-1 col-md-10">
-          <div class="col-md-4">
-            <div class="well">
-                <h4>Username: <code>developer</code></h4>
-                <p>password: <code>developer99</code></p>
-                <p>Super User</p>
-                <code>:admin, :demo</code>
-            </div>
-          </div>
-          <div class="col-md-4">
-              <div class="well">
-                <h4>Username: <code>eptester</code></h4>
-                <p>password: <code>nobugs</code></p>
-                <p>Employee Primary User</p>
-                <code>:admin, :demo</code>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="well">
-                <h4>Username: <code>estester</code></h4>
-                <p>password: <code>nobugs</code></p>
-                <p>Employee Secondary User</p>
-                <code>:reset</code>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="well">
-                <h4>Username: <code>bptester</code></h4>
-                <p>password: <code>nobugs</code></p>
-                <p>Branch Primary User</p>
-                <code>:reset, :admin</code>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="well">
-                <h4>Username: <code>bstester</code></h4>
-                <p>password: <code>nobugs</code></p>
-                <p>Branch Secondary User</p>
-                <code>:reset</code>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="well">
-                <h4>Username: <code>bnptester</code></h4>
-                <p>password: <code>nobugs</code></p>
-                <p>Branch No Privileges</p>
-                <code>:reset</code>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="well">
-                <h4>Username: <code>vptester</code></h4>
-                <p>password: <code>nobugs</code></p>
-                <p>Vendor Primary User</p>
-                <code>:reset</code>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="well">
-                <h4>Username: <code>vstester</code></h4>
-                <p>password: <code>nobugs</code></p>
-                <p>Vendor Secondary User</p>
-                <code>:reset</code>
-              </div>
-          </div>
+    <div class="col-md-3">
+        <div class="well">
+          <h4>Username: <code>eptester</code></h4>
+          <p>password: <code>demos</code></p>
+          <p>Employee Primary User</p>
+          <code>:admin, :demo</code>
         </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+          <h4>Username: <code>estester</code></h4>
+          <p>password: <code>demos</code></p>
+          <p>Employee Secondary User</p>
+          <code>:reset, :runtime</code>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+          <h4>Username: <code>bptester</code></h4>
+          <p>password: <code>demos</code></p>
+          <p>Branch Primary User</p>
+          <code>:reset, :runtime</code>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+          <h4>Username: <code>bstester</code></h4>
+          <p>password: <code>demos</code></p>
+          <p>Branch Secondary User</p>
+          <code>:reset, :runtime</code>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+          <h4>Username: <code>bnptester</code></h4>
+          <p>password: <code>demos</code></p>
+          <p>Branch No Privileges</p>
+          <code>:reset, :runtime</code>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+          <h4>Username: <code>vptester</code></h4>
+          <p>password: <code>demos</code></p>
+          <p>Vendor Primary User</p>
+          <code>:reset, :runtime</code>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+          <h4>Username: <code>vstester</code></h4>
+          <p>password: <code>demos</code></p>
+          <p>Vendor Secondary User</p>
+          <code>:reset, :runtime</code>
+        </div>
+    </div>
+  </section>
 
-    </section>
+  <h4>Page Map</h4>
+  <div class="jumbotron test-squeez">
+    <%= image_tag("SknService-PageMap.png", alt: "Main Path", class: "") %>
+  </div>
 
 </article>

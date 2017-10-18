@@ -20,10 +20,17 @@ class TopicTypeOpt < ApplicationRecord
     opts.value.gsub!(/\s+/,'')
   }
 
-  def self.option_selects(name)
+  def self.option_selects_with_desc(name)
     options = []
     self.where(type_name: name).find_each do |r|
-      options << [r.value, r.id, {data: {description: r.description}}]
+      options << ["#{r.value} : #{r.description}", r.id, {data: {description: r.description}}]
+    end
+    options
+  end
+  def self.member_option_selects_with_desc(name)
+    options = []
+    self.where(type_name: name).find_each do |r|
+      options << ["#{r.value} : #{r.description}", r.value]
     end
     options
   end

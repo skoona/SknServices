@@ -1,0 +1,205 @@
+<% provide(:title, accessed_page_name) %>
+
+<article>
+
+  <section>
+      <h1 class="text-center"><%= accessed_page_name %><br><small><%= @page_controls.package.first.display_name %></small></h1>
+  </section>
+
+  <section>
+      <%= do_page_actions %>
+
+      <ul class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#home" data-dttable="#mc-users-table">Users</a></li>
+          <li><a data-toggle="tab" href="#menu2" data-dttable="#mc-entries-table">Entries</a></li>
+      </ul>
+
+      <div class="tab-content" data-user-package="<%= @page_controls.package.map(&:to_hash).to_json %>">
+          <div id="home" class="tab-pane fade in active">
+              <h3>ContentProfile</h3>
+              <p class="lead">Content profiles are the basis of this authorization strategy.  Select a
+                  user's ContentProfile from the list below, then click on the Entries tab to review their current authorizations.</p>
+              <div class="table-responsive">
+                  <table id="mc-users-table" class="table table-hover table-striped table-bordered display" cellspacing="0" width="100%">
+                      <thead class="bg-primary">
+                      <th>Username</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Profile Role</th>
+                      <th>Provider</th>
+                      <th>Actions</th>
+                      </thead>
+                      <tbody class="" data-package="<%= @page_controls.to_hash().to_json %>">
+                      <% @page_controls.package.each do |u| %>
+                          <tr class="profile" data-package="<%= u.to_hash.to_json %>">
+                              <td><%= u.username %></td>
+                              <td><%= u.display_name %></td>
+                              <td><%= u.email %></td>
+                              <td><%= u.try(:profile_type_description) %></td>
+                              <td><%= u.try(:provider) %></td>
+                              <td class="text-center">
+                                <% if u.profile_exist %>
+                                    <%= link_to( "#content-profile-modal", {class: "btn edit", data: {url: update_profile_for_user_profiles_path }}) do %>
+                                      <i class="fa fa-pencil-square-o fa-lg" title="Edit Content Profile" aria-hidden="true"></i>
+                                    <% end %>
+                                <% else %>
+                                  <%= link_to( "#content-profile-modal", {class: "btn create", data: {url: create_profile_for_user_profiles_path }}) do %>
+                                      <i class="fa fa-plus-square-o fa-lg" title="Create Content Profile" aria-hidden="true"></i>
+                                  <% end %>
+                                <% end %>
+                              </td>
+                          </tr>
+                      <% end  %>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+          <div id="menu2" class="tab-pane fade">
+              <h3>ContentProfileEntries</h3>
+              <p class="lead">Content profile entries make the association between the type of protected resources, or content, and
+                  the entities those resources are related to, or Topic.  Both content and topic are meant to be specific.</p>
+              <p>It is considered <em>Best Practice</em> to choose one topic identifier and one content type identifier per entry.  While
+                multiple identifiers can be chosen, it will make adding or removing one identifier from the group frustrating.  By only including one
+                identifier per entry, you can easily delete, or add new entries as needed.</p>
+              <div class="table-responsive">
+                <table id="mc-entries-table" class="table table-hover table-striped table-bordered display" cellspacing="0" width="100%">
+                  <caption>
+                    <%= link_to( "#content-entry-modal", {id: 'create-entry-action', class: "btn create", data: {url: create_entries_for_user_profiles_path, toggle: 'modal', target: '#content-entry-modal' }}) do %>
+                        <i class="fa fa-plus-square-o fa-lg" title="Create Content Profile Entry" aria-hidden="true"></i>
+                        <span><strong>create new entry</strong></span>
+                    <% end %>
+                  </caption>
+                  <thead class="bg-primary">
+                      <th>Entry Description</th>
+                      <th>Content</th>
+                      <th>Content Description</th>
+                      <th>Topic</th>
+                      <th>Topic Description</th>
+                      <th>Topic Value</th>
+                      <th>Content Value</th>
+                      <th>Actions</th>
+                  </thead>
+                  <tbody class="">
+                  </tbody>
+                </table>
+              </div>
+          </div>
+      </div>
+
+    <!-- Profile Modals -->
+    <div class="modal fade" id="content-profile-modal" tabindex="-1" role="dialog" aria-labelledby="content-profile-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <%= form_tag create_profile_for_user_profiles_path,
+                       :class => "modal-form form-horizontal novalidate", :novalidate => false, :remote => false, :method => :post do %>
+              <input name="id" type="hidden" value="replace with id"/>
+              <input name="username" type="hidden" value="replace with userName"/>
+          <div class="modal-header bg-primary">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title text-center" id="content-profile-label">Modal title</h4>
+          </div>
+          <div class="modal-body" id="content-profile-body">
+            <p class="lead" id="profile-message">Content Profiles are system objects, and as a result only have one admin specified
+              value: <em>Profile Type</em>.  This value documents a person's role or relationship to the business.</p>
+            <fieldset>
+              <div class="form-group">
+                <label class="col-md-4 col-md-4 control-label" for="profile-type-id"><abbr class="text-error" title="required">*</abbr> Profile Type</label>
+                <div class="col-md-6">
+                  <select class="form-control"
+                          id="profile-type-id"
+                          name="profile_type_id"
+                          type="select"
+                          placeholder="Select business role"
+                          required>
+                    <%= options_for_select( @page_controls.profile_type_options ) %>
+                  </select>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <div class="form-group">
+              <div class="col-md-offset-4 col-md-6">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                <%= button_tag "Save", type: :submit, value: "content-profile-modal", class: "btn btn-primary btn-large", id: "create-button" %>
+              </div>
+            </div>
+          </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <!-- Entry Modals -->
+    <div class="modal fade" id="content-entry-modal" tabindex="-1" role="dialog" aria-labelledby="content-entry-label">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <%= form_tag create_entries_for_user_profiles_path(),
+                       :class => "modal-form form-vertical novalidate", :novalidate => false, :remote => false, :method => :post do %>
+              <input name="id" type="hidden" value="profile entry id"/>
+              <input name="pak" type="hidden" value="profile key"/>
+              <input name="username" type="hidden" value="replace with userName"/>
+              <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center" id="content-entry-label">Create Content Profile Entry</h4>
+              </div>
+              <div class="modal-body" id="content-entry-body">
+                <p class="lead">Content Profile Entries are permission objects, create as many as needed to express authorizations.</p>
+                <fieldset>
+                  <div class="form-group">
+                    <label class="col-md-2 control-label" for="description"><abbr class="text-error" title="required">*</abbr> Description</label>
+                    <div class="col-md-10 controls">
+                      <textarea rows="3" class="form-control" id="description" name="description" type="textarea" placeholder="describe permission being granted" required></textarea>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="form-group">
+                    <label class="col-md-2 control-label" for="topic-type-id"><abbr class="text-error" title="required">*</abbr> Topic Type</label>
+                    <div class="col-md-4 controls">
+                      <select class="form-control" id="topic-type-id" name="topic_type_id" type="select" prompt="Select business entity" required>
+                        <%= skn_options_for_select_with_data( @page_controls.topic_type_options ) %>
+                      </select>
+                    </div>
+                    <div class="col-md-6 controls">
+                      <select multiple class="form-control" id="topic-type-value-id" name="topic_type_value[]" type="select" placeholder="Select " required>
+                        <%#= options_for_select( @page_controls.topic_type_opts_options ) %>
+                      </select>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="form-group">
+                    <label class="col-md-2 control-label" for="content-type-id"><abbr class="text-error" title="required">*</abbr> Content Type</label>
+                    <div class="col-md-4 controls">
+                      <select class="form-control" id="content-type-id" name="content_type_id" type="select" prompt="Select Business Document" required>
+                        <%= skn_options_for_select_with_data( @page_controls.content_type_options ) %>
+                      </select>
+                    </div>
+                    <div class="col-md-6 controls">
+                      <select multiple class="form-control" id="content-type-value-id" name="content_type_value[]" type="select" placeholder="Select" required>
+                        <%#= options_for_select( @page_controls.content_type_opts_options ) %>
+                      </select>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="modal-footer">
+                <div class="form-group">
+                  <div class="col-md-offset-4 col-md-6">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                    <%= button_tag "Save", type: :submit, value: "content-entry-modal", class: "btn btn-primary btn-large", id: "create-button" %>
+                  </div>
+                </div>
+              </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="row">
+      <p class="text-center">Administrative</p>
+      <p class="text-center"><%= @page_controls.message %></p>
+  </div>
+</article>

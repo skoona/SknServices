@@ -1,20 +1,23 @@
-<% provide(:title, 'Reset Password') %>
+<% provide(:title, 'Reset Password Request') %>
 
-<header class="page-header">
+<article>
+  <header class="page-header">
     <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
+  </header>
 
-<section>
+  <section>
+    <% user = @page_controls.user %>
 
-    <%= simple_form_for(@user, :url => password_resets_path, :html => { :class => 'form-horizontal form' }) do |f| %>
+    <%= simple_form_for(user, :url => password_resets_path, :html => { :class => 'form-horizontal form' }) do |f| %>
         <%= f.input :username, label: 'User Name', autofocus: true %>
         
         <div class="form-actions">
           <div class="col-md-push-3 col-md-9">
-            <%= f.button :submit, class: 'btn btn-primary submit' %>
+            <%= f.button :submit, "Request Password Reset", class: 'btn btn-primary submit' %>
             <%= link_to "Cancel", root_path, class: 'btn' %>
           </div>
         </div>
     <% end %>
 
-</section>
+  </section>
+</article>

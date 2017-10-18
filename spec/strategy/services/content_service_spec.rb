@@ -2,7 +2,7 @@
 #
 
 RSpec.describe Services::ContentService, "Service routines of Services::ContentService." do
-  let!(:user) {user_bstester}
+  let!(:user) {user_developer}
   let!(:userp) {page_user_bnptester}
 
   let(:mc) {ServiceRegistryMockController.new(user: user)}
@@ -55,6 +55,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                "id"=>userp.person_authenticated_key
       }
       expect(service.handle_content_profile_create(parms).success).to be true
+      expect(service.handle_content_profile_create({}).success).to be false
     end
 
     scenario "#handle_content_profile_update" do
@@ -64,6 +65,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                "id"=>user.person_authenticated_key
       }
       expect(service.handle_content_profile_update(parms).success).to be true
+      expect(service.handle_content_profile_update({}).success).to be false
     end
 
     scenario "#handle_content_profile_destroy" do
@@ -73,6 +75,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                "id"=>ContentProfile.first.person_authentication_key.to_s
       }
       expect(service.handle_content_profile_destroy(parms).success).to be true
+      expect(service.handle_content_profile_destroy({}).success).to be false
     end
 
     scenario "#handle_content_profile_entries_create" do
@@ -88,6 +91,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
             "button"=>"content-entry-modal"
       }
       expect(service.handle_content_profile_entries_create(parms).success).to be true
+      expect(service.handle_content_profile_entries_create({}).success).to be false
     end
 
     scenario "#handle_content_profile_entry_destroy" do
@@ -97,14 +101,15 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                'pak' => user.person_authenticated_key
       }
       expect(service.handle_content_profile_entry_destroy(parms).success).to be true
+      expect(service.handle_content_profile_entry_destroy({}).success).to be false
     end
 
   end
 
-  context "Demo methods return proper results. " do
+  context "Developers In Action Pages. " do
 
-    scenario "#handle_demo_page" do
-      result = service.handle_demo_page({})
+    scenario "#handle_in_action_admin" do
+      result = service.handle_in_action_admin({})
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.success).to be true
     end
@@ -124,17 +129,98 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       result = service.handle_api_accessible_content(parms)
       expect(result).to be_a(SknUtils::NestedResult)
       expect(result.package.success).to be true
+      expect(service.handle_api_accessible_content({}).package.success).to be false
     end
 
     scenario "#api_get_content_object" do
-      parms = {"id"=>"0:0:1",
-               "username"=>"developer"}
+      parms = {"id"=>"content",
+               "username"=>"developer",
+               "user_options"=>["BranchPrimary", "0034", "0037", "0040"],
+               "content_type"=>"Commission",
+               "content_value"=>["68613"],
+               "topic_type"=>"Branch",
+               "topic_value"=>["0038"],
+               "description"=>"Determine which branch documents can be seen",
+               "topic_type_description"=>"Branch Actions for a specific branch",
+               "content_type_description"=>"Monthly Commission Reports and Files"
+      }
+      catalog = service.handle_api_accessible_content(parms)
+      expect(catalog.package.success).to be true
+
+      parms = {"id"=>"0:0:0",
+               "username"=>"developer",
+               "content_type"=>"Commission"
+      }
+
       result = service.api_get_content_object(parms)
-      # catalog is not built, look for result and false
       expect(result).to be_a(SknUtils::NestedResult)
-      expect(result.package.success).to be true
+      expect(result.success).to be true
+      expect(service.api_get_content_object({}).success).to be false
+    end
+
+  end
+
+  context "Users In Action Pages. " do
+
+    scenario "#handle_in_action" do
+      result = service.handle_in_action()
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+    end
+
+    scenario "#api_get_demo_content_object " do
+      parms = {"id"=>"0:0:0",
+               "username"=>"developer",
+               'content_type'=>"Commission"
+      }
+      catalog = service.handle_in_action()
+      expect(catalog.success).to be true
+
+      result = service.api_get_demo_content_object(parms)
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+      expect(service.api_get_demo_content_object({}).success).to be false
     end
   end
 
+  context "Administrators In Action Pages. " do
+
+    scenario "#handle_members" do
+      result = service.handle_members()
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+    end
+
+    scenario "#handle_member" do
+      parms = {
+          "username"=>"bstester",
+          "display_name"=>"Branch Secondary User",
+          "id"=>user.person_authenticated_key
+      }
+      result = service.handle_member(parms)
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+      expect(service.handle_member({}).success).to be false
+    end
+
+    scenario "#handle_member_updates " do
+      parms = {
+            "member"=>{
+                "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+                "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+                "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+                "activity"=>{"partners"=>["0099"]},
+                "filedownload"=>{"usergroups"=>["EmployeePrimary", "EmployeeSecondary", "BranchPrimary"]}
+            },
+            "commit"=>"bstester",
+            "id"=> user.person_authenticated_key
+          }
+
+      result = service.handle_member_updates(parms)
+      expect(result).to be_a(SknUtils::NestedResult)
+      expect(result.success).to be true
+      expect(service.handle_member_updates(false).success).to be false
+    end
+  end
 
 end

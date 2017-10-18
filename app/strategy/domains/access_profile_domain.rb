@@ -7,6 +7,9 @@ module Domains
 
   class AccessProfileDomain < DomainsBase
 
+    PROFILE_CONTEXT='access'
+
+
     def reload_access_registry
       # hash = Secure::AccessRegistry.get_ar_permissions_hash
       # puts generate_xml_from_hash(hash, 'my_stuff', 'FileDownload/UserGroups/Pdf')
@@ -21,7 +24,8 @@ module Domains
     end
 
     def system_actions_api(params)
-      case params['id']
+      id_val = params[:id] || params['id']
+      case id_val.to_s
         when 'xml'
           reload_access_registry
           "AccessRegistry Reloaded"
@@ -77,7 +81,7 @@ module Domains
          content_entries: content_entries,
          xprofile: xprofile,
          cprofile: cprofile,
-         apis_enabled: (authenticated_user and current_user.has_access?('#Management')),
+         apis_enabled: (authenticated_user and current_user.has_access?('#SystemsManagement')),
          storage_size: storage_size,
          storage_keys: storage_keys
       }

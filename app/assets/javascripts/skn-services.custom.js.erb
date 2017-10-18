@@ -8,9 +8,7 @@
 
 
 var logEnabled = <%= Rails.env.development? %>,
-    csrfToken,
-    controllerAction,
-    controllerName,
+    SknService,
     accessibleUrl,
     userTable,
     accessTable,
@@ -18,7 +16,8 @@ var logEnabled = <%= Rails.env.development? %>,
     accessibleTable,
     mcUserTable,
     mcEntriesTable,
-    siStorageTable;
+    siStorageTable,
+    membersTable;
 
 /**
  * Prevents debuging messages from going to console none development mode
@@ -29,6 +28,178 @@ function consoleLog(message) {
         console.log(message);
     }
 }
+
+
+/**
+ * SknServiceUtil
+ *
+ *  - desired usage pattern:
+ *
+ *    var SknService = new SknServiceObject();
+ *    SknService.go('/controller/action');     => redirect to page
+ *    SknService.context('controller/action'); => true|false
+ *
+ */
+;function SknServiceUtil() {
+    this.relativeUrlPath = $('body').data('relative-path');
+    this.controllerName = $('body').data('controller-name');
+    this.controllerAction = $('body').data('controller-action');
+    this.currentPage = ($('body').data('controller-name') + '/' + $('body').data('controller-action'));
+    this.csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    /* #AGENCY-TITLE# #AGENCY-NUM# */
+    this.templateCard =
+        '<div class="col-md-3 branch-entry #AGENCY-NUM#"><div class="well well-sm" data-mh="entry-group">' +
+        '<a data-branch="#AGENCY-NUM#" href="#" class="pull-right"><i class="fa fa-trash" aria-hidden="true"></i></a><h4>#AGENCY-TITLE#</h4><hr/>' +
+        '<div class="checkbox"><label><input id="com-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Commission]"> Commission</label></div>' +
+        '<div class="checkbox"><label><input id="exp-#AGENCY-NUM#" type="checkbox" name="member[#AGENCY-NUM#][Experience]"> Experience</label></div>' +
+        '<div class="form-group">' +
+        '<label for="not-#AGENCY-NUM#" class="control-label">Notification</label>' +
+        '<select id="not-#AGENCY-NUM#" multiple class="form-control selectpicker" data-live-search="true" name="member[#AGENCY-NUM#][Notification][]">' +
+        '</select></div>' +
+        '<div class="form-group">' +
+        '<label for="lc-#AGENCY-NUM#" class="control-label">Licensed States</label>' +
+        '<select id="lc-#AGENCY-NUM#" multiple class="form-control selectpicker" data-live-search="true" name="member[#AGENCY-NUM#][LicensedStates][]">' +
+        '</select></div>' +
+        '</div></div>';
+
+    if (typeof this.relativeUrlPath === "undefined")  {
+        this.relativeUrlPath = '';
+    }
+
+};
+
+SknServiceUtil.prototype = {
+    get csrf() {
+        return this.csrfToken;
+    },
+    get page() {
+        return this.currentPage;
+    },
+    get relativePath() {
+        return this.relativeUrlPath;
+    },
+    set relativePath(str) {
+        this.relativeUrlPath = str;
+    },
+    get controller() {
+        return this.controllerName;
+    },
+    get action() {
+        return this.controllerAction;
+    },
+    context: function(path){
+        return this.currentPage === path;
+    },
+    genURL: function(path) {
+        var x = window.location.href.split('/'),
+            urlPath = '',
+            urlBase = '';
+
+        if (this.relativeUrlPath.length > 1) { // is this a controller name or relative prefix
+            if ( path.startsWith(this.relativeUrlPath) ) {
+                urlPath = urlBase.concat(x[0], '//', x[2], path);
+            } else {
+                urlPath = urlBase.concat(x[0], '//', x[2], '/', x[3], path);
+            }
+        } else { // path include leading slash
+            urlPath = urlBase.concat(x[0], '//', x[2], path);
+        }
+        return urlPath;
+
+    },
+    go: function(path) {
+        window.location = this.genURL(path);
+    },
+    /* Fixed to #card-container
+     * - replaces #TITLE# and #AGENCY-NUM#
+     */
+    addCardFor: function (agencyNumber, title) {
+        var workText = '',
+            rc = true,
+            state_options = $("div.branch-entry:last select:last > option").clone(),
+            statesArray = $('#user-anchor').data().statesArray,
+            userOptions = $("#user-anchor").data().userOptions,
+            notifyArray = $('#user-anchor').data().notifyArray,
+            notify_options = $("div.branch-entry:last select:first > option").clone(),
+            choices = [],
+            newCard;
+
+        try {
+            /* does not exist */
+            if (agencyNumber.length < 1 || title.length < 1 || $('#com-' + agencyNumber).length == 1) {
+                consoleLog('addCardFor(' + agencyNumber + ') Invalid!');
+                return false;
+            }
+
+            /* is not a contracted agency */
+            if ($.inArray(agencyNumber, userOptions) == -1) {
+                workText = this.templateCard.replace(/#AGENCY-TITLE#/g, title);
+                workText = workText.replace(/#AGENCY-NUM#/g, agencyNumber);
+                $('#apply-branch-container').before(workText);
+
+                if (state_options.length == 0) {
+                    choices = [];
+                    $.each(statesArray, function(index, row) {
+                        choices.push('<option value="' + row[1] + '">' + row[0] + '</option>');
+                    });
+                    state_options = $(choices.join());
+                }
+                $('#lc-' + agencyNumber).append(state_options).selectpicker({
+                    size: 5,
+                    selectedTextFormat: 'count > 2'
+                });
+
+                if (notify_options.length == 0) {
+                    choices = [];
+                    $.each(notifyArray, function(index, row) {
+                        choices.push('<option value="' + row + '">' + row + '</option>');
+                    });
+                    notify_options = $(choices.join());
+                }
+                $('#not-' + agencyNumber).append(notify_options).selectpicker({
+                    size: 5,
+                    selectedTextFormat: 'count > 2'
+                });
+
+                $('div.well-sm[data-mh="entry-group"]').matchHeight();
+                $.fn.matchHeight._update();
+                consoleLog('addCardFor(' + agencyNumber + ') Processed!');
+            }
+        } catch (e) {}
+        return rc;
+    },
+    removeCardFor: function (agencyNumber) {
+        var userOptions = $('#user-anchor').data().userOptions,
+            target = $('div.branch-entry.' + agencyNumber),
+            rc = true;
+        try {
+            if ($.inArray(agencyNumber, userOptions) == -1) {
+                target.slideUp(1500).remove();
+            } else {
+                consoleLog('removeCardFor(' + agencyNumber + ') not found!');
+            }
+            $('div.well-sm[data-mh="entry-group"]').matchHeight();
+            $.fn.matchHeight._update();
+        } catch (e) {}
+        return rc;
+    },
+    branchRemovalSetup: function() {
+      $('div.branch-entry > div.well-sm > a').on('click', function(ev) {
+          var branch = $(this).data().branch;
+          ev.stopPropagation();
+          SknService.removeCardFor(branch);
+
+          $('div.well-sm[data-mh="entry-group"]').matchHeight();
+          consoleLog('onClick() fired for Trashcan! branch: ' + branch);
+
+          return false;
+      });
+      return true;
+    }
+
+};
+
 
 /* ********************************************************
  * System Info Page: :details_sysinfo
@@ -45,7 +216,7 @@ function handleRailsInfo(ev) {
     console.log( "handleRailsInfo() init: " + JSON.stringify(pkg));
 
     $.ajax({
-        headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+        headers: {'X-CSRF-Token': SknService.csrf, 'X-XSRF-Token': SknService.csrf },
         method: "GET",
         url: '/' + pkg.url
     }).done(function(data,textStatus, jqXHR) {
@@ -67,7 +238,7 @@ function handleRailsInfo(ev) {
 }
 
 /* ********************************************************
- * ContentProfileDemo Page: :content_profile_demo
+ * ContentProfileDemo Page: :in_action_admin
  * ********************************************************
  */
 
@@ -78,46 +249,48 @@ function handleRailsInfo(ev) {
  * - REQUIRES JQuery-Binary-Transport.js
  */
 function profileTablesGetObject(ev) {
-  var dataPackage = $(ev.currentTarget).data().package,
-      dataResponse,
-      objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
+    var dataPackage = $(ev.currentTarget).data().package,
+        dataResponse,
+        objectUrl = $("#accessible-table tbody").data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
-  /*
-   * flag selected in related table */
-  $("table.profile tbody tr").removeClass('success');
-  $(ev.currentTarget).addClass('success');
+    /*
+     * flag selected in related table */
+    $("table.profile tbody tr").removeClass('success');
+    $(ev.currentTarget).addClass('success');
 
-  ev.preventDefault();
+    ev.preventDefault();
 
-  if(dataPackage.hasOwnProperty('id')) {
-    window.open(objectUrl, dataPackage.filename);
-    consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
-  } else {
-    consoleLog("profileTablesGetObject() Not a file based request - skipped");
-  }
+    if(dataPackage.hasOwnProperty('id')) {
+        window.open(objectUrl, dataPackage.filename);
+        consoleLog("profileTablesGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+    } else {
+        consoleLog("profileTablesGetObject() Not a file based request - skipped");
+    }
 
+    consoleLog("profileTablesGetObject(completed) ");
 
-  /**  Worked but user could not detach
+    return false;
+}
 
-   $.ajax({
-    headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
-    method: "GET",
-    dataType: 'binary',
-    url: objectUrl,
-    processData: false
-  }).done(function(data,textStatus) {
-    window.open( URL.createObjectURL(data) );
-    consoleLog( "profileTablesGetObject("+ dataPackage.username + ":" + dataPackage.id + ") success: " + textStatus );
-  }).fail(function(jqXHR, textStatus, errorThrown) {
-    accessibleTable.clear().draw();
-    consoleLog( "profileTablesGetObject("+ dataPackage.username + ") error: " + textStatus + ', thrown=' + errorThrown + ', RequestPkg=' + JSON.stringify(dataPackage));
-  });
+/*
+ * For Runtime Demo Page Selections */
+function runtimeDemoGetObject(ev) {
+    var dataPackage = $(ev.currentTarget).data().package,
+        dataResponse,
+        objectUrl = $('#accordion').data().accessibleUrl + "?id=" + dataPackage.id + ";username=" + dataPackage.username + ";content_type=" + dataPackage.content_type;
 
-  */
+    ev.preventDefault();
 
-  consoleLog("profileTablesGetObject(completed) ");
+    if(dataPackage.hasOwnProperty('id')) {
+        window.open(objectUrl, dataPackage.filename);
+        consoleLog("runtimeDemoGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
+    } else {
+        consoleLog("runtimeDemoGetObject() Not a file based request - skipped");
+    }
 
-  return false;
+    consoleLog("runtimeDemoGetObject(completed) ");
+
+    return false;
 }
 
 /**
@@ -148,7 +321,7 @@ function profileTablesRequester(ev) {
     $(ev.currentTarget).addClass('success');
 
     $.ajax({
-        headers: {'X-CSRF-Token': csrfToken, 'X-XSRF-Token': csrfToken },
+        headers: {'X-CSRF-Token': SknService.csrf, 'X-XSRF-Token': SknService.csrf },
         method: "GET",
         dataType: "json",
         contentType: 'json',
@@ -370,7 +543,7 @@ function handleDemoPages() {
 
 
 /* ********************************************************
- * ManageContentProfiles Page: :manage_content_profiles
+ * ManageContentProfiles Page: :in_depth
  * ********************************************************
  */
 
@@ -477,7 +650,10 @@ function handleManagementPages() {
     $('#mc-users-table tbody tr.profile').on('click', function (event) {
       var dataPackage = $(event.currentTarget).data().package;
 
-      /* maintain selected item on users table */
+
+      $('section h1 > small').text(dataPackage.display_name)
+
+        /* maintain selected item on users table */
       $('#mc-users-table tbody tr.profile').removeClass('success');
       $(event.currentTarget).addClass('success');
 
@@ -525,6 +701,163 @@ function handleManagementPages() {
     return true;
 } // end function
 
+/**
+ * Initialization of Members and Member Page
+ */
+
+function handle_members() {
+    membersTable = $('#members-table').DataTable({
+        dom: "<'row'<'col-md-offset-4 col-md-4'f>>tr<'row'<'col-md-12'ip>>",// dom: 'tr<"bottom align-justify"ip>',
+        order: [[0, 'asc']],
+        lengthChange: true,
+        ordering: false,
+        paging: true,
+        processing: true,
+        searching: true,
+        scrollY: "",
+        pageLength: 10,
+        scrollCollapse: false,
+        scroller: true,
+        language: {
+            emptyTable: "No Profiles to Display!"
+        },
+        drawCallback: function(settings) {
+            try {
+                /*
+                 * enable row clicks to member page from members table */
+                $('#members-table tbody tr').on('click', function(event){
+                    var pkg = $(event.currentTarget).data().package
+
+                    $('#members-table tr.admin').removeClass('success');
+                    $(event.currentTarget).addClass('success');
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    consoleLog("drawCallback(members) Row Data(" + JSON.stringify(pkg) + ")");
+                    SknService.go('/profiles/' + pkg.id + '/member?username=' + pkg.username + '&display_name=' + pkg.display_name);
+                });
+            } catch (e) {
+                consoleLog("DataTables DrawCallBack Failed " + e);
+            }
+        }
+    });
+
+ return true;
+}
+
+function handle_member() {
+    /* Setup dropdown lists */
+    $('.selectpicker').selectpicker({
+        size: 5,
+        selectedTextFormat: 'count > 2'
+    });
+    $("select#new-branch").selectpicker({
+        size: 4,
+        selectedTextFormat: 'count > 2'
+    });
+    $("select#filedownload").selectpicker({
+        size: 4,
+        selectedTextFormat: 'count > 2'
+    });
+
+    /**
+     * Manage Add Agency Feature
+     */
+
+    if ($('#apply-branch-container').length > 0) {
+
+        $('#add-branch-btn').on('click', function (ev) {
+            var selected = $("#new-branch").find('option:selected').first();
+            if (selected.val() == 'blank') {
+                return false;
+            }
+            SknService.addCardFor(selected.val(), selected.text());
+            $(ev.currentTarget).attr("disabled", true);
+            ev.stopPropagation();
+            $('div.branch-entry > div.well-sm').matchHeight();
+            $.fn.matchHeight._update();
+
+            consoleLog('New Branch Button(' + selected.val() + ') called!');
+
+            /* allow for added card to be removed */
+            SknService.branchRemovalSetup();
+
+            return false;
+        });
+
+        $('#new-branch').on('changed.bs.select', function (ev, clickedIndex, newValue, oldValue) {
+            /* fires only when changed: new/old are booleans and irrelevant */
+            if (newValue) {
+                $('#add-branch-btn').removeAttr("disabled");
+            }
+            return false;
+        });
+
+        $('#add-branch-btn').attr("disabled", true);
+
+    }
+    /* Keep Container at same height */
+    $('div.well-sm[data-mh="entry-group"]').matchHeight();
+    $.fn.matchHeight._update();
+
+    return true;
+}
+
+/**
+ * Handle System Information page initialization
+ * @returns {boolean}
+ */
+function handle_details_sysinfo() {
+    /*
+     * Initial Establish sections
+     * id="about" -  <a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">
+     *     target: <div id="about-content" style="display: none"></div>
+     * id="routes" - <a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false;">
+     *     target: <div id="route-content" style="display: none"></div>
+     */
+    $('h2 > a.btn-lg').on('click', handleRailsInfo);
+
+
+    siStorageTable = $('#storage-table').DataTable({
+        scrollY: "420px",
+        language: {
+            emptyTable: "ObjectStorage is Empty!"
+        }
+    });
+
+    $('table.sys-table').DataTable({
+        scrollY: "",
+        language: {
+            emptyTable: "No Profiles to Display!"
+        }
+    });
+
+    $('#obs-panel, div.panel.sys-table').on('shown.bs.collapse', function () {
+        siStorageTable.draw();
+        $('table.sys-table').DataTable().draw();
+        consoleLog("Draw() on Panel Shown for DataTables");
+        return false;
+    });
+
+    return true;
+}
+
+/**
+ * Handle In Action page Initialization
+ */
+function handle_in_action() {
+    $('div.well.runtime-item').on("click", runtimeDemoGetObject);
+
+    $('div.well-sm[data-mh="files-group"]').matchHeight();
+    $.fn.matchHeight._update();
+
+    $('#accordion').on('show.bs.collapse', function() {
+        $.fn.matchHeight._update();
+    });
+
+    return true;
+}
+
 
 /* ********************************************************
  * JQuery Enabled Processing
@@ -532,17 +865,14 @@ function handleManagementPages() {
  */
 $(function() {
 
-    controllerAction = $('body').data().controllerAction;
-    controllerName = $('body').data().controllerName;
-    /* Save this token for the Ajax calls */
-    csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-    /* Initialize code pretty print feature */
-    prettyPrint();
+    /*
+     * Create the general utility object
+    */
+    SknService = new SknServiceUtil();
 
     /*
      * Only for the ProfilesController based pages */
-    if ( controllerName.startsWith('profiles') ) {
+    if ( SknService.controllerName.startsWith('profiles') ) {
         /*
          * Initial Establish the dataTables */
         try {
@@ -570,40 +900,49 @@ $(function() {
         }
     }
 
-    switch (controllerAction) {
-        case 'details_sysinfo':
-            /*
-             * Initial Establish sections
-             * id="about" -  <a href="rails/info/properties" onclick="getRailsInfo('about-content'); return false;">
-             *     target: <div id="about-content" style="display: none"></div>
-             * id="routes" - <a href="rails/info/routes" onclick="getRailsInfo('route-content'); return false;">
-             *     target: <div id="route-content" style="display: none"></div>
-             */
-            $('h2 > a.btn-lg').on('click', handleRailsInfo);
-
-
-          siStorageTable = $('#storage-table').DataTable({
-            scrollY: "420px",
-            language: {
-              emptyTable: "ObjectStorage is Empty!"
-            }
-          });
-
-          $('#obs-panel').on('shown.bs.collapse', function () {
-            siStorageTable.draw();
-          });
-
+    switch (SknService.action) {
+        case 'members':
+            handle_members();
             break;
-        case 'manage_content_profiles':
+
+        case 'member':
+            handle_member();
+            break;
+
+        case 'in_action':
+            handle_in_action();
+            break;
+
+        case 'edit':
+            $('.selectpicker').selectpicker();
+            break;
+
+        case 'details_sysinfo':
+            handle_details_sysinfo();
+            break;
+        case 'in_depth':
             handleManagementPages();
             break;
-        case 'content_profile_demo':
+        case 'in_action_admin':
             handleDemoPages();
             break;
         default:
-            consoleLog("Current Page (" + controllerAction + ") has no custom Javascripts enabled.");
+            consoleLog("Current Page (" + SknService.page + ") has no custom Javascripts enabled.");
     }
-    consoleLog("Initialization Complete for: " + controllerName + "/" + controllerAction + ".");
+
+
+    /* Timeout non-Error Flash messages
+     * { alert: :alert, notice: :success, info: :info, secondary: :secondary, success: :success, error: :alert, warning: :warning, primary: :primary }
+     */
+    setTimeout(function() { // all except alert
+        var elems = $('div.alert.alert-success,.alert.alert-notice,.alert.alert-info,.alert.alert-warning');
+        $.each( elems, function (index, item) {
+            $(item).slideUp(2000);
+        });
+    }, 20000); // <-- time in milliseconds
+
+
+    consoleLog("Initialization Complete for: " + SknService.page + ".");
 
     return false;
 });

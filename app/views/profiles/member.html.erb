@@ -1,0 +1,133 @@
+<% provide(:title, accessed_page_name) %>
+
+<article>
+  <div class="jumbotron earth-snow">
+    <h1 class="big-chalk"><%= accessed_page_name %></h1>
+    <p>
+      Determine which protected resources this user should have access to, and assign those permissions on this page.
+    </p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="<%= details_content_pages_path %>" role="button">More about ContentProfile</a>
+    </p>
+  </div>
+
+  <section>
+    <div class="col-md-12">
+      <%= link_to members_profiles_path, class: "pull-right" do %>
+          <i class="fa fa-undo" aria-hidden="true"></i> Back
+      <% end %>
+      <h2 class="pull-left">
+        Member permissions for <%= @page_controls.payload.profile.display_name %><br/>
+        <small>
+          <i class="fa fa-user" aria-hidden="true"></i> <%= @page_controls.payload.profile.username %>
+          <%= @page_controls.payload.profile.email %>
+          <i class="fa fa-calendar-check-o" aria-hidden="true"></i> <%= @page_controls.payload.profile.last_update %>
+        </small>
+      </h2>
+    </div>
+  </section>
+
+  <section>
+    <%= form_tag(member_update_profile_path(id: @page_controls.payload.profile.pak), method: :put) do -%>
+      <div id="user-anchor" class="well col-md-12" data-user-options="<%= @page_controls.payload.user_options %>" data-states-array="<%= @page_controls.payload.states %>" data-notify-array="<%= @page_controls.payload.notify_opts %>">
+
+        <% @page_controls.payload.branch_workflow.each do |branch| %>
+          <div class="col-md-3 branch-entry <%= branch[1] %>">
+            <div class="well well-sm" data-mh="entry-group">
+              <h4 class="pull-left"><%= branch[0] %></h4>
+
+              <hr/>
+              <div class="checkbox">
+                <label>
+                  <input id="com-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Commission]" <%= @page_controls.payload.page.branch[branch[1]].commission ? 'checked' : '' %>> Commission
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input id="exp-<%= branch[1] %>" type="checkbox" name="member[<%= branch[1] %>][Experience]" <%= @page_controls.payload.page.branch[branch[1]].experience ? 'checked' : '' %>> Experience
+                </label>
+              </div>
+              <div class="form-group">
+                <label for="not-<%= branch[1] %>" class="control-label">Notification</label>
+                <select id="not-<%= branch[1] %>" multiple class="form-control selectpicker" name="member[<%= branch[1] %>][Notification][]">
+                  <%= options_for_select( @page_controls.payload.notify_opts, @page_controls.payload.page.branch[branch[1]].notification ) %>
+                </select>
+              </div>
+              <!-- Make this a multi-select -->
+              <div class="form-group">
+                <label for="lc-<%= branch[1] %>" class="control-label">Licensed States</label>
+                <select id="lc-<%= branch[1] %>" multiple class="form-control selectpicker" data-live-search="true" name="member[<%= branch[1] %>][LicensedStates][]">
+                  <%= options_for_select( @page_controls.payload.states, @page_controls.payload.page.branch[branch[1]].licensed_states ) %>
+                </select>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Add New Branch -->
+        <% if @page_controls.payload.branches.size > 0 %>
+          <div id="apply-branch-container" class="col-md-3">
+            <div class="well well-sm" data-mh="entry-group">
+              <h4>Branch Assignment</h4>
+              <hr/>
+              <div class="form-group">
+                <label for="new-branch" class="control-label">Assign Branch</label>
+                <select id="new-branch" class="form-control">
+                  <%= options_for_select( @page_controls.payload.branches.unshift( ['Choose Branch', 'blank'] ) ) %>
+                </select>
+              </div>
+              <hr/>
+              <div style="text-align: center; padding-bottom: 6px; color: blue;">
+                <i class="fa fa-cubes fa-2x" aria-hidden="true"></i>
+              </div>
+              <div class="button">
+                <button id="add-branch-btn" type="button" class="btn btn-info btn-block">Apply</button>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+
+        <div class="col-md-3">
+          <div class="well well-sm" data-mh="entry-group">
+            <h4>Activity</h4>
+            <hr/>
+            <div class="form-group">
+              <label for="partners" class="control-label">Authorized Partners</label>
+              <select id="partners" multiple class="form-control selectpicker" name="member[activity][partners][]">
+                <%= options_for_select( @page_controls.payload.partners, @page_controls.payload.page.partner ) %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="well well-sm" data-mh="entry-group">
+            <h4>FileDownloads</h4>
+            <hr/>
+            <div class="form-group">
+              <label for="filedownload" class="control-label">Allowed UserGroups</label>
+              <select id="filedownload" multiple class="form-control selectpicker" name="member[filedownload][usergroups][]">
+                <%= options_for_select( @page_controls.payload.user_groups, @page_controls.payload.page.user_groups ) %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-12">
+        <% if current_user_has_access?('#ContentProfileManagement') %>
+            <div class="form-group">
+              <div class="col-md-3  pull-right">
+                <button type="submit" name="commit" value="<%= @page_controls.payload.profile.username %>" class="btn btn-primary btn-block">Update</button>
+              </div>
+            </div>
+        <% end %>
+      </div>
+
+    <% end %>
+  </section>
+
+</article>
+

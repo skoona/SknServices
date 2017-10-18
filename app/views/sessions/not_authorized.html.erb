@@ -1,14 +1,12 @@
 <% provide(:title, accessed_page_name) %>
 
-<section class="container">
-    <article>
-        <section class="container">
-            <p class="lead text-center"><%= accessed_page_name %></p>
-        </section>
-    </article>
+<article>
+    <section>
+        <p class="lead text-center"><%= accessed_page_name %></p>
+    </section>
 
     <%= link_to :back, class: "pull-right" do %>
-        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-undo" aria-hidden="true"></span>
         Back
     <% end %>
-</section>
+</article>

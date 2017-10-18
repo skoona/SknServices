@@ -1,6 +1,6 @@
 
 
-RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based AccessRegistry' do
+RSpec.describe Processors::InlineValuesProcessor, 'Content Adapter for XML Based AccessRegistry' do
 
   let(:user) { page_user_developer }
   let(:mc) {ServiceRegistryMockController.new(user: user)}
@@ -15,16 +15,16 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
   context "Initialization "  do
 
     it "#new throws an Exception without params." do
-      expect{ Processors::InlineValuesAdapter.new }.to raise_error(ArgumentError)
+      expect{ described_class.new }.to raise_error(ArgumentError)
     end
     it "#new succeeds with only :registry as init param." do
-      expect(Processors::InlineValuesAdapter.new({registry: @registry})).to be_a(Processors::InlineValuesAdapter)
+      expect(described_class.new({registry: @registry})).to be_a(described_class)
     end
     it "#new fails when :registry is invalid." do
-      expect{ Processors::InlineValuesAdapter.new({registry: nil}) }.to raise_error(ArgumentError)
+      expect{ described_class.new({registry: nil}) }.to raise_error(ArgumentError)
     end
     it "#registry.profile_data_services returns a proper service object." do
-      expect( @service ).to be_a Processors::InlineValuesAdapter
+      expect( @service ).to be_a described_class
     end
     it "#registry and #controller objects to be different." do
       expect( @service.registry ).to be_a Services::ServiceRegistry
@@ -44,13 +44,13 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
   context "Core methods delivery as designed." do
     let(:cpe) {
                 { :id=>"access",
-                  :uri=>"LicensedStates/Branch/Operations",
-                  :resource_options=>{
-                      :uri=>"LicensedStates/Branch/Operations",
-                      :role=>"Test.Branch.Operations.LicensedStates.USA",
-                      :role_opts=>["0037"]
+                  :uri=>"LicensedStates/Branch/0037",
+                  :resource_options=>{ "0" => {
+                      :uri=>"LicensedStates/Branch/0037",
+                      :role=>"Services.Branch.LicensedStates.Access",
+                      :role_opts=>["0037"]}
                   },
-                  'content_type' =>"LicensedStates",
+                  :content_type=>"LicensedStates",
                   :content_value=>["21"],
                   :topic_type=>"Branch",
                   :topic_value=>["0037"],
@@ -68,7 +68,7 @@ RSpec.describe Processors::InlineValuesAdapter, 'Content Adapter for XML Based A
     end
 
     ## Expected Response
-    # {:source=>"images", :filename=>"galaxy-man.png", :created=>"2016/02/14", :size=>"3.2 MB"}
+    # {:source=>"images", :filename=>"galaxy-man.jpg", :created=>"2016/02/14", :size=>"3.2 MB"}
     it "#available_content_list returns array of options with descriptions. " do
       expect(  @registry.adapter_for_content_profile_entry(cpe).available_content_list({}) ).to be_a Array
       expect(  @registry.adapter_for_content_profile_entry(cpe).available_content_list(cpe).first ).to be_a(Hash)

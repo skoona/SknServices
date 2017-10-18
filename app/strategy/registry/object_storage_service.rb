@@ -51,10 +51,6 @@ module Registry
         object_store.size_of_store(context)
       end
 
-      def stored_user_profile_keys
-        object_store.get_warden_stored_user_profile_keys(oscs_get_context)
-      end
-
       # Purge all over 2 days old
       def purge_older_than_two_days(seconds=nil)
         object_store.purge_by_seconds(seconds) # 2 days is default, else (Time.zone.now - 2.days).to_i

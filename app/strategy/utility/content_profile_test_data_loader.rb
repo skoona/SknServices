@@ -208,7 +208,7 @@ module Utility
       ContentType.create!([
           {name: "Experience",   description: "Monthly Experience Reports and Files", value_data_type: "String",
            content_type_opts_attributes: {
-               "0" => {value: "*.log", type_name: "Experience", description: "Document store Experience Document Type ID" } }
+               "1" => {value: "*.pdf", type_name: "Experience", description: "Document store Experience PDF Type" }}
           },
           {name: "Commission",   description: "Monthly Commission Reports and Files", value_data_type: "String",
            content_type_opts_attributes: {
@@ -223,16 +223,75 @@ module Utility
           },
           {name: "LicensedStates",   description: "Business Operational Metric", value_data_type: "Integer",
            content_type_opts_attributes: {
-               "0" => {value: "21", type_name: "LicensedStates", description: "Michigan"},
-               "1" => {value: "9",  type_name: "LicensedStates",  description: "Ohio"},
-               "2" => {value: "23", type_name: "LicensedStates", description: "Illinois"} }
+                "0"=>{:value=>"54", :type_name=>"LicensedStates", :description=>"Alaska"},
+                "1"=>{:value=>"1", :type_name=>"LicensedStates", :description=>"Alabama"},
+                "2"=>{:value=>"3", :type_name=>"LicensedStates", :description=>"Arkansas"},
+                "3"=>{:value=>"2", :type_name=>"LicensedStates", :description=>"Arizona"},
+                "4"=>{:value=>"4", :type_name=>"LicensedStates", :description=>"California"},
+                "5"=>{:value=>"5", :type_name=>"LicensedStates", :description=>"Colorado"},
+                "6"=>{:value=>"6", :type_name=>"LicensedStates", :description=>"Connecticut"},
+                "7"=>{:value=>"8", :type_name=>"LicensedStates", :description=>"Washington Dc"},
+                "8"=>{:value=>"7", :type_name=>"LicensedStates", :description=>"Delaware"},
+                "9"=>{:value=>"9", :type_name=>"LicensedStates", :description=>"Florida"},
+                "10"=>{:value=>"10", :type_name=>"LicensedStates", :description=>"Georgia"},
+                "11"=>{:value=>"52", :type_name=>"LicensedStates", :description=>"Hawaii"},
+                "12"=>{:value=>"14", :type_name=>"LicensedStates", :description=>"Iowa"},
+                "13"=>{:value=>"11", :type_name=>"LicensedStates", :description=>"Idaho"},
+                "14"=>{:value=>"12", :type_name=>"LicensedStates", :description=>"Illinois"},
+                "15"=>{:value=>"13", :type_name=>"LicensedStates", :description=>"Indiana"},
+                "16"=>{:value=>"15", :type_name=>"LicensedStates", :description=>"Kansas"},
+                "17"=>{:value=>"16", :type_name=>"LicensedStates", :description=>"Kentucky"},
+                "18"=>{:value=>"17", :type_name=>"LicensedStates", :description=>"Louisiana"},
+                "19"=>{:value=>"20", :type_name=>"LicensedStates", :description=>"Massachusetts"},
+                "20"=>{:value=>"19", :type_name=>"LicensedStates", :description=>"Maryland"},
+                "21"=>{:value=>"18", :type_name=>"LicensedStates", :description=>"Maine"},
+                "22"=>{:value=>"21", :type_name=>"LicensedStates", :description=>"Michigan"},
+                "23"=>{:value=>"22", :type_name=>"LicensedStates", :description=>"Minnesota"},
+                "24"=>{:value=>"24", :type_name=>"LicensedStates", :description=>"Missouri"},
+                "25"=>{:value=>"23", :type_name=>"LicensedStates", :description=>"Mississippi"},
+                "26"=>{:value=>"25", :type_name=>"LicensedStates", :description=>"Montana"},
+                "27"=>{:value=>"32", :type_name=>"LicensedStates", :description=>"North Carolina"},
+                "28"=>{:value=>"33", :type_name=>"LicensedStates", :description=>"North Dakota"},
+                "29"=>{:value=>"26", :type_name=>"LicensedStates", :description=>"Nebraska"},
+                "30"=>{:value=>"28", :type_name=>"LicensedStates", :description=>"New Hampshire"},
+                "31"=>{:value=>"29", :type_name=>"LicensedStates", :description=>"New Jersey"},
+                "32"=>{:value=>"30", :type_name=>"LicensedStates", :description=>"New Mexico"},
+                "33"=>{:value=>"27", :type_name=>"LicensedStates", :description=>"Nevada"},
+                "34"=>{:value=>"31", :type_name=>"LicensedStates", :description=>"New York"},
+                "35"=>{:value=>"34", :type_name=>"LicensedStates", :description=>"Ohio"},
+                "36"=>{:value=>"35", :type_name=>"LicensedStates", :description=>"Oklahoma"},
+                "37"=>{:value=>"36", :type_name=>"LicensedStates", :description=>"Oregon"},
+                "38"=>{:value=>"37", :type_name=>"LicensedStates", :description=>"Pennsylvania"},
+                "39"=>{:value=>"38", :type_name=>"LicensedStates", :description=>"Rhode Island"},
+                "40"=>{:value=>"39", :type_name=>"LicensedStates", :description=>"South Carolina"},
+                "41"=>{:value=>"40", :type_name=>"LicensedStates", :description=>"South Dakota"},
+                "42"=>{:value=>"41", :type_name=>"LicensedStates", :description=>"Tennessee"},
+                "43"=>{:value=>"42", :type_name=>"LicensedStates", :description=>"Texas"},
+                "44"=>{:value=>"43", :type_name=>"LicensedStates", :description=>"Utah"},
+                "45"=>{:value=>"45", :type_name=>"LicensedStates", :description=>"Virginia"},
+                "46"=>{:value=>"44", :type_name=>"LicensedStates", :description=>"Vermont"},
+                "47"=>{:value=>"46", :type_name=>"LicensedStates", :description=>"Washington"},
+                "48"=>{:value=>"48", :type_name=>"LicensedStates", :description=>"Wisconsin"},
+                "49"=>{:value=>"47", :type_name=>"LicensedStates", :description=>"West Virginia"},
+                "50"=>{:value=>"49", :type_name=>"LicensedStates", :description=>"Wyoming"},
+                "51"=>{:value=>"58", :type_name=>"LicensedStates", :description=>"Puerto Rico"},
+                "52"=>{:value=>"81", :type_name=>"LicensedStates", :description=>"A F Americas"},
+                "53"=>{:value=>"82", :type_name=>"LicensedStates", :description=>"A F Europe"},
+                "54"=>{:value=>"83", :type_name=>"LicensedStates", :description=>"A F Pacific"},
+                "55"=>{:value=>"84", :type_name=>"LicensedStates", :description=>"American Samoa"},
+                "56"=>{:value=>"85", :type_name=>"LicensedStates", :description=>"Micronesia"},
+                "57"=>{:value=>"86", :type_name=>"LicensedStates", :description=>"Guam"},
+                "58"=>{:value=>"87", :type_name=>"LicensedStates", :description=>"Marshall Isl"},
+                "59"=>{:value=>"88", :type_name=>"LicensedStates", :description=>"N Mariana Isl"},
+                "60"=>{:value=>"89", :type_name=>"LicensedStates", :description=>"Palau"},
+                "61"=>{:value=>"99", :type_name=>"LicensedStates", :description=>"Not Found"} }
           },
           {name: "Activity",   description: "Partner Relationship Reports", value_data_type: "String",
            content_type_opts_attributes: {
                "0" => {value: "*.pdf", type_name: "Activity", description: "Document store Project Status Report Document Type ID"}
            }
           },
-          {name: "FileDownload",   description: "Project Related Images", value_data_type: "String",
+          {name: "FileDownload",   description: "Project Related Resources", value_data_type: "String",
            content_type_opts_attributes: {
                "0" => {value: "*.png", type_name: "FileDownload", description: "Project Related by Document Type PNG"},
                "1" => {value: "*.jpg", type_name: "FileDownload", description: "Project Related by Document Type JPEG"},
@@ -251,7 +310,7 @@ module Utility
           },
           {name: "Partner", description: "This Corporate Account",  value_based_y_n: "N",
            topic_type_opts_attributes: {
-               "0" => {value: "0099", type_name: "Partner", description: "Skoona Development Account"}}
+               "0" => {value: "0099", type_name: "Partner", description: "Skoona Consulting"}}
           },
           {name: "UserGroups", description: "Shared access to project working files",  value_based_y_n: "N",
            topic_type_opts_attributes: {
@@ -261,27 +320,35 @@ module Utility
                "3" => {value: "VendorPrimary",     type_name: "UserGroups", description: "Project Workfiles"},
                "4" => {value: "VendorSecondary",   type_name: "UserGroups", description: "Project Workfiles"},
                "5" => {value: "BranchPrimary",     type_name: "UserGroups", description: "Project Workfiles"},
-               "6" => {value: "Developer",         type_name: "UserGroups", description: "Project Workfiles"}
+               "6" => {value: "BranchSecondary",   type_name: "UserGroups", description: "Project Workfiles"},
+               "7" => {value: "Developer",         type_name: "UserGroups", description: "Project Workfiles"}
            }
           }
       ])
 
       cpe_developer = []
       [
-          ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0034'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
-          ['LicensedStates', ['21','9'],    'Branch',  ['0034'], 'Licensed to operate in state'],
+          ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
+          ['LicensedStates', ['12'],        'Branch',  ['0034'], 'Licensed to operate in state'],
+          ['LicensedStates', ['13'],        'Branch',  ['0034'], 'Licensed to operate in state'],
           ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
-          ['Experience',     ['*.log'],     'Branch',  ['0037'], 'Branch Experience Statements'],
-          ['Commission',     ['*.csv'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0037'], 'Branch Experience Statements'],
+          ['Commission',     ['*.pdf'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
           ['Notification',   ['Cancel'],    'Branch',  ['0037'], 'Notify Branch of Policy Events'],
-          ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
+          ['LicensedStates', ['34'],        'Branch',  ['0037'], 'Licensed to operate in state'],
+          ['LicensedStates', ['37'],        'Branch',  ['0037'], 'Licensed to operate in state'],
+          ['LicensedStates', ['31'],        'Branch',  ['0037'], 'Licensed to operate in state'],
 
-          ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0040'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
+          ['LicensedStates', ['24'],        'Branch',  ['0040'], 'Licensed to operate in state'],
+          ['LicensedStates', ['14'],        'Branch',  ['0040'], 'Licensed to operate in state'],
+          ['LicensedStates', ['3'],         'Branch',  ['0040'], 'Licensed to operate in state'],
 
           ['FileDownload',   ['*.pdf'], 'UserGroups',  ['Developer'], 'Shared access to project working files'],
           ['FileDownload',   ['*.png'], 'UserGroups',  ['Developer'], 'Shared access to project working files'],
@@ -296,20 +363,27 @@ module Utility
 
       cpe_primary = []
       [
-       ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
+       ['Experience',     ['*.pdf'],     'Branch',  ['0034'], 'Branch Experience Statements'],
        ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
        ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
-       ['LicensedStates', ['21','9'],    'Branch',  ['0034'], 'Licensed to operate in state'],
+       ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
+       ['LicensedStates', ['12'],        'Branch',  ['0034'], 'Licensed to operate in state'],
+       ['LicensedStates', ['13'],        'Branch',  ['0034'], 'Licensed to operate in state'],
        ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
-       ['Experience',     ['*.log'],     'Branch',  ['0037'], 'Branch Experience Statements'],
+       ['Experience',     ['*.pdf'],     'Branch',  ['0037'], 'Branch Experience Statements'],
        ['Commission',     ['*.csv'],     'Branch',  ['0037'], 'Access Branch Commission CSV Files'],
        ['Notification',   ['Cancel'],    'Branch',  ['0037'], 'Notify Branch of Policy Events'],
-       ['LicensedStates', ['23'],        'Branch',  ['0037'], 'Licensed to operate in state'],
+       ['LicensedStates', ['34'],        'Branch',  ['0037'], 'Licensed to operate in state'],
+       ['LicensedStates', ['37'],        'Branch',  ['0037'], 'Licensed to operate in state'],
+       ['LicensedStates', ['31'],        'Branch',  ['0037'], 'Licensed to operate in state'],
 
-       ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+       ['Experience',     ['*.pdf'],     'Branch',  ['0040'], 'Branch Experience Statements'],
        ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
        ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
+       ['LicensedStates', ['24'],        'Branch',  ['0040'], 'Licensed to operate in state'],
+       ['LicensedStates', ['14'],        'Branch',  ['0040'], 'Licensed to operate in state'],
+       ['LicensedStates', ['3'],         'Branch',  ['0040'], 'Licensed to operate in state'],
 
        ['FileDownload',   ['*.pdf'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files'],
        ['FileDownload',   ['*.png'], 'UserGroups',  ['EmployeePrimary'], 'Shared access to project working files'],
@@ -324,13 +398,12 @@ module Utility
 
       cpe_sec = []
       [
-          ['Experience',     ['*.log'],     'Branch',  ['0034'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0034'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0034'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['AdvCancel'], 'Branch',  ['0034'], 'Notify Branch of Policy Events'],
-          ['LicensedStates', ['21'],        'Branch',  ['0034'], 'Licensed to operate in state'],
           ['Activity',       ['*.pdf'],     'Partner', ['0099'], 'Partner Relationship Reports'],
 
-          ['Experience',     ['*.log'],     'Branch',  ['0040'], 'Branch Experience Statements'],
+          ['Experience',     ['*.pdf'],     'Branch',  ['0040'], 'Branch Experience Statements'],
           ['Commission',     ['*.pdf'],     'Branch',  ['0040'], 'Access Branch Commission PDF Files'],
           ['Notification',   ['FutCancel'], 'Branch',  ['0040'], 'Notify Branch of Policy Events'],
 

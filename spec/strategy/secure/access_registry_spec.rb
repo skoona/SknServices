@@ -46,7 +46,8 @@
 
 RSpec.describe Secure::AccessRegistry, "Authorization management" do
 
-  let(:admin) {["Test.Action.Create", "Test.Action.Read", "Test.Action.Update", "Test.Action.Delete"]}
+  let(:admin) {["Test.Action.Create", "Test.Action.Read",
+                "Test.Action.Update", "Test.Action.Delete"]}
   let(:employee) {["Test.Action.Read"]}
   let(:manager) {["Test.Action.Delete"]}
   let(:bad) {["Bad User Role"]}
@@ -58,10 +59,8 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
 
   let(:in_branch_option) {["0037"]}
   let(:out_branch_option) {["1162"]}
-  let(:commission_all) {["Services.Branch.Commission.PDF.Access",
-                         "Services.Branch.Commission.CSV.Access",
-                         "Services.Branch.Experience.PDF.Access"]}
-  let(:commission_expr) {["Services.Branch.Experience.PDF.Access"]}
+  let(:commission_all) {["Services.Branch.Commission.Access", "Services.Branch.Experience.Access"]}
+  let(:commission_expr) {["Services.Branch.Experience.Access"]}
 
   let(:resource_unknown) {"any value will do"}
   let(:resource_options) {"testing/role/options"}
@@ -277,13 +276,13 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
     context "ContentControl succeeds as designed, given all params" do
       it "#get_resource_content_entries returns all authorized content entries. " do
         expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, in_branch_option)).to be_a(Array)
-        expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, in_branch_option).size).to eq 3
+        expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, in_branch_option).size).to eq 2
         expect(Secure::AccessRegistry.get_resource_content_entries(commission_expr, in_branch_option).size).to eq 1
       end
       it "#get_resource_content_entry returns the requested entry. " do
-        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/CSV' ,in_branch_option)).to be_a(Hash)
-        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/CSV' ,in_branch_option).empty?).to be false
-        expect(Secure::AccessRegistry.get_resource_content_entry(commission_expr, 'Experience/Branch/PDF' ,in_branch_option).empty?).to be false
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/0037' ,in_branch_option)).to be_a(Hash)
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/0037' ,in_branch_option).empty?).to be false
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_expr, 'Experience/Branch/0037' ,in_branch_option).empty?).to be false
       end
     end
     context "ContentControl fails as designed without options." do
@@ -291,8 +290,8 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
         expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, nil).empty?).to be true
       end
       it "#get_resource_content_entry does not return the requested entry. " do
-        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/CSV' , nil).empty?).to be true
-        expect(Secure::AccessRegistry.get_resource_content_entry(commission_expr, 'Commission/Branch/CSV' ,in_branch_option).empty?).to be true
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/0037' , nil).empty?).to be true
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_expr, 'Commission/Branch/0037' ,in_branch_option).empty?).to be true
       end
     end
     context "ContentControl fails as designed with wrong options." do
@@ -300,7 +299,7 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
         expect(Secure::AccessRegistry.get_resource_content_entries(commission_all, out_branch_option).empty?).to be true
       end
       it "#get_resource_content_entry does not return the requested entry. " do
-        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/CSV' ,out_branch_option).empty?).to be true
+        expect(Secure::AccessRegistry.get_resource_content_entry(commission_all, 'Commission/Branch/0037' ,out_branch_option).empty?).to be true
       end
     end
     context "ContentControl fails as designed with wrong roles and correct options." do
@@ -308,8 +307,8 @@ RSpec.describe Secure::AccessRegistry, "Authorization management" do
         expect(Secure::AccessRegistry.get_resource_content_entries(admin, in_branch_option).empty?).to be true
       end
       it "#get_resource_content_entry does not return the requested entry. " do
-        expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Branch/CSV' ,in_branch_option).empty?).to be true
-        expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Branch/PDF', in_branch_option).empty?).to be true
+        expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Branch/0037' ,in_branch_option).empty?).to be true
+        expect(Secure::AccessRegistry.get_resource_content_entry(admin, 'Commission/Branch/0037', in_branch_option).empty?).to be true
       end
     end
   end

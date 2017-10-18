@@ -15,7 +15,6 @@ module Processors
 
     def self.inherited(klass)
       klass.processor_type = klass.name
-      super
     end
 
     def self.processor_type
@@ -26,8 +25,8 @@ module Processors
       @processor_prefix = klass_name
     end
 
-    def self.call(param1={})
-      new(param1).call
+    def self.call(parms={})
+      new(parms).call
     end
 
     def call

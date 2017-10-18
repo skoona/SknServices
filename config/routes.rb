@@ -26,15 +26,22 @@ Rails.application.routes.draw do
 
   resources :profiles, only: :none do
     collection do
-      get :content_profile_demo
+      get :in_action
+      get :in_action_admin
       get :api_accessible_content
       get :api_get_content_object
-      get :manage_content_profiles
+      get :api_get_demo_content_object
+      get :members
+      get :in_depth
       post :create_profile_for_user
       post :update_profile_for_user
       delete :delete_profile_for_user
       post :create_entries_for_user
       delete :delete_entry_for_user
+    end
+    member do
+      get :member
+      put :member_update
     end
   end
 

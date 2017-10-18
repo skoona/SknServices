@@ -2,10 +2,10 @@
 
 <article xmlns="http://www.w3.org/1999/html">
 
-    <header class="page-header">
+    <section>
         <h1><%= accessed_page_name %></h1>
         <%= image_tag("SknService-CoreComponents.jpg", alt: "ContentProfile", class: "huge-image") %>
-    </header>
+    </section>>
 
     <section>
         <h2>AccessRegistry Component</h2>
@@ -56,7 +56,7 @@
        </dl>
         <p>
           <strong>Page Entries</strong> are automatically validated by a security filter provided to the ApplicationController
-            as a part of the <code>ControllerAccessControl#login_required()</code> functionality.  If the user does not have
+            as a part of the <code>AccessAuthenticationMethods#login_required()</code> functionality.  If the user does not have
             a matching role for the current controller_name/action_name then they are redirected to <code>SessionsController#not_authorized</code> method and given
             a 'not authorized' warning; otherwise they pass through to the desired page.
         </p>
@@ -133,7 +133,7 @@
         </div>
       </div>
 
-    <pre class="prettyprint lang-xml">
+    <pre><code class="language-xml">
        * FULL RESOURCE SYNTAX **********************************************
 
         &lt;resource secured="true|false"&gt;
@@ -176,9 +176,9 @@
            returns String if no format chars present
            format chars: |:  # vertical-bar and semi-colon
 
-      </pre>
+      </code></pre>
 
-      <pre class="prettyprint lang-xml pre-scrollable">
+      <pre class="pre-scrollable"><code class="language-xml">
         &lt;!--============== RSpec Test Data  ========== --&gt;
         &lt;resource secured="false"&gt;
             &lt;uri&gt;testing/public&lt;/uri&gt;
@@ -295,7 +295,7 @@
                 &lt;/authorizedRoles&gt;
             &lt;/permission&gt;
         &lt;/resource&gt;
-      </pre>
+      </code></pre>
     </section>
 
 </article>

@@ -808,6 +808,7 @@ ALTER TABLE ONLY join_entries
 
 SET search_path TO "$user",public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160113200706');
+INSERT INTO "schema_migrations" (version) VALUES
+('20160113200706');
 
 

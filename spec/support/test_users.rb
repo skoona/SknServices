@@ -6,25 +6,25 @@ module TestUsers
     Secure::UserProfile.find_and_authenticate_user("developer", "developer99")
   end
   def user_eptester
-    Secure::UserProfile.find_and_authenticate_user("eptester", "nobugs")
+    Secure::UserProfile.find_and_authenticate_user("eptester", "demos")
   end
   def user_estester
-    Secure::UserProfile.find_and_authenticate_user("estester", "nobugs")
+    Secure::UserProfile.find_and_authenticate_user("estester", "demos")
   end
   def user_bptester
-    Secure::UserProfile.find_and_authenticate_user("bptester", "nobugs")
+    Secure::UserProfile.find_and_authenticate_user("bptester", "demos")
   end
   def user_bstester
-    Secure::UserProfile.find_and_authenticate_user("bstester", "nobugs")
+    Secure::UserProfile.find_and_authenticate_user("bstester", "demos")
   end
   def user_bnptester
-    Secure::UserProfile.find_and_authenticate_user("bnptester", "nobugs")
+    Secure::UserProfile.find_and_authenticate_user("bnptester", "demos")
   end
   def user_vptester
-    Secure::UserProfile.find_and_authenticate_user("vptester", "nobugs")
+    Secure::UserProfile.find_and_authenticate_user("vptester", "demos")
   end
   def user_vstester
-    Secure::UserProfile.find_and_authenticate_user("vstester", "nobugs")
+    Secure::UserProfile.find_and_authenticate_user("vstester", "demos")
   end
 
   ##

@@ -16,7 +16,9 @@
 //= require jquery-binary-transport
 //= require bootstrap-sprockets
 //= require jquery.dataTables
+//= require jquery.matchHeight
 //= require dataTables.bootstrap
+//= require bootstrap-select
 //= require skn-services.custom.js.erb
-//= require prettify
+//= require prism
 //= require_tree .

@@ -9,7 +9,18 @@ module Domains
   class ContentProfileDomain < DomainsBase
 
 
-    PROFILE_CONTEXT=""  # override in service
+    PROFILE_CONTEXT="content"  # override in service -- get_page_user(s) is affected by missing PROFILE_CONTEXT defined in Services, when testing domain directly rather than thru Service
+
+    def in_action_package
+      profile = db_profile_provider.content_profile_for_runtime(current_user)
+      success = profile.present? && profile[:display_groups].present?
+      {
+        message: (success ? "" : "No Access Provided.  Please contact Customer Service with any questions."),
+        cp: (success ? profile : {}),
+        display_groups: (success ? profile.delete(:display_groups) : []),
+        get_demo_content_object_url: page_action_paths([:api_get_demo_content_object_profiles_path])
+      }
+    end
 
     ##
     # Returns a bundle for each available user
@@ -21,15 +32,161 @@ module Domains
                  display_name: u.display_name,
                  user_options: u.user_options || [],
                  get_content_object_url: page_action_paths([:api_get_content_object_profiles_path]),
-                 package: [ access_profile_package(u), content_profile_package(u) ]
+                 package: [
+                     access_profile_package(u),
+                     content_profile_package(u)
+                 ]
         }
       end
       usrs
     end
 
-    def get_page_user(uname, context=PROFILE_CONTEXT)
-      page_user = Secure::UserProfile.page_user(uname, context)
+    # Username,        Commission, Experience, Notification, LicensedStates, Activity,   FileDownloads
+    #  #display_name   True/False  True/False  True/False    True/False      True/False  True/False
+    def members_admin_package
+      package = []
+      msg = ""
+
+      Secure::UserProfile.page_users(PROFILE_CONTEXT).each do |u|
+
+        content_profile = nil
+
+        content_profile = db_profile_provider.content_profile_for_runtime(u, false)
+
+        unless content_profile.present?
+          db_profile_provider.create_content_profile_for(u, u.user_options.first.is_a?(String) ? u.user_options.first : 'EmployeeSecondary' )
+          content_profile = db_profile_provider.content_profile_for_runtime(u, false)
+          msg = "Created ContentProfile for #{u.display_name}"
+        end
+
+        content_enabled = content_profile[:entries].collect {|e| e[:content_type] }.uniq
+
+        # :pak, :username, :display_name, booleans
+        package <<  {
+            package: {
+              id: content_profile[:pak],
+              username: content_profile[:username],
+              display_name: content_profile[:display_name],
+            },
+            commission: content_enabled.include?('Commission'),
+            experience: content_enabled.include?('Experience'),
+            notification: content_enabled.include?('Notification'),
+            licensedstates: content_enabled.include?('LicensedStates'),
+            activity: content_enabled.include?('Activity'),
+            filedownloads: content_enabled.include?('FileDownload')
+        }
+      end
+
+      success = package.present?
+      {
+          success: success,
+          message: (success ? msg : "No Information Available.  Please contact Customer Service with any questions."),
+          display_groups: (success ? package : [])
+      }
     end
+
+    # UserInfo
+    #    * Branch 0034, Commission, Experience, Notification, LicensedStates        -- ADD Branch Section needed, + Licensed States is MultiSelect
+    #    - Branch 0037, Commission, Experience, Notification, LicensedStates
+    #    - Branch 0040, Commission, Experience, Notification, LicensedStates
+    #    * Partner 0099, Activity
+    #    * UserGroups:FileDownloads, [ Employee Primary, Employee Secondary, Branch Primary, Branch Secondary, Vendor Primary, Vendor Secondary ]
+
+    # Outputs
+    # package[:page] = {
+    #   :branch=>{
+    #       "0034"=>{:commission=>true, :experience=>true, :notification=>["AdvCancel", "FutCancel"], :licensed_states=>["21"]},
+    #       "0037"=>{:commission=>false, :experience=>false, :notification=>[], :licensed_states=>[]},
+    #       "0040"=>{:commission=>true, :experience=>true, :notification=>["AdvCancel", "FutCancel"], :licensed_states=>[]}},
+    #   :partner=>["0099"],
+    #   :user_groups=>["BranchPrimary", "EmployeeSecondary"]
+    # } ...
+    def member_admin_package(params) # username
+      msg = ""
+      up = get_page_user(params['username'])
+      profile = db_profile_provider.content_profile_for_runtime(up, false)
+
+      branch_preselects = up.user_options.select {|s|  (s.to_i > 0) and (s != '0099') }
+      partners = db_profile_provider.member_topic_type_opts_select_options_with_description('Partner')
+      branches = db_profile_provider.member_topic_type_opts_select_options_with_description('Branch')
+      branch_workflow = branches.select {|s| !!branch_preselects.detect {|c| c == s.second} }
+      notify_opts = db_profile_provider.select_option_values_for_content_type('Notification')
+
+      items = {}
+      branch_preselects.each do |branch|
+        cpes = profile_cpes_for_topic(profile, branch, 'Branch')
+        items[branch] = {
+            commission: content_presence_from_profile_cpes_by_content_type( cpes, 'Commission'),
+            experience: content_presence_from_profile_cpes_by_content_type( cpes, 'Experience'),
+            notification: content_values_from_profile_cpes_by_content_type( cpes, 'Notification'),
+            licensed_states: content_values_from_profile_cpes_by_content_type( cpes, 'LicensedStates')
+        }
+      end
+
+      package = {
+           page: {
+               branch: items,
+               partner: topic_values_from_profile_by_content_and_topic_types(profile, 'Activity', 'Partner'),
+               user_groups: topic_values_from_profile_by_content_and_topic_types(profile, 'FileDownload', 'UserGroups')
+           },
+           profile: profile.except(:entries),
+           states: db_profile_provider.long_state_name_options,
+           user_groups: db_profile_provider.select_option_values_for_topic_type('UserGroups'),
+           partners: partners,
+           branches: branches.select {|s| !branch_preselects.include?(s[1]) },
+           branch_workflow: branch_workflow,
+           notify_opts: notify_opts,
+           user_options: up.user_options
+      }
+
+      # pp package
+
+      success = profile.present?
+      {
+          success: success,
+          message: (success ? msg : "No Information available for #{params['username']}.  Please contact Customer Service with any questions."),
+          display_groups: (success ? package : {})
+      }
+    end
+
+    def profile_cpes_for_topic(profile, topic_value, topic_type) # *, '0034', 'Branch'
+      profile[:entries].select {|p| p[:topic_value].include?(topic_value) and p[:topic_type].eql?(topic_type) }
+    end
+    def content_values_from_profile_cpes_by_content_type(cpes, content_type) # Notification, LicensedStates,
+      cpes.collect {|s| s[:content_value] if s[:content_type].eql?(content_type) }.compact.flatten.uniq
+    end
+    def content_presence_from_profile_cpes_by_content_type(cpes, content_type) # Commission, Experience
+      !!cpes.detect {|s| s[:content_type].eql?(content_type) }
+    end
+    def topic_values_from_profile_by_content_and_topic_types(profile, content_type, topic_type) # Activity::Partner, FileDownload::UserGroups
+      return [] unless profile.present? and profile[:entries].present?
+      profile[:entries].collect {|s| s[:topic_value] if s[:content_type].eql?(content_type) and s[:topic_type].eql?(topic_type) }.compact.flatten.uniq
+    end
+
+    # Parameters: {
+    #   "member"=>{
+    #       "0037"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+    #       "0034"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+    #       "0040"=>{"Commission"=>"on", "Experience"=>"on", "Notification"=>["FutCancel", "Cancel"], "LicensedStates"=>["20", "21"]},
+    #       "activity"=>{"partners"=>["0099"]},
+    #       "filedownload"=>{"usergroups"=>["EmployeePrimary", "EmployeeSecondary", "BranchPrimary"]}
+    #   },
+    #   "commit"=>"bstester",
+    #   "id"=>"a1ee7b9492e31c922274babeddbc97c5"
+    # }
+    # Absent if not clicked or selected
+    #
+    def member_update_package(params)
+      # c_name, [c_value], t_type, [t_value]
+      choices = db_profile_provider.parse_member_update_params(params)
+      success = db_profile_provider.apply_member_updates(params['id'], choices)
+      {
+          success: success,
+          message: (success ? "Update Completed" : "Update Failed"),
+          package: {}
+      }
+    end
+
 
 
     # Returns:
@@ -106,14 +263,16 @@ module Domains
         usrs <<  content_profile.merge(profile_exist: content_profile[:success])
       end
       results = {
-        profile_type_options: ProfileType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        content_type_options: ContentType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        content_type_opts_options: ContentTypeOpt.option_selects('Commission').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        topic_type_options: TopicType.option_selects.map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
-        topic_type_opts_options: TopicTypeOpt.option_selects('Branch').map() {|s| [s[0] = "#{s[0]} : #{s[2][:data][:description]}", s[1]]},
+        profile_type_options:       db_profile_provider.profile_type_select_options_with_description,
+        content_type_options:       db_profile_provider.content_type_select_options_with_description,
+        content_type_opts_options:  db_profile_provider.content_type_opts_select_options_with_description('Commission'),
+        topic_type_options:         db_profile_provider.topic_type_select_options_with_description,
+        topic_type_opts_options:    db_profile_provider.topic_type_opts_select_options_with_description('Branch'),
         package: usrs
       }
-      Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package]}"
+      Rails.logger.debug "#{self.class.name}.#{__method__}() returns: #{results[:package].present?}"
+
+      # pp results
 
       results
     end
@@ -159,7 +318,7 @@ module Domains
     #       { :uri=>"Activity/Partner/0099",
     #         :resource_options=>{
     #           :uri=>"Activity/Partner/0099",
-    #           :role=>"Services.Action.Use.FileDownload.Pdf",
+    #           :role=>"Services.UserGroups.Use.FileDownload",
     #           :role_opts=>["0099"]
     #         },
     #         :content_type=>"Activity",
@@ -176,26 +335,21 @@ module Domains
     #   }
     # }
     #
-    # {:success=>true, :message=>"AccessProfile Entries for vptester:Vendor Primary User Options=VendorPrimary,0099", :user_options=>["VendorPrimary", "0099"], :accessible_content_url=>"/profiles/api_accessible_content.json?id=access", :page_user=>"vptester", :access_profile=>{:success=>true, :entries=>[{:uri=>"Activity/Partner/0099", :resource_options=>[{:uri=>"Activity/Partner/0099", :role=>"Services.Action.Use.FileDownload.Pdf", :role_opts=>["0099"]}], :content_type=>"Activity", :content_value=>["*.pdf"], :topic_type=>"Partner", :topic_value=>["0099"], :description=>"Partner Relationship Reports", :topic_type_description=>"Partner Relationship Reports", :content_type_description=>"Partner Relationship Reports", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}, {:uri=>"FileDownload/UserGroups/Pdf", :resource_options=>[{:uri=>"FileDownload/UserGroups/Pdf", :role=>"Services.Action.Use.FileDownload.Pdf", :role_opts=>["VendorSecondary", "VendorPrimary", "EmployeeSecondary", "EmployeePrimary"]}], :content_type=>"FileDownload", :content_value=>["*.pdf"], :topic_type=>"UserGroups", :topic_value=>["VendorPrimary"], :description=>"Permission to Download PDF Files", :topic_type_description=>"Permission to Download PDF Files", :content_type_description=>"Permission to Download PDF Files", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}, {:uri=>"FileDownload/UserGroups/Datafiles", :resource_options=>[{:uri=>"FileDownload/UserGroups/Datafiles", :role=>"Services.Action.Use.FileDownload.Datafile", :role_opts=>["VendorSecondary", "VendorPrimary", "EmployeeSecondary", "EmployeePrimary"]}], :content_type=>"FileDownload", :content_value=>["*.log"], :topic_type=>"UserGroups", :topic_value=>["VendorPrimary"], :description=>"Permission to Download Data Files", :topic_type_description=>"Permission to Download Data Files", :content_type_description=>"Permission to Download Data Files", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}, {:uri=>"FileDownload/UserGroups/Images", :resource_options=>[{:uri=>"FileDownload/UserGroups/Images", :role=>"Services.Action.Use.FileDownload.Image", :role_opts=>["VendorSecondary", "VendorPrimary", "EmployeeSecondary", "EmployeePrimary"]}], :content_type=>"FileDownload", :content_value=>["*.png", "*.jpg"], :topic_type=>"UserGroups", :topic_value=>["VendorPrimary"], :description=>"Permission to Download Image Files", :topic_type_description=>"Permission to Download Image Files", :content_type_description=>"Permission to Download Image Files", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}], :pak=>"63001ba01dfe8c5f888fd579c6a4cfdc", :profile_type=>"VendorPrimary", :profile_type_description=>"VendorPrimary", :provider=>"Secure::AccessRegistry", :username=>"vptester", :assigned_group=>["VendorPrimary"], :user_options=>["VendorPrimary", "0099"], :display_name=>"Vendor Primary User", :email=>"appdev4@localhost.com"}}
+    # {:success=>true, :message=>"AccessProfile Entries for vptester:Vendor Primary User Options=VendorPrimary,0099", :user_options=>["VendorPrimary", "0099"], :accessible_content_url=>"/profiles/api_accessible_content.json?id=access", :page_user=>"vptester", :access_profile=>{:success=>true, :entries=>[{:uri=>"Activity/Partner/0099", :resource_options=>[{:uri=>"Activity/Partner/0099", :role=>"Services.UserGroups.Use.FileDownload", :role_opts=>["0099"]}], :content_type=>"Activity", :content_value=>["*.pdf"], :topic_type=>"Partner", :topic_value=>["0099"], :description=>"Partner Relationship Reports", :topic_type_description=>"Partner Relationship Reports", :content_type_description=>"Partner Relationship Reports", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}, {:uri=>"FileDownload/UserGroups/Pdf", :resource_options=>[{:uri=>"FileDownload/UserGroups/Pdf", :role=>"Services.UserGroups.Use.FileDownload", :role_opts=>["VendorSecondary", "VendorPrimary", "EmployeeSecondary", "EmployeePrimary"]}], :content_type=>"FileDownload", :content_value=>["*.pdf"], :topic_type=>"UserGroups", :topic_value=>["VendorPrimary"], :description=>"Permission to Download PDF Files", :topic_type_description=>"Permission to Download PDF Files", :content_type_description=>"Permission to Download PDF Files", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}, {:uri=>"FileDownload/UserGroups/Datafiles", :resource_options=>[{:uri=>"FileDownload/UserGroups/Datafiles", :role=>"Services.UserGroups.Use.FileDownload", :role_opts=>["VendorSecondary", "VendorPrimary", "EmployeeSecondary", "EmployeePrimary"]}], :content_type=>"FileDownload", :content_value=>["*.log"], :topic_type=>"UserGroups", :topic_value=>["VendorPrimary"], :description=>"Permission to Download Data Files", :topic_type_description=>"Permission to Download Data Files", :content_type_description=>"Permission to Download Data Files", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}, {:uri=>"FileDownload/UserGroups/Images", :resource_options=>[{:uri=>"FileDownload/UserGroups/Images", :role=>"Services.UserGroups.Use.FileDownload", :role_opts=>["VendorSecondary", "VendorPrimary", "EmployeeSecondary", "EmployeePrimary"]}], :content_type=>"FileDownload", :content_value=>["*.png", "*.jpg"], :topic_type=>"UserGroups", :topic_value=>["VendorPrimary"], :description=>"Permission to Download Image Files", :topic_type_description=>"Permission to Download Image Files", :content_type_description=>"Permission to Download Image Files", :username=>"vptester", :user_options=>["VendorPrimary", "0099"]}], :pak=>"63001ba01dfe8c5f888fd579c6a4cfdc", :profile_type=>"VendorPrimary", :profile_type_description=>"VendorPrimary", :provider=>"Secure::AccessRegistry", :username=>"vptester", :assigned_group=>["VendorPrimary"], :user_options=>["VendorPrimary", "0099"], :display_name=>"Vendor Primary User", :email=>"appdev4@localhost.com"}}
     def access_profile_package(user_profile=nil)
       @accessible_type = "access" # [:access, :content]
         raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
 
+      package = xml_profile_provider.content_profile_for_user(user_profile)
       res = {
-             success: true,
-             message: "",
+             success: package[:entries].present?,
+             message: package[:entries].present? ? package[:message] : "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}",
              user_options: (user_profile.user_options || []),
              accessible_content_url: page_action_paths([:api_accessible_content_profiles_path, {id: 'access', format: :json}]),
              page_user: user_profile.username,
-             access_profile: xml_profile_provider.content_profile_for_user(user_profile)
+             access_profile: package
       }
-      res[:success] = res[:access_profile][:entries].empty? ? false : true
-      unless res[:success]
-        res[:message] = res[:access_profile][:message]
-      else
-        res[:message] = "AccessProfile Entries for #{user_profile.username}:#{user_profile.display_name} Options=#{user_profile.user_options.join(',')}"
-      end
-      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
+      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{package[:entries].size}"
 
       res
     end
@@ -255,21 +409,16 @@ module Domains
       @accessible_type = "content" # [:access, :content]
         raise(Utility::Errors::NotFound, "No profile data available for user") unless user_profile.present?
 
+      package = db_profile_provider.content_profile_for_user(user_profile)
       res = {
-         success: true,
-         message: "",
+         success: package[:entries].present?,
+         message: package[:entries].present? ? package[:message] : "ContentProfile Entry for #{user_profile.username}, #{package[:profile_type]}:#{package[:profile_type_description]}, Options=#{user_profile.user_options.join(',')}",
          user_options: (user_profile.user_options || []),
          accessible_content_url: page_action_paths([:api_accessible_content_profiles_path, {id: 'content', format: :json}]),
          page_user: user_profile.username,
-         content_profile: db_profile_provider.content_profile_for_user(user_profile)
+         content_profile: package
       }
-      res[:success] = res[:content_profile][:entries].empty? ? false : true
-      unless res[:success]
-        res[:message] = res[:content_profile][:message]
-      else
-        res[:message] = "ContentProfile Entry for #{user_profile.username}, #{res[:content_profile][:profile_type]}:#{res[:content_profile][:profile_type_description]}, Options=#{user_profile.user_options.join(',')}"
-      end
-      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res}"
+      Rails.logger.warn "#{self.class.name}.#{__method__}() returns: #{res.size}"
 
       res
     end
@@ -313,7 +462,8 @@ module Domains
 
       cpe[:profile] = cpe[:id]
       cpe[:id] = pg_u.id
-      Rails.logger.debug "#{self.class}##{__method__} results => #{cpe}"
+      cpe[:pak] = pg_u.person_authenticated_key
+      Rails.logger.debug "#{self.class}##{__method__} results => #{cpe.present?}"
 
       # Returns an empty Array on Error, or Array of Hashes on Success
       [adapter_for_content_profile_entry(cpe).available_content_list(cpe), pg_u.display_name]
@@ -321,6 +471,10 @@ module Domains
 
     def get_content_object_api(params)
        adapter_for_content_profile_entry(params).retrieve_content_object(params)
+    end
+
+    def get_demo_content_object_api(params)
+      adapter_for_content_profile_entry(params).retrieve_demo_content_object(params, current_user)
     end
 
     ##

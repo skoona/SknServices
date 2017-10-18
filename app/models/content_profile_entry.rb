@@ -33,36 +33,10 @@ class ContentProfileEntry < ActiveRecord::Base
 
   validates_presence_of :description, :content_type, :topic_type
 
-  def self.option_selects
-    options = []
-    self.find_each do |cpes|
-      options << [cpes.description, cpes.id, {'data-description': "#{cpes.content_type_description} / #{cpes.topic_type_description}"}]
-    end
-    options
-  end
-
-  def entry_contents
-    opts = []
-    content_value.collect do |v|
-      opts << [v,0, {'data-description': content_type_description}]
-    end
-    opts
-  end
-  def entry_topics
-    opts = []
-    topic_value.collect do |v|
-      opts << [v,0, {'data-description': topic_type_description}]
-    end
-    opts
-  end
-
   def entry_info_with_username(userp)
     entry_info.merge({user_options: userp.user_options, username: userp.username, id: self.id})
   end
-  def entry_info_with_selects(userp)
-    entry_info.merge({content_selects: entry_contents, topic_selects: entry_topics,
-                     user_options: userp.user_options, username: userp.username})
-  end
+
   def entry_info
     {
       content_value: content_value,
@@ -71,7 +45,8 @@ class ContentProfileEntry < ActiveRecord::Base
       topic_value: topic_value,
       topic_type: topic_type,
       topic_type_description: topic_type_description,
-      description: description
+      description: description,
+      last_update: updated_at.strftime("%Y-%m-%d %I:%M:%S %p")
     }
   end
 end

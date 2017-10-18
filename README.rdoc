@@ -1,7 +1,8 @@
 === SknService
 
-Author: James Scott <jscott@localhost.com>
+Author: James Scott <skoona@gmail.com>
 Date: Dec 2015
+Images: Some Images were sourced from https://apod.nasa.gov/apod/lib/about_apod.html
 
 This file contains a collection of notes and data used during development
 The Readme.md file is more like documentation; outside of the app itself.
@@ -23,75 +24,76 @@ http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-i
 
 
 === Controller Layout
-                                  Service               Role                Inherts from
-                                  ----------------      ----------------    -----------------------
-sessions_controller                None                  Login/Out           ActionController::Base
-application_controller             service_registry      App/Security        ActionController::Base/Secure::ControllerAccessControl
-users_controller                   access_service        Admin               ApplicationController
-user_group_roles_controller        access_service        Admin               ApplicationController
-password_resets_controller         access_service        Admin               ApplicationController
-pages_controller                   access_service        Public Info         ApplicationController
-profiles_controller                content_service       Features Demo       ApplicationController
+                                      Service               Role                Inherts from
+                                      ----------------      ----------------    -----------------------
+    sessions_controller                None                  Login/Out           ActionController::Base
+    application_controller             service_registry      App/Security        ActionController::Base/Secure::AccessAuthenticationMethods
+    users_controller                   access_service        Admin               ApplicationController
+    user_group_roles_controller        access_service        Admin               ApplicationController
+    password_resets_controller         access_service        Admin               ApplicationController
+    pages_controller                   access_service        Public Info         ApplicationController
+    profiles_controller                content_service       Features Demo       ApplicationController
 
 
 === Services Strategy Components Layout
 
-ServiceRegistry
-    Registry::RegistryBase
-        +Registry::ObjectStorageService
+    ServiceRegistry
+        Registry::RegistryBase
+            +Registry::ObjectStorageService
 
-ContentService
-    ContentProfileDomain
-        Domains::DomainsBase
+    ContentService
+        ContentProfileDomain
+            Domains::DomainsBase
 
-AccessService
-    AccessProfileDomain
-        Domains::DomainsBase
+    AccessService
+        AccessProfileDomain
+            Domains::DomainsBase
 
-Providers::DBProfileProvider
-Providers::XMLProfileProvider
-    Providers::ProvidersBase
-        +Registry::ObjectStorageService
+    Providers::DBProfileProvider
+    Providers::XMLProfileProvider
+        Providers::ProvidersBase
+            +Registry::ObjectStorageService
 
-Processors::InlineValuesAdapter
-Processors::FileSystemAdapter
-    Processors::ProcessorBase (Multiple Purpose)
+    Processors::InlineValuesProcessor
+    Processors::FileSystemProcessor
+        Processors::ProcessorBase (Multiple Purpose)
 
-    Processors::CommandBase (Not Used Yet - Single Purpose)
+        Processors::CommandBase (Not Used Yet - Single Purpose)
 
-Registry::ControllerMethods
-Secure::ObjectStorageContainer
+    Registry::RegistryMethods
+    Secure::ObjectStorageContainer
 
-Utility::ContentProfileBean
-    SknUtils::NestedResult
+    Utility::ContentProfileBean
+        SknUtils::NestedResult
 
 
 ==== Special Helpers
     PageActionsBuilder
-    Secure::ControllerAccessControl#page_action_paths
+    Secure::AccessAuthenticationMethods#page_action_paths
     ApplicationHelper#do_page_actions
 
 
 === Authentication and Authorization Components Layout
 ==== Gems Warden, Skn_utils
 
-config/initializers/warden.rb
-SessionsController
-Secure::ControllerAccessControl
-Secure::ObjectStorageContainer
+    config/initializers/warden.rb
+    SessionsController
+    Secure::AccessAuthenticationMethods
+    Secure::ObjectStorageContainer
 
-Secure::UserProfile
-    +Registry::ObjectStorageService
-    +Secure::UserAccessControl
-    (proxy)User
-        +Secure::UserProfileHelper
+    Secure::UserProfile
+        +Registry::ObjectStorageService
+        +Secure::UserAccessControl
+        (proxy)User
+            +Secure::UserProfileHelper
 
-Secure::AccessRegistry
-    Secure::AccessRegistryUtility
-        +config/access_registry.xml
-        +config/access_registry.xsd
-        +config/content_registry.xml
-        +config/content_registry.xsd
+    Secure::AccessRegistry
+        Secure::AccessRegistryUtility
+            +config/access_registry.xml
+            +config/access_registry.xsd
+            +config/content_registry.xml
+            +config/content_registry.xsd
+
 
 ==== UserProfile Required User Object Attributes
 
@@ -236,4 +238,30 @@ ActiveSupport::Notifications.subscribe('sql.active_record') do |name, start, fin
 
 end
 ```
+
+=== All Services methods
+
+app/strategy/services/access_service.rb
+     get_user_form_options                        #==> Hash :present?
+     handle_users_index                           #==> Hash :present?
+     reset_password(params)                       #==> Hash :success
+     reset_requested(params)                      #==> Hash :present?
+     handle_system_information_api(params)        #==> Hash :present?
+     handle_system_information(params)            #==> Hash :success
+
+app/strategy/services/content_service.rb
+     *handle_in_action                              #==> Hash :present?
+     *handle_in_action_admin(params={})             #==> ArrayOfHash :present?
+     *handle_api_accessible_content(params)         #==> ArrayOfHash :present?
+     *api_get_content_object(params)                #==> Hash :success
+     *api_get_demo_content_object(params)           #==> Hash :success
+     *handle_members                                #==> Hash :success
+     *handle_member(params)                         #==> Hash :success
+     *handle_member_updates(params)                 #==> Hash :success
+     *handle_content_profile_management(params)     #==> Hash
+     *handle_content_profile_create(params)         #==> true
+     *handle_content_profile_update(params)         #==> true
+     *handle_content_profile_destroy(params)        #==> true
+     *handle_content_profile_entries_create(params) #==> true
+     *handle_content_profile_entry_destroy(params)  #==> true
 

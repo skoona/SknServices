@@ -50,10 +50,26 @@ module ApplicationHelper
   def choose_column_icons(*show)
     #show is_a?(Array)
     out = show.inject([]) do |res,item|
-      icon = (item ? "glyphicon-ok-circle" : "glyphicon-remove-circle")
+      icon = (item ? "glyphicon-ok-circle text-primary" : "glyphicon-remove-circle text-danger")
       res << content_tag(:td, tag(:span, class: ["glyphicon", icon, "btn-lg"]), class: "text-center")
     end
     raw out.join()
+  end
+
+  def choose_content_icons(content)
+    if content.content_type.include?('LicensedStates')
+    '<i class="fa fa-balance-scale fa-2x text-primary"></i>'
+    elsif content.content_type.include?('Notification')
+    '<i class="fa fa-envelope-open-o fa-2x text-primary"></i>'
+    elsif content.filename.include?('pdf')
+      '<i class="fa fa-file-pdf-o fa-2x text-primary"></i>'
+    elsif content.filename.include?('jpg') or content.filename.include?('png')
+      '<i class="fa fa-file-image-o fa-2x text-primary"></i>'
+    elsif content.filename.include?('log')
+      '<i class="fa fa-file-text-o fa-2x text-primary"></i>'
+    else
+      '<i class="fa fa-file-o fa-2x text-primary"></i>'
+    end.html_safe
   end
 
   def nav_link(link_text, link_path, http_method=nil)
@@ -116,9 +132,16 @@ module ApplicationHelper
     '#page_action_error'
   end
 
+  def skn_options_for_select_with_data(items)
+    res = items.each_with_object("") do |item, str|
+      str << content_tag(:option, item[0], {value: item[1] }.merge(item[2]))
+    end
+    raw res
+  end
+
   def do_page_actions
     if @page_controls and @page_controls.page_actions?
-      PageActionsBuilder.new(@page_controls.to_hash()[:page_actions], self, false).to_s
+      PageActionsBuilder.new(@page_controls.hash_from(:page_actions)[:page_actions], self, false).to_s
     end
   end
 

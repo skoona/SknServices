@@ -53,16 +53,15 @@ module Domains
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceRegistry: Missing required initialization param!" if @registry.nil?
+      raise ArgumentError, "#{self.class.name}: Missing required initialization param!" if @registry.nil?
     end
 
     def self.inherited(klass)
       Rails.logger.debug("#{self.name} inherited By #{klass.name}")
     end
 
-    # Not required, simply reduces traffic since it is called often
-    def current_user
-      @current_user ||= registry.current_user
+    def get_page_user(uname, context=self.class.name)
+      Secure::UserProfile.page_user(uname, context)
     end
 
   private

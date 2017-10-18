@@ -45,11 +45,11 @@ module Providers
 
     # Arrays of the following hash
     # parms = {
-    #  "uri"=>"ContentType/TopicType/SomeKey",
+    #  "uri"=>"ContentType/TopicType/TopicValue",   FileDownload/UserGroups/BranchPrimary
     #  "content_type"=>"ContentType",
     #  "content_value"=>{:docType=>123, :drawerType=>4312},
     #  "topic_type"=>"TopicType",
-    #  "topic_value"=>["0034", "0037", "0040"],
+    #  "topic_value"=>["BranchPrimary", 0034", "0037", "0040"],
     #  "description"=>"XML Testing Data"
     # }
     # Create an XML version of a ContentProfileEntry from parms
@@ -74,6 +74,11 @@ module Providers
             xml.permission('type' => 'READ') do
               xml.authorizedRoles do
                 xml.authorizedRole(@optionsKeyword => role_opts) do
+                  # ToDo: The TopicType/ContentType elements are largely fixed at development time and should not require admins to create more roles beyond the original set
+                  xml.text "Services.#{a}.#{b}.Access"
+                end
+                xml.authorizedRole(@optionsKeyword => role_opts) do
+                  # ToDo: Too Detailed, the third qualifier(c) will force repeated role creation by admins : Ignored for now
                   xml.text "Services.#{a}.#{b}.#{c}.Access"
                 end
               end
@@ -147,39 +152,40 @@ module Providers
       arobj = get_existing_profile(user_profile)
       return  arobj if arobj
 
-      results = {
+      package = {
+          message: "XML Entries for: #{user_profile.display_name}, UserOptions=#{user_profile.user_options}",
           success: true,
           entries: collect_context_profile_entry(user_profile) || [],
           pak: user_profile.person_authenticated_key,
-          profile_type: user_profile.assigned_groups.first || "not assigned",
-          profile_type_description: user_profile.assigned_groups.first || "not assigned",
+          profile_type: (user_profile.assigned_groups.try(:empty?) ? "not assigned" : user_profile.assigned_groups.first),
+          profile_type_description: (user_profile.assigned_groups.try(:empty?) ? "not assigned" : user_profile.assigned_groups.first),
           provider: "Secure::AccessRegistry",
           username: user_profile.username,
-          assigned_group: user_profile.assigned_groups,
+          assigned_group: user_profile.assigned_groups || [],
           user_options: user_profile.user_options,
           display_name: user_profile.display_name,
           email: user_profile.email
       }
-      if results[:entries].empty?
-        results = {
+      if package[:entries].empty?
+        package = {
             success: false,
             message: "No access profile data available for #{user_profile.display_name}",
             username: user_profile.username,
             entries:[]
         }
       end
-      unless results[:entries].empty?
-        results[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
+      unless package[:entries].empty?
+        package[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      update_storage_object(user_profile.person_authenticated_key, results) if results[:success]
-      
-      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{results.to_hash.keys}")
-      results
-      
+      update_storage_object(user_profile.person_authenticated_key, package) if package[:success]
+
+      Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{package.to_hash.keys}")
+      package
+
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
       delete_storage_object(user_profile.person_authenticated_key) if user_profile.present?
-      results = {
+      package = {
           success: false,
           message: e.message,
           username: "unknown",

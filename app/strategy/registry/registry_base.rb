@@ -1,6 +1,7 @@
 # lib/registry/factories_base.rb
 #
-# Common Base for all Services oriented Classes, without Domains
+# Common Base for ServiceRegistry oriented Classes
+# - Expect to have one ServiceRegistry per Engine or App
 #
 
 module Registry
@@ -12,6 +13,7 @@ module Registry
     def self.inherited(klass)
       klass.send(:oscs_set_context=, klass.name)
       Rails.logger.debug("#{self.name} inherited By #{klass.name}")
+      nil
     end
 
     def initialize(params={})
@@ -19,7 +21,8 @@ module Registry
         instance_variable_set "@#{k.to_s}".to_sym, nil
         instance_variable_set "@#{k.to_s}".to_sym, params[k]
       end
-      raise ArgumentError, "ServiceRegistry: Missing required initialization param!" if @registry.nil?
+      raise ArgumentError, "#{self.class.name}: Missing required initialization param!" if @registry.nil?
+      nil
     end
 
     # User Session Handler
@@ -31,12 +34,12 @@ module Registry
       @registry.session[key] = value
     end
 
-  protected
-
     # Not required, simply reduces traffic since it is called often
     def current_user
       @current_user ||= registry.current_user
     end
+
+    protected
 
     # Support the regular respond_to? method by
     # answering for any method the controller actually handles
@@ -51,7 +54,7 @@ module Registry
     # Easier to code than delegation, or forwarder; @registry assumed to equal @controller
     def method_missing(method, *args, &block)
       Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      if registry.respond_to?(method)
+      if registry.public_methods.try(:include?, method)
         block_given? ? registry.send(method, *args, block) :
             (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
       else

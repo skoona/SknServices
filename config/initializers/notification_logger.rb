@@ -32,7 +32,7 @@ ActiveSupport::Notifications.subscribe("process_action.action_controller") do |n
   message.sub!(/@db/, '%2.1f' % db)
   message.sub!(/@view/, '%2.1f' % view)
   message.sub!(/@username/, payload.fetch(:username,'no-user'))
-  message.sub!(/@requestparams/, payload.fetch(:params,'none').inspect )
+  message.sub!(/@requestparams/, (!payload[:params].nil?).to_s )
 
   if payload[:exception].present? || payload[:status] == 500
     message += " EXCEPTION: #{payload[:exception]}"

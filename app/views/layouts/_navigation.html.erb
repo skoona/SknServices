@@ -24,31 +24,38 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <% if current_user_has_access?('#UserProfileManagement') %>
+                            <% if current_user_has_access?('#AccessProfileManagement') %>
                                 <% if current_user_has_access?('users/index') %>
                                     <%= nav_link_icon("glyphicon-user", "Manage UserProfiles", users_path) %>
                                 <% end %>
-                            <% end %>
 
-                            <% if current_user_has_access?('#AccessProfileManagement') %>
                                 <% if current_user_has_access?('user_group_roles/index') %>
                                     <%= nav_link_icon("glyphicon-lock", "Manage AccessProfiles", user_group_roles_path) %>
                                 <% end %>
                             <% end %>
 
                             <% if current_user_has_access?('#ContentProfileManagement') %>
-                                <% if current_user_has_access?('profiles/manage_content_profiles') %>
-                                    <%= nav_link_icon("glyphicon-cog", "Build Content Profiles", manage_content_profiles_profiles_path) %>
+                                <% if current_user_has_access?('profiles/in_depth') %>
+                                    <%= nav_link_icon("glyphicon-cog", "Profiles In Depth", in_depth_profiles_path) %>
+                                <% end %>
+                                <% if current_user_has_access?('profiles/in_action_admin') %>
+                                    <%= nav_link_icon("glyphicon-cog", "Profiles In Action", in_action_admin_profiles_path) %>
                                 <% end %>
                             <% end %>
 
-                            <%= nav_link_icon("glyphicon-cog", "System Information", details_sysinfo_pages_path) %>
+                            <% if current_user_has_access?('#SystemsInformation') %>
+                              <%= nav_link_icon("glyphicon-cog", "System Information", details_sysinfo_pages_path) %>
+                            <% end %>
                         </ul>
                     </li>
-                    <% if current_user_has_access?('#Demonstration') %>
-                        <% if current_user_has_access?('profiles/content_profile_demo') %>
-                            <%= nav_link_icon("glyphicon-eye-open", "ContentProfile", content_profile_demo_profiles_path) %>
-                        <% end %>
+                    <% if current_user_has_access?('#ContentProfileManagement') %>
+                        <%= nav_link_icon("glyphicon-eye-open", "Admin's View", members_profiles_path) %>
+                    <% end %>
+                <% end %>
+
+                <% if current_user_has_access?('#RuntimeDemonstration') %>
+                    <% if current_user_has_access?('profiles/in_action') %>
+                        <%= nav_link_icon("glyphicon-eye-open", "User's View", in_action_profiles_path) %>
                     <% end %>
                 <% end %>
             </ul>

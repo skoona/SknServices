@@ -73,7 +73,7 @@ RSpec.describe 'Inherited Registry Base Services' do
   it 'Reports saved object counts by context.' do
     provider_one = TestProviders::DocumentProvider.new()
     provider_two = TestProviders::ImageProvider.new()
-    u = Secure::UserProfile.find_and_authenticate_user("vstester", "nobugs").enable_authentication_controls
+    u = Secure::UserProfile.find_and_authenticate_user("vstester", "demos").enable_authentication_controls
     k1 = provider_one.save
     k2 = provider_two.save
     expect(TestProviders::DocumentProvider.count_storage_objects).to eq(1)

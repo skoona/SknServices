@@ -21,6 +21,13 @@ class ServiceRegistryMockController
     @action_name = params.fetch(:action_name, 'test')
   end
 
+  def self.helper_method(values)
+    # mock controller methods
+  end
+  def self.before_action(values)
+    # mock controller methods
+  end
+
   # Mock those methods you know will be called on the controller
   def controller
     self
@@ -50,10 +57,32 @@ class ServiceRegistryMockController
     @paths = paths
   end
 
+  # called from a engine to check access with status
   def current_user_has_access?(uri, options=nil)
-    Rails.logger.debug "#{self.class.name}#{}#{__method__}(#{uri})"
-    true
+    opts = options || current_user.try(:user_options) || nil
+    current_user.present? and current_user.has_access?(uri, opts)
   end
+  # called from a engine to check access with status
+  def current_user_has_create?(uri, options=nil)
+    opts = options || current_user.try(:user_options) || nil
+    current_user.present? and current_user.has_create?(uri, opts)
+  end
+  # called from a engine to check access with status
+  def current_user_has_read?(uri, options=nil)
+    opts = options || current_user.try(:user_options) || nil
+    current_user.present? and current_user.has_read?(uri, opts)
+  end
+  # called from a engine to check access with status
+  def current_user_has_update?(uri, options=nil)
+    opts = options || current_user.try(:user_options) || nil
+    current_user.present? and current_user.has_update?(uri, opts)
+  end
+  # called from a engine to check access with status
+  def current_user_has_delete?(uri, options=nil)
+    opts = options || current_user.try(:user_options) || nil
+    current_user.present? and current_user.has_delete?(uri, opts)
+  end
+
 
 private
 

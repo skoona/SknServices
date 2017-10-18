@@ -26,7 +26,7 @@ chdir APP_ROOT do
   # end
 
   puts "\n== Creating Content Paths  =="
-  FileUtils.remove("./controlled/projects/*", force: true)
+  FileUtils.remove("./controlled/projects", force: true)
   FileUtils.mkpath( [
     "./controlled/projects/Branch/0034/Commission",
     "./controlled/projects/Branch/0037/Commission",
@@ -34,52 +34,41 @@ chdir APP_ROOT do
     "./controlled/projects/Branch/0034/Experience",
     "./controlled/projects/Branch/0037/Experience",
     "./controlled/projects/Branch/0040/Experience",
-    "./controlled/projects/LicensedStates/USA/Operations",
     "./controlled/projects/Partner/0099/Activity",
     "./controlled/projects/UserGroups/Developer/FileDownload",
+    "./controlled/projects/UserGroups/Manager/FileDownload",
     "./controlled/projects/UserGroups/EmployeePrimary/FileDownload",
-    "./controlled/projects/UserGroups/BranchPrimary/FileDownload",
-    "./controlled/projects/UserGroups/VendorPrimary/FileDownload",
     "./controlled/projects/UserGroups/EmployeeSecondary/FileDownload",
+    "./controlled/projects/UserGroups/BranchPrimary/FileDownload",
     "./controlled/projects/UserGroups/BranchSecondary/FileDownload",
+    "./controlled/projects/UserGroups/VendorPrimary/FileDownload",
     "./controlled/projects/UserGroups/VendorSecondary/FileDownload",
     "./tmp",
     "./log"
   ], verbose: true)
 
   puts "\n== Preloading some test data files #{FileUtils.pwd} =="
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0037/Experience/")
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0037/Commission/")
-  system!("cp -v controlled/downloads/images/* controlled/projects/Branch/0037/Commission/")
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0037/Commission/")
 
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0034/Experience/")
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0034/Commission/")
-  system!("cp -v controlled/downloads/images/* controlled/projects/Branch/0034/Commission/")
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0034/Commission/")
+  system!('cp -v controlled/downloads/datafiles/* controlled/downloads/pdf/Experience*-0034.pdf controlled/projects/Branch/0034/Experience/')
+  system!('cp -v controlled/downloads/datafiles/* controlled/downloads/images/* controlled/downloads/pdf/Commission*-0034.pdf controlled/projects/Branch/0034/Commission/')
 
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0040/Experience/")
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/Branch/0040/Commission/")
-  system!("cp -v controlled/downloads/images/* controlled/projects/Branch/0040/Commission/")
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/Branch/0040/Commission/")
+  system!('cp -v controlled/downloads/datafiles/* controlled/downloads/pdf/Experience*-0037.pdf controlled/projects/Branch/0037/Experience/')
+  system!('cp -v controlled/downloads/datafiles/* controlled/downloads/images/* controlled/downloads/pdf/Commission*-0037.pdf controlled/projects/Branch/0037/Commission/')
 
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/UserGroups/Developer/FileDownload/")
-  system!("cp -v controlled/downloads/images/* controlled/projects/UserGroups/Developer/FileDownload/")
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/UserGroups/Developer/FileDownload/")
+  system!('cp -v controlled/downloads/datafiles/* controlled/downloads/pdf/Experience*-0040.pdf controlled/projects/Branch/0040/Experience/')
+  system!('cp -v controlled/downloads/datafiles/* controlled/downloads/images/* controlled/downloads/pdf/Commission*-0040.pdf controlled/projects/Branch/0040/Commission/')
 
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/")
-  system!("cp -v controlled/downloads/images/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/")
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/")
+  system!('cp -v controlled/downloads/pdf/Developer*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/Developer/FileDownload/')
+  system!('cp -v controlled/downloads/pdf/Manager*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/Manager/FileDownload/')
+  system!('cp -v controlled/downloads/pdf/EmployeePrimary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeePrimary/FileDownload/')
+  system!('cp -v controlled/downloads/pdf/EmployeeSecondary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/EmployeeSecondary/FileDownload/')
+  system!('cp -v controlled/downloads/pdf/BranchPrimary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/BranchPrimary/FileDownload/')
+  system!('cp -v controlled/downloads/pdf/BranchSecondary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/BranchSecondary/FileDownload/')
+  system!('cp -v controlled/downloads/pdf/VendorPrimary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorPrimary/FileDownload/')
+  system!('cp -v controlled/downloads/pdf/VendorSecondary*.pdf controlled/downloads/images/* controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorSecondary/FileDownload/')
 
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/UserGroups/BranchPrimary/FileDownload/")
-  system!("cp -v controlled/downloads/images/* controlled/projects/UserGroups/BranchPrimary/FileDownload/")
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/UserGroups/BranchPrimary/FileDownload/")
-
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/UserGroups/VendorPrimary/FileDownload/")
-  system!("cp -v controlled/downloads/images/* controlled/projects/UserGroups/VendorPrimary/FileDownload/")
-  system!("cp -v controlled/downloads/datafiles/* controlled/projects/UserGroups/VendorPrimary/FileDownload/")
-
-  system!("cp -v controlled/downloads/pdf/* controlled/projects/Partner/0099/Activity/")
+  system!('cp -v controlled/downloads/pdf/Skoona*.pdf controlled/projects/Partner/0099/Activity/')
+  system!('cp -v controlled/downloads/pdf/SknServices*.pdf controlled/projects/Partner/0099/Activity/')
 
   puts "\n== Preparing databases =="
   

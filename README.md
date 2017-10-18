@@ -52,7 +52,7 @@ a enterprise class document management systems.  In any event, retrieving items 
 
 I chose a FileSystem as the SCS for this demo application, so filename implies a specific instance of a thing, and filename with wildcards implies a collection of things, and the file path is identity meta-data.
 
-Filepaths are a part of the TOPIC structure, filenames are a part of the CONTENT structure. A ContentProfile entry will have both structures present.
+Filepaths become part of the TOPIC structure, while filenames become part of the CONTENT structure. A ContentProfile entry will have both structures present.
 
 The TOPIC structure is composed of three elements,
 - topic_type:  :string           some type of business entity like a branch, agency, store, etc.

@@ -1,22 +1,24 @@
 <% provide(:title, accessed_page_name) %>
 
-<header class="page-header">
-    <h1 class="text-center"><%= accessed_page_name %></h1>
-</header>
+<article>
+  <section>
+      <h1 class="text-center"><%= accessed_page_name %></h1>
+  </section>
 
-<section>
-    <%= simple_form_for(@user, :html => { :class => 'form form-horizontal', :authenticity_token => true }) do |f| %>
-        <%= f.error_notification %>
+  <section>
+      <%= simple_form_for(@user, :html => { :class => 'form form-horizontal', :authenticity_token => true }) do |f| %>
+          <%= f.error_notification %>
 
-        <div class="form-inputs">
-            <%= render 'fields', f:  f %>
-        </div>
+          <div class="form-inputs">
+              <%= render 'fields', f:  f %>
+          </div>
 
-        <div class="form-actions">
-            <div class="col-md-push-3 col-md-9">
-                <%= f.button :submit, class: 'btn btn-primary submit' %>
-                <%= link_to "Cancel", users_path, class: 'btn' %>
-            </div>
-        </div>
-    <% end %>
-</section>
+          <div class="form-actions">
+              <div class="col-md-push-3 col-md-9">
+                  <%= f.button :submit, class: 'btn btn-primary submit' %>
+                  <%= link_to "Cancel", users_path, class: 'btn' %>
+              </div>
+          </div>
+      <% end %>
+  </section>
+</article>
