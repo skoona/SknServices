@@ -15,7 +15,7 @@
 #
 
 class ContentProfileEntry < ActiveRecord::Base
-  has_and_belongs_to_many :content_profiles, inverse_of: :content_profile_entries, :join_table => :join_entries
+  has_and_belongs_to_many :content_profiles, inverse_of: :content_profile_entries, :join_table => :content_profiles_entries
 
   before_create { |record|
     record.topic_value = [record.topic_value].flatten unless record.topic_value.is_a?(Array)

@@ -48,13 +48,13 @@ class NullMigration < ActiveRecord::Migration
       t.datetime "updated_at",                  null: false
     end
 
-    create_table "join_entries", force: :cascade do |t|
+    create_table "content_profiles_entries", force: :cascade do |t|
       t.integer "content_profile_id"
       t.integer "content_profile_entry_id"
     end
 
-    add_index "join_entries", ["content_profile_entry_id"], name: "index_join_entries_on_content_profile_entry_id", using: :btree
-    add_index "join_entries", ["content_profile_id"], name: "index_join_entries_on_content_profile_id", using: :btree
+    add_index "content_profiles_entries", ["content_profile_entry_id"], name: "index_content_profiles_entries_on_content_profile_entry_id", using: :btree
+    add_index "content_profiles_entries", ["content_profile_id"], name: "index_content_profiles_entries_on_content_profile_id", using: :btree
 
     create_table "profile_types", force: :cascade do |t|
       t.string   "name",        limit: 255
@@ -135,8 +135,8 @@ class NullMigration < ActiveRecord::Migration
     add_foreign_key "content_type_opts", "content_types"
     add_foreign_key "topic_type_opts", "topic_types"
     add_foreign_key "content_profiles", "profile_types"
-    add_foreign_key "join_entries", "content_profile_entries"
-    add_foreign_key "join_entries", "content_profiles"
+    add_foreign_key "content_profiles_entries", "content_profile_entries"
+    add_foreign_key "content_profiles_entries", "content_profiles"
     add_foreign_key "user_group_roles_user_roles", "user_group_roles"
     add_foreign_key "user_group_roles_user_roles", "user_roles"
 
