@@ -138,7 +138,7 @@ Warden::Strategies.add(:api_auth) do
   end
 
   def authenticate!
-    Rails.logger.debug "  -> Warden::Strategies.add(:api_auth).authenticate!()"
+    logger.debug "  -> Warden::Strategies.add(:api_auth).authenticate!()"
     user = Secure::UserProfile.find_and_authenticate_user(auth.credentials[0],auth.credentials[1])
     (user.present? and user.active?) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
   rescue => e
@@ -177,7 +177,7 @@ Warden::Strategies.add(:password) do
   end
 
   def authenticate!
-    Rails.logger.debug "  -> Warden::Strategies.add(:password).authenticate!()"
+    logger.debug "  -> Warden::Strategies.add(:password).authenticate!()"
     user = Secure::UserProfile.find_and_authenticate_user(params["session"]["username"], params["session"]["password"])
     (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
   rescue => e
@@ -194,7 +194,7 @@ Warden::Strategies.add(:not_authorized) do
   end
 
   def authenticate!
-    Rails.logger.debug "  -> Warden::Strategies.add(:not_authorized).authenticate!()"
+    logger.debug "  -> Warden::Strategies.add(:not_authorized).authenticate!()"
     fail!("Your Credentials are invalid or expired. Not Authorized! [NotAuthorized](FailNotAuthorized)")
   end
 end
@@ -205,7 +205,7 @@ end
 #    attempt to authenticate using token, fail to signin page, else pass
 Warden::Manager.on_request do |proxy|
   # puts "===============[DEBUG]:or #{self.class}\##{__method__}"
-  Rails.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.env['PATH_INFO']}, session.keys=#{proxy.raw_session.keys}"
+  proxy.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.user().present?}, token=#{proxy.cookies['remember_token'].present?}, path_info=#{proxy.env['PATH_INFO']}, session.keys=#{proxy.raw_session.keys}"
   timeout_flag = false
   bypass_flag = false
   remembered = false
@@ -246,7 +246,7 @@ Warden::Manager.on_request do |proxy|
 
   end # end bypass
 
-  Rails.logger.perf " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Attempted Restore=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]} RequestId=#{proxy.request.uuid}"
+  proxy.logger.perf " Warden::Manager.on_request(EXIT) PublicPage=#{bypass_flag ? 'yes': 'no'}, TimedOut=#{timeout_flag ? 'yes': 'no'}, RememberToken=#{remembered ? 'yes': 'no'}, Attempted Restore=#{attempted_remember_flag ? 'yes': 'no'}, userId=#{proxy.user().name if proxy.user().present?}, path_info=#{full_path}, sessionId=#{proxy.request.session_options[:id]} RequestId=#{proxy.request.uuid}"
   true
 end
 
@@ -284,7 +284,7 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   else
     auth.cookies.delete :remember_token, domain: domain_part
   end
-  Rails.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, RememberedFor=#{remembered_for} session.id=#{auth.request.session_options[:id]} !
+  auth.logger.debug %Q! Warden::Manager.after_authentication(ONLY, token=#{remember ? true : false}) user=#{user.name unless user.nil?}, RememberedFor=#{remembered_for} session.id=#{auth.request.session_options[:id]} !
   true
 end
 
@@ -296,7 +296,7 @@ end
 #
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
-  Rails.logger.debug " Warden::Manager.after_failed_fetch(ONLY) :remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, session.id=#{auth.request.session_options[:id]}"
+  auth.logger.debug " Warden::Manager.after_failed_fetch(ONLY) :remember_token present?(#{auth.cookies["remember_token"].present?}), opts=#{opts}, session.id=#{auth.request.session_options[:id]}"
   true
 end
 
@@ -319,7 +319,7 @@ Warden::Manager.before_failure do |env, opts|
   env['warden'].cookies.delete( :remember_token, domain: domain_part )
   env['warden'].cookies.delete( Rails.application.config.session_options[:key], domain: domain_part )
   env['warden'].request.reset_session
-  Rails.logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, session.id=#{env['warden'].request.session_options[:id]}"
+  env['warden'].logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, session.id=#{env['warden'].request.session_options[:id]}"
   true
 end
 
@@ -336,7 +336,7 @@ Warden::Manager.before_logout do |user,auth,opts|
   auth.request.reset_session
   auth.request.flash[:notice] = opts[:message] if opts[:message]
 
-  Rails.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, starting-session.id=#{session_id_before_reset}, ending-session.id=#{auth.request.session_options[:id]}"
+  auth.logger.debug " Warden::Manager.before_logout(ONLY) user=#{user.name unless user.nil?}, opts=#{opts}, starting-session.id=#{session_id_before_reset}, ending-session.id=#{auth.request.session_options[:id]}"
   true
 end
 
@@ -350,7 +350,7 @@ end
 
 module Warden::Mixins::Common
 
-  # Gets the rails request object by default if it's available
+  # # Gets the rails request object by default if it's available
   def request
     return @request if @request
     if defined?(ActionDispatch::Request)
@@ -389,15 +389,7 @@ module Warden::Mixins::Common
   end
 
   def logger
-    unless defined?('Rails')
-      puts 'logger not defined'
-      return
-    end
-    Rails.logger
-  end
-
-  def raw_session
-    request.session
+    @_warden_logger ||= Logging.logger['WAR']
   end
 
   def reset_session!

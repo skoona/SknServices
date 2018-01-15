@@ -285,7 +285,7 @@ function runtimeDemoGetObject(ev) {
         window.open(objectUrl, dataPackage.filename);
         consoleLog("runtimeDemoGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
     } else {
-        consoleLog("runtimeDemoGetObject() Not a file based request - skipped");
+        consoleLog("runtimeDemoGetObject() Not a file based request - skipped, DataPackage: " + JSON.stringify(dataPackage));
     }
 
     consoleLog("runtimeDemoGetObject(completed) ");

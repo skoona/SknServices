@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     collection do
       get :in_action
       get :in_action_admin
+      get :api_in_action
       get :api_accessible_content
       get :api_get_content_object
       get :api_get_demo_content_object

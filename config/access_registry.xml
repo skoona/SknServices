@@ -266,6 +266,17 @@
     </resource>
 
     <resource secured="true">
+        <uri>profiles/api_in_action</uri>
+        <description>Profiles In Action API</description>
+        <permission type="READ">
+            <authorizedRoles>
+                <authorizedRole>Services.Action.Use.ContentProfile</authorizedRole>
+                <authorizedRole>Services.Action.Use.UserRecords</authorizedRole>
+            </authorizedRoles>
+        </permission>
+    </resource>
+
+    <resource secured="true">
         <uri>profiles/in_action_admin</uri>
         <description>Profiles In Action</description>
         <permission type="READ">

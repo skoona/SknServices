@@ -13,12 +13,22 @@ module Domains
 
     def in_action_package
       profile = db_profile_provider.content_profile_for_runtime(current_user)
+      action_package(profile)
+    end
+
+    def in_action_api_package(username)
+      up = get_page_user(username)
+      profile = db_profile_provider.content_profile_for_runtime(up)
+      action_package(profile)
+    end
+
+    def action_package(profile)
       success = profile.present? && profile[:display_groups].present?
       {
-        message: (success ? "" : "No Access Provided.  Please contact Customer Service with any questions."),
-        cp: (success ? profile : {}),
-        display_groups: (success ? profile.delete(:display_groups) : []),
-        get_demo_content_object_url: page_action_paths([:api_get_demo_content_object_profiles_path])
+          message: (success ? "" : "No Access Provided.  Please contact Customer Service with any questions."),
+          cp: (success ? profile : {}),
+          display_groups: (success ? profile.delete(:display_groups) : []),
+          get_demo_content_object_url: page_action_paths([:api_get_demo_content_object_profiles_path])
       }
     end
 

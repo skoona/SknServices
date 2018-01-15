@@ -47,6 +47,21 @@ module Services
                                  })
     end
 
+    def handle_api_in_action(params)
+      package = in_action_api_package(params['username'])
+      SknUtils::NestedResult.new({package: {
+                                     success: package[:cp].present?,
+                                     message: package[:message],
+                                     payload: package
+                                 }})
+    rescue Exception => e
+      Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
+      SknUtils::NestedResult.new({package: {
+                                     success: false,
+                                     message: e.message,
+                                     payload: []
+                                 }})
+    end
 
     # Controller Entry Point
     def handle_api_accessible_content(params)

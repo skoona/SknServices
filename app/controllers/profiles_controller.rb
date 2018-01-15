@@ -11,6 +11,10 @@ class ProfilesController < ApplicationController
     wrap_html_response content_service.handle_in_action_admin(params.to_unsafe_h)
   end
 
+  def api_in_action
+    wrap_json_response content_service.handle_api_in_action(params.to_unsafe_h)
+  end
+
   # json api, requires :username and access: [:access, :content]
   # - returns Accessible Content
   # GET
