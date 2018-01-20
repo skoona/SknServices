@@ -1,1 +1,22 @@
+title: SknServices
+email: skoona@gmail.com
+description: > # this means to ignore newlines until "baseurl:"
+  Rails V5 based application for use as Administrator for SknBase.  Also, built using SknStrategy development techniques.
+baseurl: ""
+url: https://skoona.github.io/SknServices
+
+twitter_username: JamesScottiii
+twitter:
+  username: jamesscottiii
+
 theme: jekyll-theme-cayman
+
+github_username:  skoona
+github:
+  username:  skoona
+
+# paginate:     1
+author:
+  name:       "James Scott, Jr. (a.k.a Skoona)"
+  url:        https://keybase.io/skoona
+
