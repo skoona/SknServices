@@ -1,7 +1,7 @@
 title: SknServices
 email: skoona@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Rails V5 based application for use as Administrator for SknBase.  Also, built using SknStrategy development techniques.
+  Authentication and Authorization focused starter Rails 5 Application.  Rails V5 based application for use as Administrator for SknBase.  Built using SknStrategy, an alternative Rails development technique.  
 baseurl: ""
 url: https://skoona.github.io/SknServices
 
