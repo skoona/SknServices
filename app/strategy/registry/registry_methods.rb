@@ -47,6 +47,11 @@ module Registry
       render(json: @page_controls.to_hash, status: (@page_controls.package.success ? :accepted : :not_found), layout: false, content_type: :json) and return
     end
 
+    def wrap_file_response(service_response)
+      return render( plain: "File not available!", status: :not_found ) unless service_response.success and service_response.package.package.source?
+      send_file(service_response.package.package.source, filename: service_response.package.package.filename, type: service_response.package.package.mime, disposition: :inline) and return
+    end
+
     # Call or Restore app services
     def establish_domain_services
       flash_message(:notice, warden.message) if warden.message.present?

@@ -34,7 +34,7 @@
                         <dd>Collect all ActiveRecord invocations and methods into a one or more classes which follow the Repository or Provider pattern, suitable for dependency injection.</dd>
                         <dd>&nbsp;</dd>
                       <dt>Remove from Views</dt>
-                        <dd>Limit controller instance variables to one nested hash of pure ruby values.  UseCase methods should return this object as the sole results object to be rendered as HTML or JSON to requester.</dd>
+                        <dd>Limit controller instance variables to one nested hash of pure ruby values.  UseCase methods should return this object as the sole results object to be rendered as HTML or JSON to requester.  Views must never cause the execution of a non-helper method or follow the dotted-path of an ActiveRecord object, the data available to a view should be a value.  As an example, views should format a time object for display but they should not execute <code>Time.now</code> to get the object to format.</dd>
                         <dd>&nbsp;</dd>
                       <dt>Wrap APIs in helpers</dt>
                         <dd>Create a few View helpers to aid in the HTML rendering or controller interface; to minimize Rails View API changes and the number of partials needed.</dd>
@@ -535,12 +535,12 @@ end
                 </p>
 
                 <p>I've looked long and hard at the Repository pattern as an interface to the SQL subsystem or ActiveRecord and decided each time to use the SknStrategy's Provider pattern.  Most repository implementations
-                  I've reviewed tend to use the CRUD semantics and handle only one record at a time.  In practice I've found that I often need to process collection of objects at once and all the objects may not be
+                  I've reviewed tend to use the CRUD semantics and handle only one record at a time.  In practice I've found that I often need to process collection or Aggregate of objects at once and all the objects may not be
                   from the same SQL Table.  The Provider pattern has the freedom to treat that request as a single unit of work and complete it in one call from the UseCase.
                 </p>
 
                 <p>Larger application might provide fifty to one-hundred controllers, if each has ten url-entry methods that will result in five-hundred different entry-points into you application logic.  This
-                  scaling issue the justification for SknStrategy.  UseCase classes or Services classes are the targets for those five-hundred url-entries, code reuse opportunities will be represented in the
+                  scaling issue fits well into the SknStrategy.  UseCase classes or Services classes are the targets for those five-hundred url-entries, code reuse opportunities will be represented in the
                   Domain classes the Services and UseCases inherit from along with the contents of Providers and Processors.  It is hoped that reasoning about where a particular feature is located will be easier
                   to follow, once the basic of this strategy have been adopted.
                 </p>
@@ -548,7 +548,11 @@ end
                 <p>Rails Engines and Ruby Gems as a packaging strategy for application code.  My experiences, thus far, highlights <strong>NameSpacing</strong> as the most valuable property of large applications using Rails.  Ruby
                   Gems come in second as a valid option for code separation, if they too are namespaced.  My current corporate apps use multiple engines as a legacy artifact and as technical debt from co-existing with Rails for
                   years.  I would not choose engines again, knowing what I know about NameSpacing (a Ruby Feature BTW).  Looking forward from today, if the application becomes too large for one Rails app -- at that point I would
-                  recommend breaking the one into two parts; but only when the time is at hand.  <em>In no scaling situation would I suggest switching from Rails to another Ruby Web Framework</em>, Rails really is the best one available.
+                  recommend breaking the one into two parts; but only when the time is at hand.  <em>In no scaling situation would I suggest switching from Rails to another Ruby Web Framework</em>, if you started with its Rails best to stay with Rails.
+                </p>
+                <p>However, if you have the opportunity to start a new web-server based application I would give serious consideration to the <a href="http://roda.jeremyevans.net">Roda</a> gem as your web-interface component,
+                  with <a href="http://dry-rb.org">Dry-Rb</a> and the <a href=" http://rom-rb.org">Rom-Rb</a> gems included in your application components.  I have a complementary starter program that you can
+                  evaluate which uses Roda, SknStrategy, and Rom-Rb called <a href="https://skoona.github.io/skn_base/">SknBase</a> on github.
                 </p>
               </div>
           </div>
