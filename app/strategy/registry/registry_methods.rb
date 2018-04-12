@@ -74,8 +74,10 @@ module Registry
     # While :establish_domain_services invokes the service_factory to initialize it,
     # be sure to call the :service_factory method rather than the instance method here.
     def method_missing(method, *args, &block)
-      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method.inspect}")
-      if service_registry.public_methods.try(:include?, method)
+      calling_method = caller_locations(1, 2)[1]
+      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: ##{method}, from #{calling_method.path}##{calling_method.label}")
+
+      if service_registry.public_methods(false).try(:include?, method)
         block_given? ? service_registry.send(method, *args, block) :
             (args.size == 0 ?  service_registry.send(method) : service_registry.send(method, *args))
       else

@@ -51,10 +51,12 @@ module Registry
 
   private
 
-    # Easier to code than delegation, or forwarder; @registry assumed to equal @controller
+    # Implements a 'bare words' like feature for dependency injection using ServiceRegistry
     def method_missing(method, *args, &block)
-      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: #{method}")
-      if registry.public_methods.try(:include?, method)
+      calling_method = caller_locations(1, 2)[1]
+      Rails.logger.debug("#{self.class.name}##{__method__}() looking for: ##{method}, from #{calling_method.path}##{calling_method.label}")
+
+      if registry.public_methods(true).try(:include?, method)
         block_given? ? registry.send(method, *args, block) :
             (args.size == 0 ?  registry.send(method) : registry.send(method, *args))
       else

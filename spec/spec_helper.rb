@@ -8,6 +8,8 @@ require 'support/utilities'
 require 'support/test_users'
 require 'support/test_data_serializers'
 
+ActionMailer::Base.delivery_method = :test
+
 RSpec.configure do |config|
 
   Kernel.srand config.seed
