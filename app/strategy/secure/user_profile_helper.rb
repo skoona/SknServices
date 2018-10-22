@@ -5,7 +5,7 @@ module Secure
       Rails.logger.debug("#{self.name} included By #{klass.name}")
       # raise Utility::Errors::SecurityImplementionError,
       #       "You are missing one or more critical security fields; Please implement!" unless
-      #       self.attribute_names.include?("person_authenticated_key") and
+      #       self.attribute_names.include?("person_authentication_key") and
       #       self.attribute_names.include?("assigned_groups") and
       #       self.attribute_names.include?("assigned_roles") and
       #       self.attribute_names.include?("user_options") and

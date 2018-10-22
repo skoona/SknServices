@@ -504,7 +504,7 @@ module Utility
 
     def create_content_profile_for(user_p, profile_type_name )
       ContentProfile.create!({
-          person_authentication_key: user_p.person_authenticated_key,
+          person_authentication_key: user_p.person_authentication_key,
           profile_type_id: ProfileType.find_by(name: profile_type_name).try(:id),
           authentication_provider: "SknService::Bcrypt",
           username: user_p.username,

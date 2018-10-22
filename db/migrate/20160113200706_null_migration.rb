@@ -122,13 +122,13 @@ class NullMigration < ActiveRecord::Migration
       t.string   "file_access_token",        limit: 255
       t.datetime "created_at",                                           null: false
       t.datetime "updated_at",                                           null: false
-      t.string   "person_authenticated_key", limit: 255
+      t.string   "person_authentication_key", limit: 255
       t.string   "assigned_roles",           limit: 4096
       t.string   "remember_token_digest",    limit: 255
       t.string   "user_options",             limit: 4096
     end
 
-    add_index "users", ["person_authenticated_key"], name: "index_users_on_person_authenticated_key", unique: true, using: :btree
+    add_index "users", ["person_authentication_key"], name: "index_users_on_person_authentication_key", unique: true, using: :btree
     add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
     add_index "users", ["username"], name: "index_users_on_username", using: :btree
 

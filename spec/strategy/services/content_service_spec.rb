@@ -52,7 +52,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       parms = {"profile_type_id"=>"6",
                "button"=>"content-profile-modal",
                "username"=>userp.username,
-               "id"=>userp.person_authenticated_key
+               "id"=>userp.person_authentication_key
       }
       expect(service.handle_content_profile_create(parms).success).to be true
       expect(service.handle_content_profile_create({}).success).to be false
@@ -62,7 +62,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       parms = {"profile_type_id"=>"6",
                "button"=>"content-profile-modal",
                "username"=>user.username,
-               "id"=>user.person_authenticated_key
+               "id"=>user.person_authentication_key
       }
       expect(service.handle_content_profile_update(parms).success).to be true
       expect(service.handle_content_profile_update({}).success).to be false
@@ -95,10 +95,10 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
     end
 
     scenario "#handle_content_profile_entry_destroy" do
-      id = ContentProfile.where(person_authentication_key: user.person_authenticated_key).first.content_profile_entries.first.id
+      id = ContentProfile.where(person_authentication_key: user.person_authentication_key).first.content_profile_entries.first.id
       parms = {
                "id"=>id,
-               'pak' => user.person_authenticated_key
+               'pak' => user.person_authentication_key
       }
       expect(service.handle_content_profile_entry_destroy(parms).success).to be true
       expect(service.handle_content_profile_entry_destroy({}).success).to be false
@@ -195,7 +195,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
       parms = {
           "username"=>"bstester",
           "display_name"=>"Branch Secondary User",
-          "id"=>user.person_authenticated_key
+          "id"=>user.person_authentication_key
       }
       result = service.handle_member(parms)
       expect(result).to be_a(SknUtils::NestedResult)
@@ -213,7 +213,7 @@ RSpec.describe Services::ContentService, "Service routines of Services::ContentS
                 "filedownload"=>{"usergroups"=>["EmployeePrimary", "EmployeeSecondary", "BranchPrimary"]}
             },
             "commit"=>"bstester",
-            "id"=> user.person_authenticated_key
+            "id"=> user.person_authentication_key
           }
 
       result = service.handle_member_updates(parms)

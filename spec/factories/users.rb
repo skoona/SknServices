@@ -16,7 +16,7 @@
 #  file_access_token        :string(255)
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  person_authenticated_key :string(255)
+#  person_authentication_key :string(255)
 #  assigned_roles           :string(4096)
 #  remember_token_digest    :string(255)
 #  user_options             :string(4096)
@@ -28,7 +28,7 @@ require 'faker'
 FactoryGirl.define do
   factory :user do
     username                {Faker::Internet.user_name}
-    person_authenticated_key {SecureRandom.hex(16)}
+    person_authentication_key {SecureRandom.hex(16)}
     name                    {Faker::Name.name}
     email                   { "#{username}@#{Faker::Internet.domain_name}".downcase }
     remember_token          {SecureRandom.urlsafe_base64}

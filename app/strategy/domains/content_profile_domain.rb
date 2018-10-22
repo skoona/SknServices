@@ -261,7 +261,7 @@ module Domains
               username: u.username,
               display_name: u.display_name,
               email: u.email,
-              pak: u.person_authenticated_key,
+              pak: u.person_authentication_key,
               authentication_provider: 'SknService::Bcrypt',
               assigned_group: u.assigned_groups,
               user_options: u.user_options,
@@ -472,7 +472,7 @@ module Domains
 
       cpe[:profile] = cpe[:id]
       cpe[:id] = pg_u.id
-      cpe[:pak] = pg_u.person_authenticated_key
+      cpe[:pak] = pg_u.person_authentication_key
       Rails.logger.debug "#{self.class}##{__method__} results => #{cpe.present?}"
 
       # Returns an empty Array on Error, or Array of Hashes on Success

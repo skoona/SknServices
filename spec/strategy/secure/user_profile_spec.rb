@@ -57,7 +57,7 @@ RSpec.describe Secure::UserProfile, 'Contains the users presence.' do
       u = Secure::UserProfile.new(user)
       expect( u.enable_authentication_controls() ).to be true
       expect( Secure::UserProfile.count_storage_objects).to be > 0
-      expect( Secure::UserProfile.fetch_cached_user(u.person_authenticated_key)).to be_a_kind_of(Secure::UserProfile)
+      expect( Secure::UserProfile.fetch_cached_user(u.person_authentication_key)).to be_a_kind_of(Secure::UserProfile)
       expect( u.disable_authentication_controls() ).to be true
     end
   end

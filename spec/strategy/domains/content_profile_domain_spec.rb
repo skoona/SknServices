@@ -134,7 +134,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
       parms = {"profile_type_id"=>"6",
                "button"=>"content-profile-modal",
                "username"=>user.username,
-               "id"=>user.person_authenticated_key
+               "id"=>user.person_authentication_key
       }
       expect(@service.update_content_profile_with_profile_type_id(parms)).to be true
     end
@@ -142,7 +142,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
       parms = {"profile_type_id"=>"5",
        "button"=>"content-profile-modal",
                "username"=>userp.username,
-               "id"=>userp.person_authenticated_key
+               "id"=>userp.person_authentication_key
       }
       expect(@service.create_content_profile_with_profile_type_id(parms)).to be true
     end
@@ -150,7 +150,7 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
       parms = {"profile_type_id"=>"5",
                "button"=>"content-profile-modal",
                "username"=>user.username,
-               "id"=>user.person_authenticated_key
+               "id"=>user.person_authentication_key
       }
       expect(@service.destroy_content_profile_by_pak(parms)).to be true
     end
@@ -170,10 +170,10 @@ RSpec.describe Domains::ContentProfileDomain, "Service routines of Domains::Cont
       expect(@service.create_content_profile_entries(parms)).to be true
     end
     scenario "#destroy_content_profile_entry" do
-      id = ContentProfile.where(person_authentication_key: user.person_authenticated_key).first.content_profile_entries.first.id
+      id = ContentProfile.where(person_authentication_key: user.person_authentication_key).first.content_profile_entries.first.id
       parms = {
           "id"=>id,
-          'pak' => user.person_authenticated_key
+          'pak' => user.person_authentication_key
       }
       expect(@service.destroy_content_profile_entry(parms)).to be true
     end

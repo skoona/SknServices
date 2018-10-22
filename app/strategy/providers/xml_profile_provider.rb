@@ -141,7 +141,7 @@ module Providers
     # Not meant to be public, use send() to test
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
-      get_prebuilt_profile(usr_prf.person_authenticated_key)
+      get_prebuilt_profile(usr_prf.person_authentication_key)
     end
 
     ##
@@ -156,7 +156,7 @@ module Providers
           message: "XML Entries for: #{user_profile.display_name}, UserOptions=#{user_profile.user_options}",
           success: true,
           entries: collect_context_profile_entry(user_profile) || [],
-          pak: user_profile.person_authenticated_key,
+          pak: user_profile.person_authentication_key,
           profile_type: (user_profile.assigned_groups.try(:empty?) ? "not assigned" : user_profile.assigned_groups.first),
           profile_type_description: (user_profile.assigned_groups.try(:empty?) ? "not assigned" : user_profile.assigned_groups.first),
           provider: "Secure::AccessRegistry",
@@ -177,14 +177,14 @@ module Providers
       unless package[:entries].empty?
         package[:entries].each {|au| au.merge!(username: user_profile.username, user_options: user_profile.user_options)}
       end
-      update_storage_object(user_profile.person_authenticated_key, package) if package[:success]
+      update_storage_object(user_profile.person_authentication_key, package) if package[:success]
 
       Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{package.to_hash.keys}")
       package
 
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      delete_storage_object(user_profile.person_authenticated_key) if user_profile.present?
+      delete_storage_object(user_profile.person_authentication_key) if user_profile.present?
       package = {
           success: false,
           message: e.message,

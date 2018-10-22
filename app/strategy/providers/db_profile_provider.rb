@@ -31,7 +31,7 @@ module Providers
     end
 
     def content_profile_for_runtime(user_profile, available_resource_catalog=true)
-      profile = ContentProfile.find_by(person_authentication_key: user_profile.person_authenticated_key).try(:entry_info)
+      profile = ContentProfile.find_by(person_authentication_key: user_profile.person_authentication_key).try(:entry_info)
       cprofile = condense_profile_entries(profile, user_profile, available_resource_catalog)
       Rails.logger.debug "#{self.class.name}.#{__method__}() ContentProfile: #{cprofile.present? ? 'Found' : 'Not Found'}"
       cprofile
@@ -237,7 +237,7 @@ module Providers
 
     def create_content_profile_for(user_p, profile_type_name )
       ContentProfile.create!({
-         person_authentication_key: user_p.person_authenticated_key,
+         person_authentication_key: user_p.person_authentication_key,
          profile_type_id: ProfileType.find_by(name: profile_type_name).try(:id),
          authentication_provider: "SknService::Bcrypt",
          username: user_p.username,
@@ -290,7 +290,7 @@ module Providers
                        id: 'content',
                        username: user_profile.username,
                        user_options: user_profile.user_options,
-                       pak: user_profile.person_authenticated_key
+                       pak: user_profile.person_authentication_key
                    }) # fixup for accessible list
 
         worker = collection.detect do |x|
@@ -329,7 +329,7 @@ module Providers
 
     def get_existing_profile(usr_prf)
       raise Utility::Errors::NotFound, "Invalid UserProfile!" unless usr_prf.present?
-      get_prebuilt_profile(usr_prf.person_authenticated_key)
+      get_prebuilt_profile(usr_prf.person_authentication_key)
     end
 
     def remove_content_profile_entry_from(profile_obj, profile_entry_obj)
@@ -347,7 +347,7 @@ module Providers
       return  cpobj if cpobj
 
       results = {}
-      ctxp = ContentProfile.includes(:content_profile_entries).find_by( person_authentication_key: user_profile.person_authenticated_key)
+      ctxp = ContentProfile.includes(:content_profile_entries).find_by( person_authentication_key: user_profile.person_authentication_key)
 
       unless ctxp.nil?
         msg = "DB Entries for: #{user_profile.display_name}, UserOptions=#{user_profile.user_options}"
@@ -360,14 +360,14 @@ module Providers
             entries:[]
         }
       end
-      update_storage_object(user_profile.person_authenticated_key, results) unless results[:entries].empty?
+      update_storage_object(user_profile.person_authentication_key, results) unless results[:entries].empty?
 
       Rails.logger.debug("#{self.class.name}.#{__method__}() returns: #{results.to_hash.keys}")
       results
       
     rescue Exception => e
       Rails.logger.error "#{self.class.name}.#{__method__}() Klass: #{e.class.name}, Cause: #{e.message} #{e.backtrace[0..4]}"
-      delete_storage_object(user_profile.person_authenticated_key) if user_profile.present?
+      delete_storage_object(user_profile.person_authentication_key) if user_profile.present?
       {
         success: false,
         message: e.message,

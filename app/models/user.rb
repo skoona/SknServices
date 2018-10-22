@@ -15,7 +15,7 @@
 #  file_access_token        :string(255)
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  person_authenticated_key :string(255)
+#  person_authentication_key :string(255)
 #  assigned_roles           :string(4096)
 #  remember_token           :string(255)
 #  remember_token_digest    :string(255)
@@ -28,7 +28,7 @@ class User < ApplicationRecord
   has_secure_password
 
   before_create {|user|
-    user.generate_unique_token(:person_authenticated_key)   # Never Changes
+    user.generate_unique_token(:person_authentication_key)   # Never Changes
     user.regenerate_remember_token!   # :remember_token Change by reset or any update
     user.active = true
     user.user_options = [user.user_options].flatten.reject(&:blank?)

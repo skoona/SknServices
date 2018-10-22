@@ -97,7 +97,7 @@ http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-i
 
 ==== UserProfile Required User Object Attributes
 
-    :person_authenticated_key => String Secure Key 32chars
+    :person_authentication_key => String Secure Key 32chars
     :assigned_groups => Array
     :assigned_roles => Array
     :user_options => Array

@@ -15,7 +15,7 @@ module Secure
 
     @@object_storage_service_prefix = self.name
 
-    attr_accessor :id, :person_authenticated_key, :last_access, :name, :username, :email
+    attr_accessor :id, :person_authentication_key, :last_access, :name, :username, :email
 
     # ActiveModel, ActiveRecord dynamic methods need delegation at a class level
     singleton_class.send :delegate, :find_by, :find_each, :where, :to => ::User
@@ -29,7 +29,7 @@ module Secure
       @user_object = user
       @last_access = Time.zone.now
 
-      [:@id, :@person_authenticated_key, :@assigned_roles,
+      [:@id, :@person_authentication_key, :@assigned_roles,
        :@name, :@user_options, :@assigned_groups, :@username,
        :@email, :@roles].each do |k|
         instance_variable_set(k, nil)
@@ -106,21 +106,21 @@ module Secure
 
     # Warden will call this methods
     def disable_authentication_controls(prepare_only=false)
-      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{name}) Token=#{person_authentication_key}")
       return self if prepare_only
       self.last_access = Time.zone.now
-      delete_storage_object(person_authenticated_key.to_sym)
+      delete_storage_object(person_authentication_key.to_sym)
       proxy_u.save!
       true
     end
 
     # Warden will call this methods
     def enable_authentication_controls(prepare_only=false)
-      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{name}) Token=#{person_authenticated_key}")
+      Rails.logger.debug("  #{self.class.name}.#{__method__}(#{name}) Token=#{person_authentication_key}")
       return self if prepare_only
       self.proxy_u.active= true
       self.last_access = Time.zone.now
-      update_storage_object(person_authenticated_key.to_sym, self)
+      update_storage_object(person_authentication_key.to_sym, self)
       true
     end
 
@@ -186,7 +186,7 @@ end # end Secure
 #  "roles",
 #  "active",
 #  "file_access_token",
-#  "person_authenticated_key",
+#  "person_authentication_key",
 #  "assigned_roles",
 #  "remember_token_digest",
 # ]

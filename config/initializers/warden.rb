@@ -62,7 +62,7 @@
 # DEBUG Legend:
 #
 # :01 RailsWarden:Manager
-# :st serialize_into_session              using person_authenticated_key rather than user.id
+# :st serialize_into_session              using person_authentication_key rather than user.id
 # :sf serialize_from_session              retrieves memory object from object cache
 #
 # :pw Strategy :password                  set user and call after_auth, fail (if last) and call after_fetch_failed:event:authent
@@ -107,7 +107,7 @@ class Warden::SessionSerializer
   ##
   # Save the userProfile id to session store
   def serialize(record)
-    [record.class.name, record.person_authenticated_key]
+    [record.class.name, record.person_authentication_key]
   end
 
   ##

@@ -40,8 +40,8 @@
 
 module FeatureHelpers
   def logged_as(user)
-    page.set_rack_session('warden.user.access_profile.key' => [Secure::UserProfile.class.name, user.person_authenticated_key])
-    # "warden.user.access_profile.key" => [Secure::UserProfile.class.name, user.person_authenticated_key]
+    page.set_rack_session('warden.user.access_profile.key' => [Secure::UserProfile.class.name, user.person_authentication_key])
+    # "warden.user.access_profile.key" => [Secure::UserProfile.class.name, user.person_authentication_key]
   end
   def click_signout_link
     Capybara.current_session.driver.delete signout_url
