@@ -1,7 +1,7 @@
 # spec/controllers/password_resets_controller_spec.rb
 
 describe PasswordResetsController, " Reset User Password Process" do
-  let!(:user) {FactoryGirl.create(:user)} # let!(:user) { user_eptester()}
+  let!(:user) {FactoryBot.create(:user)} # let!(:user) { user_eptester()}
 
   before :each do
     sign_in(user, scope: :access_profile)

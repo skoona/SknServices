@@ -14,13 +14,13 @@
 #  updated_at               :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :content_profile_entry do
-    topic_value "MyString"
-content_value "MyString"
-content_type nil
-topic_type nil
-content_profile nil
+    topic_value   { "MyString" }
+    content_value { "MyString" }
+    content_type  { nil }
+    topic_type    { nil }
+    content_profile { nil }
   end
 
 end

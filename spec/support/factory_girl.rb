@@ -1,5 +1,5 @@
-# Turn on FactoryGirl
-# ref: https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md
+# Turn on FactoryBot
+# ref: https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 end

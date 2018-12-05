@@ -10,11 +10,11 @@
 #  updated_at      :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :content_type do
-    name "MyString"
-description "MyString"
-value_data_type "MyString"
+    name        { "MyString" }
+    description { "MyString" }
+    value_data_type { "MyString" }
   end
 
 end

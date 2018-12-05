@@ -4,7 +4,7 @@
 #
 
 RSpec.describe "Password Resets View Collection " do
-  let(:user_object) { FactoryGirl.create(:user) }
+  let(:user_object) { FactoryBot.create(:user) }
   
   before :each do
     login_as(user_object, scope: :access_profile)

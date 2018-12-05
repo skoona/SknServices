@@ -1,6 +1,6 @@
 
 RSpec.describe UserMailer do
- let(:user) {FactoryGirl.create(:user)}
+ let(:user) {FactoryBot.create(:user)}
   
   describe "password_reset" do
     let(:mail) { UserMailer.password_reset(user) }

@@ -22,45 +22,45 @@
 #  user_options             :string(4096)
 #
 
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
-    username                {Faker::Internet.user_name}
-    person_authentication_key {SecureRandom.hex(16)}
-    name                    {Faker::Name.name}
+    username                { Faker::Internet.user_name }
+    person_authentication_key {SecureRandom.hex(16) }
+    name                    { Faker::Name.name }
     email                   { "#{username}@#{Faker::Internet.domain_name}".downcase }
-    remember_token          {SecureRandom.urlsafe_base64}
-    password                "foobar"
-    password_confirmation   "foobar"
-    password_reset_token    {SecureRandom.urlsafe_base64}
-    password_reset_date     {Time.zone.now}
-    user_options            ["Employee"]
-    assigned_groups         ["EmployeeSecondary"]
-    assigned_roles          ["Service.Action.ResetPassword"]
-    roles                   ["Service.Action.ResetPassword"]
+    remember_token          { SecureRandom.urlsafe_base64 }
+    password                { "foobar" }
+    password_confirmation   { "foobar" }
+    password_reset_token    { SecureRandom.urlsafe_base64 }
+    password_reset_date     { Time.zone.now }
+    user_options            { ["Employee"] }
+    assigned_groups         { ["EmployeeSecondary"] }
+    assigned_roles          { ["Service.Action.ResetPassword"] }
+    roles                   { ["Service.Action.ResetPassword"] }
 
     factory :support do
-      user_options            ["Support"]
-      assigned_groups             ["EmployeeSecondary"]
-      assigned_roles          ["Users.Action.Update",
+      user_options            { ["Support"] }
+      assigned_groups         { ["EmployeeSecondary"] }
+      assigned_roles          { ["Users.Action.Update",
                                "Users.Action.Edit",
                                "Users.Action.Read",
-                               "Service.Action.ResetPassword"]
-      roles                   ["Users.Action.Update",
+                               "Service.Action.ResetPassword"] }
+      roles                   { ["Users.Action.Update",
                                "Users.Action.Edit",
                                "Users.Action.Read",
-                               "Service.Action.ResetPassword"]
+                               "Service.Action.ResetPassword"] }
     end
 
     factory :manager do
-      user_options            ["Manager"]
-      assigned_groups          ["EmployeePrimary"]
-      assigned_roles          ["Services.Action.Admin",
-                               "Services.Action.Developer"]
-      roles                   ["Services.Action.Admin",
-                               "Services.Action.Developer"]
+      user_options            { ["Manager"] }
+      assigned_groups         { ["EmployeePrimary"] }
+      assigned_roles          { ["Services.Action.Admin",
+                               "Services.Action.Developer"] }
+      roles                   { ["Services.Action.Admin",
+                               "Services.Action.Developer"] }
     end
   end
 

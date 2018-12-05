@@ -9,10 +9,10 @@
 #  updated_at  :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :profile_type do
-    name "MyString"
-description "MyString"
+    name        { "MyString" }
+    description { "MyString" }
   end
 
 end

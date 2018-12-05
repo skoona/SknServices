@@ -13,14 +13,14 @@
 #  updated_at                :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :content_profile do
-    person_authentication_key "MyString"
-profile_type nil
-authentication_provider "MyString"
-username "MyString"
-display_name "MyString"
-email "MyString"
+    person_authentication_key { "MyString" }
+    profile_type  { nil }
+    authentication_provider { "MyString" }
+    username      { "MyString" }
+    display_name  { "MyString" }
+    email         { "MyString" }
   end
 
 end

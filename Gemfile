@@ -19,7 +19,7 @@ gem 'therubyrhino'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'bootstrap-will_paginate'
-gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'sprockets-rails', "~> 3.2.1", :require => 'sprockets/railtie'
 gem 'font-awesome-sass'
 
 gem 'jbuilder'
@@ -57,7 +57,7 @@ group :development, :test do
   gem 'capybara'
   gem 'capybara-screenshot'
 
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'faker'
   gem 'database_cleaner'
   gem 'poltergeist'

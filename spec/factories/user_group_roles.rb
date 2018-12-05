@@ -10,11 +10,11 @@
 #  updated_at  :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user_group_role do
-    name "MyString"
-description "MyString"
-group_type "MyString"
+    name        { "MyString" }
+    description { "MyString" }
+    group_type  { "MyString" }
   end
 
 end

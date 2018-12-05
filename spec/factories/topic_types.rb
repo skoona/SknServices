@@ -10,11 +10,11 @@
 #  updated_at      :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :topic_type do
-    name "MyString"
-description "MyString"
-value_based_y_n "MyString"
+    name        { "MyString" }
+    description { "MyString" }
+    value_based_y_n { "MyString" }
   end
 
 end
