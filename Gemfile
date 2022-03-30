@@ -30,7 +30,7 @@ gem 'tzinfo-data'
 
 # Use Puma as the app server
 #gem 'puma', '= 3.6.0'
-gem 'puma', '3.9.0'
+gem 'puma', '4.3.12'
 
 
 # bundle exec rake doc:rails generates the API under doc/api.
